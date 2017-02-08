@@ -1,0 +1,433 @@
+https://www.w3.org/TR/html5/index.html#elements-1
+
+a
+abbr
+address
+area
+article
+aside
+audio
+
+b
+base
+bdi
+bdo
+blockquote
+body
+br
+button
+
+canvas
+caption
+cite
+code
+col
+colgroup
+
+data
+datalist
+dd
+del
+dfn
+div
+dl
+!doctype
+dt
+
+em
+embed
+
+fieldset
+figcaption
+figure
+footer
+form
+
+h1
+h2
+h3
+h4
+h5
+h6
+head
+header
+hr
+html
+
+i
+iframe
+img
+input
+ins
+
+kbd
+keygen
+
+label
+legend
+li
+link
+
+main
+map
+mark
+math
+meta
+meter
+
+nav
+noscript
+
+object
+ol
+optgroup
+option
+output
+
+p
+param
+pre
+progress
+
+q
+
+rb
+rp
+rt
+rtc
+ruby
+
+s
+samp
+script
+section
+select
+small
+source
+span
+strong
+style
+sub
+sup
+svg
+
+table
+tbody
+td
+template
+textarea
+tfoot
+th
+thread
+time
+title
+tr
+track
+
+u
+ul
+
+var
+video
+
+wbr
+--------------------------------------------------------------------------
+root: doctype html
+
+html
+	head
+		metadata-content
+	body
+		flow
+
+metadata-content
+	base
+		EMPTY
+	link
+		EMPTY
+	meta
+		EMPTY
+	noscript
+		link
+		meta
+		style
+		TEXT
+	style
+		TEXT
+	template
+		UNKNOWN
+	title
+		TEXT
+	
+flow
+	a
+		transparent
+	abbr
+		phasing
+	address
+		flow
+	article
+		flow
+	aside
+		flow
+	audio
+		source
+			EMPTY
+		track
+			EMPTY
+		transparent
+	b
+		phrasing
+	bdi
+		phrasing
+	bdo
+		phrasing
+	blockquote
+		flow
+	br
+		EMPTY
+	button
+		phrasing
+	canvas
+		transparent
+	cite
+		phrasing
+	code
+		phrasing
+	data
+		phrasing
+	datalist
+		phrasing
+		option
+			TEXT
+	del
+		transparent
+	dfn
+		phrasing
+	div
+		flow
+	dl
+		dd
+			flow
+		dt
+			flow
+		script_supporting_elements
+	em
+		phasing
+	embed
+		EMPTY
+	fieldset
+		legend
+		flow
+	figure
+		figcaption
+		flow
+	footer
+		flow
+	form
+		flow
+	h1
+		phasing
+	h2
+		phasing
+	h3
+		phasing
+	h4
+		phasing
+	h5
+		phasing
+	h6
+		phasing
+	header
+		flow
+	hr
+		EMPTY
+	i
+		phasing
+	iframe
+		TEXT
+	img
+		EMPTY
+	input
+		EMPTY
+	ins
+		transparent
+	kbd
+		phasing
+	keygen
+		EMPTY
+	label
+		phasing
+	main
+		flow
+	map
+		transparent
+		area
+	mark
+		phasing
+	math
+		UNKNOWN
+	meter
+		phasing
+	noscript
+		UNKNOWN
+	object
+		param
+			EMPTY
+		transparent
+	ol
+		li
+			flow
+		script-supporting-elements
+	output
+		phrasing
+	p
+		phrasing
+	pre
+		phrasing
+	progress
+		phrasing
+	q
+		phrasing
+	ruby
+		phrasing
+		rp
+			phasing
+		rt
+			phasing
+		rb
+			phasing
+		rtc
+			phasing
+	s
+		phrasing
+	samp
+		phrasing
+	script
+		SCRIPT
+	section
+		flow
+	select
+		option
+		optgroup
+			option
+			script-supporting-elements
+	small
+		phrasing
+	span
+		phrasing
+	strong
+		phrasing
+	sub
+		phrasing
+	sup
+		phrasing
+	svg
+		UNKNOWN
+	table
+		caption
+			flow
+		colgroup
+			col
+				EMPTY
+			script-supporting-elements
+		thread
+			tr
+				td
+					flow
+				th
+					flow
+				script-supporting-elements
+			script-supporting-elements
+		tbody
+			tr
+			script-supporting-elements
+		tfoot
+			tr
+			script-supporting-elements
+		tr
+		script-supporting-elements
+	template
+		param
+		track
+		UNKNOWN
+	textarea
+		TEXT
+	time
+		phrasing
+	u
+		phrasing
+	ul
+		li
+		script-supporting-elements
+	var
+		phrasing
+	video
+		source
+		transacaction
+		track
+	wbr
+		EMPTY
+	TEXT
+
+phasing
+	a
+	abbr
+	audio
+	b
+	bdi
+	bdo
+	br
+	button
+	canvas
+	cite
+	code
+	data
+	datalist
+	del
+	dfn
+	em
+	embed
+	i
+	iframe
+	img
+	input
+	ins
+	kbd
+	keygen
+	label
+	map
+	mark
+	math
+	meter
+	noscript
+	object
+	output
+	progress
+	q
+	ruby
+	s
+	samp
+	script
+	select
+	small
+	span
+	strong
+	sub
+	sup
+	svg
+	template
+	textarea
+	time
+	u
+	var 
+	video 
+	wbr
+	TEXT
+
+script_supporting_elements
+	script
+	template
+
+...............
+nav
