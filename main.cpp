@@ -1,6 +1,7 @@
 
 #include "opl.h"
 #include "html.h"
+#include "html_lex_context.h"
 #include <iostream>
 #include <string>
 #include <cstring>

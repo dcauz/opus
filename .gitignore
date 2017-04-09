@@ -1,0 +1,12 @@
+opusc/opusc.vcxproj.filters
+.vs
+.deps
+files.txt
+html.cpp
+html.hpp
+html.output
+obj
+opl.cpp
+opl.hpp
+opl.output
+opus.exe

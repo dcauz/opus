@@ -52,6 +52,9 @@ clean:
 	rm -f  html.output html.cpp html.hpp
 	rm -f  opl.output opl.cpp opl.hpp
 
+clobber: clean
+	rm -f opus.exe
+
 opus: $(OBJS)
 	g++ -std=c++11 -o $@ $(OBJS)
 
@@ -85,6 +88,8 @@ obj .deps:
 test: opus
 	cd test; make
 
+ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
 -include $(patsubst %.cpp,.deps/%.d,$(SRC))
+endif
 endif

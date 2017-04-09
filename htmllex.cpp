@@ -6,8 +6,9 @@
 #include <cstdlib>
 #include <vector>
 
-#include "htmllex.h"
-#include "html.gram.h"
+#include "html.h"
+#include "html_lex_context.h"
+
 
 namespace
 {
