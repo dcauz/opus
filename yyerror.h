@@ -1,6 +1,6 @@
 #pragma once
 
-#include "opus.gram.h"
+#include "opl.h"
 
 
 void opuserror( YYLTYPE * llocp, ParseContext * pc, const char *);

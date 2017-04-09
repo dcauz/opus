@@ -29,7 +29,6 @@ Keyword keywords[] =
 
 	{ DEFAULT,  "default" },
 	{ DEQUEUE,  "dequeue" },
-    { DOUBLE,   "double" },
 
 	{ ELSE,     "else" },
 
@@ -38,9 +37,6 @@ Keyword keywords[] =
 	{ FOR,      "for" },
 
 	{ IF,       "if" },
-	{ INT,		"int" },
-
-    { LONG,     "long" }, 
 
 	{ PQUEUE,	"pqueue" },
 
@@ -49,15 +45,11 @@ Keyword keywords[] =
     { RETURN,   "return" },
 
 	{ SET,      "set" },
-    { SHORT,    "short" }, 
 	{ STACK,    "stack" },
 	{ STRING,   "string" },
 	{ SWITCH,   "switch" },
 
-    { TINY,     "tiny" }, 
 	{ TRUE,     "true" },
-
-    { UNSIGNED, "unsigned" }, 
 
 	{ VECTOR,   "vector" },
 };

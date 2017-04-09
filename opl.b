@@ -5,12 +5,31 @@
 #include "parse_context.h"
 #include "expr.h"
 #include "statement.h"
-#include "type.h"
 #include "symtbl.h"
+
+#include "bool.h"
+#include "dequeue.h"
+#include "dynamic.h"
+#include "enum.h"
+#include "float.h"
+#include "integer.h"
+#include "matrix.h"
+#include "object.h"
+#include "pqueue.h"
+#include "queue.h"
+#include "rational.h"
+#include "real.h"
+#include "set.h"
+#include "stack.h"
+#include "string.h"
+#include "tensor.h"
+#include "vector.h"
+#include "void.h"
 
 %}
 
-%token ALIAS					"alias"
+
+%token ALIAS				"alias"
 
 %token BOOL						"bool"	
 %token BREAK					"break"
@@ -22,7 +41,6 @@
 %token DEFAULT					"default"
 %token DEQUEUE					"dequeue"
 %token DOT_DOT_DOT				"..."
-%token DOUBLE					"double"
 %token <dbl> DOUBLE_LIT			"double-literal"
 %token DYNAMIC					"dynamic"
 
@@ -35,39 +53,37 @@
 
 %token IF 						"if"
 %token <i32> INT_LIT			"int-literal"
-%token INT						"int"
 %token INVALID_NUMBER			"invalid-number"
 %token INVALID_STRING			"invalid-string"
 
-%token LONG						"long"
 %token <i64> LONG_LIT			"long-literal"
 
 %token MATRIX					"matrix"
 
+%token N						"N"
 %token <str> NAME				"name"
 
 %token OBJECT					"object"
 
 %token PQUEUE					"pqueue"
 
+%token Q						"Q"
 %token QUEUE					"queue"
 
+%token R						"R"
 %token <str> RAW_STRING_LIT		"raw-string-literal"
 %token RETURN					"return"
 
 %token SET						"set"
-%token SHORT					"short"
 %token STACK					"stack"
 %token STRING					"string"
 %token <str> STRING_LIT			"string-literal"
 %token SWITCH					"switch"
 
 %token TENSOR					"tensor"
-%token TINY						"tiny"
 %token <b> TRUE					"true"
 %token TUPLE					"tuple"
 
-%token UNSIGNED					"unsigned"
 %token <u32> UNSIGNED_LIT		"unsigned-literal"
 %token <u64> UNSIGNED_LONG_LIT	"unsigned-long-literal"
 
@@ -76,6 +92,7 @@
 
 %token WHERE					"where"
 
+%token Z						"Z"
 
 %right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS '?' ':'
 %left LOR
@@ -95,15 +112,15 @@
 %type <ar>   arg
 %type <arL>  args
 %type <bl>   body
-%type <dcl>	 definition
+%type <dcl>  definition
 %type <dclL> definitions
 %type <i32>  dim
 %type <i32L> dims
-%type <ex>	 expr
-%type <exL>	 exprList
+%type <ex>   expr
+%type <exL>  exprList
 %type <fdef> function
-%type <en>	 member
-%type <enL>	 members
+%type <en>   member
+%type <enL>  members
 %type <st>   statement
 %type <stL>  statements
 %type <ty>   type
@@ -112,9 +129,7 @@
 
 %expect 2
 
-%define api.pure full
-%define parse.error verbose
-%define parse.lac full
+%define api.pure
 
 %locations
 
@@ -316,53 +331,21 @@ type
 	{
 		$$ = context->symtbl.findType($1);
 	}
-	| INT
+	| Z
 	{
 		$$ = &intType;
-	}
-	| LONG
-	{
-		$$ = &longType;
-	}
-	| SHORT
-	{
-		$$ = &shortType;
-	}
-	| UNSIGNED SHORT
-	{
-		$$ = &unsignedShortType;
-	}
-	| TINY
-	{
-		$$ = &tinyType;
-	}
-	| UNSIGNED TINY
-	{
-		$$ = &unsignedTinyType;
-	}
-	| UNSIGNED
-	{
-		$$ = &unsignedType;
-	}
-	| UNSIGNED INT
-	{
-		$$ = &unsignedType;
-	}
-	| UNSIGNED LONG
-	{
-		$$ = &unsignedLongType;
 	}
 	| FLOAT
 	{
 		$$ = &floatType;
 	}
-	| DOUBLE
+	| Q
 	{
-		$$ = &doubleType;
+		$$ = &rationalType;
 	}
-	| LONG DOUBLE
+	| R
 	{
-		$$ = &longDoubleType;
+		$$ = &realType;
 	}
 	| STRING
 	{

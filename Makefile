@@ -4,21 +4,40 @@ opus
 SRC := \
 expr.cpp \
 gencodecontext.cpp \
-html.gram.cpp \
+html.cpp \
 html_lex_context.cpp \
-opus.gram.cpp \
 il.cpp \
 main.cpp \
 nodes.cpp \
+opl.cpp \
 program.cpp \
 semchkcontext.cpp \
 statement.cpp \
 symtbl.cpp \
-type.cpp \
 htmlerror.cpp \
 htmllex.cpp \
 yyerror.cpp \
-yylex.cpp
+yylex.cpp \
+type.cpp \
+bool.cpp \
+dequeue.cpp \
+dynamic.cpp \
+enum.cpp \
+float.cpp \
+integer.cpp \
+matrix.cpp \
+object.cpp \
+pqueue.cpp \
+queue.cpp \
+rational.cpp \
+real.cpp \
+set.cpp \
+stack.cpp \
+string.cpp \
+tensor.cpp \
+vector.cpp \
+void.cpp
+
 
 OBJS := $(patsubst %.cpp,obj/%.o,$(SRC))
 
@@ -30,19 +49,23 @@ all: $(TARGETS)
 
 clean:
 	rm -fr obj .deps $(TARGETS)
-	rm -f  html.gram.output html.gram.cpp html.gram.hpp
-	rm -f  opus.gram.output opus.gram.cpp opus.gram.hpp
+	rm -f  html.output html.cpp html.hpp
+	rm -f  opl.output opl.cpp opl.hpp
 
 opus: $(OBJS)
 	g++ -std=c++11 -o $@ $(OBJS)
 
 ########################################
 
-opus.gram.cpp : opus.gram.b
-	bison --name-prefix=opus -d -v -o $@ opus.gram.b
+opl.cpp opl.hpp: opl.b
+	bison --name-prefix=opus -d -v -o opl.cpp opl.b
 
-html.gram.cpp : html.gram.b
-	bison --name-prefix=html -d -v -o $@ html.gram.b
+html.cpp html.hpp: html.b
+	bison --name-prefix=html -d -v -o html.cpp html.b
+
+opl.h: opl.hpp
+
+html.h: html.hpp
 
 ########################################
 
@@ -57,8 +80,10 @@ obj .deps:
 	mkdir $@
 
 
-run: opus
-	./opus test/main.opus
+.PHONY: test
+
+test: opus
+	cd test; make
 
 ifneq ($(MAKECMDGOALS), clean)
 -include $(patsubst %.cpp,.deps/%.d,$(SRC))

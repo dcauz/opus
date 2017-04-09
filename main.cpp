@@ -1,9 +1,13 @@
 
-#include "opus.gram.h"
-#include "html.gram.h"
+#include "opl.h"
+#include "html.h"
 #include <iostream>
 #include <string>
 #include <cstring>
+
+
+int opusparse( ParseContext * );
+int htmlparse( HtmlLexContext * );
 
 
 int main( int c, char * a [] )

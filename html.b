@@ -359,9 +359,7 @@ int	htmlparse();
 %type <node> video
 %type <node> TEXT
 
-%define api.pure full
-%define parse.error verbose
-%define parse.lac full
+%define api.pure
 
 %locations
 
