@@ -28,12 +28,45 @@
 
 %}
 
+%token LOG						"log"
+%token LOG2						"log2"
+%token LOG10					"log10"
+%token LOG_N					"log_N"
 
-%token ALIAS				"alias"
+%token COS						"cos"
+%token COT						"cot"
+%token CSC						"csc"
+%token SEC						"sec"
+%token SIN						"sin"
+%token TAN						"tan"
+%token COSH						"cosh"
+%token COTH						"coth"
+%token CSCH						"csch"
+%token SECH						"sech"
+%token SINH						"sinh"
+%token TANH						"tanh"
+
+%token ARCCOS					"arccos"
+%token ARCCOT					"arccot"
+%token ARCCSC					"arccsc"
+%token ARCSEC					"arcsec"
+%token ARCSIN					"arcsin"
+%token ARCTAN					"arctan"
+
+%token ARCOSH					"arcosh"
+%token ARCOTH					"arcoth"
+%token ARCSCH					"arcsch"
+%token ARSECH					"arsech"
+%token ARSINH					"arsinh"
+%token ARTANH					"artanh"
+
+
+%token ALIAS					"alias"
 
 %token BOOL						"bool"	
 %token BREAK					"break"
 
+%token C						"C"
 %token CASE						"case"
 %token CLASS					"class"
 %token CONTINUE					"continue"
@@ -44,6 +77,7 @@
 %token <dbl> DOUBLE_LIT			"double-literal"
 %token DYNAMIC					"dynamic"
 
+%token E						"e"
 %token ELSE						"else"
 %token ENUM						"enum"
 
@@ -51,6 +85,9 @@
 %token FLOAT					"float"
 %token FOR						"for"
 
+%token GRAMMAR					"grammar"
+
+%token I 						"i"
 %token IF 						"if"
 %token <i32> INT_LIT			"int-literal"
 %token INVALID_NUMBER			"invalid-number"
@@ -65,6 +102,7 @@
 
 %token OBJECT					"object"
 
+%token PI						"pi"
 %token PQUEUE					"pqueue"
 
 %token Q						"Q"
@@ -117,17 +155,21 @@
 %type <i32>  dim
 %type <i32L> dims
 %type <ex>   expr
+%type <ex>   exprs
 %type <exL>  exprList
 %type <fdef> function
+%type <dcl>  grammar
 %type <en>   member
 %type <enL>  members
+%type <ex>   row
+%type <ex>   rows
 %type <st>   statement
 %type <stL>  statements
 %type <ty>   type
 %type <tdef> typeDef
 %type <vdef> variableDefinition
 
-%expect 2
+%expect 107
 
 %define api.pure
 
@@ -200,10 +242,14 @@ definition
 	{
 		$$ = $1;
 	}
+	| grammar
+	{
+		$$ = $1;
+	}
 	;
 
 function
-	: type NAME '(' args ')' ';'
+	: type NAME '(' args ')'
 	{
 		$$ = new FuncDef( context->start, context->end, $1, $2, $4 );
 	}
@@ -249,14 +295,14 @@ body
 	;
 
 variableDefinition
-	: type NAME ';'
+	: type NAME
 	{
 		$$ = new VarDef( context->start, context->end, $1, $2 );
 	}
 	;
 
 alias
-	: ALIAS NAME '=' type ';'
+	: ALIAS NAME '=' type
 	{
 		$$ = new AliasDef( context->start, context->end, $2, $4 );
 	}
@@ -455,7 +501,7 @@ statements
 	;
 
 statement
-	: expr ';'
+	: expr
 	{
 		$$ = new ExprStatement( context->start, context->end, $1 );
 	}
@@ -543,25 +589,21 @@ statement
 	{
 		$$ = new Case( context->start, context->end, $2, $4, $6 );
 	}
-	| BREAK ';'
+	| BREAK
 	{
 		$$ = new Break(context->start);
 	}
-	| CONTINUE ';'
+	| CONTINUE
 	{
 		$$ = new Continue(context->start);
 	}
-	| RETURN expr ';'
+	| RETURN expr
 	{
 		$$ = new Return( context->start, context->end, $2 );
 	}
 	| '{' statements '}'
 	{
 		$$ = new Block( context->start, context->end, $2 );
-	}
-	| ';'
-	{
-		$$ = new Empty( context->start );
 	}
 	;
 
@@ -573,6 +615,18 @@ expr
 	| INT_LIT
 	{
 		$$ = new IntLit($1);
+	}
+	| I
+	{
+		$$ = 0; // TODO
+	}
+	| E
+	{
+		$$ = 0; // TODO
+	}
+	| PI
+	{
+		$$ = 0; // TODO
 	}
 	| UNSIGNED_LIT
 	{
@@ -597,6 +651,14 @@ expr
 	| RAW_STRING_LIT
 	{
 		$$ = new RawStringLit($1);
+	}
+	| '(' expr ')'
+	{
+		$$ = $2;
+	}
+	| rows
+	{
+		$$ = static_cast<Expr *>(nullptr);
 	}
 	| TRUE
 	{
@@ -766,6 +828,151 @@ expr
 	{
 		$$ = new Conditional( $1, $3, $5 );
 	}
+	| LOG '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| LOG2 '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| LOG10 '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| LOG_N '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| COS '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| COT '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| CSC '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| SEC '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| SIN '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| TAN '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| COSH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| COTH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| CSCH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| SECH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| SINH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| TANH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCCOS '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCCOT '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCCSC '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCSEC '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCSIN '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCTAN '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCOSH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCOTH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARCSCH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARSECH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARSINH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| ARTANH '(' expr ')'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	;
+
+rows
+	: rows row
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| row
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	;
+
+row
+	: '|' exprs '|'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| '|' '|'
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	;
+
+exprs
+	: exprs expr
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
+	| expr
+	{
+		$$ = static_cast<Expr *>(nullptr);
+	}
 	;
 
 exprList
@@ -781,4 +988,37 @@ exprList
 	}
 	;
 
+grammar
+	: GRAMMAR NAME '{' grammarDefs '}'
+	{
+		$$ = static_cast<Definition *>(nullptr); // TODO
+	}
+	;
+
+
+grammarDefs
+	: grammarDefs grammarDef
+	| grammarDef
+	;
+
+grammarDef
+	: tokenDef
+	| ruleDef
+	;
+
+tokenDef
+	: type NAME '=' STRING_LIT
+	;
+
+ruleDef
+	: NAME ':' names ';'
+	| NAME ':' ';'
+	;
+
+names
+	: names NAME
+	| NAME
+	;
+
 %%
+

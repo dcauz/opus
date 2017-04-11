@@ -1,10 +1,10 @@
 opusc/opusc.vcxproj.filters
 .vs
 .deps
-files.txt
 html.cpp
 html.hpp
 html.output
+log
 obj
 opl.cpp
 opl.hpp
