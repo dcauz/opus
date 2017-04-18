@@ -1,16 +1,21 @@
 #pragma once
 
-#include "type.h"
 #include <cstdint>
 #include <memory>
+#include "type.h"
+#include "value.h"
 
 
-class Int
+class Integer : public Value
 {
 public:
-	Int( const char * );
+	Integer( const char * );
+	Integer( int );
 
-	Int();
+	Integer();
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	bool semCheck( SemCheckContext & scc ) const override;
 
 //	Int( const Int & );
 //	Int( Int && );
@@ -22,16 +27,15 @@ private:
 	std::unique_ptr<unsigned int> value_;
 };
 
-
-class IntType : public Type
+class IntegerType : public Type
 {
 public:
-	IntType();
-	IntType( int );
-	IntType( int64_t );
-	IntType( const Int & );
+	IntegerType();
+	IntegerType( int );
+	IntegerType( int64_t );
+	IntegerType( const Integer & );
 
 
 };
 
-extern IntType	intType;
+extern IntegerType	integerType;

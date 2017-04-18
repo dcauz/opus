@@ -4,14 +4,17 @@
 #include "integer.h"
 
 
-class Rational
+class Rational: public Value
 {
 public:
 	Rational();
 
+	bool genCode( GenCodeContext & gcc ) const override;
+	bool semCheck( SemCheckContext & scc ) const override;
+
 private:
-	Int num_;
-	Int den_;
+	Integer num_;
+	Integer den_;
 };
 
 

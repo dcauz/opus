@@ -144,10 +144,10 @@ private:
 	std::string name_;
 };
 
-class FuncDef: public Definition
+class RoutineDef: public Definition
 {
 public:
-	FuncDef( int s, int e, Type * t, const char * n, 
+	RoutineDef( int s, int e, Type * t, const char * n, 
 		std::vector<Arg * > * args, Block * bl = nullptr ):Definition(s,e),
 		returnType_(t), name_(n), body_(bl) 
 	{
@@ -162,6 +162,25 @@ private:
 	Type 		* returnType_;
 	std::string	name_;
 	Block 		* body_;
+};
+
+class FunDef: public Definition
+{
+public:
+	FunDef( int s, int e, const char * n, std::vector<Arg * > * args, Expr *ex):
+		Definition(s,e), name_(n), body_(ex) 
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	bool semCheck( SemCheckContext & ) const final;
+
+	const Type	* returnType() const	{ return returnType_; }
+
+private:
+	Type 		* returnType_;
+	std::string	name_;
+	Expr  		* body_;
 };
 
 class AliasDef: public Definition

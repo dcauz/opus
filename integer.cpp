@@ -1,13 +1,36 @@
 #include "integer.h"
 
-IntType	intType;
+IntegerType	integerType;
 
 
-IntType::IntType()
+IntegerType::IntegerType()
 {
+// TODO
 }
 
+////////////////////////////////////////////
 
-Int::Int()
+Integer::Integer()
 {
+// TODO
+}
+
+Integer::Integer(int)
+{
+// TODO
+}
+
+Integer::Integer(const char *)
+{
+// TODO
+}
+
+bool Integer::genCode( GenCodeContext & gcc ) const
+{
+// TODO
+}
+
+bool Integer::semCheck( SemCheckContext & scc ) const
+{
+// TODO
 }

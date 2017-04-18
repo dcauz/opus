@@ -11,4 +11,6 @@ class Type
 {
 public:
 
+private:
+	std::string name_;
 };

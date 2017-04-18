@@ -22,6 +22,7 @@ type.cpp \
 bool.cpp \
 dequeue.cpp \
 dynamic.cpp \
+complex.cpp \
 enum.cpp \
 float.cpp \
 integer.cpp \

@@ -47,7 +47,7 @@ bool VarDef::semCheck( SemCheckContext & scc ) const
 	return false;
 }
 
-bool FuncDef::semCheck( SemCheckContext & scc ) const 
+bool RoutineDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
 	return false;
@@ -107,6 +107,12 @@ bool Switch::semCheck( SemCheckContext & scc ) const
 	return false;
 }
 
+bool FunDef::semCheck( SemCheckContext & scc ) const 
+{
+	TODO
+	return false;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool Empty::genCode( GenCodeContext & gcc ) const 
@@ -151,7 +157,7 @@ bool VarDef::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool FuncDef::genCode( GenCodeContext & gcc ) const 
+bool RoutineDef::genCode( GenCodeContext & gcc ) const 
 {
 	FunctionDefinition * fd = new FunctionDefinition( name_ );
 
@@ -221,6 +227,12 @@ bool Case::genCode( GenCodeContext & gcc ) const
 }
 
 bool Switch::genCode( GenCodeContext & gcc ) const 
+{
+	TODO
+	return false;
+}
+
+bool FunDef::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;

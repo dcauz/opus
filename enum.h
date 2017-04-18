@@ -1,8 +1,17 @@
 #pragma once
 
+#include <vector>
 #include "type.h"
+#include "value.h"
 
 class Expr;
+
+
+class Enum: public Value
+{
+public:
+
+};
 
 
 class EnumMember
@@ -19,8 +28,10 @@ private:
 };
 
 
-class Enum : public Type
+class EnumType : public Type
 {
 public:
 
+private:
+	std::vector<EnumMember>	members_;
 };

@@ -4,19 +4,28 @@
 #include "value.h"
 
 
-class Void: public Value
+class Real;
+
+
+class Complex: public Value
 {
 public:
+	Complex( int r, int i );
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	bool semCheck( SemCheckContext & scc ) const override;
+
+private:
+	Real * real_;
+	Real * imaginary_;
 };
 
-class VoidType: public Type
+
+class ComplexType: public Type
 {
 public:
 
 };
 
 
-extern VoidType	voidType;
+extern ComplexType	complexType;

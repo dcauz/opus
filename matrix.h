@@ -1,8 +1,19 @@
 #pragma once
 
 #include "collection.h"
+#include "value.h"
+
 
 class Expr;
+
+
+class Matrix: public Value
+{
+public:
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	bool semCheck( SemCheckContext & scc ) const override;
+};
 
 
 class MatrixType: public CollectionType

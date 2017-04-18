@@ -46,12 +46,6 @@ protected:
 	Expr * operand3_;
 };
 
-class Literal: public Expr
-{
-public:
-
-};
-
 class FuncCall: public Expr
 {
 public:
@@ -66,6 +60,18 @@ private:
 	std::vector<Expr * > * args_;
 };
 
+class IsVoid: public Expr
+{
+public:
+	IsVoid( Expr * arg ): arg_(arg) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	bool semCheck( SemCheckContext & scc ) const final;
+
+private:
+	Expr * arg_;
+};
+
 class Name: public Expr
 {
 public:
@@ -76,102 +82,6 @@ public:
 
 private:
 	std::string	name_;
-};
-
-class IntLit: public Literal
-{
-public:
-	IntLit( int i):value_(i) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	int value_;
-};
-
-class UnsignedLit : public Literal
-{
-public:
-	UnsignedLit( unsigned int ui ):value_(ui) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	int value_;
-};
-
-class UnsignedLongLit: public Literal
-{
-public:
-	UnsignedLongLit( unsigned long int uli ):value_(uli) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	int value_;
-};
-
-class LongLit : public Literal
-{
-public:
-	LongLit( long int li ):value_(li) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	int value_;
-};
-
-class DoubleLit : public Literal
-{
-public:
-	DoubleLit( double d ):value_(d) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	int value_;
-};
-
-class StringLit: public Literal
-{
-public:
-	StringLit( const char * v ):value_(v) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	std::string value_;
-};
-
-class RawStringLit: public Literal
-{
-public:
-	RawStringLit( const char * v ):value_(v) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	std::string value_;
-};
-
-class BoolLit: public Literal
-{
-public:
-	BoolLit( bool b ):value_(b) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-
-private:
-	bool value_;
 };
 
 /////////////////////////////////////////////////////////////////

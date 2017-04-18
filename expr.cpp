@@ -14,54 +14,6 @@ bool Name::semCheck( SemCheckContext & scc ) const
 	return false;
 }
 
-bool IntLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool UnsignedLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool UnsignedLongLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool LongLit ::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool DoubleLit ::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool StringLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool RawStringLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool BoolLit::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
 bool Assign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
@@ -308,6 +260,12 @@ bool OuterJoin::semCheck( SemCheckContext & scc ) const
 	return false;
 }
 
+bool IsVoid::semCheck( SemCheckContext & scc ) const 
+{
+	TODO
+	return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 bool FuncCall::genCode( GenCodeContext & gcc ) const 
@@ -317,54 +275,6 @@ bool FuncCall::genCode( GenCodeContext & gcc ) const
 }
 
 bool Name::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool IntLit::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool UnsignedLit::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool UnsignedLongLit::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool LongLit ::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool DoubleLit ::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool StringLit::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool RawStringLit::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool BoolLit::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;
@@ -611,6 +521,12 @@ bool RightJoin::genCode( GenCodeContext & gcc ) const
 }
 
 bool OuterJoin::genCode( GenCodeContext & gcc ) const 
+{
+	TODO
+	return false;
+}
+
+bool IsVoid::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;

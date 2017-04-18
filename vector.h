@@ -1,7 +1,12 @@
 #pragma once
 
 #include "collection.h"
+#include "value.h"
 
+
+class Vector: public Value
+{
+};
 
 
 

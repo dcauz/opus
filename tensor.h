@@ -1,7 +1,12 @@
 #pragma once
 
 #include "collection.h"
+#include "value.h"
 
+
+class Tensor:public Value
+{
+};
 
 class TensorType: public CollectionType
 {
