@@ -114,6 +114,7 @@
 
 %token SELECT					"select"
 %token SET						"set"
+%token <i> SHARED				"shared"
 %token STACK					"stack"
 %token STRING					"string"
 %token <str> STRING_LIT			"string-literal"
@@ -126,11 +127,13 @@
 %token TUPLE					"tuple"
 
 %token UNION					"union"
+%token <i> UNIQUE				"unique"
 
 %token VAR						"var"
 %token VECTOR					"vector"
 %token VOID						"void"
 
+%token <i> WEAK					"weak"
 %token WHERE					"where"
 %token WITH						"with"
 
@@ -199,6 +202,7 @@
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
+%type <i32>  ptrType
 %type <rdef> routine
 %type <gd>   ruleDef
 %type <st>   statement
@@ -418,6 +422,25 @@ variableDefinition
 	: type NAME
 	{
 		$$ = new VarDef( context->start, context->end, $1, $2 );
+	}
+	| ptrType type NAME
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1 );
+	}
+	;
+
+ptrType
+	: UNIQUE
+	{
+		$$ = UNIQUE;
+	}
+	| SHARED
+	{
+		$$ = SHARED;
+	}
+	| WEAK
+	{
+		$$ = WEAK;
 	}
 	;
 

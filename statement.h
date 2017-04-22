@@ -146,8 +146,11 @@ private:
 class VarDef: public Definition
 {
 public:
-	VarDef( int s, int e, Type * t, const char * n ):Definition(s,e), type_(t),
-		name_(n) {}
+	VarDef( int s, int e, Type * t, const char * n, int pt=0 ):
+		Definition(s,e), 
+		type_(t),
+		name_(n),
+		ptrType_(pt) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	bool semCheck( SemCheckContext & ) const final;
@@ -155,6 +158,7 @@ public:
 private:
 	Type	* type_;
 	std::string name_;
+	int		ptrType_;
 };
 
 class Arg
