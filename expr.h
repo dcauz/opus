@@ -50,7 +50,7 @@ protected:
 class FuncCall: public Expr
 {
 public:
-	FuncCall( Expr * n, std::vector<Expr *> * args = nullptr ):
+	FuncCall( Expr * n, std::vector<std::unique_ptr<Expr>> * args = nullptr ):
 		name_(n), args_(args) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
@@ -58,7 +58,7 @@ public:
 
 private:
 	Expr * name_;
-	std::vector<Expr * > * args_;
+	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> args_;
 };
 
 class IsVoid: public Expr
@@ -324,14 +324,16 @@ public:
 class Index : public Expr
 {
 public:
-	Index( Expr * v, std::vector<Expr * > * i ):tensor_(v), index_(i)  {}
+	Index( 
+		Expr * v, 
+		std::vector<std::unique_ptr<Expr>> * i ):tensor_(v), index_(i)  {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	bool semCheck( SemCheckContext & scc ) const final;
 
 private:
 	Expr				* tensor_;
-	std::vector<Expr *> * index_;
+	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> index_;
 };
 
 class Inc: public Uniary
@@ -504,7 +506,7 @@ public:
 	SelectEx( 
 		int dist, 
 		Top * top, 
-		std::vector<Column *> * cols, 
+		std::vector<std::unique_ptr<Column>> * cols, 
 		std::vector<std::string> * tables, 
 		Where   * where, 
 		GroupBy * groupBy, 
@@ -514,4 +516,12 @@ public:
 	bool semCheck( SemCheckContext & scc ) const final;
 
 private:
+	int distinct_;
+
+	std::unique_ptr<Top> top_;
+	std::unique_ptr<std::vector<std::unique_ptr<Column>>> cols_; 
+	std::unique_ptr<std::vector<std::string>> tables_; 
+	std::unique_ptr<Where>	where_;
+	std::unique_ptr<GroupBy>groupBy_;
+	std::unique_ptr<Having>	having_;
 };

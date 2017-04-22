@@ -2,43 +2,44 @@ TARGETS := \
 opus
 
 SRC := \
-expr.cpp \
-gencodecontext.cpp \
-html.cpp \
-html_lex_context.cpp \
-il.cpp \
-grammar.cpp \
-main.cpp \
-nodes.cpp \
-opl.cpp \
-program.cpp \
-semchkcontext.cpp \
-statement.cpp \
-symtbl.cpp \
-htmlerror.cpp \
-htmllex.cpp \
-yyerror.cpp \
-yylex.cpp \
-type.cpp \
 bool.cpp \
+complex.cpp \
+constraints.cpp \
 dequeue.cpp \
 dynamic.cpp \
-complex.cpp \
 enum.cpp \
+expr.cpp \
 float.cpp \
+gencodecontext.cpp \
+grammar.cpp \
+html.cpp \
+html_lex_context.cpp \
+htmlerror.cpp \
+htmllex.cpp \
+il.cpp \
 integer.cpp \
+main.cpp \
 matrix.cpp \
+nodes.cpp \
 object.cpp \
+opl.cpp \
 pqueue.cpp \
+program.cpp \
 queue.cpp \
 rational.cpp \
 real.cpp \
+semchkcontext.cpp \
 set.cpp \
+statement.cpp \
+symtbl.cpp \
+type.cpp \
 stack.cpp \
 string.cpp \
 tensor.cpp \
 vector.cpp \
-void.cpp
+void.cpp \
+yyerror.cpp \
+yylex.cpp
 
 
 OBJS := $(patsubst %.cpp,obj/%.o,$(SRC))

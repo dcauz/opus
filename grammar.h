@@ -27,8 +27,15 @@ private:
 class RuleDef: public GrammarDef
 {
 public:
+	RuleDef( const char * n, std::vector<std::string> * tokens ):
+		name_(n), tokens_(tokens)
+	{}
+
 	~RuleDef() override {}
 
+private:
+	std::string name_;
+	std::unique_ptr<std::vector<std::string>> tokens_;
 };
 
 class Grammar: public Definition

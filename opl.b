@@ -189,7 +189,7 @@
 %type <i32>  optDistinct
 %type <ex>   expr
 %type <exL>  exprList
-%type <ex>   exprs
+%type <exL>  exprs
 %type <fdef> function
 %type <dcl>  grammar
 %type <gd>   grammarDef
@@ -199,13 +199,13 @@
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
-%type <nL>   names
 %type <rdef> routine
 %type <gd>   ruleDef
 %type <st>   statement
 %type <stL>  statements
 %type <top>	 optTop
 %type <gd>	 tokenDef
+%type <nL>   tokens
 %type <ty>   type
 %type <tdef> typeDef
 %type <vdef> variableDefinition
@@ -233,29 +233,36 @@
 {
                  AliasDef * adef;
                       Arg * ar;
-      std::vector<Arg * > * arL;
+      std::vector<std::unique_ptr<Arg>> 
+                          * arL;
 
                     Block * bl;
                        bool b;
 
             ConstraintDef * cd;
-std::vector<ConstraintDef * > * cds;
+std::vector<std::unique_ptr<ConstraintDef>> 
+                          * cds;
                    Column * col;
-    std::vector<Column *> * cols;
+    std::vector<std::unique_ptr<Column>> 
+                          * cols;
 
                      double dbl;
                Definition * dcl;
-std::vector<Definition *> * dclL;
+std::vector<std::unique_ptr<Definition>> 
+                          * dclL;
 
                EnumMember * en;
-std::vector<EnumMember *> * enL;
+std::vector<std::unique_ptr<EnumMember>> 
+                          * enL;
                      Expr * ex;
-      std::vector<Expr *> * exL;
+      std::vector<std::unique_ptr<Expr>> 
+                          * exL;
 
                    FunDef * fdef;
 
                GrammarDef * gd;
-std::vector<std::unique_ptr<GrammarDef>> * gds;
+std::vector<std::unique_ptr<GrammarDef>> 
+                          * gds;
                   GroupBy * gb;
 
                    Having * h;
@@ -271,7 +278,8 @@ std::vector<std::unique_ptr<GrammarDef>> * gds;
                RoutineDef * rdef;
 
                 Statement * st;
-std::vector<Statement * > * stL;
+std::vector<std::unique_ptr<Statement>> 
+                          * stL;
                        char str[1024];
 
                       Top * top;
@@ -379,12 +387,12 @@ args
 	| args ',' arg
 	{
 		$$ = $1;
-		$$->push_back($3);
+		$$->push_back(std::unique_ptr<Arg>($3));
 	}
 	| arg
 	{
-		$$ = new std::vector<Arg *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<Arg>>();
+		$$->push_back(std::unique_ptr<Arg>($1));
 	}
 	;
 
@@ -451,12 +459,12 @@ members
 	: members ',' member
 	{
 		$$ = $1;
-		$$->push_back($3);
+		$$->push_back(std::unique_ptr<EnumMember>($3));
 	}
 	| member
 	{
-		$$ = new std::vector<EnumMember *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<EnumMember>>();
+		$$->push_back(std::unique_ptr<EnumMember>($1));
 	}
 	;
 
@@ -475,12 +483,12 @@ definitions
 	: definitions definition
 	{
 		$$ = $1;
-		$$->push_back($2);
+		$$->push_back(std::unique_ptr<Definition>($2));
 	}
 	| definition
 	{
-		$$ = new std::vector<Definition *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<Definition>>();
+		$$->push_back(std::unique_ptr<Definition>($1));
 	}
 	;
 
@@ -607,12 +615,12 @@ statements
 	: statements statement
 	{
 		$$ = $1;
-		$$->push_back($2);
+		$$->push_back(std::unique_ptr<Statement>($2));
 	}
 	| statement
 	{
-		$$ = new std::vector<Statement *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<Statement>>();
+		$$->push_back(std::unique_ptr<Statement>($1));
 	}
 	;
 
@@ -967,12 +975,12 @@ colList
 	: colList ',' col
 	{
 		$$ = $1;
-		$$->push_back($3);
+		$$->push_back(std::unique_ptr<Column>($3));
 	}
 	| col
 	{
-		$$ = new std::vector<Column *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<Column>>();
+		$$->push_back(std::unique_ptr<Column>($1));
 	}
 	;
 
@@ -1061,11 +1069,13 @@ optHaving
 exprs
 	: exprs expr
 	{
-		$$ = static_cast<Expr *>(nullptr);
+		$$ = $1;
+		$$->push_back(std::unique_ptr<Expr>($2));
 	}
 	| expr
 	{
-		$$ = static_cast<Expr *>(nullptr);
+		$$ = new std::vector<std::unique_ptr<Expr>>();
+		$$->push_back(std::unique_ptr<Expr>($1));
 	}
 	;
 
@@ -1073,12 +1083,12 @@ exprList
 	: exprList ',' expr
 	{
 		$$ = $1;
-		$$->push_back($3);
+		$$->push_back(std::unique_ptr<Expr>($3));
 	}
 	| expr
 	{
-		$$ = new std::vector<Expr *>();
-		$$->push_back($1);
+		$$ = new std::vector<std::unique_ptr<Expr>>();
+		$$->push_back(std::unique_ptr<Expr>($1));
 	}
 	;
 
@@ -1115,49 +1125,63 @@ tokenDef
 	;
 
 ruleDef
-	: NAME ':' names ';'
+	: NAME ':' tokens ';'
 	{
-		$$ = NULL; // TODO
+		$$ = new RuleDef( $1, $3 );
 	}
 	| NAME ':' ';'
 	{
-		$$ = NULL; // TODO
+		$$ = new RuleDef( $1, nullptr );
 	}
 	;
 
-names
-	: names NAME
+tokens
+	: tokens NAME
 	{
-		$$ = NULL; // TODO
+		$$ = $1;
+		$$->push_back($2);
+	}
+	| tokens STRING_LIT
+	{
+		$$ = $1;
+		$$->push_back($2);
 	}
 	| NAME
 	{
-		$$ = NULL; // TODO
+		$$ = new std::vector<std::string>();
+		$$->push_back($1);
+	}
+	| STRING_LIT
+	{
+		$$ = new std::vector<std::string>();
+		$$->push_back($1);
 	}
 	;
 
 constraints
 	: CONSTRAINTS NAME '{' constraintDefs '}'
 	{
-		$$ = static_cast<Definition *>(nullptr); // TODO
+		$$ = new Constraints( 0, 0, $2, $4 );
 	}
 	;
 
 constraintDefs
 	: constraintDefs constraintDef
 	{
-		$$ = nullptr; // TODO
+		$$ = $1;
+		$$->push_back(std::unique_ptr<ConstraintDef>($2));
 	}
 	| constraintDef
 	{
-		$$ = nullptr; // TODO
+		$$ = new std::vector<std::unique_ptr<ConstraintDef>>();
+		$$->push_back(std::unique_ptr<ConstraintDef>($1));
 	}
 	;
 
 constraintDef
-	: NAME '(' args ')' IMPLES exprs
+	: NAME '(' nameList ')' IMPLES exprs
 	{
-		$$ = static_cast<ConstraintDef *>(nullptr); // TODO
+		$$ = new ConstraintDef( $1, $3, $6 );
 	}
 	;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <string>
 
 
@@ -38,14 +39,17 @@ public:
 class Block: public Statement
 {
 public:
-	Block( int s, int e, std::vector<Statement * > * sts = nullptr ):
+	Block( 
+		int s, 
+		int e, 
+		std::vector<std::unique_ptr<Statement>> * sts = nullptr ):
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	bool semCheck( SemCheckContext & ) const final;
 
 private:
-	std::vector<Statement *> * statements_;
+	std::vector<std::unique_ptr<Statement>> * statements_;
 };
 
 
@@ -88,7 +92,11 @@ class EnumMember;
 class EnumDef: public TypeDef
 {
 public:
-	EnumDef( int s, int e, const char * n, std::vector<EnumMember * > * moe = nullptr ):
+	EnumDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<std::unique_ptr<EnumMember>> * moe = nullptr ):
 		TypeDef(s,e), name_(n), moe_(moe) {}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -96,14 +104,17 @@ public:
 
 private:
 	std::string	name_;
-	std::vector<EnumMember * >	* moe_;
+	std::vector<std::unique_ptr<EnumMember>>	* moe_;
 };
 
 class ClassDef: public TypeDef
 {
 public:
-	ClassDef( int s, int e, const char * n, 
-		std::vector<Definition *> * mbrs = nullptr ):
+	ClassDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<std::unique_ptr<Definition>> * mbrs = nullptr ):
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -111,14 +122,17 @@ public:
 
 private:
 	std::string	name_;
-	std::vector<Definition * > * members_;
+	std::vector<std::unique_ptr<Definition>> * members_;
 };
 
 class TupleDef: public TypeDef
 {
 public:
-	TupleDef( int s, int e, const char * n, 
-		std::vector<Definition *> * mbrs = nullptr ):
+	TupleDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<std::unique_ptr<Definition>> * mbrs = nullptr ):
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -126,7 +140,7 @@ public:
 
 private:
 	std::string	name_;
-	std::vector<Definition * > * members_;
+	std::vector<std::unique_ptr<Definition>> * members_;
 };
 
 class VarDef: public Definition
@@ -156,8 +170,13 @@ private:
 class RoutineDef: public Definition
 {
 public:
-	RoutineDef( int s, int e, Type * t, const char * n, 
-		std::vector<Arg * > * args, Block * bl = nullptr ):Definition(s,e),
+	RoutineDef( 
+		int s, 
+		int e, 
+		Type * t, 
+		const char * n, 
+		std::vector<std::unique_ptr<Arg>> * args, 
+		Block * bl = nullptr ):Definition(s,e),
 		returnType_(t), name_(n), body_(bl) 
 	{
 	}
@@ -176,7 +195,12 @@ private:
 class FunDef: public Definition
 {
 public:
-	FunDef( int s, int e, const char * n, std::vector<Arg * > * args, Expr *ex):
+	FunDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<std::unique_ptr<Arg>> * args, 
+		Expr * ex):
 		Definition(s,e), name_(n), body_(ex) 
 	{
 	}
