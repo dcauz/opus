@@ -1110,7 +1110,7 @@ grammarDef
 tokenDef
 	: type NAME '=' STRING_LIT
 	{
-		$$ = NULL; // TODO
+		$$ = new TokenDef( $2, $4 );
 	}
 	;
 

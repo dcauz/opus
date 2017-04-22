@@ -1,3 +1,5 @@
+
+#include "opus.h"
 #include "string.h"
 
 StringType	stringType;
@@ -7,17 +9,17 @@ StringType	stringType;
 
 String::String( const char * s )
 {
-// TODO
+ TODO
 }
 
 bool String::genCode( GenCodeContext & gcc ) const
 {
-	// TODO
+ TODO
 	return false;
 }
 
 bool String::semCheck( SemCheckContext & scc ) const
 {
-	// TODO
+ TODO
 	return false;
 }

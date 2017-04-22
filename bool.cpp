@@ -1,3 +1,5 @@
+
+#include "opus.h"
 #include "bool.h"
 
 
@@ -7,12 +9,12 @@ BoolType	boolType;
 
 bool Bool::genCode( GenCodeContext & gcc ) const
 {
-// TODO
+	TODO
 	return false;
 }
 
 bool Bool::semCheck( SemCheckContext & scc ) const
 {
-// TODO
+	TODO
 	return false;
 }

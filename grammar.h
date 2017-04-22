@@ -16,8 +16,12 @@ public:
 class TokenDef: public GrammarDef
 {
 public:
+	TokenDef( const char * n, const char * v):name_(n), value_(v) {}
 	~TokenDef() override {}
 
+private:
+	std::string name_;
+	std::string value_;
 };
 
 class RuleDef: public GrammarDef

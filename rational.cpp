@@ -1,4 +1,7 @@
+
+#include "opus.h"
 #include "rational.h"
+
 
 RationalType	rationalType;
 
@@ -9,17 +12,17 @@ Rational::Rational()
 
 Rational::Rational( const char * r)
 {
-	// TODO
+	TODO
 }
 
 bool Rational::genCode( GenCodeContext & gcc ) const
 {
-// TODO
+TODO
 	return false;
 }
 
 bool Rational::semCheck( SemCheckContext & scc ) const
 {
-// TODO
+TODO
 	return false;
 }

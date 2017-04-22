@@ -1,36 +1,39 @@
+
+#include "opus.h"
 #include "integer.h"
+
 
 IntegerType	integerType;
 
 
 IntegerType::IntegerType()
 {
-// TODO
+	TODO
 }
 
 ////////////////////////////////////////////
 
 Integer::Integer()
 {
-// TODO
+	TODO
 }
 
 Integer::Integer(int)
 {
-// TODO
+	TODO
 }
 
 Integer::Integer(const char *)
 {
-// TODO
+	TODO
 }
 
 bool Integer::genCode( GenCodeContext & gcc ) const
 {
-// TODO
+	TODO
 }
 
 bool Integer::semCheck( SemCheckContext & scc ) const
 {
-// TODO
+	TODO
 }

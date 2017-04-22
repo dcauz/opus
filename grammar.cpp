@@ -1,14 +1,16 @@
+
+#include "opus.h"
 #include "grammar.h"
 
 
 bool Grammar::genCode( GenCodeContext & gcc ) const
 {
-	// TODO
+	TODO
 	return false;
 }
 
 bool Grammar::semCheck( SemCheckContext & gcc ) const
 {
-	// TODO
+	TODO
 	return false;
 }

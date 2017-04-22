@@ -1,3 +1,5 @@
+
+#include "opus.h"
 #include "real.h"
 
 RealType	realType;
@@ -7,15 +9,15 @@ RealType	realType;
 
 Real::Real()
 {
-// TODO
+ TODO
 }
 
 bool Real::genCode( GenCodeContext & gcc ) const
 {
-// TODO
+ TODO
 }
 
 bool Real::semCheck( SemCheckContext & scc ) const
 {
-// TODO
+ TODO
 }

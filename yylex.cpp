@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 
+#include "opus.h"
 #include "yylex.h"
 
 
@@ -133,7 +134,7 @@ bool isLong( YYLTYPE * llocp, LexContext * context, long & l )
 
 bool isInteger( YYLTYPE * llocp, LexContext * context, const char * i )
 {
-// TODO
+ TODO
 	return false;
 }
 
