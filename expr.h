@@ -275,33 +275,6 @@ public:
 	bool semCheck( SemCheckContext & scc ) const final;
 };
 
-class LorAssign: public Binary
-{
-public:
-	LorAssign( Expr * l, Expr * r ):Binary(l,r) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-};
-
-class LandAssign: public Binary
-{
-public:
-	LandAssign( Expr * l, Expr * r ):Binary(l,r) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-};
-
-class Lor: public Binary
-{
-public:
-	Lor( Expr * l, Expr * r ):Binary(l,r) {}
-
-	bool genCode( GenCodeContext & gcc ) const final;
-	bool semCheck( SemCheckContext & scc ) const final;
-};
-
 class Or: public Binary
 {
 public:
@@ -320,19 +293,28 @@ public:
 	bool semCheck( SemCheckContext & scc ) const final;
 };
 
-class Land: public Binary
+class And: public Binary
 {
 public:
-	Land( Expr * l, Expr * r ):Binary(l,r) {}
+	And( Expr * l, Expr * r ):Binary(l,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	bool semCheck( SemCheckContext & scc ) const final;
 };
 
-class And: public Binary
+class Union: public Binary
 {
 public:
-	And( Expr * l, Expr * r ):Binary(l,r) {}
+	Union( Expr * l, Expr * r ):Binary(l,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	bool semCheck( SemCheckContext & scc ) const final;
+};
+
+class Intersect: public Binary
+{
+public:
+	Intersect( Expr * l, Expr * r ):Binary(l,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	bool semCheck( SemCheckContext & scc ) const final;
@@ -454,6 +436,27 @@ class OuterJoin: public Trinary
 {
 public:
 	OuterJoin( Expr * l, Expr * r, Expr * c ):Trinary( l,r,c) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	bool semCheck( SemCheckContext & scc ) const final;
+};
+
+class Top
+{
+public:
+
+};
+
+class Column
+{
+public:
+
+};
+
+class SelectEx: public Expr
+{
+public:
+	SelectEx( int, Top *, std::vector<Column *> *, std::vector<std::string> *, Expr *, Expr *, Expr * );
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	bool semCheck( SemCheckContext & scc ) const final;

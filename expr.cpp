@@ -2,6 +2,25 @@
 #include "opus.h"
 
 
+SelectEx::SelectEx( 
+	int, 
+	Top *, 
+	std::vector<Column *> *, 
+	std::vector<std::string> *, 
+	Expr *, 
+	Expr *, 
+	Expr * )
+{
+}
+
+////////////////////////////////////////////////////////
+
+bool SelectEx::semCheck( SemCheckContext & scc ) const 
+{
+	TODO
+	return false;
+}
+
 bool FuncCall::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
@@ -140,19 +159,13 @@ bool XorAssign::semCheck( SemCheckContext & scc ) const
 	return false;
 }
 
-bool LorAssign::semCheck( SemCheckContext & scc ) const 
+bool Union::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
 	return false;
 }
 
-bool LandAssign::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool Lor::semCheck( SemCheckContext & scc ) const 
+bool Intersect::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
 	return false;
@@ -165,12 +178,6 @@ bool Or::semCheck( SemCheckContext & scc ) const
 }
 
 bool Xor::semCheck( SemCheckContext & scc ) const 
-{
-	TODO
-	return false;
-}
-
-bool Land::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
 	return false;
@@ -267,6 +274,12 @@ bool IsVoid::semCheck( SemCheckContext & scc ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////
+
+bool SelectEx::genCode( GenCodeContext & gcc ) const 
+{
+	TODO
+	return false;
+}
 
 bool FuncCall::genCode( GenCodeContext & gcc ) const 
 {
@@ -406,19 +419,13 @@ bool XorAssign::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool LorAssign::genCode( GenCodeContext & gcc ) const 
+bool Union::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;
 }
 
-bool LandAssign::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool Lor::genCode( GenCodeContext & gcc ) const 
+bool Intersect::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;
@@ -431,12 +438,6 @@ bool Or::genCode( GenCodeContext & gcc ) const
 }
 
 bool Xor::genCode( GenCodeContext & gcc ) const 
-{
-	TODO
-	return false;
-}
-
-bool Land::genCode( GenCodeContext & gcc ) const 
 {
 	TODO
 	return false;

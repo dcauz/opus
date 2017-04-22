@@ -175,7 +175,8 @@
 %type <ar>   arg
 %type <arL>  args
 %type <bl>   body
-%type <ex>   col
+%type <col>  col
+%type <cols> colList
 %type <cd>   constraintDef
 %type <cds>  constraintDefs
 %type <dcl>  constraints
@@ -237,6 +238,8 @@
 
             ConstraintDef * cd;
 std::vector<ConstraintDef * > * cds;
+                   Column * col;
+    std::vector<Column *> * cols;
 
                      double dbl;
                Definition * dcl;
@@ -932,17 +935,23 @@ expr
 	}
 	| expr UNION expr
 	{
+		$$ = new Union( $1, $3 );
 	}
 	| expr INTERSECT expr
 	{
+		$$ = new Intersect( $1, $3 );
 	}
 	| expr '?' expr ':' expr
 	{
 		$$ = new Conditional( $1, $3, $5 );
 	}
-	| SELECT optDistinct optTop colList FROM nameList optWhere optGroupBy optHaving
+	| SELECT optDistinct optTop colList FROM 
+		nameList 
+		optWhere 
+		optGroupBy 
+		optHaving
 	{
-		$$ = NULL;
+		$$ = new SelectEx( $2, $3, $4, $6, $7, $8, $9 );
 	}
 	;
 
@@ -950,26 +959,28 @@ expr
 colList
 	: colList ',' col
 	{
-		// TODO
+		$$ = $1;
+		$$->push_back($3);
 	}
 	| col
 	{
-		// TODO
+		$$ = new std::vector<Column *>();
+		$$->push_back($1);
 	}
 	;
 
 col
 	: '*'
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	| expr
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	| expr AS NAME
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	;
 
@@ -1010,33 +1021,33 @@ optTop
 optWhere 
 	: /* NULL */
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	| WHERE expr
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	;
 
 optGroupBy 
 	: /* NULL */
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	| GROUP BY expr
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	;
 
 optHaving
 	: /* NULL */
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	| HAVING expr
 	{
-		$$ = NULL;
+		$$ = NULL; // TODO
 	}
 	;
 
