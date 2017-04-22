@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include <vector>
 
 
@@ -444,20 +445,73 @@ public:
 class Top
 {
 public:
+	Top( Expr * e, bool percent = false, bool ties = false ):
+		expr_(e), percent_(percent), ties_(ties)
+	{}
 
+private:
+	std::unique_ptr<Expr> expr_;
+	bool	percent_;
+	bool	ties_;
 };
 
 class Column
 {
 public:
+	Column( Expr * e = nullptr, const char * n = nullptr )
+	{
+		if(e)
+			expr_.reset(e);
+		if(n)
+			name_ = n;
+	}
 
+private:
+	std::unique_ptr<Expr> expr_;
+	std::string name_;
+};
+
+class Where
+{
+public:
+	Where( Expr * e ):expr_(e) {}
+
+private:
+	std::unique_ptr<Expr> expr_;
+};
+
+class GroupBy
+{
+public:
+	GroupBy( Expr * e ):expr_(e) {}
+
+private:
+	std::unique_ptr<Expr> expr_;
+};
+
+class Having
+{
+public:
+	Having( Expr * e ):expr_(e) {}
+
+private:
+	std::unique_ptr<Expr> expr_;
 };
 
 class SelectEx: public Expr
 {
 public:
-	SelectEx( int, Top *, std::vector<Column *> *, std::vector<std::string> *, Expr *, Expr *, Expr * );
+	SelectEx( 
+		int dist, 
+		Top * top, 
+		std::vector<Column *> * cols, 
+		std::vector<std::string> * tables, 
+		Where   * where, 
+		GroupBy * groupBy, 
+		Having  * having );
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	bool semCheck( SemCheckContext & scc ) const final;
+
+private:
 };

@@ -4,12 +4,12 @@
 
 SelectEx::SelectEx( 
 	int, 
-	Top *, 
-	std::vector<Column *> *, 
-	std::vector<std::string> *, 
-	Expr *, 
-	Expr *, 
-	Expr * )
+	Top * top, 
+	std::vector<Column *> * cols, 
+	std::vector<std::string> * tbls, 
+	Where * w, 
+	GroupBy * gb, 
+	Having * h )
 {
 }
 

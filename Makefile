@@ -7,6 +7,7 @@ gencodecontext.cpp \
 html.cpp \
 html_lex_context.cpp \
 il.cpp \
+grammar.cpp \
 main.cpp \
 nodes.cpp \
 opl.cpp \

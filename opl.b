@@ -1,5 +1,7 @@
 %{
 
+#include <memory>
+
 #include "yyerror.h"
 #include "yylex.h"
 #include "parse_context.h"
@@ -192,8 +194,8 @@
 %type <dcl>  grammar
 %type <gd>   grammarDef
 %type <gds>  grammarDefs
-%type <ex>   optGroupBy
-%type <ex>   optHaving
+%type <gb>   optGroupBy
+%type <h>    optHaving
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
@@ -208,7 +210,7 @@
 %type <tdef> typeDef
 %type <vdef> variableDefinition
 %type <dcl>  variables
-%type <ex>   optWhere
+%type <w>    optWhere
 
 
 %expect 101
@@ -253,7 +255,10 @@ std::vector<EnumMember *> * enL;
                    FunDef * fdef;
 
                GrammarDef * gd;
-std::vector<GrammarDef *> * gds;
+std::vector<std::unique_ptr<GrammarDef>> * gds;
+                  GroupBy * gb;
+
+                   Having * h;
 
                        char i[1024];
                         int i32;
@@ -277,6 +282,8 @@ std::vector<Statement * > * stL;
               unsigned long u64;
 
                    VarDef * vdef;
+
+                    Where * w;
 }
 
 %%
@@ -972,15 +979,15 @@ colList
 col
 	: '*'
 	{
-		$$ = NULL; // TODO
+		$$ = new Column();
 	}
 	| expr
 	{
-		$$ = NULL; // TODO
+		$$ = new Column( $1 );
 	}
 	| expr AS NAME
 	{
-		$$ = NULL; // TODO
+		$$ = new Column( $1, $3 );
 	}
 	;
 
@@ -998,56 +1005,56 @@ optDistinct
 optTop
 	: /* NULL */
 	{
-		$$ = nullptr; // TODO
+		$$ = nullptr;
 	}
 	| TOP expr
 	{
-		$$ = nullptr; // TODO
+		$$ = new Top( $2 );
 	}
 	| TOP expr PERCENT
 	{
-		$$ = nullptr; // TODO
+		$$ = new Top( $2, true );
 	}
 	| TOP expr WITH TIES
 	{
-		$$ = nullptr; // TODO
+		$$ = new Top( $2, false, true );
 	}
 	| TOP expr PERCENT WITH TIES
 	{
-		$$ = nullptr; // TODO
+		$$ = new Top( $2, true, true );
 	}
 	;
 
 optWhere 
 	: /* NULL */
 	{
-		$$ = NULL; // TODO
+		$$ = nullptr;
 	}
 	| WHERE expr
 	{
-		$$ = NULL; // TODO
+		$$ = new Where($2);
 	}
 	;
 
 optGroupBy 
 	: /* NULL */
 	{
-		$$ = NULL; // TODO
+		$$ = nullptr;
 	}
 	| GROUP BY expr
 	{
-		$$ = NULL; // TODO
+		$$ = new GroupBy($3);
 	}
 	;
 
 optHaving
 	: /* NULL */
 	{
-		$$ = NULL; // TODO
+		$$ = nullptr;
 	}
 	| HAVING expr
 	{
-		$$ = NULL; // TODO
+		$$ = new Having($2);
 	}
 	;
 
@@ -1078,18 +1085,20 @@ exprList
 grammar
 	: GRAMMAR NAME '{' grammarDefs '}'
 	{
-		$$ = static_cast<Definition *>(nullptr); // TODO
+		$$ = new Grammar( $2, $4 );
 	}
 	;
 
 grammarDefs
 	: grammarDefs grammarDef
 	{
-		$$ = NULL; // TODO
+		$$ = $1;
+		$$->push_back(std::unique_ptr<GrammarDef>($2));
 	}
 	| grammarDef
 	{
-		$$ = NULL; // TODO
+		$$ = new std::vector<std::unique_ptr<GrammarDef>>();
+		$$->push_back(std::unique_ptr<GrammarDef>($1));
 	}
 	;
 
