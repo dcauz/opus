@@ -5,6 +5,19 @@
 #include "il.h"
 
 
+Variables::Variables( std::vector<std::string> * ):Definition(0,0)
+{
+	TODO
+}
+
+/////////////////////////////////////////////////////////////////
+
+bool Variables::semCheck( SemCheckContext & scc ) const
+{
+	TODO
+	return false;
+}
+
 bool Empty::semCheck( SemCheckContext & scc ) const 
 {
 	TODO
@@ -114,6 +127,12 @@ bool FunDef::semCheck( SemCheckContext & scc ) const
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool Variables::genCode( GenCodeContext & gcc ) const
+{
+	TODO
+	return false;
+}
 
 bool Empty::genCode( GenCodeContext & gcc ) const 
 {

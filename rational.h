@@ -8,6 +8,7 @@ class Rational: public Value
 {
 public:
 	Rational();
+	Rational( const char *);
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	bool semCheck( SemCheckContext & scc ) const override;

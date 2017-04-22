@@ -15,43 +15,75 @@ struct Keyword
 {
 	int id;
 	const char * lexium;
+	bool select;
 };
 
 Keyword keywords[] =
 {
-	{ ALIAS,    "alias" },
-
-	{ BOOL,     "bool" },
-	{ BREAK,    "break" },
-
-	{ CASE,     "case" },
-	{ CONTINUE, "continue" },
-
-	{ DEFAULT,  "default" },
-	{ DEQUEUE,  "dequeue" },
-
-	{ ELSE,     "else" },
-
-	{ FALSE,    "false" },
-    { FLOAT,    "float" }, 
-	{ FOR,      "for" },
-
-	{ IF,       "if" },
-
-	{ PQUEUE,	"pqueue" },
-
-	{ QUEUE,    "queue" },
-
-    { RETURN,   "return" },
-
-	{ SET,      "set" },
-	{ STACK,    "stack" },
-	{ STRING,   "string" },
-	{ SWITCH,   "switch" },
-
-	{ TRUE,     "true" },
-
-	{ VECTOR,   "vector" },
+	{ ALIAS,       "alias",       false },
+	{ AS,          "as",          true },
+	{ BOOL,        "bool",        false },
+	{ BREAK,       "break",       false },
+	{ BY,          "by",          true },
+	{ C,           "C",           false },
+	{ CASE,        "case",        false },
+	{ CLASS,       "class",       false },
+	{ CONSTRAINTS, "constraints", false },
+	{ CONTINUE,    "continue",    false },
+	{ DEFAULT,     "default",     false },
+	{ DEQUEUE,     "dequeue",     false },
+	{ DISTINCT,    "distinct",    true },
+	{ DYNAMIC,     "dynamic" ,    false },
+	{ _E,          "e",           false },
+	{ ELSE,        "else",        false },
+	{ ENUM,        "enum",        false },
+	{ FALSE,       "false",       false },
+	{ FLOAT,       "float",       false },
+	{ FOR,         "for",         false },
+	{ FROM,        "from",        true },
+	{ FUN,         "fun",         false },
+	{ GRAMMAR,     "grammar",     false },
+	{ GROUP,       "group",       true },
+	{ HAVING,      "having",      true },
+	{ I,           "i",           false },
+	{ IF,          "if",          false },
+	{ INTERSECT,   "intersect",   false },
+	{ ISNULL,      "isnull",      false },
+	{ JOIN,        "join",        true },
+	{ LEFT,        "left",        true },
+	{ MATRIX,      "matrix",      false },
+	{ MULTISET,    "multiset" ,   false },
+	{ N,           "N",           false },
+	{ NAME,        "name" ,       false },
+	{ _NULL,       "null" ,       false },
+	{ OBJECT,      "object" ,     false },
+	{ OUTER,       "outer" ,      true },
+	{ ORDER,       "order" ,      true },
+	{ PERCENT,     "percent" ,    true },
+	{ _PI,         "pi" ,         false },
+	{ PQUEUE,      "pqueue" ,     false },
+	{ Q,           "Q" ,          false },
+	{ QUEUE,       "queue" ,      false },
+	{ R,           "R" ,          false },
+	{ RETURN,      "return" ,     false },
+	{ RIGHT,       "right" ,      true },
+	{ SELECT,      "select" ,     false },
+	{ SET,         "set" ,        false },
+	{ STACK,       "stack" ,      false },
+	{ STRING,      "string" ,     false },
+	{ SWITCH,      "switch" ,     false },
+	{ TENSOR,      "tensor" ,     false },
+	{ TIES,        "ties" ,       true },
+	{ TOP,         "top" ,        true },
+	{ TRUE,        "true" ,       false },
+	{ TUPLE,       "tuple" ,      false },
+	{ UNION,       "union" ,      false },
+	{ VAR,         "var" ,        false },
+	{ VECTOR,      "vector" ,     false },
+	{ VOID,        "void" ,       false },
+	{ WHERE,       "where",       true },
+	{ WITH,        "with",        true },
+	{ Z,           "Z",           false },
 };
 
 
@@ -67,28 +99,6 @@ bool isInt( YYLTYPE * llocp, LexContext * context, int & i )
 		if( i > ( std::numeric_limits<int>::max() - d )/10)
 			return false;
 		i = i*10 + d;
-		++cp;
-	}
-	
-	bool ans = !isalpha(*cp);
-	if(ans)
-		context->cp = cp;
-
-	return ans;
-}
-
-bool isUnsigned( YYLTYPE * llocp, LexContext * context, unsigned int & ui )
-{
-	char * start = context->cp;
-	char * cp = start;
-
-	ui = 0;
-	while(*cp && isdigit(*cp))
-	{
-		int d = *cp - '0';
-		if( ui > ( std::numeric_limits<unsigned int>::max() - d )/10)
-			return false;
-		ui = ui*10 + d;
 		++cp;
 	}
 	
@@ -121,26 +131,10 @@ bool isLong( YYLTYPE * llocp, LexContext * context, long & l )
 	return ans;
 }
 
-bool isUnsignedLong( YYLTYPE * llocp, LexContext * context, unsigned long & ul )
+bool isInteger( YYLTYPE * llocp, LexContext * context, const char * i )
 {
-	char * start = context->cp;
-	char * cp = start;
-
-	ul = 0;
-	while(*cp && isdigit(*cp))
-	{
-		int d = *cp - '0';
-		if( ul > ( std::numeric_limits<unsigned long>::max() - d )/10)
-			return false;
-		ul = ul*10 + d;
-		++cp;
-	}
-	
-	bool ans = !isalpha(*cp);
-	if(ans)
-		context->cp = cp;
-
-	return ans;
+// TODO
+	return false;
 }
 
 // double_lit = d+(f|m)
@@ -283,17 +277,11 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 			if( isInt( llocp, context, lvalp->i32 ) )
 				return INT_LIT;
 	
-			if( isUnsigned( llocp, context, lvalp->u32 ) )
-				return UNSIGNED_LIT;
-	
 			if( isLong( llocp, context, lvalp->i64 ) )
 				return LONG_LIT;
 	
-			if( isUnsignedLong( llocp, context, lvalp->u64 ) )
-				return LONG_LIT;
-	
 			if( isDouble( llocp, context, lvalp->dbl ) )
-				return DOUBLE_LIT;
+				return FLOAT_LIT;
 	
 			int loc = 0;
 			do
@@ -346,7 +334,7 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 	
 			return NAME;
 		}
-		//  RAW_STRING_LIT 
+		//  Raw string literal
 		else if( c == '\'' )
 		{
 			bool escaped = false;
@@ -376,7 +364,7 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 				else if( c == '\'' )
 				{
 					lvalp->str[loc] = 0;
-					return RAW_STRING_LIT;
+					return STRING_LIT;
 				}
 				else
 					lvalp->str[loc++] = c;
@@ -416,7 +404,7 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 				else if( c == '"' )
 				{
 					lvalp->str[loc] = 0;
-					return RAW_STRING_LIT;
+					return STRING_LIT;
 				}
 				else
 					lvalp->str[loc++] = c;

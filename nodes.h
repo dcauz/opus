@@ -711,6 +711,11 @@ public:
 	virtual bool verify( Node * parent ) const;
 };
 
+class Top
+{
+public:
+};
+
 class Select:public Node
 {
 public:

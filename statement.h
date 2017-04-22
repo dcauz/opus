@@ -68,6 +68,15 @@ public:
 
 };
 
+class Variables: public Definition
+{
+public:
+	Variables( std::vector<std::string> * );
+
+	bool genCode( GenCodeContext & ) const final;
+	bool semCheck( SemCheckContext & ) const final;
+};
+
 class TypeDef: public Definition
 {
 public:
