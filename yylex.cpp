@@ -102,7 +102,7 @@ Keyword keywords[] =
 	{ UNION,       "union" ,      false },
 	{ UNIQUE,      "unique",      false },
 
-	{ VAR,         "var" ,        false },
+	{ IND,         "ind" ,        false },
 	{ VECTOR,      "vector" ,     false },
 	{ VOID,        "void" ,       false },
 

@@ -29,6 +29,8 @@ public:
 		return !(a==b);
 	}
 
+private:
+	std::string value_;
 };
 
 class StringType: public Type

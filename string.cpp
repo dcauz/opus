@@ -7,9 +7,8 @@ StringType	stringType;
 ///////////////////////////////////
 
 
-String::String( const char * s )
+String::String( const char * s ):value_(s)
 {
- TODO
 }
 
 bool String::genCode( GenCodeContext & gcc ) const

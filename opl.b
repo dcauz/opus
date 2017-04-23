@@ -130,7 +130,7 @@
 %token UNION				"union"
 %token UNIQUE				"unique"
 
-%token VAR					"var"
+%token IND					"ind"
 %token VECTOR				"vector"
 %token VOID					"void"
 
@@ -212,9 +212,10 @@
 %type <gd>	 tokenDef
 %type <nL>   tokens
 %type <ty>   type
+%type <ty>   typeDecl
 %type <tdef> typeDef
 %type <vdef> variableDefinition
-%type <dcl>  variables
+%type <dcl>  indeterminate
 %type <w>    optWhere
 
 
@@ -321,7 +322,7 @@ definition
 	{
 		$$ = $1;
 	}
-	| variables
+	| indeterminate
 	{
 		$$ = $1;
 	}
@@ -365,8 +366,8 @@ function
 	}
 	;
 
-variables
-	: VAR nameList
+indeterminate
+	: IND nameList
 	{
 		$$ = new Variables( context->start, context->end, $2 );
 	}
@@ -559,6 +560,17 @@ definitions
 	;
 
 type
+	: typeDecl '?'
+	{
+		$$ = new Nullable( $1 );
+	}
+	| typeDecl
+	{
+		$$ = $1;
+	}
+	;
+
+typeDecl
 	: NAME
 	{
 		$$ = context->symtbl.findType($1);
@@ -1004,19 +1016,19 @@ expr
 	}
 	| expr JOIN expr 
 	{
-		$$ = new Join( $1, $3, NULL );
+		$$ = new Join( $1, $3, nullptr );
 	}
 	| expr LEFT JOIN expr 
 	{
-		$$ = new LeftJoin( $1, $4, NULL );
+		$$ = new LeftJoin( $1, $4, nullptr );
 	}
 	| expr RIGHT JOIN expr 
 	{
-		$$ = new RightJoin( $1, $4, NULL );
+		$$ = new RightJoin( $1, $4, nullptr );
 	}
 	| expr OUTER JOIN expr
 	{
-		$$ = new OuterJoin( $1, $4, NULL );
+		$$ = new OuterJoin( $1, $4, nullptr );
 	}
 	| expr UNION expr
 	{
@@ -1070,7 +1082,7 @@ col
 	;
 
 optDistinct
-	: /* NULL */
+	:
 	{
 		$$ = 0;
 	}
@@ -1081,7 +1093,7 @@ optDistinct
 	;
 
 optTop
-	: /* NULL */
+	:
 	{
 		$$ = nullptr;
 	}
@@ -1104,7 +1116,7 @@ optTop
 	;
 
 optWhere 
-	: /* NULL */
+	:
 	{
 		$$ = nullptr;
 	}
@@ -1115,7 +1127,7 @@ optWhere
 	;
 
 optGroupBy 
-	: /* NULL */
+	:
 	{
 		$$ = nullptr;
 	}
@@ -1126,7 +1138,7 @@ optGroupBy
 	;
 
 optHaving
-	: /* NULL */
+	:
 	{
 		$$ = nullptr;
 	}

@@ -1,5 +1,7 @@
+
+
 TARGETS := \
-opus
+bin/opus.exe
 
 SRC := \
 bool.cpp \
@@ -56,9 +58,9 @@ clean:
 	rm -f  opl.output opl.cpp opl.hpp
 
 clobber: clean
-	rm -f opus.exe
+	rm -f bin/opus.exe
 
-opus: $(OBJS)
+bin/opus.exe: $(OBJS) | bin
 	g++ -std=c++11 -o $@ $(OBJS)
 
 ########################################
@@ -82,13 +84,13 @@ obj/%.o: %.cpp .deps/%.d | obj
 	g++ -std=c++11 -c -MMD -MP -MF .deps/$*.Td -o obj/$*.o $<
 	mv -f .deps/$*.Td $@
 
-obj .deps:
+obj bin .deps:
 	mkdir $@
 
 
 .PHONY: test
 
-test: opus
+test: bin/opus.exe
 	cd test; make
 
 ifneq ($(MAKECMDGOALS), clobber)
