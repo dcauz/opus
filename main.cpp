@@ -27,7 +27,8 @@ int main( int c, char * a [] )
 			ParseContext	pc(a[1]);
 
 			pc.fh = fopen( a[1], "r" );
-			pc.lookahead = -1;
+			pc.lookahead[0] = -1;
+			pc.lookahead[1] = -1;
 			pc.cp = NULL;
 
 			int rc = opusparse( &pc );

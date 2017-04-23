@@ -23,70 +23,130 @@ Keyword keywords[] =
 {
 	{ ALIAS,       "alias",       false },
 	{ AS,          "as",          true },
+	{ ATOMIC,      "atomic",      false },
+
 	{ BOOL,        "bool",        false },
 	{ BREAK,       "break",       false },
 	{ BY,          "by",          true },
+
 	{ C,           "C",           false },
 	{ CASE,        "case",        false },
 	{ CLASS,       "class",       false },
 	{ CONSTRAINTS, "constraints", false },
 	{ CONTINUE,    "continue",    false },
+
 	{ DEFAULT,     "default",     false },
 	{ DEQUEUE,     "dequeue",     false },
 	{ DISTINCT,    "distinct",    true },
 	{ DYNAMIC,     "dynamic" ,    false },
+
 	{ _E,          "e",           false },
 	{ ELSE,        "else",        false },
 	{ ENUM,        "enum",        false },
+
 	{ FALSE,       "false",       false },
 	{ FLOAT,       "float",       false },
 	{ FOR,         "for",         false },
 	{ FROM,        "from",        true },
 	{ FUN,         "fun",         false },
+
 	{ GRAMMAR,     "grammar",     false },
 	{ GROUP,       "group",       true },
+
 	{ HAVING,      "having",      true },
+
 	{ I,           "i",           false },
 	{ IF,          "if",          false },
 	{ INTERSECT,   "intersect",   false },
 	{ ISNULL,      "isnull",      false },
+
 	{ JOIN,        "join",        true },
+
 	{ LEFT,        "left",        true },
+
 	{ MATRIX,      "matrix",      false },
 	{ MULTISET,    "multiset" ,   false },
+
 	{ N,           "N",           false },
 	{ NAME,        "name" ,       false },
 	{ _NULL,       "null" ,       false },
+
 	{ OBJECT,      "object" ,     false },
 	{ OUTER,       "outer" ,      true },
 	{ ORDER,       "order" ,      true },
+
 	{ PERCENT,     "percent" ,    true },
 	{ _PI,         "pi" ,         false },
 	{ PQUEUE,      "pqueue" ,     false },
+
 	{ Q,           "Q" ,          false },
 	{ QUEUE,       "queue" ,      false },
+
 	{ R,           "R" ,          false },
 	{ RETURN,      "return" ,     false },
 	{ RIGHT,       "right" ,      true },
+
 	{ SELECT,      "select" ,     false },
 	{ SET,         "set" ,        false },
+	{ SHARED,      "shared",      false },
 	{ STACK,       "stack" ,      false },
 	{ STRING,      "string" ,     false },
 	{ SWITCH,      "switch" ,     false },
+
 	{ TENSOR,      "tensor" ,     false },
 	{ TIES,        "ties" ,       true },
 	{ TOP,         "top" ,        true },
 	{ TRUE,        "true" ,       false },
 	{ TUPLE,       "tuple" ,      false },
+
 	{ UNION,       "union" ,      false },
+	{ UNIQUE,      "unique",      false },
+
 	{ VAR,         "var" ,        false },
 	{ VECTOR,      "vector" ,     false },
 	{ VOID,        "void" ,       false },
+
+	{ WEAK,        "weak",        false },
 	{ WHERE,       "where",       true },
 	{ WITH,        "with",        true },
+
 	{ Z,           "Z",           false },
 };
 
+bool isInteger( 
+	   YYLTYPE * llocp, 
+	LexContext * context, 
+	const char * & s, 
+	const char * & e )
+{
+	s = context->cp;
+	e = context->cp+1;
+
+	while( *e && isdigit(*e) )
+		++e;
+
+	return !isalpha(*e) && *e != '_';
+}
+
+bool isRational( 
+	   YYLTYPE * llocp, 
+	LexContext * context, 
+	const char * & s, 
+	const char * & e )
+{
+	s = context->cp;
+	e = context->cp+1;
+
+	int dots = 0;
+	while( *e && isdigit(*e) && *e == '.' )
+	{
+		if( *e == '.' )
+			++dots;
+		++e;
+	}
+
+	return !isalpha(*e) && *e != '_' && dots == 1;
+}
 
 bool isInt( YYLTYPE * llocp, LexContext * context, int & i )
 {
@@ -110,7 +170,7 @@ bool isInt( YYLTYPE * llocp, LexContext * context, int & i )
 	return ans;
 }
 
-bool isLong( YYLTYPE * llocp, LexContext * context, long & l )
+bool isLong( YYLTYPE * llocp, LexContext * context, int64_t & l )
 {
 	char * start = context->cp;
 	char * cp = start;
@@ -130,12 +190,6 @@ bool isLong( YYLTYPE * llocp, LexContext * context, long & l )
 		context->cp = cp;
 
 	return ans;
-}
-
-bool isInteger( YYLTYPE * llocp, LexContext * context, const char * i )
-{
- TODO
-	return false;
 }
 
 // double_lit = d+(f|m)
@@ -173,11 +227,17 @@ return r; \
 
 int nextChar( YYLTYPE * llocp, LexContext * context )
 {
-	if( context->lookahead >= 0 )
+	if( context->lookahead[0] >= 0 )
 	{
-		int ans = context->lookahead;
+		int ans = context->lookahead[0];
 
-		context->lookahead = -1;
+		if( context->lookahead[1] >= 0 )
+		{
+			context->lookahead[0] = context->lookahead[1];
+			context->lookahead[1] = -1;
+		}
+		else
+			context->lookahead[0] = -1;
 
 		RET_CHAR(ans);
 	}	
@@ -233,7 +293,6 @@ bool escapeChar( char c, char & out )
 	case 'v':
 		out = 0x0b;	// vertical tab
 		break;
-		break;
 	}
 
 	return true;
@@ -253,26 +312,216 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 	{
 		switch(c)
 		{
-		case '+':
-		case '-':
-		case '*':
-		case '/':
-		case '%':
-		case '=':
-		case '(':
+		case ';': case ',': case '?':
 		case ')':
-		case ';':
-		case ',':
-		case '{':
-		case '}':
-		case '<':
-		case '>':
-		case ':':
+		case '{': case '}':
+		case '[': case ']':
 			return c;
 		}
-		
-		//  FLOAT_LIT 
-		//  INT_LIT 
+
+		switch(c)
+		{
+		case '!':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return NE;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '%':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return m_ASS;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '&':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return A_ASS;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '(':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '*')
+			{
+				char n2 = nextChar(llocp, context );
+				if( n2 == ')' )
+				{
+					return M_MULT;
+				}
+				else
+				{
+					
+					context->lookahead[0] = n;
+					context->lookahead[1] = n2;
+					return c;
+				}
+			}
+			else if( n == '/' )
+			{
+				char n2 = nextChar(llocp, context );
+				if( n2 == ')' )
+				{
+					return M_DIV;
+				}
+				else
+				{
+					
+					context->lookahead[0] = n;
+					context->lookahead[1] = n2;
+					return c;
+				}
+			}
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '*':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return M_ASS;
+			else if( n == '*' )
+				return POW;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '+':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return P_ASS;
+			else if( n == '+' )
+				return INC;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '-':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return S_ASS;
+			else if( n == '-' )
+				return DEC;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '/':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return D_ASS;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '.':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '.')
+				return DOT_DOT;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '=':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return EQ;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case ':':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '-')
+				return IMPLES;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '<':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return LE;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '>':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return GE;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '^':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return X_ASS;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		case '|':
+		{
+			char n = nextChar( llocp, context );
+			if( n == '=')
+				return O_ASS;
+			else
+			{
+				context->lookahead[0] = c;
+				return c;
+			}
+		}
+		}
+
 		if( isdigit(c))
 		{
 			if( isInt( llocp, context, lvalp->i32 ) )
@@ -284,6 +533,23 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 			if( isDouble( llocp, context, lvalp->dbl ) )
 				return FLOAT_LIT;
 	
+			const char * s, * e;
+			if( isInteger( llocp, context, s, e ))
+			{
+				lvalp->i = new char [ e-s+1 ];
+				strncpy( lvalp->i, s, e-s );
+				lvalp->i[e-s] = 0;
+				return INTEGER_LIT;
+			}
+			
+			if( isRational( llocp, context, s, e ))
+			{
+				lvalp->i = new char [ e-s+1 ];
+				strncpy( lvalp->i, s, e-s );
+				lvalp->i[e-s] = 0;
+				return RATIONAL_LIT;
+			}
+
 			int loc = 0;
 			do
 			{
@@ -293,7 +559,6 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 
 			return INVALID_NUMBER;
 		}
-		//  NAME 
 		else if( c == '_' )
 		{
 			int loc = 0;
@@ -306,7 +571,7 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 				c = nextChar( llocp, context );
 			}
 			lvalp->str[loc] = 0;
-			context->lookahead = c;
+			context->lookahead[0] = c;
 	
 			return NAME;
 		}
@@ -323,7 +588,7 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 				c = nextChar( llocp, context );
 			}
 			lvalp->str[loc] = 0;
-			context->lookahead = c;
+			context->lookahead[0] = c;
 	
 			for (int i = 0; i < sizeof(keywords)/sizeof(Keyword); ++i )
 			{

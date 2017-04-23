@@ -17,12 +17,12 @@ Rational::Rational( const char * r)
 
 bool Rational::genCode( GenCodeContext & gcc ) const
 {
-TODO
+TODO // genCode
 	return false;
 }
 
 bool Rational::semCheck( SemCheckContext & scc ) const
 {
-TODO
+TODO // semCheck
 	return false;
 }

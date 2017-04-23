@@ -36,129 +36,130 @@
 
 %}
 
-%token ALIAS					"alias"
-%token AS						"as"
+%token ALIAS				"alias"
+%token AS					"as"
+%token ATOMIC				"atomic"
 
-%token BOOL						"bool"	
-%token BREAK					"break"
-%token BY						"by"
+%token BOOL					"bool"	
+%token BREAK				"break"
+%token BY					"by"
 
-%token C						"C"
-%token CASE						"case"
-%token CLASS					"class"
-%token CONSTRAINTS				"constraints"
-%token CONTINUE					"continue"
+%token C					"C"
+%token CASE					"case"
+%token CLASS				"class"
+%token CONSTRAINTS			"constraints"
+%token CONTINUE				"continue"
 
-%token DEFAULT					"default"
-%token DEQUEUE					"dequeue"
-%token DISTINCT					"distinct"
-%token DOT_DOT_DOT				"..."
-%token DYNAMIC					"dynamic"
+%token DEFAULT				"default"
+%token DEQUEUE				"dequeue"
+%token DISTINCT				"distinct"
+%token DOT_DOT			    ".."
+%token DYNAMIC				"dynamic"
 
-%token _E						"e"
-%token ELSE						"else"
-%token ENUM						"enum"
+%token _E					"e"
+%token ELSE					"else"
+%token ENUM					"enum"
 
-%token <b> FALSE				"false"
-%token FLOAT					"float"
-%token <dbl> FLOAT_LIT			"float-literal"
-%token FOR						"for"
-%token FROM						"from"
-%token FUN						"fun"
+%token <b> FALSE			"false"
+%token FLOAT				"float"
+%token <dbl> FLOAT_LIT		"float-literal"
+%token FOR					"for"
+%token FROM					"from"
+%token FUN					"fun"
 
-%token GRAMMAR					"grammar"
-%token GROUP					"group"
+%token GRAMMAR				"grammar"
+%token GROUP				"group"
 
-%token HAVING					"having"
+%token HAVING				"having"
 
-%token I 						"i"
-%token IF 						"if"
-%token IMPLES					":-"
-%token <i32> INT_LIT			"int-literal"
-%token <i> INTEGER_LIT			"integer-literal"
-%token INTERSECT				"intersect"
-%token INVALID_NUMBER			"invalid-number"
-%token INVALID_STRING			"invalid-string"
-%token ISNULL					"isnull"
+%token I 					"i"
+%token IF 					"if"
+%token IMPLES				":-"
+%token <i32> INT_LIT		"int-literal"
+%token <i> INTEGER_LIT		"integer-literal"
+%token INTERSECT			"intersect"
+%token INVALID_NUMBER		"invalid-number"
+%token INVALID_STRING		"invalid-string"
+%token ISNULL				"isnull"
 
-%token JOIN						"join"
+%token JOIN					"join"
 
-%token LEFT						"left"
-%token <i64> LONG_LIT			"long-literal"
+%token LEFT					"left"
+%token <i64> LONG_LIT		"long-literal"
 
-%token M_MULT					"(*)"
-%token M_DIV 					"(/)"
-%token MATRIX					"matrix"
-%token MULTISET					"multiset"
+%token M_MULT				"(*)"
+%token M_DIV 				"(/)"
+%token MATRIX				"matrix"
+%token MULTISET				"multiset"
 
-%token N						"N"
-%token <str> NAME				"name"
-%token _NULL					"null"
+%token N					"N"
+%token <str> NAME			"name"
+%token _NULL				"null"
 
-%token OBJECT					"object"
-%token ORDER 					"order"
-%token OUTER					"outer"
+%token OBJECT				"object"
+%token ORDER 				"order"
+%token OUTER				"outer"
 
-%token PERCENT					"percent"
-%token _PI						"pi"
-%token POW						"**"
-%token PQUEUE					"pqueue"
+%token PERCENT				"percent"
+%token _PI					"pi"
+%token POW					"**"
+%token PQUEUE				"pqueue"
 
-%token Q						"Q"
-%token QUEUE					"queue"
+%token Q					"Q"
+%token QUEUE				"queue"
 
-%token R						"R"
-%token <r> RATIONAL_LIT			"rational-literal"
-%token RETURN					"return"
-%token RIGHT					"right"
+%token R					"R"
+%token <i> RATIONAL_LIT		"rational-literal"
+%token RETURN				"return"
+%token RIGHT				"right"
 
-%token SELECT					"select"
-%token SET						"set"
-%token <i> SHARED				"shared"
-%token STACK					"stack"
-%token STRING					"string"
-%token <str> STRING_LIT			"string-literal"
-%token SWITCH					"switch"
+%token SELECT				"select"
+%token SET					"set"
+%token SHARED				"shared"
+%token STACK				"stack"
+%token STRING				"string"
+%token <str> STRING_LIT		"string-literal"
+%token SWITCH				"switch"
 
-%token TENSOR					"tensor"
-%token TIES						"ties"
-%token TOP						"top"
-%token <b> TRUE					"true"
-%token TUPLE					"tuple"
+%token TENSOR				"tensor"
+%token TIES					"ties"
+%token TOP					"top"
+%token <b> TRUE				"true"
+%token TUPLE				"tuple"
 
-%token UNION					"union"
-%token <i> UNIQUE				"unique"
+%token UNION				"union"
+%token UNIQUE				"unique"
 
-%token VAR						"var"
-%token VECTOR					"vector"
-%token VOID						"void"
+%token VAR					"var"
+%token VECTOR				"vector"
+%token VOID					"void"
 
-%token <i> WEAK					"weak"
-%token WHERE					"where"
-%token WITH						"with"
+%token WEAK					"weak"
+%token WHERE				"where"
+%token WITH					"with"
 
-%token Z						"Z"
+%token Z					"Z"
 
-%token A_ASS 					"&="
-%token D_ASS 					"/="
-%token M_ASS 					"*="
-%token O_ASS 					"|="
-%token P_ASS 					"+="
-%token S_ASS 					"-="
-%token X_ASS					"^="
-%token m_ASS 					"%="
+%token A_ASS 				"&="
+%token D_ASS 				"/="
+%token M_ASS 				"*="
+%token O_ASS 				"|="
+%token P_ASS 				"+="
+%token S_ASS 				"-="
+%token X_ASS				"^="
+%token m_ASS 				"%="
 
-%token EQ						"=="
-%token GE						">="
-%token LE						"<="
-%token NE						"!="
+%token EQ					"=="
+%token GE					">="
+%token LE					"<="
+%token NE					"!="
 
-%token DEC						"--"
-%token INC						"++"
-%token POST_DEC					".--"
-%token POST_INC					".++"
+%token DEC					"--"
+%token INC					"++"
+%token POST_DEC				".--"
+%token POST_INC				".++"
 
-%token UNIARY_MINUS				"-"
+%token UNIARY_MINUS			"-"
 
 %right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS '?' ':'
 %left UNION INTERSECT
@@ -202,7 +203,7 @@
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
-%type <i32>  ptrType
+%type <i32>  declators
 %type <rdef> routine
 %type <gd>   ruleDef
 %type <st>   statement
@@ -271,10 +272,10 @@ std::vector<std::unique_ptr<GrammarDef>>
 
                    Having * h;
 
-                       char i[1024];
+                     char * i;
                         int i32;
          std::vector<int> * i32L;
-                       long i64;
+                    int64_t i64;
 
  std::vector<std::string> * nL;
 
@@ -367,8 +368,22 @@ function
 variables
 	: VAR nameList
 	{
-		$$ = new Variables( $2 );
+		$$ = new Variables( context->start, context->end, $2 );
 	}
+
+grammar
+	: GRAMMAR NAME '{' grammarDefs '}'
+	{
+		$$ = new Grammar( context->start, context->end, $2, $4 );
+	}
+	;
+
+constraints
+	: CONSTRAINTS NAME '{' constraintDefs '}'
+	{
+		$$ = new Constraints( context->start, context->end, $2, $4 );
+	}
+	;
 
 nameList
 	: nameList ',' NAME
@@ -423,14 +438,18 @@ variableDefinition
 	{
 		$$ = new VarDef( context->start, context->end, $1, $2 );
 	}
-	| ptrType type NAME
+	| declators type NAME
 	{
 		$$ = new VarDef( context->start, context->end, $2, $3, $1 );
 	}
 	;
 
-ptrType
-	: UNIQUE
+declators
+	: ATOMIC
+	{
+		$$ = ATOMIC;
+	}
+	| UNIQUE
 	{
 		$$ = UNIQUE;
 	}
@@ -441,6 +460,30 @@ ptrType
 	| WEAK
 	{
 		$$ = WEAK;
+	}
+	| ATOMIC UNIQUE
+	{
+		$$ = UNIQUE + ATOMIC;
+	}
+	| ATOMIC SHARED
+	{
+		$$ = SHARED + ATOMIC;
+	}
+	| ATOMIC WEAK
+	{
+		$$ = WEAK + ATOMIC;
+	}
+	| UNIQUE ATOMIC 
+	{
+		$$ = UNIQUE + ATOMIC;
+	}
+	| SHARED ATOMIC
+	{
+		$$ = SHARED + ATOMIC;
+	}
+	| WEAK ATOMIC
+	{
+		$$ = WEAK + ATOMIC;
 	}
 	;
 
@@ -732,7 +775,7 @@ statement
 	{
 		$$ = new Case( context->start, context->end, $2, nullptr, $4 );
 	}
-	| CASE expr DOT_DOT_DOT expr ':' statement
+	| CASE expr DOT_DOT expr ':' statement
 	{
 		$$ = new Case( context->start, context->end, $2, $4, $6 );
 	}
@@ -747,6 +790,10 @@ statement
 	| RETURN expr
 	{
 		$$ = new Return( context->start, context->end, $2 );
+	}
+	| ATOMIC '{' statements '}'
+	{
+		$$ = new AtomicBlock( context->start, context->end, $3 );
 	}
 	| '{' statements '}'
 	{
@@ -1115,13 +1162,6 @@ exprList
 	}
 	;
 
-grammar
-	: GRAMMAR NAME '{' grammarDefs '}'
-	{
-		$$ = new Grammar( $2, $4 );
-	}
-	;
-
 grammarDefs
 	: grammarDefs grammarDef
 	{
@@ -1178,13 +1218,6 @@ tokens
 	{
 		$$ = new std::vector<std::string>();
 		$$->push_back($1);
-	}
-	;
-
-constraints
-	: CONSTRAINTS NAME '{' constraintDefs '}'
-	{
-		$$ = new Constraints( 0, 0, $2, $4 );
 	}
 	;
 

@@ -10,12 +10,12 @@ VoidType	voidType;
 
 bool Void::genCode( GenCodeContext & gcc ) const
 {
- TODO
+ TODO // genCode
 	return false;
 }
 
 bool Void::semCheck( SemCheckContext & scc ) const
 {
- TODO
+ TODO // semCheck
 	return false;
 }

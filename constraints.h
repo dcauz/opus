@@ -33,14 +33,13 @@ class Constraints: public Definition
 {
 public:
 	Constraints( 
-		int, int,
+		int s, int e,
 		const char * n, 
 		std::vector<std::unique_ptr<ConstraintDef>> * c ):
-	Definition(0,0),
+	Definition(s,e),
 	name_(n),
 	constraints_(c)
 	{
-		TODO
 	}
 
 	bool genCode( GenCodeContext & ) const override;

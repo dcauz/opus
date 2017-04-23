@@ -14,12 +14,12 @@ String::String( const char * s )
 
 bool String::genCode( GenCodeContext & gcc ) const
 {
- TODO
+ TODO // genCode
 	return false;
 }
 
 bool String::semCheck( SemCheckContext & scc ) const
 {
- TODO
+ TODO // semCheck
 	return false;
 }

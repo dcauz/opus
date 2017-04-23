@@ -11,20 +11,29 @@ class Integer : public Value
 public:
 	Integer( const char * );
 	Integer( int );
-
+	Integer( int64_t );
 	Integer();
+
+	~Integer();
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	bool semCheck( SemCheckContext & scc ) const override;
 
-//	Int( const Int & );
-//	Int( Int && );
-//	Int & operator = ( const Int & );
-//	Int & operator = ( Int && );
-
 private:
+	enum Form
+	{
+		INT,
+		LONG,
+		BIG
+	};
 
-	std::unique_ptr<unsigned int> value_;
+	Form form_;
+	union
+	{
+		int i_;
+		int64_t l_;
+		const char * value_;
+	};
 };
 
 class IntegerType : public Type

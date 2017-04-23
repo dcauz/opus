@@ -5,12 +5,12 @@
 
 bool Grammar::genCode( GenCodeContext & gcc ) const
 {
-	TODO
+	TODO // genCode
 	return false;
 }
 
 bool Grammar::semCheck( SemCheckContext & gcc ) const
 {
-	TODO
+	TODO // semCheck
 	return false;
 }

@@ -6,19 +6,18 @@ FloatType	floatType;
 
 ////////////////////////////////////////////
 
-Float::Float(double)
+Float::Float(double d):value_(d)
 {
-	TODO
 }
 
 bool Float::genCode( GenCodeContext & gcc ) const
 {
-	TODO
+	TODO // genCode
 	return false;
 }
 
 bool Float::semCheck( SemCheckContext & scc ) const
 {
-	TODO
+	TODO // semCheck
 	return false;
 }

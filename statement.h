@@ -36,6 +36,22 @@ public:
 	bool semCheck( SemCheckContext & ) const final;
 };
 
+class AtomicBlock: public Statement
+{
+public:
+	AtomicBlock( 
+		int s, 
+		int e, 
+		std::vector<std::unique_ptr<Statement>> * sts = nullptr ):
+		Statement(s,e), statements_(sts) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	bool semCheck( SemCheckContext & ) const final;
+
+private:
+	std::vector<std::unique_ptr<Statement>> * statements_;
+};
+
 class Block: public Statement
 {
 public:
@@ -51,7 +67,6 @@ public:
 private:
 	std::vector<std::unique_ptr<Statement>> * statements_;
 };
-
 
 class ExprStatement : public Statement
 {
@@ -75,7 +90,7 @@ public:
 class Variables: public Definition
 {
 public:
-	Variables( std::vector<std::string> * );
+	Variables( int s, int e, std::vector<std::string> * );
 
 	bool genCode( GenCodeContext & ) const final;
 	bool semCheck( SemCheckContext & ) const final;

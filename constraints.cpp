@@ -5,13 +5,13 @@
 
 bool Constraints::genCode( GenCodeContext & ) const
 {
-TODO
+TODO // genCode
 	return false;
 }
 
 bool Constraints::semCheck( SemCheckContext & ) const
 {
-TODO
+TODO // semCheck
 	return false;
 }
 

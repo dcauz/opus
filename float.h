@@ -11,6 +11,9 @@ public:
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	bool semCheck( SemCheckContext & scc ) const override;
+
+private:
+	double value_;
 };
 
 

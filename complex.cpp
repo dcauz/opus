@@ -1,21 +1,23 @@
 
 #include "opus.h"
 #include "complex.h"
+#include "real.h"
 
 
-Complex::Complex(int, int)
+Complex::Complex(int r, int i): 
+	real_(new Real(r)), 
+	imaginary_(new Real(i))
 {
-	TODO
 }
 
 bool Complex::genCode( GenCodeContext & gcc ) const
 {
-	TODO
+	TODO // genCode
 	return false;
 }
 
 bool Complex::semCheck( SemCheckContext & scc ) const
 {
-	TODO
+	TODO // semCheck
 	return false;
 }

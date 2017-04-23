@@ -41,10 +41,10 @@ private:
 class Grammar: public Definition
 {
 public:
-	Grammar( 
+	Grammar( int s, int e,
 		const char * n, 
 		std::vector<std::unique_ptr<GrammarDef>> * gd ):
-		Definition(0,0), // TODO
+		Definition(s,e),
 		name_(n), defs_(gd)
 	{}
 

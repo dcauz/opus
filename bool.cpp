@@ -9,12 +9,12 @@ BoolType	boolType;
 
 bool Bool::genCode( GenCodeContext & gcc ) const
 {
-	TODO
+	TODO	// genCode
 	return false;
 }
 
 bool Bool::semCheck( SemCheckContext & scc ) const
 {
-	TODO
+	TODO // semCheck
 	return false;
 }
