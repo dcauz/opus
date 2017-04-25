@@ -17,7 +17,7 @@ public:
 	~Integer();
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	enum Form

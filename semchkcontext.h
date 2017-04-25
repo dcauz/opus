@@ -2,4 +2,6 @@
 
 struct SemCheckContext
 {
+public:
+
 };

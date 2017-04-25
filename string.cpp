@@ -17,8 +17,8 @@ bool String::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool String::semCheck( SemCheckContext & scc ) const
+Type * String::semCheck( SemCheckContext & scc ) const
 {
  TODO // semCheck
-	return false;
+	return &errorType;
 }

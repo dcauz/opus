@@ -164,7 +164,7 @@ Instruction instructions[] =
 
 bool ModuleLevelInlineAsm::output( FILE * fh )
 {
-	TODO
+	TODO // il
 	return false;
 }
 
@@ -178,13 +178,13 @@ bool TargetDefinition::output( FILE * fh )
 
 bool DepLibrary::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool FunctionDeclaration::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
@@ -200,42 +200,42 @@ bool FunctionDefinition::output( FILE * fh )
 
 bool UnnamedType::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool NamedType::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool UnnamedGlobalVariable::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool NamedGlobalVariable::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool Comdat::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool StandaloneMetadata::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }
 
 bool NamedMetadata::output( FILE * fh )
 {
-TODO
+TODO // il
 	return false;
 }

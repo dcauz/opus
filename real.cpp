@@ -19,17 +19,18 @@ Real::Real(int64_t l):form_(LONG), l_(l)
 {
 }
 
-Real::Real(double d):form_(RATIONAL)
+Real::Real(double d):form_(RATIONAL),d_(d)
 {
-TODO // Real::Reak(double)
 }
 
 bool Real::genCode( GenCodeContext & gcc ) const
 {
  TODO // genCode
+	return false;
 }
 
-bool Real::semCheck( SemCheckContext & scc ) const
+Type * Real::semCheck( SemCheckContext & scc ) const
 {
  TODO // semCheck
+	return &errorType;
 }

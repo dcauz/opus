@@ -3,6 +3,7 @@
 #include "semchkcontext.h"
 #include "gencodecontext.h"
 #include "statement.h"
+#include "type.h"
 
 
 Program::Program( const char * srcFile ):srcFile_(srcFile)
@@ -13,7 +14,7 @@ Program::Program( const char * srcFile ):srcFile_(srcFile)
 		"x86_64-pc-linux-gnu") );
 }
 
-bool Program::semCheck()
+bool Program::semCheck() const
 {
 	auto i = definitions_.begin();
 	auto e = definitions_.end();
@@ -24,7 +25,9 @@ bool Program::semCheck()
 	{
 		Definition * def = *i;
 
-		def->semCheck( context );
+		Type * type = def->semCheck( context );
+		if( type == &errorType )
+			return false;
 
 		++i;
 	}
@@ -50,7 +53,7 @@ bool Program::genCode()
 	return false;
 }
 
-bool Program::outputIL()
+bool Program::outputIL() const
 {
 	auto p = srcFile_.find('.');
 	std::string objFile;

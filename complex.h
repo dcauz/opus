@@ -14,7 +14,7 @@ public:
 	Complex( int r, int i );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	std::unique_ptr<Real> real_;

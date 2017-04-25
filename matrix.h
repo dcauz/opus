@@ -7,15 +7,6 @@
 class Expr;
 
 
-class Matrix: public Value
-{
-public:
-
-	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
-};
-
-
 class MatrixType: public CollectionType
 {
 public:
@@ -26,3 +17,15 @@ private:
 	int rows_;
 	int cols_;
 };
+
+class Matrix: public Value
+{
+public:
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
+
+private:
+	MatrixType	* type_;
+};
+

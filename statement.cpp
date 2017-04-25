@@ -3,6 +3,8 @@
 #include "gencodecontext.h"
 #include "program.h"
 #include "il.h"
+#include "type.h"
+
 
 
 Variables::Variables( int s, int e, std::vector<std::string> * ):
@@ -12,124 +14,124 @@ Variables::Variables( int s, int e, std::vector<std::string> * ):
 
 /////////////////////////////////////////////////////////////////
 
-bool Variables::semCheck( SemCheckContext & scc ) const
+Type * Variables::semCheck( SemCheckContext & scc ) const
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Empty::semCheck( SemCheckContext & scc ) const 
+Type * Empty::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool AtomicBlock::semCheck( SemCheckContext & scc ) const 
+Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Block::semCheck( SemCheckContext & scc ) const 
+Type * Block::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool ExprStatement::semCheck( SemCheckContext & scc ) const 
+Type * ExprStatement::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool EnumDef::semCheck( SemCheckContext & scc ) const 
+Type * EnumDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool ClassDef::semCheck( SemCheckContext & scc ) const 
+Type * ClassDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool TupleDef::semCheck( SemCheckContext & scc ) const 
+Type * TupleDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool VarDef::semCheck( SemCheckContext & scc ) const 
+Type * VarDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool RoutineDef::semCheck( SemCheckContext & scc ) const 
+Type * RoutineDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool AliasDef::semCheck( SemCheckContext & scc ) const 
+Type * AliasDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool If::semCheck( SemCheckContext & scc ) const 
+Type * If::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool For::semCheck( SemCheckContext & scc ) const 
+Type * For::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Default::semCheck( SemCheckContext & scc ) const 
+Type * Default::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Continue::semCheck( SemCheckContext & scc ) const 
+Type * Continue::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Break::semCheck( SemCheckContext & scc ) const 
+Type * Break::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Return::semCheck( SemCheckContext & scc ) const 
+Type * Return::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Case::semCheck( SemCheckContext & scc ) const 
+Type * Case::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Switch::semCheck( SemCheckContext & scc ) const 
+Type * Switch::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool FunDef::semCheck( SemCheckContext & scc ) const 
+Type * FunDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
 /////////////////////////////////////////////////////////////////////////////

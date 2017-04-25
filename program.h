@@ -6,6 +6,7 @@
 
 
 class Definition;
+class Type;
 
 
 class Program
@@ -17,9 +18,9 @@ public:
 
 	std::vector<ILentity * > & ilEntities() { return ilEntities_; }
 
-	bool semCheck();
+	bool semCheck() const;
 	bool genCode();
-	bool outputIL();
+	bool outputIL() const;
 
 	std::vector<FunctionDeclaration::FuncAttrs>	& funcAttrs() 
 	{ 

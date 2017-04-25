@@ -1,5 +1,6 @@
 #include "expr.h"
 #include "opus.h"
+#include "type.h"
 
 
 SelectEx::SelectEx( 
@@ -22,262 +23,262 @@ std::vector<std::unique_ptr<Column>> * cols,
 
 ////////////////////////////////////////////////////////
 
-bool SelectEx::semCheck( SemCheckContext & scc ) const 
+Type * SelectEx::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool FuncCall::semCheck( SemCheckContext & scc ) const 
+Type * FuncCall::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Name::semCheck( SemCheckContext & scc ) const 
+Type * Name::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Assign::semCheck( SemCheckContext & scc ) const 
+Type * Assign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Add::semCheck( SemCheckContext & scc ) const 
+Type * Add::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Sub::semCheck( SemCheckContext & scc ) const 
+Type * Sub::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Mul::semCheck( SemCheckContext & scc ) const 
+Type * Mul::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Div::semCheck( SemCheckContext & scc ) const 
+Type * Div::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Mod::semCheck( SemCheckContext & scc ) const 
+Type * Mod::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool NotEq::semCheck( SemCheckContext & scc ) const 
+Type * NotEq::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Eq::semCheck( SemCheckContext & scc ) const 
+Type * Eq::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool GreaterEq::semCheck( SemCheckContext & scc ) const 
+Type * GreaterEq::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Greater::semCheck( SemCheckContext & scc ) const 
+Type * Greater::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool LessEq::semCheck( SemCheckContext & scc ) const 
+Type * LessEq::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Less::semCheck( SemCheckContext & scc ) const 
+Type * Less::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Dot::semCheck( SemCheckContext & scc ) const 
+Type * Dot::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool AddAssign::semCheck( SemCheckContext & scc ) const 
+Type * AddAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool SubAssign::semCheck( SemCheckContext & scc ) const 
+Type * SubAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool MulAssign::semCheck( SemCheckContext & scc ) const 
+Type * MulAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool DivAssign::semCheck( SemCheckContext & scc ) const 
+Type * DivAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool ModAssign::semCheck( SemCheckContext & scc ) const 
+Type * ModAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool AndAssign::semCheck( SemCheckContext & scc ) const 
+Type * AndAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool OrAssign::semCheck( SemCheckContext & scc ) const 
+Type * OrAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool XorAssign::semCheck( SemCheckContext & scc ) const 
+Type * XorAssign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Union::semCheck( SemCheckContext & scc ) const 
+Type * Union::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Intersect::semCheck( SemCheckContext & scc ) const 
+Type * Intersect::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Or::semCheck( SemCheckContext & scc ) const 
+Type * Or::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Xor::semCheck( SemCheckContext & scc ) const 
+Type * Xor::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool And::semCheck( SemCheckContext & scc ) const 
+Type * And::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Index::semCheck( SemCheckContext & scc ) const 
+Type * Index::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Inc::semCheck( SemCheckContext & scc ) const 
+Type * Inc::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Dec::semCheck( SemCheckContext & scc ) const 
+Type * Dec::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool PostInc::semCheck( SemCheckContext & scc ) const 
+Type * PostInc::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool PostDec::semCheck( SemCheckContext & scc ) const 
+Type * PostDec::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Lnot::semCheck( SemCheckContext & scc ) const 
+Type * Lnot::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Not::semCheck( SemCheckContext & scc ) const 
+Type * Not::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Minus::semCheck( SemCheckContext & scc ) const 
+Type * Minus::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Conditional::semCheck( SemCheckContext & scc ) const 
+Type * Conditional::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool Join::semCheck( SemCheckContext & scc ) const 
+Type * Join::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool LeftJoin::semCheck( SemCheckContext & scc ) const 
+Type * LeftJoin::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool RightJoin::semCheck( SemCheckContext & scc ) const 
+Type * RightJoin::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool OuterJoin::semCheck( SemCheckContext & scc ) const 
+Type * OuterJoin::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
-bool IsVoid::semCheck( SemCheckContext & scc ) const 
+Type * IsVoid::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }
 
 ////////////////////////////////////////////////////////////////////////////

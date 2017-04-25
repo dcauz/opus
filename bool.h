@@ -10,7 +10,7 @@ public:
 	Bool( bool b ): value_(b) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	bool value_;

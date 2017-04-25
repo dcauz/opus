@@ -14,8 +14,7 @@ bool Void::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool Void::semCheck( SemCheckContext & scc ) const
+Type * Void::semCheck( SemCheckContext & scc ) const
 {
- TODO // semCheck
-	return false;
+	return &voidType;
 }

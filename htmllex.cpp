@@ -325,15 +325,15 @@ bool getAttributes(
 
 		if( c == '"' )
 		{
-			TODO
+			TODO // htmllex
 		}
 		else if( c == '\'' )
 		{
-			TODO
+			TODO // htmllex
 		}
 		else
 		{
-			TODO
+			TODO // htmllex
 		}
 	}
 

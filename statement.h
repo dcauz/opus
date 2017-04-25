@@ -18,7 +18,7 @@ public:
 	virtual ~Statement() {}
 
 	virtual bool genCode( GenCodeContext & ) const = 0;
-	virtual bool semCheck( SemCheckContext & )  const= 0;
+	virtual Type * semCheck( SemCheckContext & )  const= 0;
 	
 protected:
 	int	startLine_;
@@ -33,7 +33,7 @@ public:
 	Empty( int s):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class AtomicBlock: public Statement
@@ -46,7 +46,7 @@ public:
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::vector<std::unique_ptr<Statement>> * statements_;
@@ -62,7 +62,7 @@ public:
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::vector<std::unique_ptr<Statement>> * statements_;
@@ -74,7 +74,7 @@ public:
 	ExprStatement( int s, int e, Expr * ex ):Statement(s,e), expr_(ex) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	Expr * expr_;
@@ -93,7 +93,7 @@ public:
 	Variables( int s, int e, std::vector<std::string> * );
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class TypeDef: public Definition
@@ -115,7 +115,7 @@ public:
 		TypeDef(s,e), name_(n), moe_(moe) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
@@ -133,7 +133,7 @@ public:
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
@@ -151,7 +151,7 @@ public:
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
@@ -168,7 +168,7 @@ public:
 		ptrType_(pt) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	Type	* type_;
@@ -201,7 +201,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	const Type	* returnType() const	{ return returnType_; }
 
@@ -225,7 +225,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	const Type	* returnType() const	{ return returnType_; }
 
@@ -242,7 +242,7 @@ public:
 		type_(t), name_(n) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string name_;
@@ -263,7 +263,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
      Expr * cond_;
@@ -294,7 +294,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 
@@ -311,7 +311,7 @@ public:
 	Default( int s, int e, Statement * st ):Statement(s,e), statement_(st) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	Statement * statement_;
@@ -323,7 +323,7 @@ public:
 	Continue( int s ):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Break: public Statement
@@ -332,7 +332,7 @@ public:
 	Break( int s ):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Return: public Statement
@@ -341,7 +341,7 @@ public:
 	Return( int s, int e, Expr * v ):Statement(s,e), value_(v) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	Expr * value_;
@@ -356,7 +356,7 @@ public:
 	}
 	
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
      Expr * lower_;
@@ -377,7 +377,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	bool semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
      Expr * cond_;

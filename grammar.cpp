@@ -1,6 +1,7 @@
 
 #include "opus.h"
 #include "grammar.h"
+#include "type.h"
 
 
 bool Grammar::genCode( GenCodeContext & gcc ) const
@@ -9,8 +10,8 @@ bool Grammar::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool Grammar::semCheck( SemCheckContext & gcc ) const
+Type * Grammar::semCheck( SemCheckContext & gcc ) const
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }

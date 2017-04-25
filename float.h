@@ -10,7 +10,7 @@ public:
 	Float( double );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	double value_;

@@ -8,7 +8,6 @@ IntegerType	integerType;
 
 IntegerType::IntegerType()
 {
-	TODO
 }
 
 ////////////////////////////////////////////
@@ -38,9 +37,11 @@ Integer::~Integer()
 bool Integer::genCode( GenCodeContext & gcc ) const
 {
 	TODO // genCode
+	return false;
 }
 
-bool Integer::semCheck( SemCheckContext & scc ) const
+Type * Integer::semCheck( SemCheckContext & scc ) const
 {
 	TODO // semCheck
+	return &errorType;
 }

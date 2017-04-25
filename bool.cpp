@@ -13,8 +13,8 @@ bool Bool::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-bool Bool::semCheck( SemCheckContext & scc ) const
+Type * Bool::semCheck( SemCheckContext & scc ) const
 {
 	TODO // semCheck
-	return false;
+	return &errorType;
 }

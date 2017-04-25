@@ -43,7 +43,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const override;
-	bool semCheck( SemCheckContext & ) const override;
+	Type * semCheck( SemCheckContext & ) const override;
 
 private:
 	std::string	name_;

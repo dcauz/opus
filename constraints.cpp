@@ -1,5 +1,6 @@
 
 #include "opus.h"
+#include "type.h"
 #include "constraints.h"
 
 
@@ -9,10 +10,10 @@ TODO // genCode
 	return false;
 }
 
-bool Constraints::semCheck( SemCheckContext & ) const
+Type * Constraints::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
-	return false;
+	return &errorType;
 }
 
 

@@ -43,8 +43,8 @@ TODO // genCode
 	return false;
 }
 
-bool Rational::semCheck( SemCheckContext & scc ) const
+Type * Rational::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
-	return false;
+	return &errorType;
 }

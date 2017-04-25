@@ -15,7 +15,7 @@ public:
 	Real( double d );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	bool semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 
@@ -25,6 +25,7 @@ private:
 		LONG,
 		INTEGER,
 		RATIONAL,
+		DOUBLE,
 		MULTI_TERM
 	};	
 	
@@ -33,6 +34,7 @@ private:
 	{
 		int i_;
 		int64_t l_;
+		double d_;
 	};
 };
 
