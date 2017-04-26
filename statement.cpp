@@ -38,20 +38,37 @@ Type * Empty::semCheck( SemCheckContext & scc ) const
 
 Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	auto i = statements_->begin();
+	auto e = statements_->end();
+
+	while( i != e )
+	{
+		if( i->get()->semCheck( scc ) == &errorType )
+			return &errorType;
+		++i;
+	}
+
+	return &voidType;
 }
 
 Type * Block::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	auto i = statements_->begin();
+	auto e = statements_->end();
+
+	while( i != e )
+	{
+		if( i->get()->semCheck( scc ) == &errorType )
+			return &errorType;
+		++i;
+	}
+
+	return &voidType;
 }
 
 Type * ExprStatement::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	return expr_->semCheck( scc );
 }
 
 Type * EnumDef::semCheck( SemCheckContext & scc ) const 
