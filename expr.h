@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "opus.h"
 
 
 class GenCodeContext;
@@ -24,7 +25,7 @@ public:
 	Uniary( Expr * o ):operand_(o) {}
 
 protected:
-	std::unique_ptr<Expr> operand_;
+	up<Expr> operand_;
 };
 
 class Binary: public Expr
@@ -33,8 +34,8 @@ public:
 	Binary( Expr * l, Expr * r ):left_(l), right_(r) {}
 
 protected:
-	std::unique_ptr<Expr> left_;
-	std::unique_ptr<Expr> right_;
+	up<Expr> left_;
+	up<Expr> right_;
 };
 
 class Trinary: public Expr
@@ -43,23 +44,23 @@ public:
 	Trinary( Expr * a, Expr * b, Expr * c ):operand1_(a), operand2_(b), operand3_(c) {}
 
 protected:
-	std::unique_ptr<Expr> operand1_;
-	std::unique_ptr<Expr> operand2_;
-	std::unique_ptr<Expr> operand3_;
+	up<Expr> operand1_;
+	up<Expr> operand2_;
+	up<Expr> operand3_;
 };
 
 class FuncCall: public Expr
 {
 public:
-	FuncCall( Expr * n, std::vector<std::unique_ptr<Expr>> * args = nullptr ):
+	FuncCall( Expr * n, std::vector<up<Expr>> * args = nullptr ):
 		name_(n), args_(args) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	std::unique_ptr<Expr> name_;
-	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> args_;
+	up<Expr> name_;
+	up<std::vector<up<Expr>>> args_;
 };
 
 class IsVoid: public Expr
@@ -71,7 +72,7 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	std::unique_ptr<Expr> arg_;
+	up<Expr> arg_;
 };
 
 class Name: public Expr
@@ -327,14 +328,14 @@ class Index : public Expr
 public:
 	Index( 
 		Expr * v, 
-		std::vector<std::unique_ptr<Expr>> * i ):tensor_(v), index_(i)  {}
+		std::vector<up<Expr>> * i ):tensor_(v), index_(i)  {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	Expr				* tensor_;
-	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> index_;
+	up<std::vector<up<Expr>>> index_;
 };
 
 class Inc: public Uniary
@@ -453,7 +454,7 @@ public:
 	{}
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 	bool	percent_;
 	bool	ties_;
 };
@@ -470,7 +471,7 @@ public:
 	}
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 	std::string name_;
 };
 
@@ -480,7 +481,7 @@ public:
 	Where( Expr * e ):expr_(e) {}
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 };
 
 class GroupBy
@@ -489,7 +490,7 @@ public:
 	GroupBy( Expr * e ):expr_(e) {}
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 };
 
 class Having
@@ -498,7 +499,7 @@ public:
 	Having( Expr * e ):expr_(e) {}
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 };
 
 class SelectEx: public Expr
@@ -507,7 +508,7 @@ public:
 	SelectEx( 
 		int dist, 
 		Top * top, 
-		std::vector<std::unique_ptr<Column>> * cols, 
+		std::vector<up<Column>> * cols, 
 		std::vector<std::string> * tables, 
 		Where   * where, 
 		GroupBy * groupBy, 
@@ -519,10 +520,10 @@ public:
 private:
 	int distinct_;
 
-	std::unique_ptr<Top> top_;
-	std::unique_ptr<std::vector<std::unique_ptr<Column>>> cols_; 
-	std::unique_ptr<std::vector<std::string>> tables_; 
-	std::unique_ptr<Where>	where_;
-	std::unique_ptr<GroupBy>groupBy_;
-	std::unique_ptr<Having>	having_;
+	up<Top> top_;
+	up<std::vector<up<Column>>> cols_; 
+	up<std::vector<std::string>> tables_; 
+	up<Where>	where_;
+	up<GroupBy>groupBy_;
+	up<Having>	having_;
 };

@@ -1,5 +1,6 @@
 %{
 
+#include "opus.h"
 #include "nodes.h"
 #include "htmlerror.h"
 #include "htmllex.h"
@@ -375,7 +376,7 @@ int	htmlparse();
 %union
 {
 	Node * node;
-	std::vector<std::unique_ptr<Node>> * nodes;
+	std::vector<up<Node>> * nodes;
 }
 
 %%
@@ -427,80 +428,80 @@ metadata_content
 	: metadata_content BASE
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content LINK
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content META
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content noscript
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content style
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content template
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| metadata_content title
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| BASE
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| LINK
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| META
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| noscript
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| style
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| template
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| title
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 	
 style
 	: STYLE TEXT _STYLE
 	{
-		auto v = new std::vector<std::unique_ptr<Node>>();
-		v->push_back(std::unique_ptr<Node>($2));
+		auto v = new std::vector<up<Node>>();
+		v->push_back(up<Node>($2));
 		$$ = new Style( nullptr, v );
 	}
 	| STYLE _STYLE
@@ -512,8 +513,8 @@ style
 title
 	: TITLE TEXT _TITLE
 	{
-		auto v = new std::vector<std::unique_ptr<Node>>();
-		v->push_back(std::unique_ptr<Node>($2));
+		auto v = new std::vector<up<Node>>();
+		v->push_back(up<Node>($2));
 		$$ = new Title( nullptr, v );
 	}
 	| TITLE _TITLE
@@ -537,12 +538,12 @@ nodes
 	: nodes element
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| element
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -820,8 +821,8 @@ datalist
 option	
 	: OPTION TEXT _OPTION
 	{
-		auto v = new std::vector<std::unique_ptr<Node>>();
-		v->push_back(std::unique_ptr<Node>($2));
+		auto v = new std::vector<up<Node>>();
+		v->push_back(up<Node>($2));
 		$$ = new Option( nullptr, v );
 	}
 	| OPTION _OPTION
@@ -987,8 +988,8 @@ i
 iframe
 	: IFRAME TEXT _IFRAME
 	{
-		auto v = new std::vector<std::unique_ptr<Node>>();
-		v->push_back(std::unique_ptr<Node>($2));
+		auto v = new std::vector<up<Node>>();
+		v->push_back(up<Node>($2));
 		$$ = new Iframe( nullptr, v );
 	}
 	| IFRAME _IFRAME
@@ -1198,8 +1199,8 @@ map
 area
 	: AREA TEXT _AREA
 	{
-		auto v = new std::vector<std::unique_ptr<Node>>();
-		v->push_back(std::unique_ptr<Node>($2));
+		auto v = new std::vector<up<Node>>();
+		v->push_back(up<Node>($2));
 		$$ = new Area( nullptr, v );
 	}
 	| AREA _AREA
@@ -1223,32 +1224,32 @@ dls
 	: dls dd
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| dls dt
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| dls script_supporting_elements
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Node>($2));
+		$$->push_back(up<Node>($2));
 	}
 	| dd
 	{
-		$$ = new std::vector<std::unique_ptr<Node>> ();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>> ();
+		$$->push_back(up<Node>($1));
 	}
 	| dt
 	{
-		$$ = new std::vector<std::unique_ptr<Node>> ();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>> ();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>> ();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>> ();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1351,72 +1352,72 @@ tables
 	: tables caption
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables colgroup
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables thread
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables tbody
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables tfoot
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables tr
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tables script_supporting_elements
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| caption
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| colgroup
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| thread
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| tbody
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| tfoot
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| tr
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1435,22 +1436,22 @@ colgroups
 	: colgroups COL
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| colgroups script_supporting_elements
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| COL
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1469,22 +1470,22 @@ threads
 	: threads tr
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| threads script_supporting_elements
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| tr
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1515,22 +1516,22 @@ optgroups
 	: optgroups option
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| optgroups script_supporting_elements
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| option
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1549,32 +1550,32 @@ trs
 	: trs td
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| trs th
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| trs script_supporting_elements
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| td
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| th
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1593,22 +1594,22 @@ temp
 	: temp PARAM
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| temp TRACK
 	{
 		$$ = $1;
-		$1->push_back(std::unique_ptr<Node>($2));
+		$1->push_back(up<Node>($2));
 	}
 	| PARAM
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| TRACK
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1628,13 +1629,13 @@ tbodys
 	| tbodys script_supporting_elements
 	| tr
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1654,13 +1655,13 @@ tfoots
 	| tfoots script_supporting_elements
 	| tr
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 
@@ -1680,13 +1681,13 @@ uls
 	| uls script_supporting_elements
 	| li
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	| script_supporting_elements
 	{
-		$$ = new std::vector<std::unique_ptr<Node>>();
-		$$->push_back(std::unique_ptr<Node>($1));
+		$$ = new std::vector<up<Node>>();
+		$$->push_back(up<Node>($1));
 	}
 	;
 

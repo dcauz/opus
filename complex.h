@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "opus.h"
 #include "type.h"
 #include "value.h"
 
@@ -17,8 +18,8 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	std::unique_ptr<Real> real_;
-	std::unique_ptr<Real> imaginary_;
+	up<Real> real_;
+	up<Real> imaginary_;
 };
 
 

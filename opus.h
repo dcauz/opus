@@ -2,6 +2,10 @@
 
 #include <cstdio>
 #include <string>
+#include <memory>
+
+template <typename T> using up = std::unique_ptr<T>;
+template <typename T> using sp = std::shared_ptr<T>;
 
 
 inline void throwNotImpl( const char * f, int l )

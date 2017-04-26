@@ -9,14 +9,13 @@
 #include "expr.h"
 
 
-
 class ConstraintDef
 {
 public:
 	ConstraintDef( 
 		const char * n, 
 		std::vector<std::string> * args,
-		std::vector<std::unique_ptr<Expr>> * ops ):
+		std::vector<up<Expr>> * ops ):
 	name_(n),
 	args_(args),
 	ops_(ops)
@@ -24,8 +23,8 @@ public:
 
 private:
 	std::string	name_;
-	std::unique_ptr<std::vector<std::string>>	args_;
-	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> ops_;
+	up<std::vector<std::string>>args_;
+	up<std::vector<up<Expr>>>	ops_;
 };
 
 
@@ -35,7 +34,7 @@ public:
 	Constraints( 
 		int s, int e,
 		const char * n, 
-		std::vector<std::unique_ptr<ConstraintDef>> * c ):
+		std::vector<up<ConstraintDef>> * c ):
 	Definition(s,e),
 	name_(n),
 	constraints_(c)
@@ -47,6 +46,5 @@ public:
 
 private:
 	std::string	name_;
-	std::unique_ptr<std::vector<std::unique_ptr<ConstraintDef>>>
-		constraints_;
+	up<std::vector<up<ConstraintDef>>> constraints_;
 };

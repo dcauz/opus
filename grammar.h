@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "opus.h"
 #include "statement.h"
 
 
@@ -35,7 +36,7 @@ public:
 
 private:
 	std::string name_;
-	std::unique_ptr<std::vector<std::string>> tokens_;
+	up<std::vector<std::string>> tokens_;
 };
 
 class Grammar: public Definition
@@ -43,7 +44,7 @@ class Grammar: public Definition
 public:
 	Grammar( int s, int e,
 		const char * n, 
-		std::vector<std::unique_ptr<GrammarDef>> * gd ):
+		std::vector<up<GrammarDef>> * gd ):
 		Definition(s,e),
 		name_(n), defs_(gd)
 	{}
@@ -53,5 +54,5 @@ public:
 
 private:
 	std::string name_;
-	std::unique_ptr<std::vector<std::unique_ptr<GrammarDef>>> defs_;
+	up<std::vector<up<GrammarDef>>> defs_;
 };

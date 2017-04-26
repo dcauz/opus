@@ -4,13 +4,13 @@
 
 
 SelectEx::SelectEx( 
-                                   int dis, 
-                                 Top * top, 
-std::vector<std::unique_ptr<Column>> * cols, 
-            std::vector<std::string> * tbls, 
-                               Where * w, 
-                             GroupBy * gb, 
-                              Having * h ):
+                       int dis, 
+                     Top * top, 
+ std::vector<up<Column>> * cols, 
+std::vector<std::string> * tbls, 
+                   Where * w, 
+                 GroupBy * gb, 
+                  Having * h ):
 	distinct_(dis), 
 	top_(top), 
 	cols_(cols), 

@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include "opus.h"
 #include "enum.h"
 
 
@@ -43,14 +44,14 @@ public:
 	AtomicBlock( 
 		int s, 
 		int e, 
-		std::vector<std::unique_ptr<Statement>> * sts = nullptr ):
+		std::vector<up<Statement>> * sts = nullptr ):
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::unique_ptr<std::vector<std::unique_ptr<Statement>>> statements_;
+	up<std::vector<up<Statement>>> statements_;
 };
 
 class Block: public Statement
@@ -59,14 +60,14 @@ public:
 	Block( 
 		int s, 
 		int e, 
-		std::vector<std::unique_ptr<Statement>> * sts = nullptr ):
+		std::vector<up<Statement>> * sts = nullptr ):
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::unique_ptr<std::vector<std::unique_ptr<Statement>>> statements_;
+	up<std::vector<up<Statement>>> statements_;
 };
 
 class ExprStatement : public Statement
@@ -78,7 +79,7 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::unique_ptr<Expr> expr_;
+	up<Expr> expr_;
 };
 
 class Definition: public Statement
@@ -112,14 +113,14 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<std::unique_ptr<EnumMember>> * moe = nullptr );
+		std::vector<up<EnumMember>> * moe = nullptr );
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
-	std::unique_ptr<std::vector<std::unique_ptr<EnumMember>>> moe_;
+	up<std::vector<up<EnumMember>>> moe_;
 };
 
 class ClassDef: public TypeDef
@@ -129,7 +130,7 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<std::unique_ptr<Definition>> * mbrs = nullptr ):
+		std::vector<up<Definition>> * mbrs = nullptr ):
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -137,7 +138,7 @@ public:
 
 private:
 	std::string	name_;
-	std::unique_ptr<std::vector<std::unique_ptr<Definition>>> members_;
+	up<std::vector<up<Definition>>> members_;
 };
 
 class TupleDef: public TypeDef
@@ -147,7 +148,7 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<std::unique_ptr<Definition>> * mbrs = nullptr ):
+		std::vector<up<Definition>> * mbrs = nullptr ):
 	TypeDef(s,e), name_(n), members_(mbrs) {}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -155,7 +156,7 @@ public:
 
 private:
 	std::string	name_;
-	std::unique_ptr<std::vector<std::unique_ptr<Definition>>> members_;
+	up<std::vector<up<Definition>>> members_;
 };
 
 class VarDef: public Definition
@@ -171,9 +172,9 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::shared_ptr<Type> type_;
-	std::string name_;
-	int		ptrType_;
+   sp<Type> type_;
+std::string name_;
+		int ptrType_;
 };
 
 class Arg
@@ -182,8 +183,8 @@ public:
 	Arg( Type * t, const char * n ): type_(t), name_(n) {}
 
 private:
-	std::shared_ptr<Type> type_;
-	std::string name_;
+	sp<Type> type_;
+ std::string name_;
 };
 
 class RoutineDef: public Definition
@@ -194,7 +195,7 @@ public:
 		int e, 
 		Type * t, 
 		const char * n, 
-		std::vector<std::unique_ptr<Arg>> * args, 
+		std::vector<up<Arg>> * args, 
 		Block * bl = nullptr ):Definition(s,e),
 		returnType_(t), name_(n), body_(bl) 
 	{
@@ -206,9 +207,9 @@ public:
 	const Type	* returnType() const	{ return returnType_.get(); }
 
 private:
-	std::shared_ptr<Type> returnType_;
+	   sp<Type> returnType_;
 	std::string	name_;
-	std::unique_ptr<Block> body_;
+	  up<Block> body_;
 };
 
 class FunDef: public Definition
@@ -218,7 +219,7 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<std::unique_ptr<Arg>> * args, 
+		std::vector<up<Arg>> * args, 
 		Expr * ex):
 		Definition(s,e), name_(n), body_(ex) 
 	{
@@ -230,9 +231,9 @@ public:
 	const Type	* returnType() const	{ return returnType_.get(); }
 
 private:
-	std::shared_ptr<Type> returnType_;
+	   sp<Type> returnType_;
 	std::string	name_;
-	std::unique_ptr<Expr> body_;
+	   up<Expr> body_;
 };
 
 class AliasDef: public Definition
@@ -246,7 +247,7 @@ public:
 
 private:
 	std::string name_;
-	std::shared_ptr<Type> type_;
+	   sp<Type> type_;
 };
 
 class If: public Statement
@@ -266,10 +267,10 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-     std::unique_ptr<Expr> cond_;
-   std::unique_ptr<VarDef> variable_;
-std::unique_ptr<Statement> if_;
-std::unique_ptr<Statement> else_;
+     up<Expr> cond_;
+   up<VarDef> variable_;
+up<Statement> if_;
+up<Statement> else_;
 };
 
 class For: public Statement
@@ -298,11 +299,11 @@ public:
 
 private:
 
-     std::unique_ptr<Expr> init_;
-   std::unique_ptr<VarDef> variable_;
-     std::unique_ptr<Expr> cond_;
-     std::unique_ptr<Expr> incr_;
-std::unique_ptr<Statement> statement_;
+     up<Expr> init_;
+   up<VarDef> variable_;
+     up<Expr> cond_;
+     up<Expr> incr_;
+up<Statement> statement_;
 };
 
 class Default: public Statement
@@ -314,7 +315,7 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::unique_ptr<Statement> statement_;
+	up<Statement> statement_;
 };
 
 class Continue: public Statement
@@ -344,7 +345,7 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	std::unique_ptr<Expr> value_;
+	up<Expr> value_;
 };
 
 class Case: public Statement
@@ -359,9 +360,9 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-     std::unique_ptr<Expr> lower_;
-     std::unique_ptr<Expr> upper_;
-std::unique_ptr<Statement> statement_;
+     up<Expr> lower_;
+     up<Expr> upper_;
+up<Statement> statement_;
 };
 
 class Switch: public Statement
@@ -380,8 +381,8 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-     std::unique_ptr<Expr> cond_;
-   std::unique_ptr<VarDef> varDef_;
-std::unique_ptr<Statement> statement_;
+     up<Expr> cond_;
+   up<VarDef> varDef_;
+up<Statement> statement_;
 };
 

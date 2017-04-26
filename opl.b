@@ -239,36 +239,31 @@
 {
                  AliasDef * adef;
                       Arg * ar;
-      std::vector<std::unique_ptr<Arg>> 
-                          * arL;
+     std::vector<up<Arg>> * arL;
 
                     Block * bl;
                        bool b;
 
             ConstraintDef * cd;
-std::vector<std::unique_ptr<ConstraintDef>> 
+std::vector<up<ConstraintDef>> 
                           * cds;
                    Column * col;
-    std::vector<std::unique_ptr<Column>> 
+    std::vector<up<Column>> 
                           * cols;
 
                      double dbl;
                Definition * dcl;
-std::vector<std::unique_ptr<Definition>> 
-                          * dclL;
+std::vector<up<Definition>> * dclL;
 
                EnumMember * en;
-std::vector<std::unique_ptr<EnumMember>> 
-                          * enL;
+std::vector<up<EnumMember>> * enL;
                      Expr * ex;
-      std::vector<std::unique_ptr<Expr>> 
-                          * exL;
+      std::vector<up<Expr>> * exL;
 
                    FunDef * fdef;
 
                GrammarDef * gd;
-std::vector<std::unique_ptr<GrammarDef>> 
-                          * gds;
+std::vector<up<GrammarDef>> * gds;
                   GroupBy * gb;
 
                    Having * h;
@@ -284,8 +279,7 @@ std::vector<std::unique_ptr<GrammarDef>>
                RoutineDef * rdef;
 
                 Statement * st;
-std::vector<std::unique_ptr<Statement>> 
-                          * stL;
+std::vector<up<Statement>> * stL;
                        char str[1024];
 
                       Top * top;
@@ -407,12 +401,12 @@ args
 	| args ',' arg
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Arg>($3));
+		$$->push_back(up<Arg>($3));
 	}
 	| arg
 	{
-		$$ = new std::vector<std::unique_ptr<Arg>>();
-		$$->push_back(std::unique_ptr<Arg>($1));
+		$$ = new std::vector<up<Arg>>();
+		$$->push_back(up<Arg>($1));
 	}
 	;
 
@@ -526,12 +520,12 @@ members
 	: members ',' member
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<EnumMember>($3));
+		$$->push_back(up<EnumMember>($3));
 	}
 	| member
 	{
-		$$ = new std::vector<std::unique_ptr<EnumMember>>();
-		$$->push_back(std::unique_ptr<EnumMember>($1));
+		$$ = new std::vector<up<EnumMember>>();
+		$$->push_back(up<EnumMember>($1));
 	}
 	;
 
@@ -550,12 +544,12 @@ definitions
 	: definitions definition
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Definition>($2));
+		$$->push_back(up<Definition>($2));
 	}
 	| definition
 	{
-		$$ = new std::vector<std::unique_ptr<Definition>>();
-		$$->push_back(std::unique_ptr<Definition>($1));
+		$$ = new std::vector<up<Definition>>();
+		$$->push_back(up<Definition>($1));
 	}
 	;
 
@@ -693,12 +687,12 @@ statements
 	: statements statement
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Statement>($2));
+		$$->push_back(up<Statement>($2));
 	}
 	| statement
 	{
-		$$ = new std::vector<std::unique_ptr<Statement>>();
-		$$->push_back(std::unique_ptr<Statement>($1));
+		$$ = new std::vector<up<Statement>>();
+		$$->push_back(up<Statement>($1));
 	}
 	;
 
@@ -1057,12 +1051,12 @@ colList
 	: colList ',' col
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Column>($3));
+		$$->push_back(up<Column>($3));
 	}
 	| col
 	{
-		$$ = new std::vector<std::unique_ptr<Column>>();
-		$$->push_back(std::unique_ptr<Column>($1));
+		$$ = new std::vector<up<Column>>();
+		$$->push_back(up<Column>($1));
 	}
 	;
 
@@ -1152,12 +1146,12 @@ exprs
 	: exprs expr
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Expr>($2));
+		$$->push_back(up<Expr>($2));
 	}
 	| expr
 	{
-		$$ = new std::vector<std::unique_ptr<Expr>>();
-		$$->push_back(std::unique_ptr<Expr>($1));
+		$$ = new std::vector<up<Expr>>();
+		$$->push_back(up<Expr>($1));
 	}
 	;
 
@@ -1165,12 +1159,12 @@ exprList
 	: exprList ',' expr
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<Expr>($3));
+		$$->push_back(up<Expr>($3));
 	}
 	| expr
 	{
-		$$ = new std::vector<std::unique_ptr<Expr>>();
-		$$->push_back(std::unique_ptr<Expr>($1));
+		$$ = new std::vector<up<Expr>>();
+		$$->push_back(up<Expr>($1));
 	}
 	;
 
@@ -1178,12 +1172,12 @@ grammarDefs
 	: grammarDefs grammarDef
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<GrammarDef>($2));
+		$$->push_back(up<GrammarDef>($2));
 	}
 	| grammarDef
 	{
-		$$ = new std::vector<std::unique_ptr<GrammarDef>>();
-		$$->push_back(std::unique_ptr<GrammarDef>($1));
+		$$ = new std::vector<up<GrammarDef>>();
+		$$->push_back(up<GrammarDef>($1));
 	}
 	;
 
@@ -1237,12 +1231,12 @@ constraintDefs
 	: constraintDefs constraintDef
 	{
 		$$ = $1;
-		$$->push_back(std::unique_ptr<ConstraintDef>($2));
+		$$->push_back(up<ConstraintDef>($2));
 	}
 	| constraintDef
 	{
-		$$ = new std::vector<std::unique_ptr<ConstraintDef>>();
-		$$->push_back(std::unique_ptr<ConstraintDef>($1));
+		$$ = new std::vector<up<ConstraintDef>>();
+		$$->push_back(up<ConstraintDef>($1));
 	}
 	;
 

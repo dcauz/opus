@@ -12,7 +12,7 @@ EnumDef::EnumDef(
 	int s,
 	int e,
 	const char * n,
-	std::vector<std::unique_ptr<EnumMember>> * moe ):
+	std::vector<up<EnumMember>> * moe ):
 	TypeDef(s,e), 
 	name_(n), 
 	moe_(moe) 
