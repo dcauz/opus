@@ -4,8 +4,20 @@
 #include "program.h"
 #include "il.h"
 #include "type.h"
+#include "void.h"
+#include "expr.h"
 
 
+EnumDef::EnumDef(
+	int s,
+	int e,
+	const char * n,
+	std::vector<std::unique_ptr<EnumMember>> * moe ):
+	TypeDef(s,e), 
+	name_(n), 
+	moe_(moe) 
+{
+}
 
 Variables::Variables( int s, int e, std::vector<std::string> * ):
 	Definition(e,s)
@@ -16,14 +28,12 @@ Variables::Variables( int s, int e, std::vector<std::string> * ):
 
 Type * Variables::semCheck( SemCheckContext & scc ) const
 {
-	TODO // semCheck
-	return &errorType;
+	return &voidType;
 }
 
 Type * Empty::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	return &voidType;
 }
 
 Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 

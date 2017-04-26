@@ -24,7 +24,7 @@ public:
 	Uniary( Expr * o ):operand_(o) {}
 
 protected:
-	Expr * operand_;
+	std::unique_ptr<Expr> operand_;
 };
 
 class Binary: public Expr
@@ -33,8 +33,8 @@ public:
 	Binary( Expr * l, Expr * r ):left_(l), right_(r) {}
 
 protected:
-	Expr * left_;
-	Expr * right_;
+	std::unique_ptr<Expr> left_;
+	std::unique_ptr<Expr> right_;
 };
 
 class Trinary: public Expr
@@ -43,9 +43,9 @@ public:
 	Trinary( Expr * a, Expr * b, Expr * c ):operand1_(a), operand2_(b), operand3_(c) {}
 
 protected:
-	Expr * operand1_;
-	Expr * operand2_;
-	Expr * operand3_;
+	std::unique_ptr<Expr> operand1_;
+	std::unique_ptr<Expr> operand2_;
+	std::unique_ptr<Expr> operand3_;
 };
 
 class FuncCall: public Expr
@@ -58,7 +58,7 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	Expr * name_;
+	std::unique_ptr<Expr> name_;
 	std::unique_ptr<std::vector<std::unique_ptr<Expr>>> args_;
 };
 
@@ -71,7 +71,7 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	Expr * arg_;
+	std::unique_ptr<Expr> arg_;
 };
 
 class Name: public Expr
