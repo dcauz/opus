@@ -85,6 +85,12 @@ Type * ClassDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * Namespace::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * TupleDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -92,6 +98,12 @@ Type * TupleDef::semCheck( SemCheckContext & scc ) const
 }
 
 Type * VarDef::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
+Type * OperatorDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
 	return &errorType;
@@ -211,6 +223,12 @@ bool EnumDef::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
+bool Namespace::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool ClassDef::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
@@ -248,6 +266,12 @@ bool RoutineDef::genCode( GenCodeContext & gcc ) const
 	gcc.program()->ilEntities().push_back( fd );
 
 	return true;
+}
+
+bool OperatorDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
 }
 
 bool CtorDef::genCode( GenCodeContext & gcc ) const 

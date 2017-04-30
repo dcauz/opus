@@ -89,6 +89,25 @@ public:
 
 };
 
+class Namespace: public Definition
+{
+public:
+	Namespace( 
+		int s, 
+		int e, 
+		const char * n,
+		std::vector<up<Statement>> * sts = nullptr ):
+		name_(n),
+		Definition(s,e), statements_(sts) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	std::string name_;
+	up<std::vector<up<Statement>>> statements_;
+};
+
 class Variables: public Definition
 {
 public:
@@ -235,6 +254,31 @@ public:
 private:
 	   sp<Type> returnType_;
 	std::string	name_;
+	  up<Block> body_;
+};
+
+class OperatorDef: public Definition
+{
+public:
+	OperatorDef( 
+		int s, 
+		int e, 
+		Type * t, 
+		int n, 
+		std::vector<up<Arg>> * args, 
+		Block * bl = nullptr ):Definition(s,e),
+		returnType_(t), op_(n), body_(bl) 
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+	const Type	* returnType() const	{ return returnType_.get(); }
+
+private:
+	   sp<Type> returnType_;
+	        int op_;
 	  up<Block> body_;
 };
 

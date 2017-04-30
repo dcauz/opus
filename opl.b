@@ -54,6 +54,7 @@
 %token CASE					"case"
 %token CLASS				"class"
 %token <str> CLASS_NAME		"class-name"
+%token CONST				"const"
 %token CONTINUE				"continue"
 
 %token DATE                 "date"
@@ -96,17 +97,17 @@
 %token LEFT					"left"
 %token <i64> LONG_LIT		"long-literal"
 
-%token M_MULT				"(*)"
-%token M_DIV 				"(/)"
 %token MATRIX				"matrix"
 %token MODEL				"model"
 %token MULTISET				"multiset"
 
 %token N					"N"
 %token <str> NAME			"name"
+%token NAMESPACE			"namespace"
 %token _NULL				"null"
 
 %token OBJECT				"object"
+%token OPERATOR 			"operator"
 %token ORDER 				"order"
 %token OUTER				"outer"
 
@@ -152,6 +153,11 @@
 
 %token Z					"Z"
 
+%token IMPLES				":-"
+
+%token M_MULT				"(*)"
+%token M_DIV 				"(/)"
+
 %token A_ASS 				"&="
 %token D_ASS 				"/="
 %token M_ASS 				"*="
@@ -160,8 +166,6 @@
 %token S_ASS 				"-="
 %token X_ASS				"^="
 %token m_ASS 				"%="
-
-%token IMPLES				":-"
 
 %token EQ					"=="
 %token GE					">="
@@ -193,7 +197,7 @@
 %left '(' '['
 
 
-%type <adef> alias
+%type <dcl>  alias
 %type <ar>   arg
 %type <arL>  args
 %type <ex>   assignment
@@ -203,9 +207,10 @@
 %type <ex>   condExpr
 %type <cd>   constraintDef
 %type <cds>  constraintDefs
-%type <cdef> ctor
+%type <dcl>  ctor
 %type <dcl>  model
 %type <ex>   decExpr
+%type <i32>  declarators
 %type <dcl>  definition
 %type <dclL> definitions
 %type <i32>  dim
@@ -213,7 +218,7 @@
 %type <i32>  optDistinct
 %type <ex>   expr
 %type <exL>  exprList
-%type <fdef> function
+%type <dcl>  function
 %type <dcl>  grammar
 %type <gd>   grammarDef
 %type <gds>  grammarDefs
@@ -228,8 +233,10 @@
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
-%type <i32>  declarators
-%type <rdef> routine
+%type <dcl>  namespace
+%type <i32>  op
+%type <dcl>  operator
+%type <dcl>  routine
 %type <gd>   ruleDef
 %type <ex>   sExpr
 %type <st>   statement
@@ -240,8 +247,8 @@
 %type <dclL> topDefinitions
 %type <ty>   type
 %type <ty>   typeDecl
-%type <tdef> typeDef
-%type <vdef> variableDefinition
+%type <dcl>  typeDef
+%type <dcl>  variableDefinition
 %type <str>  varFrom
 %type <exL>  varWhere
 %type <ex>   wConstraint
@@ -268,7 +275,6 @@
 %union
 {
 
-                 AliasDef * adef;
                       Arg * ar;
      std::vector<up<Arg>> * arL;
 
@@ -281,7 +287,6 @@ std::vector<up<ConstraintDef>>
                    Column * col;
     std::vector<up<Column>> 
                           * cols;
-                  CtorDef * cdef;
 
                      double dbl;
                Definition * dcl;
@@ -291,8 +296,6 @@ std::vector<up<Definition>> * dclL;
 std::vector<up<EnumMember>> * enL;
                      Expr * ex;
       std::vector<up<Expr>> * exL;
-
-                   FunDef * fdef;
 
                GrammarDef * gd;
 std::vector<up<GrammarDef>> * gds;
@@ -308,7 +311,6 @@ std::vector<up<GrammarDef>> * gds;
  std::vector<std::string> * nL;
 
                        char r[1024];
-               RoutineDef * rdef;
 
                 Statement * st;
 std::vector<up<Statement>> * stL;
@@ -316,12 +318,9 @@ std::vector<up<Statement>> * stL;
 
                       Top * top;
                      Type * ty;
-                  TypeDef * tdef;
 
                unsigned int u32;
               unsigned long u64;
-
-                   VarDef * vdef;
 
                     Where * w;
 }
@@ -374,52 +373,68 @@ topDefinitions
 
 definition
 	: routine
-	{
-		$$ = $1;
-	}
 	| function
-	{
-		$$ = $1;
-	}
+	| operator
 	| ctor
-	{
-		$$ = $1;
-	}
+	| namespace
 	| indeterminate
-	{
-		$$ = $1;
-	}
 	| variableDefinition
-	{
-		$$ = $1;
-	}
 	| alias
-	{
-		$$ = $1;
-	}
 	| typeDef
-	{
-		$$ = $1;
-	}
 	| grammar
-	{
-		$$ = $1;
-	}
 	| model
+	;
+
+namespace
+	: NAMESPACE NAME '{' '}'
 	{
-		$$ = $1;
+		$$ = new Namespace( context->start, context->end, $2 );
+	}
+	| NAMESPACE NAME '{' statements '}'
+	{
+		$$ = new Namespace( context->start, context->end, $2, $4 );
 	}
 	;
 
 routine
-	: type NAME '(' args ')'
-	{
-		$$ = new RoutineDef( context->start, context->end, $1, $2, $4 );
-	}
-	| type NAME '(' args ')' body
+	: type NAME '(' args ')' body
 	{
 		$$ = new RoutineDef( context->start, context->end, $1, $2, $4, $6 );
 	}
+	;
+
+operator
+	: type OPERATOR op '(' args ')' body
+	{
+		$$ = new OperatorDef( context->start, context->end, $1, $3, $5 );
+	}
+	;
+
+op
+	: '+'		{ $$ = '+'; }
+	| '-'		{ $$ = '-'; }
+	| '&'		{ $$ = '&'; }
+	| '/'		{ $$ = '/'; }
+	| '*'		{ $$ = '*'; }
+	| '|'		{ $$ = '|'; }
+	| '^'		{ $$ = '^'; }
+	| '%'		{ $$ = '%'; }
+	| '='		{ $$ = '='; }
+	| '>'		{ $$ = '>'; }
+	| '<'		{ $$ = '<'; }
+	| EQ		{ $$ = EQ; }
+	| GE		{ $$ = GE; }
+	| LE		{ $$ = LE; }
+	| A_ASS 	{ $$ = A_ASS; }
+	| D_ASS 	{ $$ = D_ASS; }
+	| M_ASS 	{ $$ = M_ASS; }
+	| O_ASS		{ $$ = O_ASS; }
+	| P_ASS		{ $$ = P_ASS; }
+	| S_ASS		{ $$ = S_ASS; }
+	| X_ASS		{ $$ = X_ASS; }
+	| m_ASS		{ $$ = m_ASS; }
+	| M_MULT	{ $$ = M_MULT; }
+	| M_DIV 	{ $$ = M_DIV; }
 	;
 
 ctor
@@ -618,6 +633,10 @@ declarators
 	{
 		$$ = ATOMIC;
 	}
+	| CONST
+	{
+		$$ = CONST;
+	}
 	| UNIQUE
 	{
 		$$ = UNIQUE;
@@ -733,9 +752,6 @@ type
 		$$ = new Nullable( $1 );
 	}
 	| typeDecl
-	{
-		$$ = $1;
-	}
 	;
 
 typeDecl
@@ -920,9 +936,6 @@ dim
 		$$ = -1;
 	}
 	| INT_LIT
-	{
-		$$ = $1;
-	}
 	;
 
 statements
@@ -953,11 +966,12 @@ statement
 	}
 	| IF '(' variableDefinition ')' statement
 	{
-		$$ = new If( context->start, context->end, $3, $5 );
+		$$ = new If( context->start, context->end, static_cast<VarDef *>($3), $5 );
 	}
 	| IF '(' variableDefinition ')' statement ELSE statement
 	{
-		$$ = new If( context->start, context->end, $3, $5, $7 );
+		$$ = new If( context->start, context->end, static_cast<VarDef *>($3), 
+			$5, $7 );
 	}
 	| FOR '(' expr ';' expr ';' expr ')' statement
 	{
@@ -985,15 +999,18 @@ statement
 	}
 	| FOR '(' variableDefinition ';' expr ';' expr ')' statement
 	{
-		$$ = new For( context->start, context->end, $3, $5, $7, $9 );
+		$$ = new For( context->start, context->end, static_cast<VarDef *>($3),
+			 $5, $7, $9 );
 	}
 	| FOR '(' variableDefinition ';' ';' ')' statement
 	{
-		$$ = new For( context->start, context->end, $3, nullptr, nullptr, $7 );
+		$$ = new For( context->start, context->end, static_cast<VarDef *>($3),
+			nullptr, nullptr, $7 );
 	}
 	| FOR '(' variableDefinition ';' expr ';' ')' statement
 	{
-		$$ = new For( context->start, context->end, $3, $5, nullptr, $8 );
+		$$ = new For( context->start, context->end, static_cast<VarDef *>($3), 
+			$5, nullptr, $8 );
 	}
 	| FOR '(' expr ';' ';' expr ')' statement
 	{
@@ -1001,7 +1018,8 @@ statement
 	}
 	| FOR '(' variableDefinition ';' ';' expr ')' statement
 	{
-		$$ = new For( context->start, context->end, $3, nullptr, $6, $8 );
+		$$ = new For( context->start, context->end, static_cast<VarDef *>($3), 
+			nullptr, $6, $8 );
 	}
 	| FOR '(' ';' expr ';' expr ')' statement
 	{
@@ -1013,7 +1031,8 @@ statement
 	}
 	| SWITCH '(' variableDefinition ')' statement
 	{
-		$$ = new Switch( context->start, context->end, $3, $5 );
+		$$ = new Switch( context->start, context->end, 
+			static_cast<VarDef *>($3), $5 );
 	}
 	| DEFAULT  ':' statement
 	{
