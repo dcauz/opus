@@ -85,8 +85,20 @@ private:
 class Definition: public Statement
 {
 public:
-	Definition( int s, int e ):Statement(s,e) {}
+	Definition( int s, int e ):Statement(s,e), isPrivate_(false) {}
+	void isPrivate() { isPrivate_ = true; }
 
+private:
+	bool isPrivate_;
+};
+
+class Private: public Definition
+{
+public:
+	Private( int s, int e ):Definition(s,e) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Namespace: public Definition

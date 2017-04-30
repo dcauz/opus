@@ -68,8 +68,10 @@
 %token _E					"e"
 %token ELSE					"else"
 %token ENUM					"enum"
+%token EXTEND				"extends"
 
 %token <b> FALSE			"false"
+%token FINAL				"final"
 %token FLOAT				"float"
 %token <dbl> FLOAT_LIT		"float-literal"
 %token FOR					"for"
@@ -110,12 +112,14 @@
 %token OPERATOR 			"operator"
 %token ORDER 				"order"
 %token OUTER				"outer"
+%token OVERRIDE         	"override"
 
 %token PERCENT				"percent"
 %token PERIOD               "period"
 %token _PI					"pi"
 %token POW					"**"
 %token PQUEUE				"pqueue"
+%token PRIVATE              "private"
 
 %token Q					"Q"
 %token QUEUE				"queue"
@@ -128,6 +132,7 @@
 %token SELECT				"select"
 %token SET					"set"
 %token SHARED				"shared"
+%token SPECIALIZE			"specialize"
 %token STACK				"stack"
 %token STRING				"string"
 %token <str> STRING_LIT		"string-literal"
@@ -211,6 +216,7 @@
 %type <dcl>  model
 %type <ex>   decExpr
 %type <i32>  declarators
+%type <dcl>  def
 %type <dcl>  definition
 %type <dclL> definitions
 %type <i32>  dim
@@ -236,6 +242,7 @@
 %type <dcl>  namespace
 %type <i32>  op
 %type <dcl>  operator
+%type <dcl>  private
 %type <dcl>  routine
 %type <gd>   ruleDef
 %type <ex>   sExpr
@@ -256,7 +263,7 @@
 %type <w>    optWhere
 
 
-%expect 74
+%expect 98
 
 
 %define api.pure
@@ -372,6 +379,15 @@ topDefinitions
 	;
 
 definition
+	: PRIVATE def
+	{
+		$$ = $2;
+		$$->isPrivate();
+	}
+	| def
+	;
+
+def
 	: routine
 	| function
 	| operator
@@ -383,6 +399,14 @@ definition
 	| typeDef
 	| grammar
 	| model
+	| private
+	;
+
+private
+	: PRIVATE ':'
+	{
+		$$ = new Private( context->start, context->end );
+	}
 	;
 
 namespace
@@ -637,6 +661,18 @@ declarators
 	{
 		$$ = CONST;
 	}
+	| OVERRIDE
+	{
+		$$ = CONST;
+	}
+	| FINAL
+	{
+		$$ = CONST;
+	}
+	| PRIVATE
+	{
+		$$ = CONST;
+	}
 	| UNIQUE
 	{
 		$$ = UNIQUE;
@@ -683,30 +719,53 @@ alias
 	;
 
 typeDef
-	: ENUM NAME '{' members '}'
+	: ENUM NAME optBaseEnums '{' members '}'
 	{
-		$$ = new EnumDef( context->start, context->end, $2, $4 );
+		$$ = new EnumDef( context->start, context->end, $2, $5 );
 	}
-	| ENUM NAME '{' '}'
+	| ENUM NAME optBaseEnums '{' '}'
 	{
 		$$ = new EnumDef( context->start, context->end, $2 );
 	}
-	| CLASS NAME '{' definitions '}'
+	| CLASS NAME optParams optBaseClasses '{' definitions '}'
 	{
-		$$ = new ClassDef( context->start, context->end, $2, $4 );
+		$$ = new ClassDef( context->start, context->end, $2, $6 );
 	}
-	| CLASS NAME '{' '}'
+	| CLASS NAME optParams optBaseClasses '{' '}'
 	{
 		$$ = new ClassDef( context->start, context->end, $2 );
 	}
-	| TUPLE NAME '{' definitions '}'
+	| TUPLE NAME optParams optBaseTuples '{' definitions '}'
 	{
-		$$ = new TupleDef( context->start, context->end, $2, $4 );
+		$$ = new TupleDef( context->start, context->end, $2, $6 );
 	}
-	| TUPLE NAME '{' '}'
+	| TUPLE NAME optParams optBaseTuples '{' '}'
 	{
 		$$ = new TupleDef( context->start, context->end, $2 );
 	}
+	;
+
+optBaseEnums
+	:
+	| EXTEND nameList
+	;
+
+optBaseClasses
+	:
+	| EXTEND nameList
+	| SPECIALIZE nameList
+	| EXTEND nameList SPECIALIZE nameList
+	| SPECIALIZE nameList EXTEND nameList
+	;
+
+optBaseTuples
+	:
+	| EXTEND nameList
+	;
+
+optParams
+	: 
+	| '<' nameList '>'
 	;
 
 members

@@ -85,6 +85,12 @@ Type * ClassDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * Private::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -218,6 +224,12 @@ bool ExprStatement::genCode( GenCodeContext & gcc ) const
 }
 
 bool EnumDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Private::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;
