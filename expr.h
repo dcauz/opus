@@ -323,6 +323,15 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
+class In: public Binary
+{
+public:
+	In( Expr * l, Expr * r ):Binary(l,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
 class Index : public Expr
 {
 public:

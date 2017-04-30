@@ -865,10 +865,10 @@ public:
 	virtual bool verify( Node * parent ) const;
 };
 
-class Time:public Node
+class TimeNode:public Node
 {
 public:
-	Time( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	TimeNode( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };

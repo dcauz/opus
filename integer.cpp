@@ -4,6 +4,7 @@
 
 
 IntegerType	integerType;
+IntegerType	naturalType;
 
 
 IntegerType::IntegerType()

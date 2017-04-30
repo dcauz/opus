@@ -7,6 +7,7 @@
 #include "bool.h"
 #include "complex.h"
 #include "constraints.h"
+#include "datetime.h"
 #include "dequeue.h"
 #include "dynamic.h"
 #include "enum.h"

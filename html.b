@@ -1804,11 +1804,11 @@ textarea
 time
 	: TIME nodes _TIME
 	{
-		$$ = new Time( nullptr, nullptr);
+		$$ = new TimeNode( nullptr, nullptr);
 	}
 	| TIME _TIME
 	{
-		$$ = new Time( nullptr, nullptr);
+		$$ = new TimeNode( nullptr, nullptr);
 	}
 	;
 

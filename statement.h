@@ -162,19 +162,45 @@ private:
 class VarDef: public Definition
 {
 public:
-	VarDef( int s, int e, Type * t, const char * n, int pt=0 ):
-		Definition(s,e), 
-		type_(t),
-		name_(n),
-		ptrType_(pt) {}
+	VarDef( int s, int e, 
+		Type * t, 
+		const char * n, 
+		int pt=0,
+		std::vector<up<Expr>> * w=nullptr,
+		const char * f=nullptr ):
+	Definition(s,e), 
+	type_(t),
+	name_(n),
+	ptrType_(pt),
+	where_(w)
+	{
+		if(f)
+			from_ = f;
+	}
+
+	VarDef( int s, int e, 
+		Type * t, 
+		const char * n, 
+		int pt=0,
+		std::vector<up<Expr>> * w=nullptr,
+		Expr * init=nullptr ):
+	Definition(s,e), 
+	type_(t),
+	name_(n),
+	ptrType_(pt),
+	init_(init) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-   sp<Type> type_;
-std::string name_;
-		int ptrType_;
+                 sp<Type> type_;
+              std::string name_;
+up<std::vector<up<Expr>>> where_;
+                      int ptrType_;
+              std::string from_;
+                 up<Expr> init_;
+	
 };
 
 class Arg
@@ -208,6 +234,27 @@ public:
 
 private:
 	   sp<Type> returnType_;
+	std::string	name_;
+	  up<Block> body_;
+};
+
+class CtorDef: public Definition
+{
+public:
+	CtorDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<up<Arg>> * args, 
+		Block * bl = nullptr ):Definition(s,e),
+		name_(n), body_(bl) 
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
 	std::string	name_;
 	  up<Block> body_;
 };

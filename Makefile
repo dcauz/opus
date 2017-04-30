@@ -7,6 +7,7 @@ SRC := \
 bool.cpp \
 complex.cpp \
 constraints.cpp \
+datetime.cpp \
 dequeue.cpp \
 dynamic.cpp \
 enum.cpp \

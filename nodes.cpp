@@ -621,7 +621,7 @@ bool Th::verify( Node * parent ) const
 	return false;
 }
 
-bool Time::verify( Node * parent ) const
+bool TimeNode::verify( Node * parent ) const
 {
 	TODO // verify
 	return false;

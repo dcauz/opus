@@ -9,6 +9,32 @@
 #include "yylex.h"
 
 
+// TODO
+//
+// DATE_LIT
+// DATETIME_LIT
+// TIME_LIT
+// PERIOD_LIT
+// CLASS_NAME
+// 
+
+// date       yyyy.mm.dd
+// datetime   yyyy.mm.dd.hh[.mm[.ss[.mmmmmm]]]
+// time       hh.mm.ss
+//
+// period     one or more of
+//
+//            digitsY
+//            digitsM
+//            digitsD
+//            digitsh
+//            digitsm
+//            digits[.digits]s
+//
+//            separated by . and in decreasing order
+//            For example, 5Y.3M.10D.2h.5m.12.121213s
+//
+
 namespace
 {
 
@@ -16,101 +42,105 @@ struct Keyword
 {
 	int id;
 	const char * lexium;
-	bool select;
 };
 
 Keyword keywords[] =
 {
-	{ ALIAS,       "alias",       false },
-	{ AS,          "as",          true },
-	{ ATOMIC,      "atomic",      false },
+	{ ALIAS,       "alias" },
+	{ AS,          "as" },
+	{ ATOMIC,      "atomic" },
 
-	{ BOOL,        "bool",        false },
-	{ BREAK,       "break",       false },
-	{ BY,          "by",          true },
+	{ BOOL,        "bool" },
+	{ BREAK,       "break" },
+	{ BY,          "by" },
 
-	{ C,           "C",           false },
-	{ CASE,        "case",        false },
-	{ CLASS,       "class",       false },
-	{ CONSTRAINTS, "constraints", false },
-	{ CONTINUE,    "continue",    false },
+	{ C,           "C" },
+	{ CASE,        "case" },
+	{ CLASS,       "class" },
+	{ CONTINUE,    "continue" },
 
-	{ DEFAULT,     "default",     false },
-	{ DEQUEUE,     "dequeue",     false },
-	{ DISTINCT,    "distinct",    true },
-	{ DYNAMIC,     "dynamic" ,    false },
+	{ DATE,        "date" },
+	{ DATETIME,    "datetime" },
+	{ DEFAULT,     "default" },
+	{ DEQUEUE,     "dequeue" },
+	{ DISTINCT,    "distinct" },
+	{ DYNAMIC,     "dynamic" },
 
-	{ _E,          "e",           false },
-	{ ELSE,        "else",        false },
-	{ ENUM,        "enum",        false },
+	{ _E,          "e" },
+	{ ELSE,        "else" },
+	{ ENUM,        "enum" },
 
-	{ FALSE,       "false",       false },
-	{ FLOAT,       "float",       false },
-	{ FOR,         "for",         false },
-	{ FROM,        "from",        true },
-	{ FUN,         "fun",         false },
+	{ FALSE,       "false" },
+	{ FLOAT,       "float" },
+	{ FOR,         "for" },
+	{ FROM,        "from" },
+	{ FUN,         "fun" },
 
-	{ GRAMMAR,     "grammar",     false },
-	{ GROUP,       "group",       true },
+	{ GRAMMAR,     "grammar" },
+	{ GROUP,       "group" },
 
-	{ HAVING,      "having",      true },
+	{ HAVING,      "having" },
 
-	{ I,           "i",           false },
-	{ IF,          "if",          false },
-	{ INTERSECT,   "intersect",   false },
-	{ ISNULL,      "isnull",      false },
+	{ I,           "i" },
+	{ IF,          "if" },
+    { IMPORT,      "import" },
+	{ INTERSECT,   "intersect" },
+	{ ISNULL,      "isnull" },
 
-	{ JOIN,        "join",        true },
+	{ JOIN,        "join" },
 
-	{ LEFT,        "left",        true },
+	{ LEFT,        "left" },
 
-	{ MATRIX,      "matrix",      false },
-	{ MULTISET,    "multiset" ,   false },
+	{ MATRIX,      "matrix" },
+	{ MODEL,       "model" },
+	{ MULTISET,    "multiset" },
 
-	{ N,           "N",           false },
-	{ NAME,        "name" ,       false },
-	{ _NULL,       "null" ,       false },
+	{ N,           "N" },
+	{ NAME,        "name" },
+	{ _NULL,       "null" },
 
-	{ OBJECT,      "object" ,     false },
-	{ OUTER,       "outer" ,      true },
-	{ ORDER,       "order" ,      true },
+	{ OBJECT,      "object" },
+	{ OUTER,       "outer" },
+	{ ORDER,       "order" },
 
-	{ PERCENT,     "percent" ,    true },
-	{ _PI,         "pi" ,         false },
-	{ PQUEUE,      "pqueue" ,     false },
+	{ PERCENT,     "percent" },
+    { PERIOD,      "period" },
+	{ _PI,         "pi" },
+	{ PQUEUE,      "pqueue" },
 
-	{ Q,           "Q" ,          false },
-	{ QUEUE,       "queue" ,      false },
+	{ Q,           "Q" },
+	{ QUEUE,       "queue" },
 
-	{ R,           "R" ,          false },
-	{ RETURN,      "return" ,     false },
-	{ RIGHT,       "right" ,      true },
+	{ R,           "R" },
+	{ RETURN,      "return" },
+	{ RIGHT,       "right" },
 
-	{ SELECT,      "select" ,     false },
-	{ SET,         "set" ,        false },
-	{ SHARED,      "shared",      false },
-	{ STACK,       "stack" ,      false },
-	{ STRING,      "string" ,     false },
-	{ SWITCH,      "switch" ,     false },
+	{ SELECT,      "select" },
+	{ SET,         "set" },
+	{ SHARED,      "shared" },
+	{ STACK,       "stack" },
+	{ STRING,      "string" },
+	{ SWITCH,      "switch" },
 
-	{ TENSOR,      "tensor" ,     false },
-	{ TIES,        "ties" ,       true },
-	{ TOP,         "top" ,        true },
-	{ TRUE,        "true" ,       false },
-	{ TUPLE,       "tuple" ,      false },
+	{ TENSOR,      "tensor" },
+	{ TIES,        "ties" },
+	{ TIME,        "time" },
+	{ TOP,         "top" },
+	{ TRUE,        "true" },
+	{ TUPLE,       "tuple" },
 
-	{ UNION,       "union" ,      false },
-	{ UNIQUE,      "unique",      false },
+	{ UNION,       "union" },
+	{ UNIQUE,      "unique" },
 
-	{ IND,         "ind" ,        false },
-	{ VECTOR,      "vector" ,     false },
-	{ VOID,        "void" ,       false },
+	{ IND,         "ind" },
+	{ VECTOR,      "vector" },
+	{ VOID,        "void" },
 
-	{ WEAK,        "weak",        false },
-	{ WHERE,       "where",       true },
-	{ WITH,        "with",        true },
+	{ WEAK,        "weak" },
+	{ WHERE,       "where" },
+	{ WITH,        "with" },
 
-	{ Z,           "Z",           false },
+	{ Z,           "Z" },
 };
 
 bool isInteger( 

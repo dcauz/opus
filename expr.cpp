@@ -173,6 +173,12 @@ Type * Union::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * In::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * Intersect::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -428,6 +434,12 @@ bool XorAssign::genCode( GenCodeContext & gcc ) const
 }
 
 bool Union::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool In::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

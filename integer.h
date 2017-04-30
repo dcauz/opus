@@ -48,3 +48,4 @@ public:
 };
 
 extern IntegerType	integerType;
+extern IntegerType	naturalType;

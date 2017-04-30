@@ -1,6 +1,7 @@
 %{
 
 #include <memory>
+#include <cstring>
 
 #include "yyerror.h"
 #include "yylex.h"
@@ -12,6 +13,7 @@
 #include "bool.h"
 #include "complex.h"
 #include "constraints.h"
+#include "datetime.h"
 #include "dequeue.h"
 #include "dynamic.h"
 #include "enum.h"
@@ -35,6 +37,10 @@
 
 
 %}
+%token <ex>  DATE_LIT       "date-literal"
+%token <ex> DATETIME_LIT    "datetime-literal"
+%token <ex>  PERIOD_LIT     "period-literal"
+%token <ex>  TIME_LIT       "time-literal"
 
 %token ALIAS				"alias"
 %token AS					"as"
@@ -47,9 +53,11 @@
 %token C					"C"
 %token CASE					"case"
 %token CLASS				"class"
-%token CONSTRAINTS			"constraints"
+%token <str> CLASS_NAME		"class-name"
 %token CONTINUE				"continue"
 
+%token DATE                 "date"
+%token DATETIME             "datetime"
 %token DEFAULT				"default"
 %token DEQUEUE				"dequeue"
 %token DISTINCT				"distinct"
@@ -74,7 +82,8 @@
 
 %token I 					"i"
 %token IF 					"if"
-%token IMPLES				":-"
+%token IMPORT				"import"
+%token IN					"in"
 %token <i32> INT_LIT		"int-literal"
 %token <i> INTEGER_LIT		"integer-literal"
 %token INTERSECT			"intersect"
@@ -90,6 +99,7 @@
 %token M_MULT				"(*)"
 %token M_DIV 				"(/)"
 %token MATRIX				"matrix"
+%token MODEL				"model"
 %token MULTISET				"multiset"
 
 %token N					"N"
@@ -101,6 +111,7 @@
 %token OUTER				"outer"
 
 %token PERCENT				"percent"
+%token PERIOD               "period"
 %token _PI					"pi"
 %token POW					"**"
 %token PQUEUE				"pqueue"
@@ -123,6 +134,7 @@
 
 %token TENSOR				"tensor"
 %token TIES					"ties"
+%token TIME                 "time"
 %token TOP					"top"
 %token <b> TRUE				"true"
 %token TUPLE				"tuple"
@@ -149,6 +161,8 @@
 %token X_ASS				"^="
 %token m_ASS 				"%="
 
+%token IMPLES				":-"
+
 %token EQ					"=="
 %token GE					">="
 %token LE					"<="
@@ -161,7 +175,9 @@
 
 %token UNIARY_MINUS			"-"
 
+
 %right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS '?' ':'
+%left IN DOT_DOT
 %left UNION INTERSECT
 %left '|'
 %left '&'
@@ -173,19 +189,23 @@
 %left '*' '/' '%' M_MULT M_DIV
 %right POW 
 %left '.' 
-%nonassoc INC DEC '!' UNIARY_MINUS POST_INC POST_DEC
+%nonassoc '!' UNIARY_MINUS 
 %left '(' '['
 
 
 %type <adef> alias
 %type <ar>   arg
 %type <arL>  args
+%type <ex>   assignment
 %type <bl>   body
 %type <col>  col
 %type <cols> colList
+%type <ex>   condExpr
 %type <cd>   constraintDef
 %type <cds>  constraintDefs
-%type <dcl>  constraints
+%type <cdef> ctor
+%type <dcl>  model
+%type <ex>   decExpr
 %type <dcl>  definition
 %type <dclL> definitions
 %type <i32>  dim
@@ -193,33 +213,43 @@
 %type <i32>  optDistinct
 %type <ex>   expr
 %type <exL>  exprList
-%type <exL>  exprs
 %type <fdef> function
 %type <dcl>  grammar
 %type <gd>   grammarDef
 %type <gds>  grammarDefs
 %type <gb>   optGroupBy
 %type <h>    optHaving
+%type <dcl>  indeterminate
+%type <dcl>  import
+%type <dclL> imports
+%type <ex>   incExpr
+%type <ex>   literal
+%type <ex>   lvalue
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
-%type <i32>  declators
+%type <i32>  declarators
 %type <rdef> routine
 %type <gd>   ruleDef
+%type <ex>   sExpr
 %type <st>   statement
 %type <stL>  statements
 %type <top>	 optTop
 %type <gd>	 tokenDef
 %type <nL>   tokens
+%type <dclL> topDefinitions
 %type <ty>   type
 %type <ty>   typeDecl
 %type <tdef> typeDef
 %type <vdef> variableDefinition
-%type <dcl>  indeterminate
+%type <str>  varFrom
+%type <exL>  varWhere
+%type <ex>   wConstraint
+%type <exL>  wConstraints
 %type <w>    optWhere
 
 
-%expect 101
+%expect 74
 
 
 %define api.pure
@@ -237,6 +267,7 @@
 
 %union
 {
+
                  AliasDef * adef;
                       Arg * ar;
      std::vector<up<Arg>> * arL;
@@ -250,6 +281,7 @@ std::vector<up<ConstraintDef>>
                    Column * col;
     std::vector<up<Column>> 
                           * cols;
+                  CtorDef * cdef;
 
                      double dbl;
                Definition * dcl;
@@ -297,7 +329,40 @@ std::vector<up<Statement>> * stL;
 %%
 
 program
-	: program definition
+	: imports topDefinitions
+	{
+		// TODO
+	}
+	| imports
+	{
+		// TODO
+	}
+	| topDefinitions
+	{
+		// TODO
+	}
+	;
+
+imports
+	: imports import
+	{
+		$$ = nullptr; // TODO
+	}
+	| import
+	{
+		$$ = nullptr; // TODO
+	}
+	;
+
+import
+	: IMPORT NAME
+	{
+		$$ = nullptr; // TODO
+	}
+	;
+
+topDefinitions
+	: topDefinitions definition
 	{
 		context->program.definitions().push_back($2);
 	}
@@ -313,6 +378,10 @@ definition
 		$$ = $1;
 	}
 	| function
+	{
+		$$ = $1;
+	}
+	| ctor
 	{
 		$$ = $1;
 	}
@@ -336,7 +405,7 @@ definition
 	{
 		$$ = $1;
 	}
-	| constraints
+	| model
 	{
 		$$ = $1;
 	}
@@ -350,6 +419,17 @@ routine
 	| type NAME '(' args ')' body
 	{
 		$$ = new RoutineDef( context->start, context->end, $1, $2, $4, $6 );
+	}
+	;
+
+ctor
+	: CLASS_NAME '(' args ')'
+	{
+		$$ = new CtorDef( context->start, context->end, $1, $3 );
+	}
+	| NAME '(' args ')' body
+	{
+		$$ = new CtorDef( context->start, context->end, $1, $3, $5 );
 	}
 	;
 
@@ -373,8 +453,8 @@ grammar
 	}
 	;
 
-constraints
-	: CONSTRAINTS NAME '{' constraintDefs '}'
+model
+	: MODEL NAME '{' constraintDefs '}'
 	{
 		$$ = new Constraints( context->start, context->end, $2, $4 );
 	}
@@ -429,17 +509,111 @@ body
 	;
 
 variableDefinition
-	: type NAME
+	: type NAME 
 	{
-		$$ = new VarDef( context->start, context->end, $1, $2 );
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, nullptr, static_cast<const char *>(nullptr) );
 	}
-	| declators type NAME
+	| declarators type NAME 
 	{
-		$$ = new VarDef( context->start, context->end, $2, $3, $1 );
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, nullptr, static_cast<const char *>(nullptr) );
+	}
+	| type NAME varFrom
+	{
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, nullptr, $3 );
+	}
+	| declarators type NAME varFrom
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, nullptr, $4);
+	}
+
+	| type NAME varWhere 
+	{
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, $3, static_cast<const char *>(nullptr) );
+	}
+	| declarators type NAME varWhere 
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, $4, static_cast<const char *>(nullptr));
+	}
+	| type NAME varWhere varFrom
+	{
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, $3, $4 );
+	}
+	| declarators type NAME varWhere varFrom
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, $4, $5 );
+	}
+
+
+	| type NAME '=' expr
+	{
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, nullptr, $4 );
+	}
+	| declarators type NAME '=' expr
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, nullptr, $5 );
+	}
+	| type NAME varWhere '=' expr
+	{
+		$$ = new VarDef( context->start, context->end, $1, $2, 0, $3, $5 );
+	}
+	| declarators type NAME varWhere '=' expr
+	{
+		$$ = new VarDef( context->start, context->end, $2, $3, $1, $4, $6 );
 	}
 	;
 
-declators
+varWhere
+	: WHERE wConstraints
+	{
+		$$ = $2;
+	}
+	;
+
+wConstraints
+	: wConstraints ',' wConstraint
+	{
+		$$ = $1;
+		$$->push_back(up<Expr>($3));
+	}
+	| wConstraint
+	{
+		$$ = new std::vector<up<Expr>>();
+		$$->push_back(up<Expr>($1));
+	}
+	;
+
+wConstraint
+	: OBJECT DISTINCT
+	{
+		$$ = nullptr; // TODO
+	}
+	| ORDER BY expr
+	{
+		$$ = nullptr; // TODO
+	}
+	| ORDER BY '(' exprList ')'
+	{
+		$$ = nullptr; // TODO
+	}
+	| expr DISTINCT
+	{
+		$$ = nullptr; // TODO
+	}
+	| '(' exprList ')' DISTINCT
+	{
+		$$ = nullptr; // TODO
+	}
+	| expr
+	;
+
+varFrom
+	: FROM STRING_LIT
+	{
+		strcpy($$, $2 );
+	}
+	;
+
+declarators
 	: ATOMIC
 	{
 		$$ = ATOMIC;
@@ -573,6 +747,34 @@ typeDecl
 	{
 		$$ = &integerType;
 	}
+	| Z '[' expr ']'
+	{
+		$$ = &integerType;
+	}
+	| Z '[' expr ',' expr ']'
+	{
+		$$ = &integerType;
+	}
+	| Z '[' expr ',' ']'
+	{
+		$$ = &integerType;
+	}
+	| N
+	{
+		$$ = &naturalType;
+	}
+	| N '[' expr ']'
+	{
+		$$ = &naturalType;
+	}
+	| N '[' expr ',' expr ']'
+	{
+		$$ = &naturalType;
+	}
+	| N '[' expr ',' ']'
+	{
+		$$ = &naturalType;
+	}
 	| FLOAT
 	{
 		$$ = &floatType;
@@ -581,13 +783,53 @@ typeDecl
 	{
 		$$ = &rationalType;
 	}
+	| Q '[' expr ']'
+	{
+		$$ = &rationalType;
+	}
+	| Q '[' expr ',' expr ']'
+	{
+		$$ = &rationalType;
+	}
+	| Q '[' expr ',' ']'
+	{
+		$$ = &rationalType;
+	}
 	| R
+	{
+		$$ = &realType;
+	}
+	| R '[' expr ']'
+	{
+		$$ = &realType;
+	}
+	| R '[' expr ',' expr ']'
+	{
+		$$ = &realType;
+	}
+	| R '[' expr ',' ']'
 	{
 		$$ = &realType;
 	}
 	| STRING
 	{
 		$$ = &stringType;
+	}
+	| DATE
+	{
+		$$ = &dateType;
+	}
+	| DATETIME
+	{
+		$$ = &datetimeType;
+	}
+	| TIME
+	{
+		$$ = &timeType;
+	}
+	| PERIOD
+	{
+		$$ = &periodType;
 	}
 	| BOOL
 	{
@@ -697,7 +939,7 @@ statements
 	;
 
 statement
-	: expr
+	: sExpr
 	{
 		$$ = new ExprStatement( context->start, context->end, $1 );
 	}
@@ -781,10 +1023,6 @@ statement
 	{
 		$$ = new Case( context->start, context->end, $2, nullptr, $4 );
 	}
-	| CASE expr DOT_DOT expr ':' statement
-	{
-		$$ = new Case( context->start, context->end, $2, $4, $6 );
-	}
 	| BREAK
 	{
 		$$ = new Break(context->start);
@@ -807,12 +1045,88 @@ statement
 	}
 	;
 
-expr
-	: NAME '=' expr
+sExpr
+	: assignment
+	| incExpr
+	| decExpr
+	;
+
+assignment
+	: lvalue '=' expr
 	{
-		$$ = new Assign( new Name($1), $3 );
+		$$ = new Assign( $1, $3 );
 	}
-	| INT_LIT
+	| lvalue P_ASS expr
+	{
+		$$ = new AddAssign( $1, $3 );
+	}
+	| lvalue S_ASS expr
+	{
+		$$ = new SubAssign( $1, $3 );
+	}
+	| lvalue M_ASS expr
+	{
+		$$ = new MulAssign( $1, $3 );
+	}
+	| lvalue D_ASS expr
+	{
+		$$ = new DivAssign( $1, $3 );
+	}
+	| lvalue m_ASS expr
+	{
+		$$ = new ModAssign( $1, $3 );
+	}
+	| lvalue A_ASS expr
+	{
+		$$ = new AndAssign( $1, $3 );
+	}
+	| lvalue O_ASS expr
+	{
+		$$ = new OrAssign( $1, $3 );
+	}
+	| lvalue X_ASS expr
+	{
+		$$ = new XorAssign( $1, $3 );
+	}
+	;
+
+
+lvalue
+	: NAME
+	{
+	}
+	| lvalue '[' expr ']'
+	{
+	}
+	| lvalue '.' lvalue
+	{
+	}
+	;
+
+incExpr
+	: INC lvalue
+	{
+		$$ = new Inc( $2 );
+	}
+	| lvalue INC %prec POST_INC
+	{
+		$$ = new PostInc( $1 );
+	}
+	;
+
+decExpr
+	: DEC lvalue
+	{
+		$$ = new Dec( $2 );
+	}
+	| lvalue DEC %prec POST_DEC
+	{
+		$$ = new PostDec( $1 );
+	}
+	;
+
+literal
+	: INT_LIT
 	{
 		$$ = new Integer($1);
 	}
@@ -836,10 +1150,6 @@ expr
 	{
 		$$ = new Void;
 	}
-	| ISNULL '(' expr ')'
-	{
-		$$ = new IsVoid( $3 );
-	}
 	| _PI
 	{
 		$$ = new PI;
@@ -856,10 +1166,6 @@ expr
 	{
 		$$ = new String($1);
 	}
-	| '(' expr ')'
-	{
-		$$ = $2;
-	}
 	| TRUE
 	{
 		$$ = new Bool($1);
@@ -867,6 +1173,68 @@ expr
 	| FALSE
 	{
 		$$ = new Bool($1);
+	}
+	| '<' exprList '>'
+	{
+		$$ = nullptr; // TODO
+	}
+	| '{' exprList '}'
+	{
+		$$ = nullptr; // TODO
+	}
+	| DATE_LIT
+	| DATETIME_LIT
+	| PERIOD_LIT
+	| TIME_LIT
+	;
+
+condExpr
+	: ISNULL '(' expr ')'
+	{
+		$$ = new IsVoid( $3 );
+	}
+	| expr IN expr
+	{
+		$$ = new In($1, $3 );
+	}
+	| expr NE expr
+	{
+		$$ = new NotEq( $1, $3 );
+	}
+	| expr EQ expr
+	{
+		$$ = new Eq( $1, $3 );
+	}
+	| expr GE expr
+	{
+		$$ = new GreaterEq( $1, $3 );
+	}
+	| expr '>' expr
+	{
+		$$ = new Greater( $1, $3 );
+	}
+	| expr LE expr
+	{
+		$$ = new LessEq( $1, $3 );
+	}
+	| expr '<' expr
+	{
+		$$ = new Less( $1, $3 );
+	}
+	| '!' expr
+	{
+		$$ = new Not( $2 );
+	}
+	;
+	
+expr
+	: literal
+	| condExpr
+	| incExpr
+	| decExpr
+	| '(' expr ')'
+	{
+		$$ = $2;
 	}
 	| expr '+' expr
 	{
@@ -900,81 +1268,9 @@ expr
 	{
 		$$ = new Div($1, $3);
 	}
-	| INC expr
-	{
-		$$ = new Inc( $2 );
-	}
-	| DEC expr
-	{
-		$$ = new Dec( $2 );
-	}
-	| expr INC %prec POST_INC
-	{
-		$$ = new PostInc( $1 );
-	}
-	| expr DEC %prec POST_DEC
-	{
-		$$ = new PostDec( $1 );
-	}
-	| expr NE expr
-	{
-		$$ = new NotEq( $1, $3 );
-	}
-	| expr EQ expr
-	{
-		$$ = new Eq( $1, $3 );
-	}
-	| expr GE expr
-	{
-		$$ = new GreaterEq( $1, $3 );
-	}
-	| expr '>' expr
-	{
-		$$ = new Greater( $1, $3 );
-	}
-	| expr LE expr
-	{
-		$$ = new LessEq( $1, $3 );
-	}
-	| expr '<' expr
-	{
-		$$ = new Less( $1, $3 );
-	}
 	| expr '.' expr
 	{
 		$$ = new Dot( $1, $3 );
-	}
-	| expr P_ASS expr
-	{
-		$$ = new AddAssign( $1, $3 );
-	}
-	| expr S_ASS expr
-	{
-		$$ = new SubAssign( $1, $3 );
-	}
-	| expr M_ASS expr
-	{
-		$$ = new MulAssign( $1, $3 );
-	}
-	| expr D_ASS expr
-	{
-		$$ = new DivAssign( $1, $3 );
-	}
-	| expr m_ASS expr
-	{
-		$$ = new ModAssign( $1, $3 );
-	}
-	| expr A_ASS expr
-	{
-		$$ = new AndAssign( $1, $3 );
-	}
-	| expr O_ASS expr
-	{
-		$$ = new OrAssign( $1, $3 );
-	}
-	| expr X_ASS expr
-	{
-		$$ = new XorAssign( $1, $3 );
 	}
 	| expr '|' expr
 	{
@@ -988,6 +1284,10 @@ expr
 	{
 		$$ = new And( $1, $3 );
 	}
+	| expr DOT_DOT expr
+	{
+		$$ = nullptr; // TODO
+	}
 	| expr '[' exprList ']'
 	{
 		$$ = new Index( $1, $3 );
@@ -999,10 +1299,6 @@ expr
 	| expr '(' exprList ')'
 	{
 		$$ = new FuncCall( $1, $3 );
-	}
-	| '!' expr
-	{
-		$$ = new Not( $2 );
 	}
 	| '-' expr %prec UNIARY_MINUS
 	{
@@ -1142,19 +1438,6 @@ optHaving
 	}
 	;
 
-exprs
-	: exprs expr
-	{
-		$$ = $1;
-		$$->push_back(up<Expr>($2));
-	}
-	| expr
-	{
-		$$ = new std::vector<up<Expr>>();
-		$$->push_back(up<Expr>($1));
-	}
-	;
-
 exprList
 	: exprList ',' expr
 	{
@@ -1241,7 +1524,7 @@ constraintDefs
 	;
 
 constraintDef
-	: NAME '(' nameList ')' IMPLES exprs
+	: NAME '(' nameList ')' IMPLES exprList
 	{
 		$$ = new ConstraintDef( $1, $3, $6 );
 	}

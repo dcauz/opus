@@ -6,6 +6,8 @@
 #include "type.h"
 #include "void.h"
 #include "expr.h"
+#include "bool.h"
+
 
 
 EnumDef::EnumDef(
@@ -101,6 +103,12 @@ Type * RoutineDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * CtorDef::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * AliasDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -109,6 +117,10 @@ Type * AliasDef::semCheck( SemCheckContext & scc ) const
 
 Type * If::semCheck( SemCheckContext & scc ) const 
 {
+	if( cond_->semCheck( scc ) != &boolType )
+	{
+		return &errorType;
+	}
 	TODO // semCheck
 	return &errorType;
 }
@@ -236,6 +248,12 @@ bool RoutineDef::genCode( GenCodeContext & gcc ) const
 	gcc.program()->ilEntities().push_back( fd );
 
 	return true;
+}
+
+bool CtorDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
 }
 
 bool AliasDef::genCode( GenCodeContext & gcc ) const 
