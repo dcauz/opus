@@ -103,6 +103,12 @@ Type * TupleDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * UnionDef::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * VarDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -248,6 +254,12 @@ bool ClassDef::genCode( GenCodeContext & gcc ) const
 }
 
 bool TupleDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool UnionDef::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

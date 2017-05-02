@@ -239,6 +239,12 @@ Type * Lnot::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * Throw::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * Not::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -500,6 +506,12 @@ bool PostDec::genCode( GenCodeContext & gcc ) const
 }
 
 bool Lnot::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Throw::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

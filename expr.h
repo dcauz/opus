@@ -410,6 +410,15 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
+class Throw: public Uniary
+{
+public:
+	Throw( Expr * o ):Uniary(o) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
 class Conditional: public Trinary
 {
 public:

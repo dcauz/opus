@@ -52,6 +52,7 @@
 
 %token C					"C"
 %token CASE					"case"
+%token CATCH                "catch"
 %token CLASS				"class"
 %token <str> CLASS_NAME		"class-name"
 %token CONST				"const"
@@ -65,7 +66,6 @@
 %token DOT_DOT			    ".."
 %token DYNAMIC				"dynamic"
 
-%token _E					"e"
 %token ELSE					"else"
 %token ENUM					"enum"
 %token EXTEND				"extends"
@@ -83,13 +83,11 @@
 
 %token HAVING				"having"
 
-%token I 					"i"
 %token IF 					"if"
 %token IMPORT				"import"
 %token IN					"in"
 %token <i32> INT_LIT		"int-literal"
 %token <i> INTEGER_LIT		"integer-literal"
-%token INTERSECT			"intersect"
 %token INVALID_NUMBER		"invalid-number"
 %token INVALID_STRING		"invalid-string"
 %token ISNULL				"isnull"
@@ -116,7 +114,6 @@
 
 %token PERCENT				"percent"
 %token PERIOD               "period"
-%token _PI					"pi"
 %token POW					"**"
 %token PQUEUE				"pqueue"
 %token PRIVATE              "private"
@@ -139,10 +136,12 @@
 %token SWITCH				"switch"
 
 %token TENSOR				"tensor"
+%token THROW                "throw"
 %token TIES					"ties"
 %token TIME                 "time"
 %token TOP					"top"
 %token <b> TRUE				"true"
+%token TRY                  "try"
 %token TUPLE				"tuple"
 
 %token UNION				"union"
@@ -187,7 +186,6 @@
 
 %right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS '?' ':'
 %left IN DOT_DOT
-%left UNION INTERSECT
 %left '|'
 %left '&'
 %left '^'
@@ -248,6 +246,7 @@
 %type <ex>   sExpr
 %type <st>   statement
 %type <stL>  statements
+%type <ex>   throwExpr
 %type <top>	 optTop
 %type <gd>	 tokenDef
 %type <nL>   tokens
@@ -263,7 +262,7 @@
 %type <w>    optWhere
 
 
-%expect 98
+%expect 94
 
 
 %define api.pure
@@ -735,6 +734,14 @@ typeDef
 	{
 		$$ = new ClassDef( context->start, context->end, $2 );
 	}
+	| UNION NAME optParams optBaseTuples '{' definitions '}'
+	{
+		$$ = new UnionDef( context->start, context->end, $2, $6 );
+	}
+	| UNION NAME optParams optBaseTuples '{' '}'
+	{
+		$$ = new UnionDef( context->start, context->end, $2 );
+	}
 	| TUPLE NAME optParams optBaseTuples '{' definitions '}'
 	{
 		$$ = new TupleDef( context->start, context->end, $2, $6 );
@@ -814,7 +821,7 @@ type
 	;
 
 typeDecl
-	: NAME
+	: NAME optParams
 	{
 		$$ = context->symtbl.findType($1);
 	}
@@ -1121,13 +1128,34 @@ statement
 	{
 		$$ = new Block( context->start, context->end, $2 );
 	}
+	| TRY '{' statements '}' catchBlocks
+	{
+	}
 	;
+
+catchBlocks
+	: catchBlocks catchBlock
+	| catchBlock
+	;
+
+catchBlock
+	: CATCH '(' variableDefinition ')' '{' statements '}'
+	{
+	}
 
 sExpr
 	: assignment
 	| incExpr
 	| decExpr
+	| throwExpr
 	;
+
+throwExpr
+	: THROW expr
+	{
+		$$ = new Throw( $2 );
+	}
+	;	
 
 assignment
 	: lvalue '=' expr
@@ -1216,21 +1244,9 @@ literal
 	{
 		$$ = new Rational($1);
 	}
-	| I
-	{
-		$$ = new Complex(0,1);
-	}
-	| _E
-	{
-		$$ = new E;
-	}
 	| _NULL
 	{
 		$$ = new Void;
-	}
-	| _PI
-	{
-		$$ = new PI;
 	}
 	| LONG_LIT
 	{
@@ -1256,6 +1272,12 @@ literal
 	{
 		$$ = nullptr; // TODO
 	}
+	| '<' nvList '>'
+	{
+	}
+	| '(' nvList ')'
+	{
+	}
 	| '{' exprList '}'
 	{
 		$$ = nullptr; // TODO
@@ -1264,6 +1286,16 @@ literal
 	| DATETIME_LIT
 	| PERIOD_LIT
 	| TIME_LIT
+	;
+
+nvList
+	:
+	| nvList ',' nv
+	| nv
+	;
+
+nv
+	: NAME ':' expr
 	;
 
 condExpr
@@ -1397,14 +1429,6 @@ expr
 	| expr OUTER JOIN expr
 	{
 		$$ = new OuterJoin( $1, $4, nullptr );
-	}
-	| expr UNION expr
-	{
-		$$ = new Union( $1, $3 );
-	}
-	| expr INTERSECT expr
-	{
-		$$ = new Intersect( $1, $3 );
 	}
 	| expr '?' expr ':' expr
 	{

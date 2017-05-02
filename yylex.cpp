@@ -56,6 +56,7 @@ Keyword keywords[] =
 
 	{ C,           "C" },
 	{ CASE,        "case" },
+	{ CATCH,       "catch" },
 	{ CLASS,       "class" },
 	{ CONTINUE,    "continue" },
 
@@ -66,7 +67,6 @@ Keyword keywords[] =
 	{ DISTINCT,    "distinct" },
 	{ DYNAMIC,     "dynamic" },
 
-	{ _E,          "e" },
 	{ ELSE,        "else" },
 	{ ENUM,        "enum" },
 
@@ -81,10 +81,8 @@ Keyword keywords[] =
 
 	{ HAVING,      "having" },
 
-	{ I,           "i" },
 	{ IF,          "if" },
     { IMPORT,      "import" },
-	{ INTERSECT,   "intersect" },
 	{ ISNULL,      "isnull" },
 
 	{ JOIN,        "join" },
@@ -105,7 +103,6 @@ Keyword keywords[] =
 
 	{ PERCENT,     "percent" },
     { PERIOD,      "period" },
-	{ _PI,         "pi" },
 	{ PQUEUE,      "pqueue" },
 
 	{ Q,           "Q" },
@@ -123,10 +120,12 @@ Keyword keywords[] =
 	{ SWITCH,      "switch" },
 
 	{ TENSOR,      "tensor" },
+	{ THROW,       "throw" },
 	{ TIES,        "ties" },
 	{ TIME,        "time" },
 	{ TOP,         "top" },
 	{ TRUE,        "true" },
+	{ TRY,         "try" },
 	{ TUPLE,       "tuple" },
 
 	{ UNION,       "union" },
