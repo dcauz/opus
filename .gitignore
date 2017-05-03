@@ -10,3 +10,5 @@ opl.cpp
 opl.hpp
 opl.output
 opus.exe
+opus.VC.db
+opus.vcxproj.filters
