@@ -172,6 +172,24 @@ private:
 	up<std::vector<up<Definition>>> members_;
 };
 
+class InterfaceDef: public TypeDef
+{
+public:
+	InterfaceDef( 
+		int s, 
+		int e, 
+		const char * n, 
+		std::vector<up<Definition>> * mbrs = nullptr ):
+	TypeDef(s,e), name_(n), members_(mbrs) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	std::string	name_;
+	up<std::vector<up<Definition>>> members_;
+};
+
 class TupleDef: public TypeDef
 {
 public:

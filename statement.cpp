@@ -85,6 +85,12 @@ Type * ClassDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * InterfaceDef::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * Private::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -248,6 +254,12 @@ bool Namespace::genCode( GenCodeContext & gcc ) const
 }
 
 bool ClassDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool InterfaceDef::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

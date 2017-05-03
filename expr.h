@@ -356,6 +356,15 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
+class ToVoid: public Uniary
+{
+public:
+	ToVoid( Expr * o ):Uniary(o) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
 class Dec: public Uniary
 {
 public:

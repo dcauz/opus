@@ -11,29 +11,8 @@
 
 // TODO
 //
-// DATE_LIT
-// DATETIME_LIT
-// TIME_LIT
-// PERIOD_LIT
 // CLASS_NAME
 // 
-
-// date       yyyy.mm.dd
-// datetime   yyyy.mm.dd.hh[.mm[.ss[.mmmmmm]]]
-// time       hh.mm.ss
-//
-// period     one or more of
-//
-//            digitsY
-//            digitsM
-//            digitsD
-//            digitsh
-//            digitsm
-//            digits[.digits]s
-//
-//            separated by . and in decreasing order
-//            For example, 5Y.3M.10D.2h.5m.12.121213s
-//
 
 namespace
 {
@@ -83,7 +62,7 @@ Keyword keywords[] =
 
 	{ IF,          "if" },
     { IMPORT,      "import" },
-	{ ISNULL,      "isnull" },
+	{ ISVOID,      "is_void" },
 
 	{ JOIN,        "join" },
 
@@ -95,7 +74,6 @@ Keyword keywords[] =
 
 	{ N,           "N" },
 	{ NAME,        "name" },
-	{ _NULL,       "null" },
 
 	{ OBJECT,      "object" },
 	{ OUTER,       "outer" },
@@ -131,7 +109,6 @@ Keyword keywords[] =
 	{ UNION,       "union" },
 	{ UNIQUE,      "unique" },
 
-	{ IND,         "ind" },
 	{ VECTOR,      "vector" },
 	{ VOID,        "void" },
 
@@ -141,6 +118,135 @@ Keyword keywords[] =
 
 	{ Z,           "Z" },
 };
+
+
+// period     one or more of
+//
+// <d>D.<h>h.<m>m.<s>[.<ms>]s
+//
+
+bool isPeriod( 
+	YYLTYPE * llocp,
+	LexContext * context )
+{
+	char * start = context->cp;
+	char * cp = start;
+
+	int n = 0;
+	while(isdigit(cp[n++]))
+		;
+	if(cp[n] == 'D' )
+	{
+		++n;
+		if( cp[n] == '.')
+		{
+
+		}
+	}
+	else if(cp[n] == 'h' )
+	{
+	}
+	else if(cp[n] == 'm' )
+	{
+	}
+	else if(cp[n] == 's' )
+	{
+	}
+
+	TODO
+	return false;
+}
+
+// date       yyyy.mm.dd
+//
+bool isDate(
+	YYLTYPE * llocp,
+	LexContext * context )
+{
+	char * start = context->cp;
+	char * cp = start;
+
+	if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&
+	  ( cp[4] == '.' ) &&
+		isdigit(cp[5]) && isdigit(cp[6]) &&
+	  ( cp[7] == '.' ) &&
+		isdigit(cp[8]) && isdigit(cp[9]) )
+	{
+	TODO
+		return true;
+	}
+
+	return false;
+}
+
+//            0123456789012 345 678 9012345
+// datetime   yyyy.mm.dd.hh[.mm[.ss[.mmmmmm]]]
+bool isDatetime(
+	YYLTYPE * llocp,
+	LexContext * context )
+{
+	char * start = context->cp;
+	char * cp = start;
+
+	if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&
+	  ( cp[4] == '.' ) &&
+		isdigit(cp[5]) && isdigit(cp[6]) &&
+	  ( cp[7] == '.' ) &&
+		isdigit(cp[8]) && isdigit(cp[9]) &&
+	  ( cp[10] == '.' ) &&
+		isdigit(cp[11]) && isdigit(cp[12]))
+	{
+		if(cp[13] == '.' )
+		{
+			if(isdigit(cp[14]) && isdigit(cp[15]))
+			{
+				if(cp[16] == '.' )
+				{
+					if(isdigit(cp[17]) && isdigit(cp[18]))
+					{
+						if(cp[19] == '.' && isdigit(cp[20]))
+						{
+							int n = 21;
+							while(isdigit(cp[n++]))
+								;
+							if(!isalpha(cp[n]) && 
+							cp[n] != '.' &&
+							cp[n] != '"' &&
+							cp[n] != '\'' )
+								return true;
+
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+TODO
+		return true;
+	}
+	return false;
+}
+
+// time       hh.mm.ss
+bool isTime(
+	YYLTYPE * llocp,
+	LexContext * context )
+{
+	char * start = context->cp;
+	char * cp = start;
+
+	if( isdigit(cp[0]) && isdigit(cp[1]) &&
+	  ( cp[2] == '.' ) &&
+		isdigit(cp[3]) && isdigit(cp[4]) &&
+	  ( cp[5] == '.' ) &&
+		isdigit(cp[6]) && isdigit(cp[7]) )
+	{
+	TODO
+		return true;
+	}
+	return false;
+}
 
 bool isInteger( 
 	   YYLTYPE * llocp, 
@@ -553,6 +659,26 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 
 		if( isdigit(c))
 		{
+			if( isPeriod( llocp, context ))
+			{
+				return PERIOD_LIT;
+			}
+
+			if( isDate( llocp, context ))
+			{
+				return DATE_LIT;
+			}
+
+			if( isDatetime( llocp, context ))
+			{
+				return DATETIME_LIT;
+			}
+
+			if( isTime( llocp, context ))
+			{
+				return TIME_LIT;
+			}
+
 			if( isInt( llocp, context, lvalp->i32 ) )
 				return INT_LIT;
 	

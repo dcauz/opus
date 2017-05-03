@@ -68,7 +68,6 @@
 
 %token ELSE					"else"
 %token ENUM					"enum"
-%token EXTEND				"extends"
 
 %token <b> FALSE			"false"
 %token FINAL				"final"
@@ -88,9 +87,10 @@
 %token IN					"in"
 %token <i32> INT_LIT		"int-literal"
 %token <i> INTEGER_LIT		"integer-literal"
+%token INTERFACE			"interface"
 %token INVALID_NUMBER		"invalid-number"
 %token INVALID_STRING		"invalid-string"
-%token ISNULL				"isnull"
+%token ISVOID				"isvoid"
 
 %token JOIN					"join"
 
@@ -104,7 +104,6 @@
 %token N					"N"
 %token <str> NAME			"name"
 %token NAMESPACE			"namespace"
-%token _NULL				"null"
 
 %token OBJECT				"object"
 %token OPERATOR 			"operator"
@@ -129,7 +128,6 @@
 %token SELECT				"select"
 %token SET					"set"
 %token SHARED				"shared"
-%token SPECIALIZE			"specialize"
 %token STACK				"stack"
 %token STRING				"string"
 %token <str> STRING_LIT		"string-literal"
@@ -147,7 +145,6 @@
 %token UNION				"union"
 %token UNIQUE				"unique"
 
-%token IND					"ind"
 %token VECTOR				"vector"
 %token VOID					"void"
 
@@ -184,7 +181,7 @@
 %token UNIARY_MINUS			"-"
 
 
-%right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS '?' ':'
+%right '=' P_ASS S_ASS M_ASS D_ASS m_ASS A_ASS O_ASS X_ASS ':'
 %left IN DOT_DOT
 %left '|'
 %left '&'
@@ -195,9 +192,9 @@
 %left '+' '-'
 %left '*' '/' '%' M_MULT M_DIV
 %right POW 
-%left '.' 
-%nonassoc '!' UNIARY_MINUS 
-%left '(' '['
+%nonassoc '!' UNIARY_MINUS INC DEC POST_DEC POST_INC
+%left '.' '['
+%left '('
 
 
 %type <dcl>  alias
@@ -214,7 +211,6 @@
 %type <dcl>  model
 %type <ex>   decExpr
 %type <i32>  declarators
-%type <dcl>  def
 %type <dcl>  definition
 %type <dclL> definitions
 %type <i32>  dim
@@ -228,9 +224,8 @@
 %type <gds>  grammarDefs
 %type <gb>   optGroupBy
 %type <h>    optHaving
-%type <dcl>  indeterminate
-%type <dcl>  import
-%type <dclL> imports
+%type <str>  import
+%type <nL>   imports
 %type <ex>   incExpr
 %type <ex>   literal
 %type <ex>   lvalue
@@ -259,10 +254,10 @@
 %type <exL>  varWhere
 %type <ex>   wConstraint
 %type <exL>  wConstraints
-%type <w>    optWhere
+%type <w>    where
 
 
-%expect 94
+%expect 119
 
 
 %define api.pure
@@ -351,18 +346,20 @@ program
 imports
 	: imports import
 	{
-		$$ = nullptr; // TODO
+		$$ = $1;
+		$$->push_back($2);
 	}
 	| import
 	{
-		$$ = nullptr; // TODO
+		$$ = new std::vector<std::string>();
+		$$->push_back($1);
 	}
 	;
 
 import
-	: IMPORT NAME
+	: IMPORT STRING_LIT
 	{
-		$$ = nullptr; // TODO
+		strcpy($$,$2);
 	}
 	;
 
@@ -378,21 +375,11 @@ topDefinitions
 	;
 
 definition
-	: PRIVATE def
-	{
-		$$ = $2;
-		$$->isPrivate();
-	}
-	| def
-	;
-
-def
 	: routine
 	| function
 	| operator
 	| ctor
 	| namespace
-	| indeterminate
 	| variableDefinition
 	| alias
 	| typeDef
@@ -424,10 +411,18 @@ routine
 	{
 		$$ = new RoutineDef( context->start, context->end, $1, $2, $4, $6 );
 	}
+	| type NAME '(' args ')'
+	{
+		$$ = new RoutineDef( context->start, context->end, $1, $2, $4 );
+	}
 	;
 
 operator
 	: type OPERATOR op '(' args ')' body
+	{
+		$$ = new OperatorDef( context->start, context->end, $1, $3, $5, $7 );
+	}
+	| type OPERATOR op '(' args ')'
 	{
 		$$ = new OperatorDef( context->start, context->end, $1, $3, $5 );
 	}
@@ -465,7 +460,7 @@ ctor
 	{
 		$$ = new CtorDef( context->start, context->end, $1, $3 );
 	}
-	| NAME '(' args ')' body
+	| CLASS_NAME '(' args ')' body
 	{
 		$$ = new CtorDef( context->start, context->end, $1, $3, $5 );
 	}
@@ -477,12 +472,6 @@ function
 		$$ = new FunDef( context->start, context->end, $2, $4, $7 );
 	}
 	;
-
-indeterminate
-	: IND nameList
-	{
-		$$ = new Variables( context->start, context->end, $2 );
-	}
 
 grammar
 	: GRAMMAR NAME '{' grammarDefs '}'
@@ -662,15 +651,15 @@ declarators
 	}
 	| OVERRIDE
 	{
-		$$ = CONST;
+		$$ = OVERRIDE;
 	}
 	| FINAL
 	{
-		$$ = CONST;
+		$$ = FINAL;
 	}
 	| PRIVATE
 	{
-		$$ = CONST;
+		$$ = PRIVATE;
 	}
 	| UNIQUE
 	{
@@ -734,6 +723,14 @@ typeDef
 	{
 		$$ = new ClassDef( context->start, context->end, $2 );
 	}
+	| INTERFACE NAME optParams optBaseInterfaces '{' definitions '}'
+	{
+		$$ = new InterfaceDef( context->start, context->end, $2, $6 );
+	}
+	| INTERFACE NAME optParams optBaseInterfaces '{' '}'
+	{
+		$$ = new InterfaceDef( context->start, context->end, $2 );
+	}
 	| UNION NAME optParams optBaseTuples '{' definitions '}'
 	{
 		$$ = new UnionDef( context->start, context->end, $2, $6 );
@@ -754,20 +751,31 @@ typeDef
 
 optBaseEnums
 	:
-	| EXTEND nameList
+	| ':' nameList
 	;
 
 optBaseClasses
 	:
-	| EXTEND nameList
-	| SPECIALIZE nameList
-	| EXTEND nameList SPECIALIZE nameList
-	| SPECIALIZE nameList EXTEND nameList
+	| ':' nameList
+	{
+		// TODO
+	}
+	;
+
+optBaseInterfaces
+	: 
+	| ':' nameList
+	{
+		// TODO
+	}
 	;
 
 optBaseTuples
 	:
-	| EXTEND nameList
+	| ':' nameList
+	{
+		// TODO
+	}
 	;
 
 optParams
@@ -1194,6 +1202,10 @@ assignment
 	{
 		$$ = new XorAssign( $1, $3 );
 	}
+	| '?' expr %prec UNIARY_MINUS
+	{
+		$$ = new ToVoid( $2 );
+	}
 	;
 
 
@@ -1243,10 +1255,6 @@ literal
 	| RATIONAL_LIT
 	{
 		$$ = new Rational($1);
-	}
-	| _NULL
-	{
-		$$ = new Void;
 	}
 	| LONG_LIT
 	{
@@ -1299,7 +1307,7 @@ nv
 	;
 
 condExpr
-	: ISNULL '(' expr ')'
+	: ISVOID '(' expr ')'
 	{
 		$$ = new IsVoid( $3 );
 	}
@@ -1342,6 +1350,14 @@ expr
 	| condExpr
 	| incExpr
 	| decExpr
+	| IF '(' expr ')' expr
+	{
+		$$ = new Conditional( $3, $5, nullptr );
+	}
+	| IF '(' expr ')' expr ELSE expr
+	{
+		$$ = new Conditional( $3, $5, $7 );
+	}
 	| '(' expr ')'
 	{
 		$$ = $2;
@@ -1430,13 +1446,16 @@ expr
 	{
 		$$ = new OuterJoin( $1, $4, nullptr );
 	}
-	| expr '?' expr ':' expr
+	| SELECT optDistinct optTop colList FROM 
+		nameList 
+		optGroupBy 
+		optHaving
 	{
-		$$ = new Conditional( $1, $3, $5 );
+		$$ = new SelectEx( $2, $3, $4, $6, nullptr, $7, $8 );
 	}
 	| SELECT optDistinct optTop colList FROM 
 		nameList 
-		optWhere 
+		where 
 		optGroupBy 
 		optHaving
 	{
@@ -1507,12 +1526,8 @@ optTop
 	}
 	;
 
-optWhere 
-	:
-	{
-		$$ = nullptr;
-	}
-	| WHERE expr
+where 
+	: WHERE expr
 	{
 		$$ = new Where($2);
 	}
