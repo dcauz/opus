@@ -6,24 +6,49 @@
 #include "type.h"
 
 
+void Program::imports( std::vector<std::string> * imp ) 
+{ 
+	imports_.reset(imp); 
+}
+
+void Program::definitions( std::vector<up<Definition>> * defs ) 
+{ 
+	definitions_.reset(defs); 
+}
+
+std::vector<std::string>    & Program::imports()
+{ 
+	return *imports_; 
+}
+
+std::vector<up<Definition>> & Program::definitions() 
+{ 
+	return *definitions_; 
+}
+
+std::vector<up<ILentity>>   & Program::ilEntities()  
+{ 
+	return *ilEntities_; 
+}
+
 Program::Program( const char * srcFile ):srcFile_(srcFile)
 {
-	ilEntities_.push_back( new TargetDefinition( false, 
-		"e-m:e-i64:64-f80:128-n8:16:32:64-S128") );
-	ilEntities_.push_back( new TargetDefinition( true, 
-		"x86_64-pc-linux-gnu") );
+	ilEntities_->push_back( up<ILentity>(new TargetDefinition( false, 
+		"e-m:e-i64:64-f80:128-n8:16:32:64-S128")));
+	ilEntities_->push_back( up<ILentity>(new TargetDefinition( true, 
+		"x86_64-pc-linux-gnu")));
 }
 
 bool Program::semCheck() const
 {
-	auto i = definitions_.begin();
-	auto e = definitions_.end();
+	auto i = definitions_->begin();
+	auto e = definitions_->end();
 	
 	SemCheckContext	context;
 
 	while( i != e )
 	{
-		Definition * def = *i;
+		up<Definition>& def = *i;
 
 		Type * type = def->semCheck( context );
 		if( type == &errorType )
@@ -37,14 +62,15 @@ bool Program::semCheck() const
 
 bool Program::genCode()
 {
-	auto i = definitions_.begin();
-	auto e = definitions_.end();
+	auto i = definitions_->begin();
+	auto e = definitions_->end();
 
 	GenCodeContext	context(this);
 
 	while( i != e )
 	{
-		Definition * def = *i;
+		up<Definition>& def = *i;
+
 		def->genCode( context );
 
 		++i;
@@ -68,12 +94,12 @@ bool Program::outputIL() const
 	FILE * fh = fopen( objFile.c_str(), "w" );
 	fprintf( fh, "; ModuleID = '%s'\n", srcFile_.c_str() );
 
-	auto i = ilEntities_.begin();
-	auto e = ilEntities_.end();
+	auto i = ilEntities_->begin();
+	auto e = ilEntities_->end();
 
 	while( i != e )
 	{
-		ILentity * entity = *i;
+		up<ILentity> & entity = *i;
 
 		entity->output( fh );
 

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "il.h"
+#include "opus.h"
 
 
 class Definition;
@@ -14,9 +15,12 @@ class Program
 public:
 	Program( const char * srcFile );
 
-	std::vector<Definition * > & definitions() { return definitions_; }
+	void imports( std::vector<std::string> * imp );
+	void definitions( std::vector<up<Definition>> * defs );
 
-	std::vector<ILentity * > & ilEntities() { return ilEntities_; }
+	std::vector<std::string>    & imports();
+	std::vector<up<Definition>> & definitions();
+	std::vector<up<ILentity>>   & ilEntities();
 
 	bool semCheck() const;
 	bool genCode();
@@ -29,9 +33,10 @@ public:
 
 private:
 
-	std::vector<Definition * > definitions_;
+	up<std::vector<std::string>>    imports_;
+	up<std::vector<up<Definition>>> definitions_;
 	std::string	srcFile_;
 
-	std::vector<ILentity *>	ilEntities_;
+	up<std::vector<up<ILentity>>>	ilEntities_;
 	std::vector<FunctionDeclaration::FuncAttrs>	funcAttrs_;
 };

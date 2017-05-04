@@ -299,7 +299,7 @@ bool RoutineDef::genCode( GenCodeContext & gcc ) const
 		TODO // genCode
 	}
 
-	gcc.program()->ilEntities().push_back( fd );
+//	gcc.program()->ilEntities().push_back( up<Definition>(fd) );
 
 	return true;
 }

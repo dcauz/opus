@@ -37,10 +37,61 @@
 
 
 %}
-%token <ex>  DATE_LIT       "date-literal"
-%token <ex> DATETIME_LIT    "datetime-literal"
-%token <ex>  PERIOD_LIT     "period-literal"
-%token <ex>  TIME_LIT       "time-literal"
+
+%union
+{
+
+                      Arg * ar;
+     std::vector<up<Arg>> * arL;
+
+                    Block * bl;
+                       bool b;
+
+            ConstraintDef * cd;
+std::vector<up<ConstraintDef>> 
+                          * cds;
+                   Column * col;
+    std::vector<up<Column>> 
+                          * cols;
+
+                     double dbl;
+               Definition * dcl;
+std::vector<up<Definition>> * dclL;
+
+               EnumMember * en;
+std::vector<up<EnumMember>> * enL;
+                     Expr * ex;
+      std::vector<up<Expr>> * exL;
+
+               GrammarDef * gd;
+std::vector<up<GrammarDef>> * gds;
+                  GroupBy * gb;
+
+                   Having * h;
+
+                     char * i;
+                        int i32;
+         std::vector<int> * i32L;
+                    int64_t i64;
+
+ std::vector<std::string> * nL;
+
+                       char r[1024];
+
+                Statement * st;
+std::vector<up<Statement>> * stL;
+                       char str[1024];
+
+                  TypeName * tn;
+std::vector<up<TypeName>> * tnL;
+                      Top * top;
+                     Type * ty;
+
+               unsigned int u32;
+              unsigned long u64;
+
+                    Where * w;
+}
 
 %token ALIAS				"alias"
 %token AS					"as"
@@ -59,7 +110,9 @@
 %token CONTINUE				"continue"
 
 %token DATE                 "date"
+%token <ex>  DATE_LIT       "date-literal"
 %token DATETIME             "datetime"
+%token <ex> DATETIME_LIT    "datetime-literal"
 %token DEFAULT				"default"
 %token DEQUEUE				"dequeue"
 %token DISTINCT				"distinct"
@@ -113,6 +166,8 @@
 
 %token PERCENT				"percent"
 %token PERIOD               "period"
+%token <ex>  PERIOD_LIT     "period-literal"
+
 %token POW					"**"
 %token PQUEUE				"pqueue"
 %token PRIVATE              "private"
@@ -137,6 +192,7 @@
 %token THROW                "throw"
 %token TIES					"ties"
 %token TIME                 "time"
+%token <ex>  TIME_LIT       "time-literal"
 %token TOP					"top"
 %token <b> TRUE				"true"
 %token TRY                  "try"
@@ -153,6 +209,7 @@
 %token WITH					"with"
 
 %token Z					"Z"
+
 
 %token IMPLES				":-"
 
@@ -201,6 +258,7 @@
 %type <ar>   arg
 %type <arL>  args
 %type <ex>   assignment
+%type <tnL>  optBaseTypes
 %type <bl>   body
 %type <col>  col
 %type <cols> colList
@@ -235,6 +293,7 @@
 %type <dcl>  namespace
 %type <i32>  op
 %type <dcl>  operator
+%type <nL>   optParams
 %type <dcl>  private
 %type <dcl>  routine
 %type <gd>   ruleDef
@@ -242,6 +301,8 @@
 %type <st>   statement
 %type <stL>  statements
 %type <ex>   throwExpr
+%type <tn>   tname
+%type <tnL>  tnameList
 %type <top>	 optTop
 %type <gd>	 tokenDef
 %type <nL>   tokens
@@ -271,59 +332,6 @@
 %lex-param
 {
 	LexContext * context
-}
-
-%union
-{
-
-                      Arg * ar;
-     std::vector<up<Arg>> * arL;
-
-                    Block * bl;
-                       bool b;
-
-            ConstraintDef * cd;
-std::vector<up<ConstraintDef>> 
-                          * cds;
-                   Column * col;
-    std::vector<up<Column>> 
-                          * cols;
-
-                     double dbl;
-               Definition * dcl;
-std::vector<up<Definition>> * dclL;
-
-               EnumMember * en;
-std::vector<up<EnumMember>> * enL;
-                     Expr * ex;
-      std::vector<up<Expr>> * exL;
-
-               GrammarDef * gd;
-std::vector<up<GrammarDef>> * gds;
-                  GroupBy * gb;
-
-                   Having * h;
-
-                     char * i;
-                        int i32;
-         std::vector<int> * i32L;
-                    int64_t i64;
-
- std::vector<std::string> * nL;
-
-                       char r[1024];
-
-                Statement * st;
-std::vector<up<Statement>> * stL;
-                       char str[1024];
-
-                      Top * top;
-                     Type * ty;
-
-               unsigned int u32;
-              unsigned long u64;
-
-                    Where * w;
 }
 
 %%
@@ -366,11 +374,11 @@ import
 topDefinitions
 	: topDefinitions definition
 	{
-		context->program.definitions().push_back($2);
+		context->program.definitions().push_back(up<Definition>($2));
 	}
 	| definition
 	{
-		context->program.definitions().push_back($1);
+		context->program.definitions().push_back(up<Definition>($1));
 	}
 	;
 
@@ -484,19 +492,6 @@ model
 	: MODEL NAME '{' constraintDefs '}'
 	{
 		$$ = new Constraints( context->start, context->end, $2, $4 );
-	}
-	;
-
-nameList
-	: nameList ',' NAME
-	{
-		$$ = $1;
-		$$->push_back($3);
-	}
-	| NAME
-	{
-		$$ = new std::vector<std::string>();
-		$$->push_back($1);
 	}
 	;
 
@@ -707,80 +702,96 @@ alias
 	;
 
 typeDef
-	: ENUM NAME optBaseEnums '{' members '}'
+	: ENUM NAME optBaseTypes '{' members '}'
 	{
 		$$ = new EnumDef( context->start, context->end, $2, $5 );
 	}
-	| ENUM NAME optBaseEnums '{' '}'
+	| ENUM NAME optBaseTypes '{' '}'
 	{
 		$$ = new EnumDef( context->start, context->end, $2 );
 	}
-	| CLASS NAME optParams optBaseClasses '{' definitions '}'
+	| CLASS NAME optParams optBaseTypes   '{' definitions '}'
 	{
 		$$ = new ClassDef( context->start, context->end, $2, $6 );
 	}
-	| CLASS NAME optParams optBaseClasses '{' '}'
+	| CLASS NAME optParams optBaseTypes   '{' '}'
 	{
 		$$ = new ClassDef( context->start, context->end, $2 );
 	}
-	| INTERFACE NAME optParams optBaseInterfaces '{' definitions '}'
+	| INTERFACE NAME optParams optBaseTypes      '{' definitions '}'
 	{
 		$$ = new InterfaceDef( context->start, context->end, $2, $6 );
 	}
-	| INTERFACE NAME optParams optBaseInterfaces '{' '}'
+	| INTERFACE NAME optParams optBaseTypes '{' '}'
 	{
 		$$ = new InterfaceDef( context->start, context->end, $2 );
 	}
-	| UNION NAME optParams optBaseTuples '{' definitions '}'
+	| UNION NAME optParams optBaseTypes  '{' definitions '}'
 	{
 		$$ = new UnionDef( context->start, context->end, $2, $6 );
 	}
-	| UNION NAME optParams optBaseTuples '{' '}'
+	| UNION NAME optParams optBaseTypes  '{' '}'
 	{
 		$$ = new UnionDef( context->start, context->end, $2 );
 	}
-	| TUPLE NAME optParams optBaseTuples '{' definitions '}'
+	| TUPLE NAME optParams optBaseTypes  '{' definitions '}'
 	{
 		$$ = new TupleDef( context->start, context->end, $2, $6 );
 	}
-	| TUPLE NAME optParams optBaseTuples '{' '}'
+	| TUPLE NAME optParams optBaseTypes '{' '}'
 	{
 		$$ = new TupleDef( context->start, context->end, $2 );
 	}
 	;
 
-optBaseEnums
+optBaseTypes
 	:
-	| ':' nameList
-	;
-
-optBaseClasses
-	:
-	| ':' nameList
 	{
-		// TODO
+		$$ = nullptr;
 	}
-	;
-
-optBaseInterfaces
-	: 
-	| ':' nameList
+	| ':' tnameList
 	{
-		// TODO
-	}
-	;
-
-optBaseTuples
-	:
-	| ':' nameList
-	{
-		// TODO
+		$$ = $2;
 	}
 	;
 
 optParams
 	: 
+	{
+		$$ = nullptr;
+	}
 	| '<' nameList '>'
+	{
+		$$ = $2;
+	}
+	;
+
+tnameList
+	: tnameList ',' tname
+	{
+		$$ = $1;
+		$$->push_back(up<TypeName>($3));
+	}
+	| tname
+	{
+		$$ = new std::vector<up<TypeName>>();
+		$$->push_back(up<TypeName>($1));
+	}
+	;
+
+tname
+	: NAME '<' tnameList '>'
+	{
+		$$ = new TypeName( $1, $3 );
+	}
+	| NAME '<' exprList '>'
+	{
+		$$ = new TypeName( $1 );
+	}
+	| NAME
+	{
+		$$ = new TypeName( $1 );
+	}
 	;
 
 members
@@ -826,6 +837,9 @@ type
 		$$ = new Nullable( $1 );
 	}
 	| typeDecl
+	{
+		// TODO
+	}
 	;
 
 typeDecl
@@ -1138,17 +1152,25 @@ statement
 	}
 	| TRY '{' statements '}' catchBlocks
 	{
+		// TODO
 	}
 	;
 
 catchBlocks
 	: catchBlocks catchBlock
+	{
+		// TODO
+	}
 	| catchBlock
+	{
+		// TODO
+	}
 	;
 
 catchBlock
 	: CATCH '(' variableDefinition ')' '{' statements '}'
 	{
+		// TODO
 	}
 
 sExpr
@@ -1212,12 +1234,15 @@ assignment
 lvalue
 	: NAME
 	{
+		// TODO
 	}
 	| lvalue '[' expr ']'
 	{
+		// TODO
 	}
 	| lvalue '.' lvalue
 	{
+		// TODO
 	}
 	;
 
@@ -1298,12 +1323,24 @@ literal
 
 nvList
 	:
+	{
+		// TODO
+	}
 	| nvList ',' nv
+	{
+		// TODO
+	}
 	| nv
+	{
+		// TODO
+	}
 	;
 
 nv
 	: NAME ':' expr
+	{
+		// TODO
+	}
 	;
 
 condExpr
@@ -1644,6 +1681,19 @@ constraintDef
 	: NAME '(' nameList ')' IMPLES exprList
 	{
 		$$ = new ConstraintDef( $1, $3, $6 );
+	}
+	;
+
+nameList
+	: nameList ',' NAME
+	{
+		$$ = $1;
+		$$->push_back($3);
+	}
+	| NAME
+	{
+		$$ = new std::vector<std::string>();
+		$$->push_back($1);
 	}
 	;
 

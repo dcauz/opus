@@ -24,6 +24,7 @@ class DatetimeType: public Type
 {
 public:
 
+private:
 };
 
 class PeriodType: public Type
@@ -39,6 +40,13 @@ extern PeriodType	periodType;
 class Date: public Expr
 {
 public:
+	Date( int y, int m, int d ):
+		value_(y << 9 + m << 5 + d )
+	{
+	}
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	uint32_t value_;
@@ -47,19 +55,43 @@ private:
 class Time: public Expr
 {
 public:
+	Time( int hr, int mn, int sc, int ms ):
+		secs_((hr*60+mn)*60+sc), ms_(ms)
+	{
+	}
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	uint32_t value_;
+	uint32_t secs_;
+	uint32_t ms_;
 };
 
-class Datetime: public Date, public Time
+class Datetime: public Expr
 {
 public:
+	Datetime( int y, int m, int d, int hr, int mn, int sc, int ms ):
+		date_(y,m,d), time_(hr,mn,sc,ms)
+	{
+	}
 
+	bool genCode( GenCodeContext & gcc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
+
+private:
+	Date date_;
+	Time time_;
 };
 
 class Period: public Expr
 {
 public:
+	Period( int d, int hr, int mn, int sc, int ms );
 
+	bool genCode( GenCodeContext & gcc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
+
+private:
+	
 };

@@ -137,6 +137,24 @@ public:
 
 class EnumMember;
 
+class TypeName
+{
+public:
+	TypeName( const char * n, std::vector<up<Expr>> * el = nullptr ):
+		name_(n), exprs_(el)
+	{
+	}
+	TypeName( const char * n, std::vector<up<TypeName>> * tnl ):
+		name_(n), pTypes_(tnl)
+	{
+	}
+
+private:
+	std::string name_;
+	up<std::vector<up<Expr>>> exprs_;
+	up<std::vector<up<TypeName>>> pTypes_;
+};
+
 class EnumDef: public TypeDef
 {
 public:
