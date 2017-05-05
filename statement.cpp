@@ -68,6 +68,18 @@ Type * Block::semCheck( SemCheckContext & scc ) const
 	return &voidType;
 }
 
+Type * CatchBlock::semCheck( SemCheckContext & scc ) const 
+{
+TODO
+	return &voidType;
+}
+
+Type * Try::semCheck( SemCheckContext & scc ) const 
+{
+TODO
+	return &voidType;
+}
+
 Type * ExprStatement::semCheck( SemCheckContext & scc ) const 
 {
 	return expr_->semCheck( scc );
@@ -224,6 +236,18 @@ bool AtomicBlock::genCode( GenCodeContext & gcc ) const
 }
 
 bool Block::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool CatchBlock::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Try::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

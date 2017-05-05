@@ -87,6 +87,24 @@ private:
 	std::string	name_;
 };
 
+class Lvalue: public Expr
+{
+public:
+	Lvalue( const char * n ):first_(new Name(n)), isDot_(false) {}
+	Lvalue( Expr * f, Expr * s, bool d = false ):
+		first_(f), second_(s), isDot_(d)
+	{
+	}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+
+private:
+	bool isDot_;
+	up<Expr> first_;
+	up<Expr> second_;
+};
+
 /////////////////////////////////////////////////////////////////
 
 class Assign: public Binary
@@ -426,6 +444,34 @@ public:
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
+class Distinct: public Expr
+{
+public:
+	Distinct( Expr * e = nullptr ):expr_(e) {}
+	Distinct( std::vector<up<Expr>> * el ): exprList_(el) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+
+private:
+	up<Expr> expr_;
+	up<std::vector<up<Expr>>> exprList_;
+};
+
+class OrderBy: public Expr
+{
+public:
+	OrderBy( Expr * e = nullptr ): expr_(e) {}
+	OrderBy( std::vector<up<Expr>> * el ):exprList_(el) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+
+private:
+	up<Expr> expr_;
+	up<std::vector<up<Expr>>> exprList_;
 };
 
 class Conditional: public Trinary

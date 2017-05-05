@@ -36,6 +36,8 @@
 #include "void.h"
 
 
+extern Program * program;
+
 %}
 
 %union
@@ -47,6 +49,8 @@
                     Block * bl;
                        bool b;
 
+               CatchBlock * cb;
+std::vector<up<CatchBlock>>* cbL;
             ConstraintDef * cd;
 std::vector<up<ConstraintDef>> 
                           * cds;
@@ -260,6 +264,8 @@ std::vector<up<TypeName>> * tnL;
 %type <ex>   assignment
 %type <tnL>  optBaseTypes
 %type <bl>   body
+%type <cb>   catchBlock
+%type <cbL>  catchBlocks
 %type <col>  col
 %type <cols> colList
 %type <ex>   condExpr
@@ -339,15 +345,16 @@ std::vector<up<TypeName>> * tnL;
 program
 	: imports topDefinitions
 	{
-		// TODO
+		program->imports( $1 );
+		program->definitions( $2 );
 	}
 	| imports
 	{
-		// TODO
+		program->imports( $1 );
 	}
 	| topDefinitions
 	{
-		// TODO
+		program->definitions( $1 );
 	}
 	;
 
@@ -607,23 +614,27 @@ wConstraints
 wConstraint
 	: OBJECT DISTINCT
 	{
-		$$ = nullptr; // TODO
-	}
-	| ORDER BY expr
-	{
-		$$ = nullptr; // TODO
-	}
-	| ORDER BY '(' exprList ')'
-	{
-		$$ = nullptr; // TODO
+		$$ = new Distinct();
 	}
 	| expr DISTINCT
 	{
-		$$ = nullptr; // TODO
+		$$ = new Distinct( $1 );
 	}
 	| '(' exprList ')' DISTINCT
 	{
-		$$ = nullptr; // TODO
+		$$ = new Distinct( $2 );
+	}
+	| ORDER BY OBJECT
+	{
+		$$ = new Distinct( );
+	}
+	| ORDER BY expr
+	{
+		$$ = new OrderBy( $3 );
+	}
+	| ORDER BY '(' exprList ')'
+	{
+		$$ = new OrderBy( $4 );
 	}
 	| expr
 	;
@@ -837,9 +848,6 @@ type
 		$$ = new Nullable( $1 );
 	}
 	| typeDecl
-	{
-		// TODO
-	}
 	;
 
 typeDecl
@@ -1152,25 +1160,27 @@ statement
 	}
 	| TRY '{' statements '}' catchBlocks
 	{
-		// TODO
+		$$ = new Try( context->start, context->end, $3, $5 );
 	}
 	;
 
 catchBlocks
 	: catchBlocks catchBlock
 	{
-		// TODO
+		$$ = $1;
+		$$->push_back(up<CatchBlock>($2));
 	}
 	| catchBlock
 	{
-		// TODO
+		$$ = new std::vector<up<CatchBlock>>();
+		$$->push_back(up<CatchBlock>($1));
 	}
 	;
 
 catchBlock
 	: CATCH '(' variableDefinition ')' '{' statements '}'
 	{
-		// TODO
+		$$ = new CatchBlock( context->start, context->end, $3, $6 );
 	}
 
 sExpr
@@ -1234,15 +1244,15 @@ assignment
 lvalue
 	: NAME
 	{
-		// TODO
+		$$ = new Lvalue( $1 );
 	}
 	| lvalue '[' expr ']'
 	{
-		// TODO
+		$$ = new Lvalue( $1, $3 );
 	}
 	| lvalue '.' lvalue
 	{
-		// TODO
+		$$ = new Lvalue( $1, $3 );
 	}
 	;
 
@@ -1307,9 +1317,11 @@ literal
 	}
 	| '<' nvList '>'
 	{
+		$$ = nullptr; // TODO
 	}
 	| '(' nvList ')'
 	{
+		$$ = nullptr; // TODO
 	}
 	| '{' exprList '}'
 	{

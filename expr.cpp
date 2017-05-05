@@ -41,6 +41,24 @@ Type * Name::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+Type * Lvalue::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
+Type * Distinct::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
+Type * OrderBy::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
 Type * Assign::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
@@ -314,6 +332,24 @@ bool FuncCall::genCode( GenCodeContext & gcc ) const
 }
 
 bool Name::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Lvalue::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Distinct::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool OrderBy::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

@@ -6,6 +6,9 @@
 #include "type.h"
 
 
+Program * program;
+
+
 void Program::imports( std::vector<std::string> * imp ) 
 { 
 	imports_.reset(imp); 

@@ -543,3 +543,32 @@ private:
 up<Statement> statement_;
 };
 
+class CatchBlock: public Statement
+{
+public:
+	CatchBlock( int e, int s, Definition * d, std::vector<up<Statement>> * st):
+		Statement(e,s), var_(d), block_(st)
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	up<Definition> var_;
+	up<std::vector<up<Statement>>> block_;
+};
+
+
+class Try: public Statement
+{
+public:
+	Try( int e, int s, std::vector<up<Statement>> * sl, std::vector<up<CatchBlock>> * cbs ):Statement(e,s), statements_(sl), catchBlocks_(cbs) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	up<std::vector<up<Statement>>>	statements_;
+	up<std::vector<up<CatchBlock>>>	catchBlocks_;
+};
