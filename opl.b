@@ -92,8 +92,7 @@ std::vector<up<std::pair<std::string,up<Expr>>>> *
 std::vector<up<Statement>> * stL;
                        char str[1024];
 
-                  TypeName * tn;
-std::vector<up<TypeName>> * tnL;
+ std::vector<up<TypeArg>> * tnL;
                       Top * top;
                      Type * ty;
 
@@ -175,8 +174,8 @@ std::vector<up<TypeName>> * tnL;
 %token OVERRIDE         	"override"
 
 %token PERCENT				"percent"
-%token PERIOD               "period"
-%token <ex>  PERIOD_LIT     "period-literal"
+%token DURATION             "duration"
+%token <ex>  DURATION_LIT   "duration-literal"
 
 %token POW					"**"
 %token PQUEUE				"pqueue"
@@ -317,8 +316,7 @@ std::vector<up<TypeName>> * tnL;
 %type <st>   statement
 %type <stL>  statements
 %type <ex>   throwExpr
-%type <tn>   tname
-%type <tnL>  tnameList
+%type <tnL>  tArgList
 %type <top>	 optTop
 %type <gd>	 tokenDef
 %type <nL>   tokens
@@ -334,7 +332,7 @@ std::vector<up<TypeName>> * tnL;
 %type <w>    where
 
 
-%expect 119
+%expect 121
 
 
 %define api.pure
@@ -770,7 +768,7 @@ optBaseTypes
 	{
 		$$ = nullptr;
 	}
-	| ':' tnameList
+	| ':' tArgList
 	{
 		$$ = $2;
 	}
@@ -787,31 +785,26 @@ optParams
 	}
 	;
 
-tnameList
-	: tnameList ',' tname
+tArgList
+	: tArgList ',' type
 	{
 		$$ = $1;
-		$$->push_back(up<TypeName>($3));
+		$$->push_back(up<TypeArg>(new TypeArg($3)));
 	}
-	| tname
+	| tArgList ',' expr
 	{
-		$$ = new std::vector<up<TypeName>>();
-		$$->push_back(up<TypeName>($1));
+		$$ = $1;
+		$$->push_back(up<TypeArg>(new TypeArg($3)));
 	}
-	;
-
-tname
-	: NAME '<' tnameList '>'
+	| type
 	{
-		$$ = new TypeName( $1, $3 );
+		$$ = new std::vector<up<TypeArg>>();
+		$$->push_back(up<TypeArg>(new TypeArg($1)));
 	}
-	| NAME '<' exprList '>'
+	| expr
 	{
-		$$ = new TypeName( $1 );
-	}
-	| NAME
-	{
-		$$ = new TypeName( $1 );
+		$$ = new std::vector<up<TypeArg>>();
+		$$->push_back(up<TypeArg>(new TypeArg($1)));
 	}
 	;
 
@@ -861,7 +854,7 @@ type
 	;
 
 typeDecl
-	: NAME optParams
+	: NAME '<' tArgList '>'
 	{
 		$$ = context->symtbl.findType($1);
 	}
@@ -937,6 +930,10 @@ typeDecl
 	{
 		$$ = &stringType;
 	}
+	| STRING '[' expr ']'
+	{
+		$$ = &stringType;
+	}
 	| DATE
 	{
 		$$ = &dateType;
@@ -953,9 +950,9 @@ typeDecl
 	{
 		$$ = &timeType;
 	}
-	| PERIOD
+	| DURATION
 	{
-		$$ = &periodType;
+		$$ = &durationType;
 	}
 	| BOOL
 	{
@@ -1343,7 +1340,7 @@ literal
 	}
 	| DATE_LIT
 	| DATETIME_LIT
-	| PERIOD_LIT
+	| DURATION_LIT
 	| REGEX_LIT
 	| TIME_LIT
 	;

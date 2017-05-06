@@ -23,7 +23,6 @@ std::vector<std::string> * tbls,
 
 Range::Range( Expr * l, Expr * r ):Binary(l,r)
 {
-	TODO
 }
 
 Type * Range::semCheck( SemCheckContext & scc ) const 

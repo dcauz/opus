@@ -7,13 +7,13 @@ Vector::Vector( std::vector<up<Expr>> * v ):values_(v)
 
 bool Vector::genCode( GenCodeContext & gcc ) const
 {
-TODO
+TODO // genCode
 	return false;
 }
 
 Type * Vector::semCheck( SemCheckContext & scc ) const
 {
-TODO
+TODO // semCheck
 	return nullptr;
 }
 

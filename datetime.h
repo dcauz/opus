@@ -27,14 +27,14 @@ public:
 private:
 };
 
-class PeriodType: public Type
+class DurationType: public Type
 {
 };
 
 extern DateType		dateType;
 extern TimeType		timeType;
 extern DatetimeType	datetimeType;
-extern PeriodType	periodType;
+extern DurationType	durationType;
 
 
 class Date: public Expr
@@ -84,10 +84,10 @@ private:
 	Time time_;
 };
 
-class Period: public Expr
+class Duration: public Expr
 {
 public:
-	Period( int d, int hr, int mn, int sc, int ms );
+	Duration( int d, int hr, int mn, int sc, int ms );
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	Type * semCheck( SemCheckContext & scc ) const override;

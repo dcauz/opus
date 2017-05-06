@@ -1,20 +1,20 @@
 #include "tuple.h"
 
 
-Tuple::Tuple( std::vector<up<std::pair<std::string,up<Expr>>>> * )
+Tuple::Tuple( std::vector<up<std::pair<std::string,up<Expr>>>> * t ):
+	value_(t)
 {
-TODO
 }
 
 bool Tuple::genCode( GenCodeContext & gcc ) const
 {
-TODO
+TODO // genCode
 	return false;
 }
 
 Type * Tuple::semCheck( SemCheckContext & scc ) const
 {
-TODO
+TODO // semCheck
 	return nullptr;
 }
 

@@ -44,6 +44,7 @@ Keyword keywords[] =
 	{ DEFAULT,     "default" },
 	{ DEQUEUE,     "dequeue" },
 	{ DISTINCT,    "distinct" },
+    { DURATION,    "duration" },
 	{ DYNAMIC,     "dynamic" },
 
 	{ ELSE,        "else" },
@@ -80,7 +81,6 @@ Keyword keywords[] =
 	{ ORDER,       "order" },
 
 	{ PERCENT,     "percent" },
-    { PERIOD,      "period" },
 	{ PQUEUE,      "pqueue" },
 
 	{ Q,           "Q" },
@@ -120,21 +120,30 @@ Keyword keywords[] =
 };
 
 
-// period     one or more of
+// duration   one or more of
 //
 // <d>D.<h>h.<m>m.<s>[.<ms>]s
 //
 
-bool isPeriod( 
+bool isDuration(
 	YYLTYPE * llocp,
 	LexContext * context )
 {
 	char * start = context->cp;
 	char * cp = start;
 
+	int d = 0;
+	int h = 0;
+	int m = 0;
+	int s = 0;
+	int ms= 0;
+
 	int n = 0;
-	while(isdigit(cp[n++]))
-		;
+	while(isdigit(cp[n]))
+	{
+		d = d*10 + cp[n] - '0';
+		++n;
+	}
 	if(cp[n] == 'D' )
 	{
 		++n;
@@ -145,12 +154,15 @@ bool isPeriod(
 	}
 	else if(cp[n] == 'h' )
 	{
+
 	}
 	else if(cp[n] == 'm' )
 	{
+
 	}
 	else if(cp[n] == 's' )
 	{
+
 	}
 
 	TODO
@@ -659,9 +671,9 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 
 		if( isdigit(c))
 		{
-			if( isPeriod( llocp, context ))
+			if( isDuration( llocp, context ))
 			{
-				return PERIOD_LIT;
+				return DURATION_LIT;
 			}
 
 			if( isDate( llocp, context ))

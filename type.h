@@ -2,9 +2,7 @@
 
 #include <vector>
 #include <string>
-
-
-class Expr;
+#include "expr.h"
 
 
 class Type
@@ -45,3 +43,14 @@ public:
 
 extern ErrorType errorType;
 
+
+class TypeArg
+{
+public:
+	TypeArg( Expr * e ):expr_(e) {}
+	TypeArg( Type * t ):type_(t) {}
+
+private:
+	up<Expr> expr_;
+	up<Type> type_;
+};

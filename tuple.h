@@ -18,4 +18,6 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
+	up<std::vector<up<std::pair<std::string,up<Expr>>>>> value_;
+	
 };

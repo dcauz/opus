@@ -1,18 +1,18 @@
 #include "set.h"
 
 
-Set::Set( std::vector<up<Expr>> * )
+Set::Set( std::vector<up<Expr>> * v ):values_(v)
 {
 }
 
 bool Set::genCode( GenCodeContext & gcc ) const
 {
-TODO
+TODO // genCode
 	return false;
 }
 
 Type * Set::semCheck( SemCheckContext & scc ) const
 {
-TODO
+TODO // semCheck
 	return nullptr;
 }

@@ -13,7 +13,7 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-
+	up<std::vector<up<Expr>>> values_;
 };
 
 class SetType: public CollectionType

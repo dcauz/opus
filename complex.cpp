@@ -2,17 +2,37 @@
 #include "opus.h"
 #include "complex.h"
 #include "real.h"
+#include <stdexcept>
 
 
-Complex::Complex(std::pair<std::string, up<Expr>> * ,
-				 std::pair<std::string, up<Expr>> * )
+Complex::Complex(std::pair<std::string, up<Expr>> * a,
+				 std::pair<std::string, up<Expr>> * b)
 {
-TODO
+	if( a->first == "re" )
+	{
+		if( b->first == "im" )
+		{
+			re_.reset(a->second.release());
+			im_.reset(b->second.release());
+			return;
+		}
+	}
+	else if( a->first == "im" )
+	{
+		if( b->first == "re" )
+		{
+			re_.reset(b->second.release());
+			im_.reset(a->second.release());
+			return;
+		}
+	}
+
+	throw std::runtime_error( "Invalid complex number literal" );
 }
 
 Complex::Complex(int r, int i): 
-	real_(new Real(r)), 
-	imaginary_(new Real(i))
+	re_(new Real(r)), 
+	im_(new Real(i))
 {
 }
 

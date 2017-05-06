@@ -70,13 +70,13 @@ Type * Block::semCheck( SemCheckContext & scc ) const
 
 Type * CatchBlock::semCheck( SemCheckContext & scc ) const 
 {
-TODO
+TODO // semCheck
 	return &voidType;
 }
 
 Type * Try::semCheck( SemCheckContext & scc ) const 
 {
-TODO
+TODO // semCheck
 	return &voidType;
 }
 

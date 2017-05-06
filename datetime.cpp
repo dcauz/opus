@@ -4,5 +4,5 @@
 DateType		dateType;
 TimeType		timeType;
 DatetimeType	datetimeType;
-PeriodType		periodType;
+DurationType	durationType;
 

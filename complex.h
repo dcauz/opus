@@ -20,8 +20,8 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<Real> real_;
-	up<Real> imaginary_;
+	up<Expr> re_;
+	up<Expr> im_;
 };
 
 
