@@ -116,6 +116,15 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
+class Range: public Binary
+{
+public:
+	Range( Expr *, Expr * );
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
 class Add: public Binary 
 {
 public:

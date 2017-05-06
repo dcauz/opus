@@ -28,10 +28,12 @@
 #include "queue.h"
 #include "rational.h"
 #include "real.h"
+#include "regex.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"
 #include "tensor.h"
+#include "tuple.h"
 #include "vector.h"
 #include "void.h"
 
@@ -79,6 +81,10 @@ std::vector<up<GrammarDef>> * gds;
                     int64_t i64;
 
  std::vector<std::string> * nL;
+std::pair<std::string,up<Expr>> *
+                            nv;
+std::vector<up<std::pair<std::string,up<Expr>>>> *
+                            nvL;
 
                        char r[1024];
 
@@ -181,6 +187,8 @@ std::vector<up<TypeName>> * tnL;
 
 %token R					"R"
 %token <i> RATIONAL_LIT		"rational-literal"
+%token REGEX                "regex"
+%token <ex> REGEX_LIT       "regex-literal"
 %token RETURN				"return"
 %token RIGHT				"right"
 
@@ -286,6 +294,8 @@ std::vector<up<TypeName>> * tnL;
 %type <dcl>  grammar
 %type <gd>   grammarDef
 %type <gds>  grammarDefs
+%type <nv>   nv
+%type <nvL>  nvList
 %type <gb>   optGroupBy
 %type <h>    optHaving
 %type <str>  import
@@ -931,6 +941,10 @@ typeDecl
 	{
 		$$ = &dateType;
 	}
+	| REGEX
+	{
+		$$ = &regexType;
+	}
 	| DATETIME
 	{
 		$$ = &datetimeType;
@@ -1313,45 +1327,54 @@ literal
 	}
 	| '<' exprList '>'
 	{
-		$$ = nullptr; // TODO
+		$$ = new Vector($2);
 	}
 	| '<' nvList '>'
 	{
-		$$ = nullptr; // TODO
+		$$ = new Tuple($2);
 	}
-	| '(' nvList ')'
+	| '(' nv ',' nv ')'
 	{
-		$$ = nullptr; // TODO
+		$$ = new Complex( $2, $4 );
 	}
 	| '{' exprList '}'
 	{
-		$$ = nullptr; // TODO
+		$$ = new Set($2);
 	}
 	| DATE_LIT
 	| DATETIME_LIT
 	| PERIOD_LIT
+	| REGEX_LIT
 	| TIME_LIT
 	;
 
 nvList
 	:
 	{
-		// TODO
+		$$ = nullptr;
 	}
 	| nvList ',' nv
 	{
-		// TODO
+		$$ = $1;
+		$$->push_back(up<std::pair<std::string,up<Expr>>>($3));
 	}
 	| nv
 	{
-		// TODO
+		$$ = new std::vector<up<std::pair<std::string,up<Expr>>>>();
+		$$->push_back(up<std::pair<std::string,up<Expr>>>($1));
 	}
 	;
 
 nv
 	: NAME ':' expr
 	{
-		// TODO
+		std::pair<std::string,up<Expr>> * nv = 
+			new std::pair<std::string,up<Expr>>();
+
+		nv->first = $1;
+		nv->second.reset($3);
+		
+		$$ = nv;
 	}
 	;
 
@@ -1461,7 +1484,7 @@ expr
 	}
 	| expr DOT_DOT expr
 	{
-		$$ = nullptr; // TODO
+		$$ = new Range( $1, $3 );
 	}
 	| expr '[' exprList ']'
 	{

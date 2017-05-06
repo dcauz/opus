@@ -12,6 +12,8 @@ class Real;
 class Complex: public Value
 {
 public:
+	Complex(std::pair<std::string,up<Expr>> *, 
+			std::pair<std::string,up<Expr>> * );
 	Complex( int r, int i );
 
 	bool genCode( GenCodeContext & gcc ) const override;

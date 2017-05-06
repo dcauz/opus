@@ -1,24 +1,21 @@
 #pragma once
 
+#include <string>
+#include <vector>
+#include <utility>
+#include "opus.h"
 #include "collection.h"
 #include "value.h"
+#include "expr.h"
 
 
-class Set: public Value
+class Tuple: public Value
 {
 public:
-	Set( std::vector<up<Expr>> * );
+	Tuple( std::vector<up<std::pair<std::string,up<Expr>>>> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-
-};
-
-class SetType: public CollectionType
-{
-public:
-	SetType( Type * ele ):CollectionType(ele) {}
-
 };

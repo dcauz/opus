@@ -31,6 +31,7 @@ program.cpp \
 queue.cpp \
 rational.cpp \
 real.cpp \
+regex.cpp \
 semchkcontext.cpp \
 set.cpp \
 statement.cpp \
@@ -39,6 +40,7 @@ type.cpp \
 stack.cpp \
 string.cpp \
 tensor.cpp \
+tuple.cpp \
 vector.cpp \
 void.cpp \
 yyerror.cpp \

@@ -21,6 +21,23 @@ std::vector<std::string> * tbls,
 {
 }
 
+Range::Range( Expr * l, Expr * r ):Binary(l,r)
+{
+	TODO
+}
+
+Type * Range::semCheck( SemCheckContext & scc ) const 
+{
+	TODO // semCheck
+	return &errorType;
+}
+
+bool Range::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 ////////////////////////////////////////////////////////
 
 Type * SelectEx::semCheck( SemCheckContext & scc ) const 

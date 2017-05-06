@@ -191,7 +191,7 @@ enum OpType
 	Terminator 	= 1,
 	Binary	   	= 2,
 	BW_Binary  	= 4,
-	Vector     	= 8,
+	_Vector    	= 8,
     Aggregate	= 16,
 	Memory		= 32,
 	Conversion	= 64,

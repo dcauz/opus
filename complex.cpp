@@ -4,6 +4,12 @@
 #include "real.h"
 
 
+Complex::Complex(std::pair<std::string, up<Expr>> * ,
+				 std::pair<std::string, up<Expr>> * )
+{
+TODO
+}
+
 Complex::Complex(int r, int i): 
 	real_(new Real(r)), 
 	imaginary_(new Real(i))

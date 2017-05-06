@@ -22,10 +22,12 @@
 #include "queue.h"
 #include "rational.h"
 #include "real.h"
+#include "regex.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"
 #include "tensor.h"
+#include "tuple.h"
 #include "vector.h"
 #include "void.h"
 
