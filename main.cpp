@@ -29,6 +29,7 @@ int main( int c, char * a [] )
 			pc.fh = fopen( a[1], "r" );
 			pc.lookahead[0] = -1;
 			pc.lookahead[1] = -1;
+			pc.classSeen = false;
 			pc.cp = NULL;
 
 			int rc = opusparse( &pc );

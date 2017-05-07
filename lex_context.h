@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdio>
+#include <stack>
+#include <string>
+
 
 struct LexContext
 {
@@ -9,4 +12,6 @@ struct LexContext
 	int  lookahead[2];
 	char line[MAX_LINE];
 	char * cp;
+	std::stack<std::string> classes;
+	bool classSeen;
 };

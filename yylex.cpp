@@ -9,11 +9,6 @@
 #include "yylex.h"
 
 
-// TODO
-//
-// CLASS_NAME
-// 
-
 namespace
 {
 
@@ -900,11 +895,11 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 			for (int i = 0; i < sizeof(keywords)/sizeof(Keyword); ++i )
 			{
 				if( strcmp( lvalp->str, keywords[i].lexium ) == 0 )
-				{
 					return keywords[i].id;
-				}
 			}
 	
+			if( context->classSeen )
+				return CLASS_NAME;
 			return NAME;
 		}
 		//  Raw string literal
@@ -1075,6 +1070,8 @@ int opuslex( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 {
 	int token = nextToken( lvalp, llocp, context );
 
+	context->classSeen = ( token == CLASS );
+	
 #ifdef DEBUG_YYLEX
 	dump( token, lvalp, llocp );
 #endif

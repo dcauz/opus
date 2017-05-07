@@ -353,16 +353,16 @@ std::vector<up<Statement>> * stL;
 program
 	: imports topDefinitions
 	{
-		program->imports( $1 );
-		program->definitions( $2 );
+		context->program.imports( $1 );
+		context->program.definitions( $2 );
 	}
 	| imports
 	{
-		program->imports( $1 );
+		context->program.imports( $1 );
 	}
 	| topDefinitions
 	{
-		program->definitions( $1 );
+		context->program.definitions( $1 );
 	}
 	;
 
@@ -732,6 +732,7 @@ typeDef
 	| CLASS NAME optParams optBaseTypes   '{' definitions '}'
 	{
 		$$ = new ClassDef( context->start, context->end, $2, $6 );
+		context->classes.pop();
 	}
 	| CLASS NAME optParams optBaseTypes   '{' '}'
 	{
