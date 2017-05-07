@@ -87,11 +87,14 @@ private:
 class Duration: public Expr
 {
 public:
-	Duration( int d, int hr, int mn, int sc, int ms );
+	Duration( int d, int hr, int mn, int sc, int ms ): value_( ((d*24 + hr)*60+mn)*60+sc)
+	{
+		value_ = value_ * 1000000 + ms;
+	}
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	
+	uint64_t value_;
 };

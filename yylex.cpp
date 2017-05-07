@@ -119,6 +119,16 @@ Keyword keywords[] =
 	{ Z,           "Z" },
 };
 
+inline bool is1stTokenChar( char c )
+{
+	return	(c == '"') ||
+			(c == '\'') ||
+			(c == '_') ||
+			isalpha(c) ||
+			isdigit(c);
+}
+
+inline int D(char c)	{ return c - '0'; }
 
 // duration   one or more of
 //
@@ -126,6 +136,7 @@ Keyword keywords[] =
 //
 
 bool isDuration(
+	YYSTYPE * lvalp,
 	YYLTYPE * llocp,
 	LexContext * context )
 {
@@ -138,40 +149,113 @@ bool isDuration(
 	int s = 0;
 	int ms= 0;
 
-	int n = 0;
-	while(isdigit(cp[n]))
+	enum State
 	{
-		d = d*10 + cp[n] - '0';
-		++n;
-	}
-	if(cp[n] == 'D' )
-	{
-		++n;
-		if( cp[n] == '.')
-		{
+		begin,
+		daysSeen,
+		hoursSeen,
+		minsSeen,
+		secsSeen,
+		end
+	} state = begin;
 
+	int n = 0;
+	while(state != end)
+	{
+		int v = 0;
+		while(isdigit(cp[n]))
+		{
+			v = v*10 + cp[n] - '0';
+			++n;
+		}
+
+		switch(state)
+		{
+		case begin:
+			if(cp[n] == 'D' )
+			{
+				d = v;
+				state = daysSeen;
+			}
+			else if(cp[n] == 'h' )
+			{
+				h = v;
+				state = hoursSeen;
+			}
+			else if(cp[n] == 'm' )
+			{
+				m = v;
+				state = minsSeen;
+			}
+			else if(cp[n] == 's' )
+			{
+				s = v;
+				state = secsSeen;
+			}
+			else
+				throw std::runtime_error( "Invalid token" );
+			break;
+		case daysSeen:
+			if(cp[n] == 'h' )
+			{
+				h = v;
+				state = hoursSeen;
+			}
+			else if(cp[n] == 'm' )
+			{
+				m = v;
+				state = minsSeen;
+			}
+			else if(cp[n] == 's' )
+			{
+				s = v;
+				state = secsSeen;
+			}
+			else
+				throw std::runtime_error( "Invalid token" );
+			break;
+		case hoursSeen:
+			if(cp[n] == 'm' )
+			{
+				m = v;
+				state = minsSeen;
+			}
+			else if(cp[n] == 's' )
+			{
+				s = v;
+				state = secsSeen;
+			}
+			else
+				throw std::runtime_error( "Invalid token" );
+			break;
+		case minsSeen:
+			if(cp[n] == 's' )
+			{
+				s = v;
+				state = secsSeen;
+			}
+			else
+				throw std::runtime_error( "Invalid token" );
+			break;
+		case secsSeen:
+			ms = v;
+			state = end;
+			break;
 		}
 	}
-	else if(cp[n] == 'h' )
-	{
 
-	}
-	else if(cp[n] == 'm' )
-	{
 
-	}
-	else if(cp[n] == 's' )
-	{
+	if(is1stTokenChar(cp[n]))
+		throw std::runtime_error( "Invalid token" );
 
-	}
-
-	TODO
-	return false;
+	lvalp->ex = new Duration( d, h, m, s, ms);
+	return true;
 }
 
 // date       yyyy.mm.dd
 //
 bool isDate(
+	YYSTYPE * lvalp,
 	YYLTYPE * llocp,
 	LexContext * context )
 {
@@ -184,7 +268,14 @@ bool isDate(
 	  ( cp[7] == '.' ) &&
 		isdigit(cp[8]) && isdigit(cp[9]) )
 	{
-	TODO
+		if( is1stTokenChar(cp[10]))
+			throw std::runtime_error( "Invalid token" );
+
+		lvalp->ex = new Date( 
+			D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
+			D(cp[5])*10 + D(cp[6]),
+			D(cp[8])*10 + D(cp[9]));
+			
 		return true;
 	}
 
@@ -194,6 +285,7 @@ bool isDate(
 //            0123456789012 345 678 9012345
 // datetime   yyyy.mm.dd.hh[.mm[.ss[.mmmmmm]]]
 bool isDatetime(
+	YYSTYPE * lvalp,
 	YYLTYPE * llocp,
 	LexContext * context )
 {
@@ -208,40 +300,69 @@ bool isDatetime(
 	  ( cp[10] == '.' ) &&
 		isdigit(cp[11]) && isdigit(cp[12]))
 	{
+		int y = D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]);
+		int m = D(cp[5])*10 + D(cp[6]);
+		int d = D(cp[8])*10 + D(cp[9]);
+		int hour = D(cp[11])*10 + D(cp[12]);
+		int min = 0;
+		int sec = 0;
+		int ms = 0;
+
+		int next;
 		if(cp[13] == '.' )
 		{
 			if(isdigit(cp[14]) && isdigit(cp[15]))
 			{
+				min = D(cp[14])*10 + D(cp[15]);
+
 				if(cp[16] == '.' )
 				{
 					if(isdigit(cp[17]) && isdigit(cp[18]))
 					{
+						min = D(cp[17])*10 + D(cp[18]);
+
 						if(cp[19] == '.' && isdigit(cp[20]))
 						{
-							int n = 21;
-							while(isdigit(cp[n++]))
-								;
-							if(!isalpha(cp[n]) && 
-							cp[n] != '.' &&
-							cp[n] != '"' &&
-							cp[n] != '\'' )
-								return true;
+							sec = D(cp[19])*10 + D(cp[20]);
 
+							int n = 21;
+							while(isdigit(cp[n]))
+							{
+								ms = ms*10 + D(cp[n]);
+								++n;
+							}
+
+							next = n;
 						}
+						else
+							next = 19;
 					}
+					else
+						throw std::runtime_error( "Invalid token" );
 				}
+				else
+					next = 16;
 			}
+			else
+				throw std::runtime_error( "Invalid token" );
 
 			return false;
 		}
-TODO
+		else
+			next = 13;
+
+		if( is1stTokenChar(cp[next]))
+			throw std::runtime_error( "Invalid token" );
+
+end:	lvalp->ex = new Datetime( y, m, d, hour, min, sec, ms );
 		return true;
 	}
 	return false;
 }
 
-// time       hh.mm.ss
+// time       hh.mm.ss[.ms]
 bool isTime(
+	YYSTYPE * lvalp,
 	YYLTYPE * llocp,
 	LexContext * context )
 {
@@ -254,7 +375,24 @@ bool isTime(
 	  ( cp[5] == '.' ) &&
 		isdigit(cp[6]) && isdigit(cp[7]) )
 	{
-	TODO
+		if( cp[8] == '.' )
+		{
+			int ms = 0;
+			int n = 9;
+			while( isdigit(cp[n]))
+			{
+				ms = ms*10 + D(cp[n]);
+				++n;
+			}
+
+			lvalp->ex = new Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), ms );
+		}
+		else
+		{
+			lvalp->ex = new Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), 0 );
+		}	
 		return true;
 	}
 	return false;
@@ -272,7 +410,7 @@ bool isInteger(
 	while( *e && isdigit(*e) )
 		++e;
 
-	return !isalpha(*e) && *e != '_';
+	return !is1stTokenChar(*e);
 }
 
 bool isRational( 
@@ -292,7 +430,7 @@ bool isRational(
 		++e;
 	}
 
-	return !isalpha(*e) && *e != '_' && dots == 1;
+	return !is1stTokenChar(*e);
 }
 
 bool isInt( YYLTYPE * llocp, LexContext * context, int & i )
@@ -310,7 +448,8 @@ bool isInt( YYLTYPE * llocp, LexContext * context, int & i )
 		++cp;
 	}
 	
-	bool ans = !isalpha(*cp);
+	bool ans = !is1stTokenChar(*cp);
+
 	if(ans)
 		context->cp = cp;
 
@@ -332,7 +471,8 @@ bool isLong( YYLTYPE * llocp, LexContext * context, int64_t & l )
 		++cp;
 	}
 	
-	bool ans = !isalpha(*cp);
+	bool ans = !is1stTokenChar(*cp);
+
 	if(ans)
 		context->cp = cp;
 
@@ -671,22 +811,22 @@ int nextToken( YYSTYPE * lvalp, YYLTYPE * llocp, LexContext * context )
 
 		if( isdigit(c))
 		{
-			if( isDuration( llocp, context ))
+			if( isDuration( lvalp, llocp, context ))
 			{
 				return DURATION_LIT;
 			}
 
-			if( isDate( llocp, context ))
+			if( isDate( lvalp, llocp, context ))
 			{
 				return DATE_LIT;
 			}
 
-			if( isDatetime( llocp, context ))
+			if( isDatetime( lvalp, llocp, context ))
 			{
 				return DATETIME_LIT;
 			}
 
-			if( isTime( llocp, context ))
+			if( isTime( lvalp, llocp, context ))
 			{
 				return TIME_LIT;
 			}
