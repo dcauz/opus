@@ -21,17 +21,7 @@ EnumDef::EnumDef(
 {
 }
 
-Variables::Variables( int s, int e, std::vector<std::string> * ):
-	Definition(e,s)
-{
-}
-
 /////////////////////////////////////////////////////////////////
-
-Type * Variables::semCheck( SemCheckContext & scc ) const
-{
-	return &voidType;
-}
 
 Type * Empty::semCheck( SemCheckContext & scc ) const 
 {
@@ -75,6 +65,24 @@ TODO // semCheck
 }
 
 Type * Try::semCheck( SemCheckContext & scc ) const 
+{
+TODO // semCheck
+	return &voidType;
+}
+
+Type * Delete::semCheck( SemCheckContext & scc ) const 
+{
+TODO // semCheck
+	return &voidType;
+}
+
+Type * Insert::semCheck( SemCheckContext & scc ) const 
+{
+TODO // semCheck
+	return &voidType;
+}
+
+Type * Update::semCheck( SemCheckContext & scc ) const 
 {
 TODO // semCheck
 	return &voidType;
@@ -217,12 +225,6 @@ Type * FunDef::semCheck( SemCheckContext & scc ) const
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool Variables::genCode( GenCodeContext & gcc ) const
-{
-	TODO // genCode
-	return false;
-}
-
 bool Empty::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
@@ -248,6 +250,24 @@ bool CatchBlock::genCode( GenCodeContext & gcc ) const
 }
 
 bool Try::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Delete::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Insert::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Update::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

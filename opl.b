@@ -123,6 +123,7 @@ std::vector<up<Statement>> * stL;
 %token DATETIME             "datetime"
 %token <ex> DATETIME_LIT    "datetime-literal"
 %token DEFAULT				"default"
+%token DELETE               "delete"
 %token DEQUEUE				"dequeue"
 %token DISTINCT				"distinct"
 %token DOT_DOT			    ".."
@@ -147,9 +148,11 @@ std::vector<up<Statement>> * stL;
 %token IF 					"if"
 %token IMPORT				"import"
 %token IN					"in"
+%token INSERT               "insert"
 %token <i32> INT_LIT		"int-literal"
 %token <i> INTEGER_LIT		"integer-literal"
 %token INTERFACE			"interface"
+%token INTO                 "into"
 %token INVALID_NUMBER		"invalid-number"
 %token INVALID_STRING		"invalid-string"
 %token ISVOID				"isvoid"
@@ -211,7 +214,9 @@ std::vector<up<Statement>> * stL;
 
 %token UNION				"union"
 %token UNIQUE				"unique"
+%token UPDATE               "update"
 
+%token VALUES               "values"
 %token VECTOR				"vector"
 %token VOID					"void"
 
@@ -274,6 +279,8 @@ std::vector<up<Statement>> * stL;
 %type <cb>   catchBlock
 %type <cbL>  catchBlocks
 %type <col>  col
+%type <nv>   colAssign
+%type <nvL>  colAssignList
 %type <cols> colList
 %type <ex>   condExpr
 %type <cd>   constraintDef
@@ -332,7 +339,7 @@ std::vector<up<Statement>> * stL;
 %type <w>    where
 
 
-%expect 121
+%expect 122
 
 
 %define api.pure
@@ -1173,6 +1180,40 @@ statement
 	| TRY '{' statements '}' catchBlocks
 	{
 		$$ = new Try( context->start, context->end, $3, $5 );
+	}
+	| DELETE FROM NAME WHERE expr
+	{
+		$$ = new Delete( context->start, context->end, $3, $5 );
+	}
+	| INSERT INTO NAME '(' nameList ')' VALUES '(' exprList ')'
+	{
+		$$ = new Insert( context->start, context->end, $3, $5, $9 );
+	}
+	| UPDATE NAME SET colAssignList WHERE expr
+	{
+		$$ = new Update( context->start, context->end, $2, $4, $6 );
+	}
+	;
+
+colAssignList
+	: colAssignList ',' colAssign
+	{
+		$$ = $1;
+		$$->push_back(up<std::pair<std::string, up<Expr>>>($3));
+	}
+	| colAssign
+	{
+		$$ = new std::vector<up<std::pair<std::string, up<Expr>>>>();
+		$$->push_back(up<std::pair<std::string, up<Expr>>>($1));
+	}
+	;
+
+colAssign
+	: NAME '=' expr
+	{
+		$$ = new std::pair<std::string, up<Expr>>();
+		$$->first = $1;
+		$$->second.reset($3);
 	}
 	;
 

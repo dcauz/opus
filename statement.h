@@ -120,15 +120,6 @@ private:
 	up<std::vector<up<Statement>>> statements_;
 };
 
-class Variables: public Definition
-{
-public:
-	Variables( int s, int e, std::vector<std::string> * );
-
-	bool genCode( GenCodeContext & ) const final;
-	Type * semCheck( SemCheckContext & ) const final;
-};
-
 class TypeDef: public Definition
 {
 public:
@@ -553,4 +544,44 @@ public:
 private:
 	up<std::vector<up<Statement>>>	statements_;
 	up<std::vector<up<CatchBlock>>>	catchBlocks_;
+};
+
+class Delete: public Statement
+{
+public:
+	Delete( int e, int s, const char *, Expr * ):Statement(e,s) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+
+};
+
+class Insert: public Statement
+{
+public:
+	Insert( int e, int s, const char *, std::vector<std::string> *,
+			std::vector<up<Expr>> * ):Statement(e,s) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+
+};
+
+class Update: public Statement
+{
+public:
+	Update( int e, int s, const char *, 
+		std::vector<up<std::pair<std::string, up<Expr>>>> *, Expr * ):
+		Statement(e,s) 
+	{}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+
 };
