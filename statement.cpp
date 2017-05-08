@@ -60,13 +60,49 @@ Type * Block::semCheck( SemCheckContext & scc ) const
 
 Type * CatchBlock::semCheck( SemCheckContext & scc ) const 
 {
-TODO // semCheck
+	if( &errorType == var_->semCheck( scc ) )
+		return &errorType;
+	
+	auto i = statements_->begin();
+	auto e = statements_->end();
+
+	while( i != e )
+	{
+		Statement * s = (*i).get();
+
+		if( s->semCheck( scc ) == &errorType )
+			return &errorType;
+
+		++i;
+	}
+
 	return &voidType;
 }
 
 Type * Try::semCheck( SemCheckContext & scc ) const 
 {
-TODO // semCheck
+	auto i = statements_->begin();
+	auto e = statements_->end();
+
+	while( i != e )
+	{
+		if( i->get()->semCheck( scc ) == &errorType )
+			return &errorType;
+		++i;
+	}
+
+	auto ci = catchBlocks_->begin();
+	auto ce = catchBlocks_->end();
+
+	while( ci != ce )
+	{
+		CatchBlock * cb = (*ci).get();
+
+		if( cb->semCheck( scc ) == &errorType )
+			return &errorType;
+		++ci;
+	}
+
 	return &voidType;
 }
 
@@ -113,13 +149,22 @@ Type * InterfaceDef::semCheck( SemCheckContext & scc ) const
 
 Type * Private::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+TODO // semCheck
+	return &voidType;
 }
 
 Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
+	auto i = statements_->begin();
+	auto e = statements_->end();
+
+	while( i != e )
+	{
+		if( i->get()->semCheck( scc ) == &errorType )
+			return &errorType;
+		++i;
+	}
+
 	return &errorType;
 }
 

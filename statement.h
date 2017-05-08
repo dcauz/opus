@@ -520,7 +520,7 @@ class CatchBlock: public Statement
 {
 public:
 	CatchBlock( int e, int s, Definition * d, std::vector<up<Statement>> * st):
-		Statement(e,s), var_(d), block_(st)
+		Statement(e,s), var_(d), statements_(st)
 	{
 	}
 
@@ -529,7 +529,7 @@ public:
 
 private:
 	up<Definition> var_;
-	up<std::vector<up<Statement>>> block_;
+	up<std::vector<up<Statement>>> statements_;
 };
 
 
