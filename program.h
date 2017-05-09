@@ -4,6 +4,8 @@
 #include <string>
 #include "il.h"
 #include "opus.h"
+#include "symtbl.h"
+
 
 
 class Definition;
@@ -39,4 +41,6 @@ private:
 
 	up<std::vector<up<ILentity>>>	ilEntities_;
 	std::vector<FunctionDeclaration::FuncAttrs>	funcAttrs_;
+
+	up<SymbolTable> globalSymTbl_;
 };

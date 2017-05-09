@@ -30,8 +30,8 @@ Type * Empty::semCheck( SemCheckContext & scc ) const
 
 Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = block_->begin();
+	auto e = block_->end();
 
 	while( i != e )
 	{
@@ -63,8 +63,8 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 	if( &errorType == var_->semCheck( scc ) )
 		return &errorType;
 	
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = block_->begin();
+	auto e = block_->end();
 
 	while( i != e )
 	{
@@ -81,8 +81,8 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 
 Type * Try::semCheck( SemCheckContext & scc ) const 
 {
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = block_->begin();
+	auto e = block_->end();
 
 	while( i != e )
 	{
@@ -155,8 +155,8 @@ TODO // semCheck
 
 Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = block_->begin();
+	auto e = block_->end();
 
 	while( i != e )
 	{

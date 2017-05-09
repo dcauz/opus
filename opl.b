@@ -275,7 +275,7 @@ std::vector<up<Statement>> * stL;
 %type <arL>  args
 %type <ex>   assignment
 %type <tnL>  optBaseTypes
-%type <bl>   body
+%type <st>   block
 %type <cb>   catchBlock
 %type <cbL>  catchBlocks
 %type <col>  col
@@ -426,18 +426,14 @@ private
 	;
 
 namespace
-	: NAMESPACE NAME '{' '}'
+	: NAMESPACE NAME block
 	{
-		$$ = new Namespace( context->start, context->end, $2 );
-	}
-	| NAMESPACE NAME '{' statements '}'
-	{
-		$$ = new Namespace( context->start, context->end, $2, $4 );
+		$$ = new Namespace( context->start, context->end, $2, $3 );
 	}
 	;
 
 routine
-	: type NAME '(' args ')' body
+	: type NAME '(' args ')' block
 	{
 		$$ = new RoutineDef( context->start, context->end, $1, $2, $4, $6 );
 	}
@@ -448,7 +444,7 @@ routine
 	;
 
 operator
-	: type OPERATOR op '(' args ')' body
+	: type OPERATOR op '(' args ')' block
 	{
 		$$ = new OperatorDef( context->start, context->end, $1, $3, $5, $7 );
 	}
@@ -490,7 +486,7 @@ ctor
 	{
 		$$ = new CtorDef( context->start, context->end, $1, $3 );
 	}
-	| CLASS_NAME '(' args ')' body
+	| CLASS_NAME '(' args ')' block
 	{
 		$$ = new CtorDef( context->start, context->end, $1, $3, $5 );
 	}
@@ -538,17 +534,6 @@ arg
 	: type NAME
 	{
 		$$ = new Arg( $1, $2 );
-	}
-	;
-
-body
-	: '{' statements '}'
-	{
-		$$ = new Block( context->start, context->end, $2 );
-	}
-	| '{' '}'
-	{
-		$$ = new Block( context->start, context->end );
 	}
 	;
 
@@ -1169,17 +1154,13 @@ statement
 	{
 		$$ = new Return( context->start, context->end, $2 );
 	}
-	| ATOMIC '{' statements '}'
+	| ATOMIC block
 	{
-		$$ = new AtomicBlock( context->start, context->end, $3 );
+		$$ = new AtomicBlock( context->start, context->end, $2 );
 	}
-	| '{' statements '}'
+	| TRY block catchBlocks
 	{
-		$$ = new Block( context->start, context->end, $2 );
-	}
-	| TRY '{' statements '}' catchBlocks
-	{
-		$$ = new Try( context->start, context->end, $3, $5 );
+		$$ = new Try( context->start, context->end, $2, $3 );
 	}
 	| DELETE FROM NAME WHERE expr
 	{
@@ -1192,6 +1173,18 @@ statement
 	| UPDATE NAME SET colAssignList WHERE expr
 	{
 		$$ = new Update( context->start, context->end, $2, $4, $6 );
+	}
+	| block
+	;
+
+block
+	: '{' statements '}'
+	{
+		$$ = new Block( context->start, context->end, $2 );
+	}
+	| '{' '}'
+	{
+		$$ = new Block( context->start, context->end, nullptr );
 	}
 	;
 
@@ -1231,9 +1224,9 @@ catchBlocks
 	;
 
 catchBlock
-	: CATCH '(' variableDefinition ')' '{' statements '}'
+	: CATCH '(' variableDefinition ')' block
 	{
-		$$ = new CatchBlock( context->start, context->end, $3, $6 );
+		$$ = new CatchBlock( context->start, context->end, $3, $5 );
 	}
 
 sExpr

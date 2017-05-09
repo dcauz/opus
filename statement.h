@@ -38,22 +38,6 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 };
 
-class AtomicBlock: public Statement
-{
-public:
-	AtomicBlock( 
-		int s, 
-		int e, 
-		std::vector<up<Statement>> * sts = nullptr ):
-		Statement(s,e), statements_(sts) {}
-
-	bool genCode( GenCodeContext & ) const final;
-	Type * semCheck( SemCheckContext & ) const final;
-
-private:
-	up<std::vector<up<Statement>>> statements_;
-};
-
 class Block: public Statement
 {
 public:
@@ -66,8 +50,27 @@ public:
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
+	std::vector<up<Statement>>::iterator begin() { return statements_->begin();}
+	std::vector<up<Statement>>::iterator end()   { return statements_->end(); }
+
 private:
 	up<std::vector<up<Statement>>> statements_;
+};
+
+class AtomicBlock: public Statement
+{
+public:
+	AtomicBlock( 
+		int s, 
+		int e, 
+		Statement * st = nullptr ):
+		Statement(s,e), block_(static_cast<Block *>(st)) {}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	up<Block> block_;
 };
 
 class ExprStatement : public Statement
@@ -108,16 +111,19 @@ public:
 		int s, 
 		int e, 
 		const char * n,
-		std::vector<up<Statement>> * sts = nullptr ):
-		name_(n),
-		Definition(s,e), statements_(sts) {}
+		Statement * st = nullptr ):
+			name_(n),
+			Definition(s,e), 
+			block_(static_cast<Block *>(st))
+	{
+	}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string name_;
-	up<std::vector<up<Statement>>> statements_;
+	up<Block> block_;
 };
 
 class TypeDef: public Definition
@@ -280,7 +286,7 @@ public:
 		Type * t, 
 		const char * n, 
 		std::vector<up<Arg>> * args, 
-		Block * bl = nullptr ):Definition(s,e),
+		Statement * bl = nullptr ):Definition(s,e),
 		returnType_(t), name_(n), body_(bl) 
 	{
 	}
@@ -293,7 +299,7 @@ public:
 private:
 	   sp<Type> returnType_;
 	std::string	name_;
-	  up<Block> body_;
+	  up<Statement> body_;
 };
 
 class OperatorDef: public Definition
@@ -305,8 +311,11 @@ public:
 		Type * t, 
 		int n, 
 		std::vector<up<Arg>> * args, 
-		Block * bl = nullptr ):Definition(s,e),
-		returnType_(t), op_(n), body_(bl) 
+		Statement * bl = nullptr ):
+			Definition(s,e),
+			returnType_(t), 
+			op_(n), 
+			body_(static_cast<Block *>(bl))
 	{
 	}
 
@@ -318,7 +327,7 @@ public:
 private:
 	   sp<Type> returnType_;
 	        int op_;
-	  up<Block> body_;
+  up<Block> body_;
 };
 
 class CtorDef: public Definition
@@ -329,8 +338,8 @@ public:
 		int e, 
 		const char * n, 
 		std::vector<up<Arg>> * args, 
-		Block * bl = nullptr ):Definition(s,e),
-		name_(n), body_(bl) 
+		Statement * bl = nullptr ):Definition(s,e),
+		name_(n), body_(static_cast<Block *>(bl))
 	{
 	}
 
@@ -519,8 +528,9 @@ up<Statement> statement_;
 class CatchBlock: public Statement
 {
 public:
-	CatchBlock( int e, int s, Definition * d, std::vector<up<Statement>> * st):
-		Statement(e,s), var_(d), statements_(st)
+	CatchBlock( int e, int s, Definition * d, 
+		Statement * st):
+		Statement(e,s), var_(d), block_(static_cast<Block *>(st))
 	{
 	}
 
@@ -529,20 +539,23 @@ public:
 
 private:
 	up<Definition> var_;
-	up<std::vector<up<Statement>>> statements_;
+	up<Block> block_;
 };
 
 
 class Try: public Statement
 {
 public:
-	Try( int e, int s, std::vector<up<Statement>> * sl, std::vector<up<CatchBlock>> * cbs ):Statement(e,s), statements_(sl), catchBlocks_(cbs) {}
+	Try(int e, int s, 
+		Statement * sl, 
+		std::vector<up<CatchBlock>> * cbs ):
+	Statement(e,s), block_(static_cast<Block *>(sl)), catchBlocks_(cbs) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<std::vector<up<Statement>>>	statements_;
+	up<Block>	block_;
 	up<std::vector<up<CatchBlock>>>	catchBlocks_;
 };
 
