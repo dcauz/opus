@@ -37,9 +37,6 @@
 #include "vector.h"
 #include "void.h"
 
-
-extern Program * program;
-
 %}
 
 %union
@@ -61,8 +58,6 @@ std::vector<up<ConstraintDef>>
                           * cols;
 
                      double dbl;
-               Definition * dcl;
-std::vector<up<Definition>> * dclL;
 
                EnumMember * en;
 std::vector<up<EnumMember>> * enL;
@@ -270,7 +265,7 @@ std::vector<up<Statement>> * stL;
 %left '('
 
 
-%type <dcl>  alias
+%type <st>   alias
 %type <ar>   arg
 %type <arL>  args
 %type <ex>   assignment
@@ -285,19 +280,18 @@ std::vector<up<Statement>> * stL;
 %type <ex>   condExpr
 %type <cd>   constraintDef
 %type <cds>  constraintDefs
-%type <dcl>  ctor
-%type <dcl>  model
+%type <st>   ctor
+%type <st>   model
 %type <ex>   decExpr
 %type <i32>  declarators
-%type <dcl>  definition
-%type <dclL> definitions
+%type <st>   definition
 %type <i32>  dim
 %type <i32L> dims
 %type <i32>  optDistinct
 %type <ex>   expr
 %type <exL>  exprList
-%type <dcl>  function
-%type <dcl>  grammar
+%type <st>   function
+%type <st>   grammar
 %type <gd>   grammarDef
 %type <gds>  grammarDefs
 %type <nv>   nv
@@ -312,12 +306,12 @@ std::vector<up<Statement>> * stL;
 %type <en>   member
 %type <enL>  members
 %type <nL>   nameList
-%type <dcl>  namespace
+%type <st>   namespace
 %type <i32>  op
-%type <dcl>  operator
+%type <st>   operator
 %type <nL>   optParams
-%type <dcl>  private
-%type <dcl>  routine
+%type <st>   private
+%type <st>   routine
 %type <gd>   ruleDef
 %type <ex>   sExpr
 %type <st>   statement
@@ -327,11 +321,10 @@ std::vector<up<Statement>> * stL;
 %type <top>	 optTop
 %type <gd>	 tokenDef
 %type <nL>   tokens
-%type <dclL> topDefinitions
 %type <ty>   type
 %type <ty>   typeDecl
-%type <dcl>  typeDef
-%type <dcl>  variableDefinition
+%type <st>   typeDef
+%type <st>   variableDefinition
 %type <str>  varFrom
 %type <exL>  varWhere
 %type <ex>   wConstraint
@@ -339,7 +332,7 @@ std::vector<up<Statement>> * stL;
 %type <w>    where
 
 
-%expect 122
+%expect 126
 
 
 %define api.pure
@@ -358,18 +351,18 @@ std::vector<up<Statement>> * stL;
 %%
 
 program
-	: imports topDefinitions
+	: imports statements
 	{
 		context->program.imports( $1 );
-		context->program.definitions( $2 );
+		context->program.statements( $2 );
 	}
 	| imports
 	{
 		context->program.imports( $1 );
 	}
-	| topDefinitions
+	| statements
 	{
-		context->program.definitions( $1 );
+		context->program.statements( $1 );
 	}
 	;
 
@@ -390,17 +383,6 @@ import
 	: IMPORT STRING_LIT
 	{
 		strcpy($$,$2);
-	}
-	;
-
-topDefinitions
-	: topDefinitions definition
-	{
-		context->program.definitions().push_back(up<Definition>($2));
-	}
-	| definition
-	{
-		context->program.definitions().push_back(up<Definition>($1));
 	}
 	;
 
@@ -721,38 +703,22 @@ typeDef
 	{
 		$$ = new EnumDef( context->start, context->end, $2 );
 	}
-	| CLASS NAME optParams optBaseTypes   '{' definitions '}'
+	| CLASS NAME optParams optBaseTypes   block
 	{
-		$$ = new ClassDef( context->start, context->end, $2, $6 );
+		$$ = new ClassDef( context->start, context->end, $2, $5 );
 		context->classes.pop();
 	}
-	| CLASS NAME optParams optBaseTypes   '{' '}'
+	| INTERFACE NAME optParams optBaseTypes block
 	{
-		$$ = new ClassDef( context->start, context->end, $2 );
+		$$ = new InterfaceDef( context->start, context->end, $2, $5 );
 	}
-	| INTERFACE NAME optParams optBaseTypes      '{' definitions '}'
+	| UNION NAME optParams optBaseTypes block
 	{
-		$$ = new InterfaceDef( context->start, context->end, $2, $6 );
+		$$ = new UnionDef( context->start, context->end, $2, $5 );
 	}
-	| INTERFACE NAME optParams optBaseTypes '{' '}'
+	| TUPLE NAME optParams optBaseTypes block
 	{
-		$$ = new InterfaceDef( context->start, context->end, $2 );
-	}
-	| UNION NAME optParams optBaseTypes  '{' definitions '}'
-	{
-		$$ = new UnionDef( context->start, context->end, $2, $6 );
-	}
-	| UNION NAME optParams optBaseTypes  '{' '}'
-	{
-		$$ = new UnionDef( context->start, context->end, $2 );
-	}
-	| TUPLE NAME optParams optBaseTypes  '{' definitions '}'
-	{
-		$$ = new TupleDef( context->start, context->end, $2, $6 );
-	}
-	| TUPLE NAME optParams optBaseTypes '{' '}'
-	{
-		$$ = new TupleDef( context->start, context->end, $2 );
+		$$ = new TupleDef( context->start, context->end, $2, $5 );
 	}
 	;
 
@@ -822,19 +788,6 @@ member
 	| NAME '=' expr
 	{
 		$$ = new EnumMember( $1, $3 );
-	}
-	;
-
-definitions
-	: definitions definition
-	{
-		$$ = $1;
-		$$->push_back(up<Definition>($2));
-	}
-	| definition
-	{
-		$$ = new std::vector<up<Definition>>();
-		$$->push_back(up<Definition>($1));
 	}
 	;
 
@@ -1055,6 +1008,9 @@ statement
 	: sExpr
 	{
 		$$ = new ExprStatement( context->start, context->end, $1 );
+	}
+	| definition
+	{
 	}
 	| IF '(' expr ')' statement
 	{

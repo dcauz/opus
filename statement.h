@@ -5,6 +5,7 @@
 #include <string>
 #include "opus.h"
 #include "enum.h"
+#include "symtbl.h"
 
 
 class Expr;
@@ -53,8 +54,11 @@ public:
 	std::vector<up<Statement>>::iterator begin() { return statements_->begin();}
 	std::vector<up<Statement>>::iterator end()   { return statements_->end(); }
 
+	SymbolTable & symbolTable() { return symbolTable_; }
+
 private:
 	up<std::vector<up<Statement>>> statements_;
+	SymbolTable symbolTable_;
 };
 
 class AtomicBlock: public Statement
@@ -158,15 +162,15 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<up<Definition>> * mbrs = nullptr ):
-	TypeDef(s,e), name_(n), members_(mbrs) {}
+		Statement * mbrs = nullptr ):
+	TypeDef(s,e), name_(n), members_(static_cast<Block *>(mbrs)) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
-	up<std::vector<up<Definition>>> members_;
+	up<Block> members_;
 };
 
 class InterfaceDef: public TypeDef
@@ -176,15 +180,15 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<up<Definition>> * mbrs = nullptr ):
-	TypeDef(s,e), name_(n), members_(mbrs) {}
+		Statement * mbrs = nullptr ):
+	TypeDef(s,e), name_(n), members_(static_cast<Block *>(mbrs)) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
-	up<std::vector<up<Definition>>> members_;
+	up<Block> members_;
 };
 
 class TupleDef: public TypeDef
@@ -194,15 +198,15 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<up<Definition>> * mbrs = nullptr ):
-	TypeDef(s,e), name_(n), members_(mbrs) {}
+		Statement * mbrs = nullptr ):
+	TypeDef(s,e), name_(n), members_(static_cast<Block *>(mbrs)) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
-	up<std::vector<up<Definition>>> members_;
+	up<Block> members_;
 };
 
 class UnionDef: public TypeDef
@@ -212,15 +216,15 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<up<Definition>> * mbrs = nullptr ):
-	TypeDef(s,e), name_(n), members_(mbrs) {}
+		Statement * mbrs = nullptr ):
+	TypeDef(s,e), name_(n), members_(static_cast<Block *>(mbrs)) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::string	name_;
-	up<std::vector<up<Definition>>> members_;
+	up<Block> members_;
 };
 
 class VarDef: public Definition
@@ -528,7 +532,7 @@ up<Statement> statement_;
 class CatchBlock: public Statement
 {
 public:
-	CatchBlock( int e, int s, Definition * d, 
+	CatchBlock( int e, int s, Statement * d, 
 		Statement * st):
 		Statement(e,s), var_(d), block_(static_cast<Block *>(st))
 	{
@@ -538,7 +542,7 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Definition> var_;
+	up<Statement> var_;
 	up<Block> block_;
 };
 

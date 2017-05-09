@@ -14,9 +14,9 @@ void Program::imports( std::vector<std::string> * imp )
 	imports_.reset(imp); 
 }
 
-void Program::definitions( std::vector<up<Definition>> * defs ) 
+void Program::statements( std::vector<up<Statement>> * defs ) 
 { 
-	definitions_.reset(defs); 
+	statements_.reset(defs); 
 }
 
 std::vector<std::string>    & Program::imports()
@@ -24,9 +24,9 @@ std::vector<std::string>    & Program::imports()
 	return *imports_; 
 }
 
-std::vector<up<Definition>> & Program::definitions() 
+std::vector<up<Statement>> & Program::statements() 
 { 
-	return *definitions_; 
+	return *statements_; 
 }
 
 std::vector<up<ILentity>>   & Program::ilEntities()  
@@ -44,14 +44,14 @@ Program::Program( const char * srcFile ):srcFile_(srcFile)
 
 bool Program::semCheck() const
 {
-	auto i = definitions_->begin();
-	auto e = definitions_->end();
+	auto i = statements_->begin();
+	auto e = statements_->end();
 	
 	SemCheckContext	context;
 
 	while( i != e )
 	{
-		up<Definition>& def = *i;
+		up<Statement>& def = *i;
 
 		Type * type = def->semCheck( context );
 		if( type == &errorType )
@@ -65,14 +65,14 @@ bool Program::semCheck() const
 
 bool Program::genCode()
 {
-	auto i = definitions_->begin();
-	auto e = definitions_->end();
+	auto i = statements_->begin();
+	auto e = statements_->end();
 
 	GenCodeContext	context(this);
 
 	while( i != e )
 	{
-		up<Definition>& def = *i;
+		up<Statement>& def = *i;
 
 		def->genCode( context );
 

@@ -7,6 +7,8 @@
 #include "collection.h"
 #include "value.h"
 #include "expr.h"
+#include "symtbl.h"
+
 
 
 class Tuple: public Value
@@ -17,7 +19,9 @@ public:
 	bool genCode( GenCodeContext & gcc ) const override;
 	Type * semCheck( SemCheckContext & scc ) const override;
 
+	SymbolTable & symbolTable() { return symbolTable_; }
+
 private:
 	up<std::vector<up<std::pair<std::string,up<Expr>>>>> value_;
-	
+	SymbolTable symbolTable_;
 };
