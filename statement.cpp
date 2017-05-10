@@ -7,6 +7,7 @@
 #include "void.h"
 #include "expr.h"
 #include "bool.h"
+#include "semchkcontext.h"
 
 
 
@@ -30,6 +31,8 @@ Type * Empty::semCheck( SemCheckContext & scc ) const
 
 Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Atomic);
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -40,11 +43,15 @@ Type * AtomicBlock::semCheck( SemCheckContext & scc ) const
 		++i;
 	}
 
+	scc.popBlockOwner();
+
 	return &voidType;
 }
 
 Type * Block::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::None);
+
 	auto i = statements_->begin();
 	auto e = statements_->end();
 
@@ -55,6 +62,8 @@ Type * Block::semCheck( SemCheckContext & scc ) const
 		++i;
 	}
 
+	scc.popBlockOwner();
+
 	return &voidType;
 }
 
@@ -63,6 +72,8 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 	if( &errorType == var_->semCheck( scc ) )
 		return &errorType;
 	
+	scc.pushBlockOwner(BlockOwner::Catch);
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -75,12 +86,15 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 
 		++i;
 	}
+	scc.popBlockOwner();
 
 	return &voidType;
 }
 
 Type * Try::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Try);
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -90,6 +104,8 @@ Type * Try::semCheck( SemCheckContext & scc ) const
 			return &errorType;
 		++i;
 	}
+
+	scc.popBlockOwner();
 
 	auto ci = catchBlocks_->begin();
 	auto ce = catchBlocks_->end();
@@ -137,13 +153,23 @@ Type * EnumDef::semCheck( SemCheckContext & scc ) const
 
 Type * ClassDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Class);
+
 	TODO // semCheck
+
+	scc.popBlockOwner();
+
 	return &errorType;
 }
 
 Type * InterfaceDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Interface);
+
 	TODO // semCheck
+
+	scc.popBlockOwner();
+
 	return &errorType;
 }
 
@@ -155,6 +181,8 @@ TODO // semCheck
 
 Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Namespace);
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -165,40 +193,52 @@ Type * Namespace::semCheck( SemCheckContext & scc ) const
 		++i;
 	}
 
+	scc.popBlockOwner();
+
 	return &errorType;
 }
 
 Type * TupleDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Tuple);
 	TODO // semCheck
+	scc.popBlockOwner();
 	return &errorType;
 }
 
 Type * UnionDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Union);
 	TODO // semCheck
-	return &errorType;
-}
-
-Type * VarDef::semCheck( SemCheckContext & scc ) const 
-{
-	TODO // semCheck
+	scc.popBlockOwner();
 	return &errorType;
 }
 
 Type * OperatorDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Operator);
 	TODO // semCheck
+	scc.popBlockOwner();
 	return &errorType;
 }
 
 Type * RoutineDef::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Routine);
 	TODO // semCheck
+	scc.popBlockOwner();
 	return &errorType;
 }
 
 Type * CtorDef::semCheck( SemCheckContext & scc ) const 
+{
+	scc.pushBlockOwner(BlockOwner::Ctor);
+	TODO // semCheck
+	scc.popBlockOwner();
+	return &errorType;
+}
+
+Type * VarDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
 	return &errorType;
@@ -216,13 +256,79 @@ Type * If::semCheck( SemCheckContext & scc ) const
 	{
 		return &errorType;
 	}
-	TODO // semCheck
+
+	Block * block = dynamic_cast<Block *>(if_.get());
+	if(block)
+	{
+		scc.pushBlockOwner(BlockOwner::If);
+
+		TODO // semCheck
+
+		scc.popBlockOwner();
+	}
+	else
+	{
+		TODO // semCheck
+	}
+
+	if(else_)
+	{
+		block = dynamic_cast<Block *>(else_.get());
+		if(block)
+		{
+			scc.pushBlockOwner(BlockOwner::Else);
+
+			TODO // semCheck
+
+			scc.popBlockOwner();
+		}
+		else
+		{
+			TODO // semCheck
+		}
+	}
+
 	return &errorType;
 }
 
 Type * For::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::For);
+
 	TODO // semCheck
+
+	scc.popBlockOwner();
+	return &errorType;
+}
+
+Type * While::semCheck( SemCheckContext & scc ) const 
+{
+	Block * block = dynamic_cast<Block *>(statement_.get());
+
+	if( block )
+	{
+		scc.pushBlockOwner(BlockOwner::While);
+
+		TODO // semCheck
+
+		scc.popBlockOwner();
+	}
+	else
+	{
+		TODO // semCheck
+	}
+
+	return &errorType;
+}
+
+Type * Until::semCheck( SemCheckContext & scc ) const 
+{
+	scc.pushBlockOwner(BlockOwner::Until);
+
+	TODO // semCheck
+
+	scc.popBlockOwner();
+
 	return &errorType;
 }
 
@@ -234,14 +340,22 @@ Type * Default::semCheck( SemCheckContext & scc ) const
 
 Type * Continue::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	if( !scc.canContinue())
+	{
+		// TODO: log error
+		return &errorType;
+	}
+	return &voidType;
 }
 
 Type * Break::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	if( !scc.canBreak())
+	{
+		// TODO: log error
+		return &errorType;
+	}
+	return &voidType;
 }
 
 Type * Return::semCheck( SemCheckContext & scc ) const 
@@ -258,7 +372,12 @@ Type * Case::semCheck( SemCheckContext & scc ) const
 
 Type * Switch::semCheck( SemCheckContext & scc ) const 
 {
+	scc.pushBlockOwner(BlockOwner::Switch);
+
 	TODO // semCheck
+
+	scc.popBlockOwner();
+
 	return &errorType;
 }
 
@@ -420,6 +539,19 @@ bool If::genCode( GenCodeContext & gcc ) const
 bool For::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
+	return false;
+}
+
+bool While::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Until::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+
 	return false;
 }
 

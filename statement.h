@@ -563,6 +563,51 @@ private:
 	up<std::vector<up<CatchBlock>>>	catchBlocks_;
 };
 
+class While: public Statement
+{
+public:
+	While( int e, int s, Expr * con, Statement * st):
+		Statement(e,s),
+		cond_(con),
+		statement_(st)
+	{
+	}
+
+	While( int e, int s, VarDef * var, Statement * st):
+		Statement(e,s),
+		statement_(st)
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+
+	up<Expr>      cond_;
+	up<VarDef>    variable_;
+	up<Statement> statement_;
+};
+
+class Until: public Statement
+{
+public:
+	Until( int e, int s, Expr * con, Statement * st):
+		Statement(e,s),
+		cond_(con),
+		statement_(st)
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+
+	up<Expr>      cond_;
+	up<Statement> statement_;
+};
+
 class Delete: public Statement
 {
 public:

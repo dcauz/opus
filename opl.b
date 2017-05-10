@@ -121,6 +121,7 @@ std::vector<up<Statement>> * stL;
 %token DELETE               "delete"
 %token DEQUEUE				"dequeue"
 %token DISTINCT				"distinct"
+%token DO                   "do"
 %token DOT_DOT			    ".."
 %token DYNAMIC				"dynamic"
 
@@ -209,6 +210,7 @@ std::vector<up<Statement>> * stL;
 
 %token UNION				"union"
 %token UNIQUE				"unique"
+%token UNTIL				"until"
 %token UPDATE               "update"
 
 %token VALUES               "values"
@@ -217,6 +219,7 @@ std::vector<up<Statement>> * stL;
 
 %token WEAK					"weak"
 %token WHERE				"where"
+%token WHILE                "while"
 %token WITH					"with"
 
 %token Z					"Z"
@@ -1081,11 +1084,23 @@ statement
 	{
 		$$ = new For( context->start, context->end, $4, $6, $8 );
 	}
-	| SWITCH '(' expr ')' statement
+	| WHILE '(' expr ')' statement
+	{
+		$$ = new While( context->start, context->end, $3, $5 );
+	}
+	| WHILE '(' variableDefinition ')' statement
+	{
+		$$ = new While( context->start, context->end, static_cast<VarDef *>($3), $5 );
+	}
+	| DO block UNTIL '(' expr ')'
+	{
+		$$ = new Until( context->start, context->end, $5, $2 );
+	}
+	| SWITCH '(' expr ')' block
 	{
 		$$ = new Switch( context->start, context->end, $3, $5 );
 	}
-	| SWITCH '(' variableDefinition ')' statement
+	| SWITCH '(' variableDefinition ')' block
 	{
 		$$ = new Switch( context->start, context->end, 
 			static_cast<VarDef *>($3), $5 );
