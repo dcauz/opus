@@ -39,6 +39,7 @@ public:
 
 	bool canBreak();
 	bool canContinue();
+	bool validBlockNesting();
 
 	SymbolTable * topSymTbl() { return symtbl_; }
 
