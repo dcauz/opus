@@ -33,6 +33,9 @@ Type * AtomicBlock::semCheck( SemCheckContext & scc ) const
 {
 	scc.pushBlockOwner(BlockOwner::Atomic);
 
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -51,6 +54,9 @@ Type * AtomicBlock::semCheck( SemCheckContext & scc ) const
 Type * Block::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::None);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
 
 	auto i = statements_->begin();
 	auto e = statements_->end();
@@ -74,6 +80,9 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 	
 	scc.pushBlockOwner(BlockOwner::Catch);
 
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	auto i = block_->begin();
 	auto e = block_->end();
 
@@ -94,6 +103,9 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 Type * Try::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Try);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
@@ -155,6 +167,9 @@ Type * ClassDef::semCheck( SemCheckContext & scc ) const
 {
 	scc.pushBlockOwner(BlockOwner::Class);
 
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 
 	scc.popBlockOwner();
@@ -165,6 +180,9 @@ Type * ClassDef::semCheck( SemCheckContext & scc ) const
 Type * InterfaceDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Interface);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
 
 	TODO // semCheck
 
@@ -182,6 +200,9 @@ TODO // semCheck
 Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Namespace);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
@@ -201,6 +222,10 @@ Type * Namespace::semCheck( SemCheckContext & scc ) const
 Type * TupleDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Tuple);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 	scc.popBlockOwner();
 	return &errorType;
@@ -209,6 +234,10 @@ Type * TupleDef::semCheck( SemCheckContext & scc ) const
 Type * UnionDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Union);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 	scc.popBlockOwner();
 	return &errorType;
@@ -217,6 +246,10 @@ Type * UnionDef::semCheck( SemCheckContext & scc ) const
 Type * OperatorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Operator);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 	scc.popBlockOwner();
 	return &errorType;
@@ -225,6 +258,10 @@ Type * OperatorDef::semCheck( SemCheckContext & scc ) const
 Type * RoutineDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Routine);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 	scc.popBlockOwner();
 	return &errorType;
@@ -233,6 +270,22 @@ Type * RoutineDef::semCheck( SemCheckContext & scc ) const
 Type * CtorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Ctor);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
+	TODO // semCheck
+	scc.popBlockOwner();
+	return &errorType;
+}
+
+Type * DtorDef::semCheck( SemCheckContext & scc ) const 
+{
+	scc.pushBlockOwner(BlockOwner::Dtor);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 	scc.popBlockOwner();
 	return &errorType;
@@ -262,6 +315,9 @@ Type * If::semCheck( SemCheckContext & scc ) const
 	{
 		scc.pushBlockOwner(BlockOwner::If);
 
+		if( scc.validBlockNesting() )
+			return &errorType;
+
 		TODO // semCheck
 
 		scc.popBlockOwner();
@@ -277,6 +333,9 @@ Type * If::semCheck( SemCheckContext & scc ) const
 		if(block)
 		{
 			scc.pushBlockOwner(BlockOwner::Else);
+
+			if( scc.validBlockNesting() )
+				return &errorType;
 
 			TODO // semCheck
 
@@ -295,6 +354,9 @@ Type * For::semCheck( SemCheckContext & scc ) const
 {
 	scc.pushBlockOwner(BlockOwner::For);
 
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 
 	scc.popBlockOwner();
@@ -308,6 +370,9 @@ Type * While::semCheck( SemCheckContext & scc ) const
 	if( block )
 	{
 		scc.pushBlockOwner(BlockOwner::While);
+
+		if( scc.validBlockNesting() )
+			return &errorType;
 
 		TODO // semCheck
 
@@ -324,6 +389,9 @@ Type * While::semCheck( SemCheckContext & scc ) const
 Type * Until::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Until);
+
+	if( scc.validBlockNesting() )
+		return &errorType;
 
 	TODO // semCheck
 
@@ -374,6 +442,9 @@ Type * Switch::semCheck( SemCheckContext & scc ) const
 {
 	scc.pushBlockOwner(BlockOwner::Switch);
 
+	if( scc.validBlockNesting() )
+		return &errorType;
+
 	TODO // semCheck
 
 	scc.popBlockOwner();
@@ -391,8 +462,7 @@ Type * FunDef::semCheck( SemCheckContext & scc ) const
 
 bool Empty::genCode( GenCodeContext & gcc ) const 
 {
-	TODO // genCode
-	return false;
+	return true;
 }
 
 bool AtomicBlock::genCode( GenCodeContext & gcc ) const 
@@ -519,6 +589,12 @@ bool OperatorDef::genCode( GenCodeContext & gcc ) const
 }
 
 bool CtorDef::genCode( GenCodeContext & gcc ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool DtorDef::genCode( GenCodeContext & gcc ) const 
 {
 	TODO // genCode
 	return false;

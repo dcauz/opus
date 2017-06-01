@@ -284,6 +284,7 @@ std::vector<up<Statement>> * stL;
 %type <cd>   constraintDef
 %type <cds>  constraintDefs
 %type <st>   ctor
+%type <st>   dtor
 %type <st>   model
 %type <ex>   decExpr
 %type <i32>  declarators
@@ -335,7 +336,7 @@ std::vector<up<Statement>> * stL;
 %type <w>    where
 
 
-%expect 126
+%expect 127
 
 
 %define api.pure
@@ -394,6 +395,7 @@ definition
 	| function
 	| operator
 	| ctor
+	| dtor
 	| namespace
 	| variableDefinition
 	| alias
@@ -474,6 +476,17 @@ ctor
 	| CLASS_NAME '(' args ')' block
 	{
 		$$ = new CtorDef( context->start, context->end, $1, $3, $5 );
+	}
+	;
+
+dtor
+	: '~' CLASS_NAME '(' ')' 
+	{
+		$$ = new DtorDef( context->start, context->end, $2 );
+	}
+	| '~' CLASS_NAME '(' ')' block
+	{
+		$$ = new DtorDef( context->start, context->end, $2, $5 );
 	}
 	;
 

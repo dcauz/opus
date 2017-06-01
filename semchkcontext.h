@@ -15,6 +15,7 @@ enum class BlockOwner
 	Catch      = 1 << 1,
 	Class      = 1 << 2,
 	Ctor       = 1 << 3,
+	Dtor       = 1 << 17,
 	Else       = 1 << 4,
 	For        = 1 << 5,
 	If         = 1 << 6,
@@ -37,15 +38,18 @@ public:
 	void pushBlockOwner(BlockOwner ob );
 	void popBlockOwner();
 
-	bool canBreak();
-	bool canContinue();
-	bool validBlockNesting();
+	bool canBreak() const;
+	bool canContinue() const;
+	bool canReturn() const;
+	bool canCase() const;
 
-	SymbolTable * topSymTbl() { return symtbl_; }
+	bool validBlockNesting() const;
+
+	SymbolTable * topSymTbl() { return symtbl_.get(); }
 
 private:
 
 	std::vector<BlockOwner> blockOwners_;
 
-	SymbolTable * symtbl_;
+	up<SymbolTable> symtbl_;
 };

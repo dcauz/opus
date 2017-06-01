@@ -355,6 +355,26 @@ private:
 	  up<Block> body_;
 };
 
+class DtorDef: public Definition
+{
+public:
+	DtorDef( 
+		int s, 
+		int e, 
+		const char * n,
+		Statement * bl = nullptr ):Definition(s,e),
+		name_(n), body_(static_cast<Block *>(bl))
+	{
+	}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+private:
+	std::string	name_;
+	  up<Block> body_;
+};
+
 class FunDef: public Definition
 {
 public:

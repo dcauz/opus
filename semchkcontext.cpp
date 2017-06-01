@@ -11,7 +11,7 @@ void SemCheckContext::popBlockOwner()
 	blockOwners_.pop_back();
 }
 
-bool SemCheckContext::canBreak()
+bool SemCheckContext::canBreak() const
 {
 	for( int i = blockOwners_.size() - 1; i >= 0; --i )
 	{
@@ -19,6 +19,7 @@ bool SemCheckContext::canBreak()
 
 		if(( bo == BlockOwner::Class ) ||
 		( bo == BlockOwner::Ctor ) ||
+		( bo == BlockOwner::Dtor ) ||
 		( bo == BlockOwner::Tuple ) ||
 		( bo == BlockOwner::Union ) ||
 		( bo == BlockOwner::Namespace ) ||
@@ -35,7 +36,7 @@ bool SemCheckContext::canBreak()
 	return false;
 }
 
-bool SemCheckContext::canContinue()
+bool SemCheckContext::canContinue() const
 {
 	for( int i = blockOwners_.size() - 1; i >= 0; --i )
 	{
@@ -43,6 +44,7 @@ bool SemCheckContext::canContinue()
 
 		if(( bo == BlockOwner::Class ) ||
 		( bo == BlockOwner::Ctor ) ||
+		( bo == BlockOwner::Dtor ) ||
 		( bo == BlockOwner::Tuple ) ||
 		( bo == BlockOwner::Union ) ||
 		( bo == BlockOwner::Namespace ) ||
@@ -58,6 +60,49 @@ bool SemCheckContext::canContinue()
 	
 
 	return false;
+}
+
+// A Routine, Operator, Dtor or Ctor must be seen before 
+// Namespace, Class, Union, Interface
+//
+bool SemCheckContext::canReturn() const
+{
+	for( int i = blockOwners_.size() - 1; i >= 0; --i )
+	{
+		BlockOwner bo = blockOwners_[i];
+
+		if(( bo == BlockOwner::Routine ) ||
+		( bo == BlockOwner::Operator ) ||
+		( bo == BlockOwner::Ctor ) ||
+		( bo == BlockOwner::Dtor ))
+			return false;
+
+		if(( bo == BlockOwner::Namespace ) || 
+		   ( bo == BlockOwner::Class ) || 
+		   ( bo == BlockOwner::Union ) ||
+		   ( bo == BlockOwner::Tuple ) )
+			return true;
+	}
+	
+
+	return false;
+}
+
+bool SemCheckContext::canCase() const
+{
+	if( blockOwners_.size() < 2 )
+	{
+		return false;
+	}
+
+	size_t blocks = blockOwners_.size();
+
+	BlockOwner bo  = blockOwners_[blocks-1];
+
+	if( bo != BlockOwner::Switch )
+		return false;
+
+	return true;
 }
 
 ///////////////////////////////////////////////////////
@@ -84,6 +129,7 @@ bool SemCheckContext::canContinue()
 //					Namespace
 //					Class
 //	Ctor       		Class
+//	Dtor       		Class
 //	None       		ALL
 //	Atomic     		ALL
 //	Try - Catch     ALL
@@ -95,7 +141,7 @@ bool SemCheckContext::canContinue()
 //	Tuple      		ALL
 //
 
-bool SemCheckContext::validBlockNesting()
+bool SemCheckContext::validBlockNesting() const
 {
 	size_t top = blockOwners_.size();
 
@@ -164,6 +210,9 @@ bool SemCheckContext::validBlockNesting()
 			if((ebo == BlockOwner::Namespace) || (ebo == BlockOwner::Class))
 				return true;
 			break;
+		case BlockOwner::Dtor:
+			if(ebo == BlockOwner::Class)
+				return true;
 		case BlockOwner::Ctor:
 			if(ebo == BlockOwner::Class)
 				return true;
@@ -173,4 +222,3 @@ bool SemCheckContext::validBlockNesting()
 	}
 	return false;
 }
-
