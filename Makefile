@@ -21,6 +21,7 @@ htmlerror.cpp \
 htmllex.cpp \
 il.cpp \
 integer.cpp \
+log.cpp \
 main.cpp \
 matrix.cpp \
 nodes.cpp \
@@ -56,7 +57,7 @@ CPPFLAGS := -std=c++11
 all: $(TARGETS)
 
 clean:
-	rm -fr obj .deps $(TARGETS)
+	rm -fr obj .d $(TARGETS)
 	rm -f  html.output html.cpp html.hpp
 	rm -f  opl.output opl.cpp opl.hpp
 
@@ -80,14 +81,14 @@ html.h: html.hpp
 
 ########################################
 
-obj/%.o: %.cpp .deps/%.d | obj
+obj/%.o: %.cpp .d/%.d | obj
 	g++ -std=c++11 -c -o $@ $<
 
-.deps/%.d: %.cpp | .deps obj
-	g++ -std=c++11 -c -MMD -MP -MF .deps/$*.Td -o obj/$*.o $<
-	mv -f .deps/$*.Td $@
+.d/%.d: %.cpp | .d obj
+	g++ -std=c++11 -c -MMD -MP -MF .d/$*.Td -o obj/$*.o $<
+	mv -f .d/$*.Td $@
 
-obj bin .deps:
+obj bin .d:
 	mkdir $@
 
 
@@ -98,6 +99,6 @@ test: bin/opus.exe
 
 ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
--include $(patsubst %.cpp,.deps/%.d,$(SRC))
+-include $(patsubst %.cpp,.d/%.d,$(SRC))
 endif
 endif
