@@ -2,6 +2,7 @@
 #include "opl.h"
 #include "html.h"
 #include "html_lex_context.h"
+#include "log.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -16,8 +17,16 @@ int main( int c, char * a [] )
 	if( c < 2 )
 	{
 		std::cerr << "usage: " << a[0] << " program-files" << std::endl;
-		return 1;
+//		return 1;
 	}
+
+	theLog.addLogger( stdout, Log::OUT );
+	theLog.addLogger( stderr, Log::ERR );
+
+FILE * fh = fopen( "aaa", "r" );
+	LOG( TEXT, "Hello" );
+	LOG( TEXT, "Bye" );
+	return 1;
 
 	try
 	{

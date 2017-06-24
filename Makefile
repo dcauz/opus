@@ -65,7 +65,7 @@ clobber: clean
 	rm -f bin/opus.exe
 
 bin/opus.exe: $(OBJS) | bin
-	g++ -std=c++11 -o $@ $(OBJS)
+	g++ -std=c++11 -o $@ $(OBJS) -pthread
 
 ########################################
 
