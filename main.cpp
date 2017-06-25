@@ -20,8 +20,8 @@ int main( int c, char * a [] )
 //		return 1;
 	}
 
-	theLog.addLogger( stdout, Log::OUT );
-	theLog.addLogger( stderr, Log::ERR );
+	theLog.addLogger( stdout, Log::Level::OUT, Log::Part::ALL );
+	theLog.addLogger( stderr, Log::Level::ERR, Log::Part::ALL );
 
 FILE * fh = fopen( "aaa", "r" );
 	LOG( TEXT, "Hello" );

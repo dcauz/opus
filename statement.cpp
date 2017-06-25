@@ -8,6 +8,7 @@
 #include "expr.h"
 #include "bool.h"
 #include "semchkcontext.h"
+#include "log.h"
 
 
 
@@ -410,7 +411,7 @@ Type * Continue::semCheck( SemCheckContext & scc ) const
 {
 	if( !scc.canContinue())
 	{
-		// TODO: log error
+		LOG( INV_CONTINUE );
 		return &errorType;
 	}
 	return &voidType;
@@ -420,7 +421,7 @@ Type * Break::semCheck( SemCheckContext & scc ) const
 {
 	if( !scc.canBreak())
 	{
-		// TODO: log error
+		LOG( INV_BREAK );
 		return &errorType;
 	}
 	return &voidType;

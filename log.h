@@ -13,7 +13,7 @@
 class Log
 {
 public:
-	enum Level
+	enum class Level
 	{
 		AUDIT   = 1,
 		FATAL   = 2,
@@ -25,36 +25,41 @@ public:
 
 		ERR =  AUDIT | FATAL | ERROR | WARNING,
 		OUT =  INFO | DEBUG | TRACE,
+
 		ALL =  OUT | ERR 
 	};
-	enum MsgPart
+	enum class Part
 	{
-		DATE,
-		YEAR,
-		DAY,
-		MSECS,
-		LEVEL,
-		CODE,
-		FILE_LOC,
-		TEXT,
-		THR_ID,
+		YEAR      = 1,
+		DAY       = 2,
+		TIME      = 4,
+		MSECS     = 8,
+		DATE = YEAR | DAY | TIME | MSECS,
+		THR_ID    = 16,
+		CODE      = 32,
+		LEVEL     = 64,
+		TEXT      = 128,
+		FILE_LOC  = 256,
+
+		ALL = DATE | THR_ID | CODE | LEVEL | TEXT | FILE_LOC
 	};
 
 	struct Logger
 	{
 		struct Msg
 		{
-			struct timespec ts;
-			const char * code;
-			int level;
-			char text[256];
-			const char * file;
-			int line;
-			std::thread::id tid;
-			int syserr;
+			struct timespec	ts;
+			std::thread::id	tid;
+			const char	* code;
+			const char	* file;
+			int			level;
+			int			line;
+			int			syserr;
+			char		text[128];
 		};
 
-		Logger( FILE * fh, int filter, bool owns ):file_(fh), filter_(filter), owns_(owns)
+		Logger( FILE * fh, int filter, int parts, bool owns ):
+			file_(fh), filter_(filter), parts_(parts), owns_(owns)
 		{}
 
 		~Logger()
@@ -68,6 +73,7 @@ public:
 		FILE 	* file_;
 		bool	owns_;
 		int		filter_;
+		int		parts_;
 	};
 
 	Log();
@@ -75,8 +81,10 @@ public:
 
 	void operator () ( const char *, int, int, ... );
 
-	void addLogger( const char *, int levels = ALL );
-	void addLogger( FILE *, int levels = ALL );
+	void addLogger( const char *, Log::Level levels = Level::ALL, 
+								  Log::Part parts = Part::ALL );
+	void addLogger( FILE *, Log::Level levels = Level::ALL, 
+							Log::Part part = Part::ALL );
 
 	std::mutex 				& mutex()	{ return mutex_; }
 	std::condition_variable	& mcond()	{ return mcond_; }
@@ -101,4 +109,4 @@ private:
 
 extern Log theLog;
 
-#define LOG( id, ... )	theLog( __FILE__, __LINE__, id,  __VA_ARGS__ );
+#define LOG( ... )	theLog( __FILE__, __LINE__,  __VA_ARGS__ );
