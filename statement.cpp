@@ -192,9 +192,15 @@ Type * InterfaceDef::semCheck( SemCheckContext & scc ) const
 	return &errorType;
 }
 
+// Must be contained directly in class, interface or union definition
+//
 Type * Private::semCheck( SemCheckContext & scc ) const 
 {
-TODO // semCheck
+	if( !scc.inTypeDef() )
+	{
+		LOG( INV_PRIVATE );
+		return &errorType;
+	}
 	return &voidType;
 }
 

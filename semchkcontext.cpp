@@ -36,6 +36,19 @@ bool SemCheckContext::canBreak() const
 	return false;
 }
 
+bool SemCheckContext::inTypeDef() const
+{
+	if( blockOwners_.size() > 0 )
+	{
+		BlockOwner bo = blockOwners_[blockOwners_.size()-1];
+
+		return ((bo == BlockOwner::Class ) ||
+				(bo == BlockOwner::Interface ) ||
+				(bo == BlockOwner::Union ) );
+	}
+	return false;
+}
+
 bool SemCheckContext::canContinue() const
 {
 	for( int i = blockOwners_.size() - 1; i >= 0; --i )

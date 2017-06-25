@@ -45,6 +45,8 @@ public:
 
 	bool validBlockNesting() const;
 
+	bool inTypeDef() const;
+
 	SymbolTable * topSymTbl() { return symtbl_.get(); }
 
 private:
