@@ -44,6 +44,9 @@ public:
 	IntegerType( int64_t );
 	IntegerType( const Integer & );
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 
 };
 

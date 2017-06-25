@@ -24,6 +24,7 @@ integer.cpp \
 log.cpp \
 main.cpp \
 matrix.cpp \
+multiset.cpp \
 nodes.cpp \
 object.cpp \
 opl.cpp \

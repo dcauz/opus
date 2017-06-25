@@ -23,6 +23,9 @@ class VectorType: public CollectionType
 public:
 	VectorType( Type * ele, int d ):CollectionType(ele), dim_(d) {}
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 private:
 	int dim_;
 };

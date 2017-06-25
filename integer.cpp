@@ -46,3 +46,21 @@ Type * Integer::semCheck( SemCheckContext & scc ) const
 	TODO // semCheck
 	return &errorType;
 }
+
+bool IntegerType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool IntegerType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool IntegerType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

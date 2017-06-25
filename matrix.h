@@ -13,6 +13,9 @@ public:
 	MatrixType( Type * ele, int r, int c ):CollectionType(ele), 
 		rows_(r), cols_(c) {}
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 private:
 	int rows_;
 	int cols_;

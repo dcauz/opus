@@ -17,3 +17,21 @@ Type * Bool::semCheck( SemCheckContext & scc ) const
 {
 	return &boolType;
 }
+
+bool BoolType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool BoolType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool BoolType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

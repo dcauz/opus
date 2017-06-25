@@ -16,3 +16,21 @@ Type * Set::semCheck( SemCheckContext & scc ) const
 TODO // semCheck
 	return nullptr;
 }
+
+bool SetType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool SetType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool SetType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

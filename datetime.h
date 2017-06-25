@@ -8,6 +8,9 @@ class DateType: public Type
 {
 public:
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 private:
 	uint32_t value_;
 };
@@ -16,6 +19,9 @@ class TimeType: public Type
 {
 public:
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 private:
 	uint32_t value_;
 };
@@ -24,11 +30,19 @@ class DatetimeType: public Type
 {
 public:
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 private:
 };
 
 class DurationType: public Type
 {
+public:
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 };
 
 extern DateType		dateType;

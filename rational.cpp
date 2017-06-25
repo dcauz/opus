@@ -48,3 +48,21 @@ Type * Rational::semCheck( SemCheckContext & scc ) const
 TODO // semCheck
 	return &errorType;
 }
+
+bool RationalType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool RationalType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool RationalType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

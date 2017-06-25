@@ -275,8 +275,7 @@ Type * Lnot::semCheck( SemCheckContext & scc ) const
 
 Type * Throw::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	return operand_->semCheck( scc );
 }
 
 Type * ToVoid::semCheck( SemCheckContext & scc ) const 

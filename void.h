@@ -16,6 +16,9 @@ class VoidType: public Type
 {
 public:
 
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
 };
 
 

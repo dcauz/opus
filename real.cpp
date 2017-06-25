@@ -34,3 +34,21 @@ Type * Real::semCheck( SemCheckContext & scc ) const
  TODO // semCheck
 	return &errorType;
 }
+
+bool RealType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool RealType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool RealType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

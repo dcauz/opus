@@ -17,3 +17,20 @@ TODO // semCheck
 	return nullptr;
 }
 
+bool VectorType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool VectorType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool VectorType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

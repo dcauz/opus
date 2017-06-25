@@ -22,3 +22,21 @@ Type * String::semCheck( SemCheckContext & scc ) const
  TODO // semCheck
 	return &errorType;
 }
+
+bool StringType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool StringType::compareTo( Type * )  const
+{
+	TODO
+	return false;
+}
+
+bool StringType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}
