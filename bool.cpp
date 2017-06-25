@@ -15,6 +15,5 @@ bool Bool::genCode( GenCodeContext & gcc ) const
 
 Type * Bool::semCheck( SemCheckContext & scc ) const
 {
-	TODO // semCheck
-	return &errorType;
+	return &boolType;
 }

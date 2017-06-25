@@ -39,9 +39,10 @@ public:
 	void popBlockOwner();
 
 	bool canBreak() const;
-	bool canContinue() const;
-	bool canReturn() const;
 	bool canCase() const;
+	bool canContinue() const;
+	bool canDefault() const;
+	bool canReturn() const;
 
 	bool validBlockNesting() const;
 
@@ -49,9 +50,14 @@ public:
 
 	SymbolTable * topSymTbl() { return symtbl_.get(); }
 
+	void pushSwitchCondType( Type * ct ){ switchCondType_.push(ct); }
+	void popSwitchCondType()			{ switchCondType_.pop(); }
+	const Type * switchCondType() const { return switchCondType_.top(); }
+
 private:
 
 	std::vector<BlockOwner> blockOwners_;
 
 	up<SymbolTable> symtbl_;
+	std::stack<Type *> switchCondType_;
 };

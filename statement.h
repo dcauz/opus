@@ -261,6 +261,8 @@ public:
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
 
+	Type * type() const { return type_.get(); }
+
 private:
                  sp<Type> type_;
               std::string name_;
@@ -268,7 +270,6 @@ up<std::vector<up<Expr>>> where_;
                       int ptrType_;
               std::string from_;
                  up<Expr> init_;
-	
 };
 
 class Arg

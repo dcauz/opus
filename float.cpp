@@ -18,6 +18,5 @@ bool Float::genCode( GenCodeContext & gcc ) const
 
 Type * Float::semCheck( SemCheckContext & scc ) const
 {
-	TODO // semCheck
-	return &errorType;
+	return &floatType;
 }

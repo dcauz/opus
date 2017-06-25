@@ -39,6 +39,7 @@ MSG( TEXT,        Log::Level::INFO, "%s" )
 MSG( INV_CONTINUE,Log::Level::FATAL, "continue was not contained in nesting statement" )
 MSG( INV_BREAK,   Log::Level::FATAL, "break was not contained in nesting statement" )
 MSG( INV_PRIVATE, Log::Level::FATAL, "private declarator must be specified in class, interface or union definition" )
+MSG( INV_DEFAULT, Log::Level::FATAL, "default statement must be enclosed by a switch statement" )
 
 END_MSGS
 

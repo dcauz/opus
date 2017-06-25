@@ -15,8 +15,7 @@ TODO // genCode
 
 Type * Date::semCheck( SemCheckContext & scc ) const
 {
-TODO // semCheck
-	return nullptr;
+	return &dateType;
 }
 
 bool Time::genCode( GenCodeContext & gcc ) const
@@ -27,8 +26,7 @@ TODO // genCode
 
 Type * Time::semCheck( SemCheckContext & scc ) const
 {
-TODO // semCheck
-	return nullptr;
+	return &timeType;
 }
 
 bool Datetime::genCode( GenCodeContext & gcc ) const
@@ -39,8 +37,7 @@ TODO // genCode
 
 Type * Datetime::semCheck( SemCheckContext & scc ) const
 {
-TODO // semCheck
-	return nullptr;
+	return &datetimeType;
 }
 
 bool Duration::genCode( GenCodeContext & gcc ) const
@@ -51,6 +48,5 @@ TODO // genCode
 
 Type * Duration::semCheck( SemCheckContext & scc ) const
 {
-TODO // semCheck
-	return nullptr;
+	return &durationType;
 }

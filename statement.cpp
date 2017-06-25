@@ -1,3 +1,4 @@
+#include <cassert>
 #include "statement.h"
 #include "opus.h"
 #include "gencodecontext.h"
@@ -409,8 +410,13 @@ Type * Until::semCheck( SemCheckContext & scc ) const
 
 Type * Default::semCheck( SemCheckContext & scc ) const 
 {
-	TODO // semCheck
-	return &errorType;
+	if( !scc.canDefault() )
+	{
+		LOG( INV_DEFAULT );
+		return &errorType;
+	}
+	
+	return statement_->semCheck( scc );
 }
 
 Type * Continue::semCheck( SemCheckContext & scc ) const 
@@ -452,11 +458,36 @@ Type * Switch::semCheck( SemCheckContext & scc ) const
 	if( scc.validBlockNesting() )
 		return &errorType;
 
-	TODO // semCheck
+	if( cond_ )
+	{
+		auto ct = cond_->semCheck( scc );
+		if( ct != &errorType )
+		{
+			scc.pushSwitchCondType( ct );
+		}
+		else
+			return &errorType;
+	}
+	else
+	{
+		assert( varDef_ );
 
+		auto ct = varDef_->semCheck( scc );
+		if( ct != &errorType )
+		{
+			ct = varDef_->type();
+			scc.pushSwitchCondType( ct );
+		}
+		else
+			return &errorType;
+	}
+
+	auto rc = statement_->semCheck( scc );
+
+	scc.popSwitchCondType();
 	scc.popBlockOwner();
 
-	return &errorType;
+	return rc;
 }
 
 Type * FunDef::semCheck( SemCheckContext & scc ) const 

@@ -49,6 +49,14 @@ bool SemCheckContext::inTypeDef() const
 	return false;
 }
 
+bool SemCheckContext::canDefault() const
+{
+	if( blockOwners_.size() > 0 )
+		return blockOwners_[blockOwners_.size()-1] == BlockOwner::Switch;
+
+	return false;
+}
+
 bool SemCheckContext::canContinue() const
 {
 	for( int i = blockOwners_.size() - 1; i >= 0; --i )
@@ -71,7 +79,6 @@ bool SemCheckContext::canContinue() const
 			return true;
 	}
 	
-
 	return false;
 }
 
