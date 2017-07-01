@@ -29,26 +29,26 @@ bool Real::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Real::semCheck( SemCheckContext & scc ) const
+sp<Type> Real::semCheck( SemCheckContext & scc ) const
 {
  TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 bool RealType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RealType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RealType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

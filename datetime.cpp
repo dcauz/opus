@@ -1,10 +1,10 @@
 #include "datetime.h"
 
 
-DateType		dateType;
-TimeType		timeType;
-DatetimeType	datetimeType;
-DurationType	durationType;
+sp<DateType>		dateType;
+sp<TimeType>		timeType;
+sp<DatetimeType>	datetimeType;
+sp<DurationType>	durationType;
 
 
 bool Date::genCode( GenCodeContext & gcc ) const
@@ -13,9 +13,9 @@ TODO // genCode
 	return false;
 }
 
-Type * Date::semCheck( SemCheckContext & scc ) const
+sp<Type> Date::semCheck( SemCheckContext & scc ) const
 {
-	return &dateType;
+	return dateType;
 }
 
 bool Time::genCode( GenCodeContext & gcc ) const
@@ -24,9 +24,9 @@ TODO // genCode
 	return false;
 }
 
-Type * Time::semCheck( SemCheckContext & scc ) const
+sp<Type> Time::semCheck( SemCheckContext & scc ) const
 {
-	return &timeType;
+	return timeType;
 }
 
 bool Datetime::genCode( GenCodeContext & gcc ) const
@@ -35,9 +35,9 @@ TODO // genCode
 	return false;
 }
 
-Type * Datetime::semCheck( SemCheckContext & scc ) const
+sp<Type> Datetime::semCheck( SemCheckContext & scc ) const
 {
-	return &datetimeType;
+	return datetimeType;
 }
 
 bool Duration::genCode( GenCodeContext & gcc ) const
@@ -46,79 +46,79 @@ TODO // genCode
 	return false;
 }
 
-Type * Duration::semCheck( SemCheckContext & scc ) const
+sp<Type> Duration::semCheck( SemCheckContext & scc ) const
 {
-	return &durationType;
+	return durationType;
 }
 
 bool DateType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DateType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DateType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool TimeType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool TimeType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool TimeType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DatetimeType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DatetimeType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DatetimeType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DurationType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DurationType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool DurationType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

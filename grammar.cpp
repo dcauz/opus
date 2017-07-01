@@ -10,8 +10,8 @@ bool Grammar::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Grammar::semCheck( SemCheckContext & gcc ) const
+sp<Type> Grammar::semCheck( SemCheckContext & gcc ) const
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }

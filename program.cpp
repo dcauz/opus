@@ -53,8 +53,8 @@ bool Program::semCheck() const
 	{
 		up<Statement>& def = *i;
 
-		Type * type = def->semCheck( context );
-		if( type == &errorType )
+		sp<Type> type = def->semCheck( context );
+		if( type == errorType )
 			return false;
 
 		++i;

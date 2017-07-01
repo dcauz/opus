@@ -10,7 +10,7 @@ public:
 	Float( double );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	double value_;
@@ -26,4 +26,4 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern FloatType			floatType;
+extern sp<FloatType> floatType;

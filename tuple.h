@@ -17,7 +17,7 @@ public:
 	Tuple( std::vector<up<std::pair<std::string,up<Expr>>>> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 	SymbolTable & symbolTable() { return symbolTable_; }
 

@@ -822,115 +822,115 @@ typeDecl
 	}
 	| Z
 	{
-		$$ = &integerType;
+		$$ = new IntegerType;
 	}
 	| Z '[' expr ']'
 	{
-		$$ = &integerType;
+		$$ = new IntegerType;
 	}
 	| Z '[' expr ',' expr ']'
 	{
-		$$ = &integerType;
+		$$ = new IntegerType;
 	}
 	| Z '[' expr ',' ']'
 	{
-		$$ = &integerType;
+		$$ = new IntegerType;
 	}
 	| N
 	{
-		$$ = &naturalType;
+		$$ = new IntegerType;
 	}
 	| N '[' expr ']'
 	{
-		$$ = &naturalType;
+		$$ = new IntegerType;
 	}
 	| N '[' expr ',' expr ']'
 	{
-		$$ = &naturalType;
+		$$ = new IntegerType;
 	}
 	| N '[' expr ',' ']'
 	{
-		$$ = &naturalType;
+		$$ = new IntegerType;
 	}
 	| FLOAT
 	{
-		$$ = &floatType;
+		$$ = new FloatType;
 	}
 	| Q
 	{
-		$$ = &rationalType;
+		$$ = new RationalType;
 	}
 	| Q '[' expr ']'
 	{
-		$$ = &rationalType;
+		$$ = new RationalType;
 	}
 	| Q '[' expr ',' expr ']'
 	{
-		$$ = &rationalType;
+		$$ = new RationalType;
 	}
 	| Q '[' expr ',' ']'
 	{
-		$$ = &rationalType;
+		$$ = new RationalType;
 	}
 	| R
 	{
-		$$ = &realType;
+		$$ = new RealType;
 	}
 	| R '[' expr ']'
 	{
-		$$ = &realType;
+		$$ = new RealType;
 	}
 	| R '[' expr ',' expr ']'
 	{
-		$$ = &realType;
+		$$ = new RealType;
 	}
 	| R '[' expr ',' ']'
 	{
-		$$ = &realType;
+		$$ = new RealType;
 	}
 	| STRING
 	{
-		$$ = &stringType;
+		$$ = new StringType;
 	}
 	| STRING '[' expr ']'
 	{
-		$$ = &stringType;
+		$$ = new StringType;
 	}
 	| DATE
 	{
-		$$ = &dateType;
+		$$ = new DateType;
 	}
 	| REGEX
 	{
-		$$ = &regexType;
+		$$ = new RegExType;
 	}
 	| DATETIME
 	{
-		$$ = &datetimeType;
+		$$ = new DatetimeType;
 	}
 	| TIME
 	{
-		$$ = &timeType;
+		$$ = new TimeType;
 	}
 	| DURATION
 	{
-		$$ = &durationType;
+		$$ = new DurationType;
 	}
 	| BOOL
 	{
-		$$ = &boolType;
+		$$ = new BoolType;
 	}
 	| VOID
 	{
-		$$ = &voidType;
+		$$ = new VoidType;
 	}
 	| OBJECT
 	{
-		$$ = &objectType;
+		$$ = new ObjectType;
 	}
 	| DYNAMIC
 	{
-		$$ = &dynamicType;
+		$$ = new DynamicType;
 	}
 	| SET '<' type '>'
 	{

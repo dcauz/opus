@@ -17,26 +17,26 @@ bool String::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * String::semCheck( SemCheckContext & scc ) const
+sp<Type> String::semCheck( SemCheckContext & scc ) const
 {
  TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 bool StringType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool StringType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool StringType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

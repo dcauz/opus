@@ -3,8 +3,8 @@
 #include "integer.h"
 
 
-IntegerType	integerType;
-IntegerType	naturalType;
+sp<IntegerType>	integerType( new IntegerType);
+sp<IntegerType>	naturalType( new IntegerType);
 
 
 IntegerType::IntegerType()
@@ -41,26 +41,26 @@ bool Integer::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Integer::semCheck( SemCheckContext & scc ) const
+sp<Type> Integer::semCheck( SemCheckContext & scc ) const
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 bool IntegerType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool IntegerType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool IntegerType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

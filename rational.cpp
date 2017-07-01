@@ -43,26 +43,26 @@ TODO // genCode
 	return false;
 }
 
-Type * Rational::semCheck( SemCheckContext & scc ) const
+sp<Type> Rational::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 bool RationalType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RationalType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RationalType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

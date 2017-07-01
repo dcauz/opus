@@ -10,7 +10,7 @@ public:
 	String( const char * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 	friend bool operator < ( const String &, const String & );
 	friend bool operator > ( const String &, const String & );

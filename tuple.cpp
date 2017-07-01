@@ -12,9 +12,9 @@ TODO // genCode
 	return false;
 }
 
-Type * Tuple::semCheck( SemCheckContext & scc ) const
+sp<Type> Tuple::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
-	return nullptr;
+	return errorType;
 }
 

@@ -11,26 +11,26 @@ TODO // genCode
 	return false;
 }
 
-Type * Multiset::semCheck( SemCheckContext & scc ) const
+sp<Type> Multiset::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
-	return nullptr;
+	return errorType;
 }
 
 bool MultisetType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool MultisetType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool MultisetType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

@@ -26,64 +26,64 @@ EnumDef::EnumDef(
 
 /////////////////////////////////////////////////////////////////
 
-Type * Empty::semCheck( SemCheckContext & scc ) const 
+sp<Type> Empty::semCheck( SemCheckContext & scc ) const 
 {
-	return &voidType;
+	return voidType;
 }
 
-Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
+sp<Type> AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Atomic);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( i->get()->semCheck( scc ) == errorType )
+			return errorType;
 		++i;
 	}
 
 	scc.popBlockOwner();
 
-	return &voidType;
+	return voidType;
 }
 
-Type * Block::semCheck( SemCheckContext & scc ) const 
+sp<Type> Block::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::None);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	auto i = statements_->begin();
 	auto e = statements_->end();
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( i->get()->semCheck( scc ) == errorType )
+			return errorType;
 		++i;
 	}
 
 	scc.popBlockOwner();
 
-	return &voidType;
+	return voidType;
 }
 
-Type * CatchBlock::semCheck( SemCheckContext & scc ) const 
+sp<Type> CatchBlock::semCheck( SemCheckContext & scc ) const 
 {
-	if( &errorType == var_->semCheck( scc ) )
-		return &errorType;
+	if( errorType == var_->semCheck( scc ) )
+		return errorType;
 	
 	scc.pushBlockOwner(BlockOwner::Catch);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
@@ -92,30 +92,30 @@ Type * CatchBlock::semCheck( SemCheckContext & scc ) const
 	{
 		Statement * s = (*i).get();
 
-		if( s->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( s->semCheck( scc ) == errorType )
+			return errorType;
 
 		++i;
 	}
 	scc.popBlockOwner();
 
-	return &voidType;
+	return voidType;
 }
 
-Type * Try::semCheck( SemCheckContext & scc ) const 
+sp<Type> Try::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Try);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( i->get()->semCheck( scc ) == errorType )
+			return errorType;
 		++i;
 	}
 
@@ -128,194 +128,194 @@ Type * Try::semCheck( SemCheckContext & scc ) const
 	{
 		CatchBlock * cb = (*ci).get();
 
-		if( cb->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( cb->semCheck( scc ) == errorType )
+			return errorType;
 		++ci;
 	}
 
-	return &voidType;
+	return voidType;
 }
 
-Type * Delete::semCheck( SemCheckContext & scc ) const 
+sp<Type> Delete::semCheck( SemCheckContext & scc ) const 
 {
 TODO // semCheck
-	return &voidType;
+	return voidType;
 }
 
-Type * Insert::semCheck( SemCheckContext & scc ) const 
+sp<Type> Insert::semCheck( SemCheckContext & scc ) const 
 {
 TODO // semCheck
-	return &voidType;
+	return voidType;
 }
 
-Type * Update::semCheck( SemCheckContext & scc ) const 
+sp<Type> Update::semCheck( SemCheckContext & scc ) const 
 {
 TODO // semCheck
-	return &voidType;
+	return voidType;
 }
 
-Type * ExprStatement::semCheck( SemCheckContext & scc ) const 
+sp<Type> ExprStatement::semCheck( SemCheckContext & scc ) const 
 {
 	return expr_->semCheck( scc );
 }
 
-Type * EnumDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> EnumDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
-Type * ClassDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> ClassDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Class);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 
 	scc.popBlockOwner();
 
-	return &errorType;
+	return errorType;
 }
 
-Type * InterfaceDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> InterfaceDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Interface);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 
 	scc.popBlockOwner();
 
-	return &errorType;
+	return errorType;
 }
 
 // Must be contained directly in class, interface or union definition
 //
-Type * Private::semCheck( SemCheckContext & scc ) const 
+sp<Type> Private::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.inTypeDef() )
 	{
 		LOG( INV_PRIVATE );
-		return &errorType;
+		return errorType;
 	}
-	return &voidType;
+	return voidType;
 }
 
-Type * Namespace::semCheck( SemCheckContext & scc ) const 
+sp<Type> Namespace::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Namespace);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	auto i = block_->begin();
 	auto e = block_->end();
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == &errorType )
-			return &errorType;
+		if( i->get()->semCheck( scc ) == errorType )
+			return errorType;
 		++i;
 	}
 
 	scc.popBlockOwner();
 
-	return &errorType;
+	return errorType;
 }
 
-Type * TupleDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> TupleDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Tuple);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * UnionDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> UnionDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Union);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * OperatorDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> OperatorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Operator);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * RoutineDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> RoutineDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Routine);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * CtorDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> CtorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Ctor);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * DtorDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> DtorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Dtor);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * VarDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> VarDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
-Type * AliasDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> AliasDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
-Type * If::semCheck( SemCheckContext & scc ) const 
+sp<Type> If::semCheck( SemCheckContext & scc ) const 
 {
-	if( cond_->semCheck( scc ) != &boolType )
+	if( cond_->semCheck( scc ) != boolType )
 	{
-		return &errorType;
+		return errorType;
 	}
 
 	Block * block = dynamic_cast<Block *>(if_.get());
@@ -324,7 +324,7 @@ Type * If::semCheck( SemCheckContext & scc ) const
 		scc.pushBlockOwner(BlockOwner::If);
 
 		if( scc.validBlockNesting() )
-			return &errorType;
+			return errorType;
 
 		TODO // semCheck
 
@@ -343,7 +343,7 @@ Type * If::semCheck( SemCheckContext & scc ) const
 			scc.pushBlockOwner(BlockOwner::Else);
 
 			if( scc.validBlockNesting() )
-				return &errorType;
+				return errorType;
 
 			TODO // semCheck
 
@@ -355,23 +355,23 @@ Type * If::semCheck( SemCheckContext & scc ) const
 		}
 	}
 
-	return &errorType;
+	return errorType;
 }
 
-Type * For::semCheck( SemCheckContext & scc ) const 
+sp<Type> For::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::For);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 
 	scc.popBlockOwner();
-	return &errorType;
+	return errorType;
 }
 
-Type * While::semCheck( SemCheckContext & scc ) const 
+sp<Type> While::semCheck( SemCheckContext & scc ) const 
 {
 	Block * block = dynamic_cast<Block *>(statement_.get());
 
@@ -380,7 +380,7 @@ Type * While::semCheck( SemCheckContext & scc ) const
 		scc.pushBlockOwner(BlockOwner::While);
 
 		if( scc.validBlockNesting() )
-			return &errorType;
+			return errorType;
 
 		TODO // semCheck
 
@@ -391,95 +391,95 @@ Type * While::semCheck( SemCheckContext & scc ) const
 		TODO // semCheck
 	}
 
-	return &errorType;
+	return errorType;
 }
 
-Type * Until::semCheck( SemCheckContext & scc ) const 
+sp<Type> Until::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Until);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	TODO // semCheck
 
 	scc.popBlockOwner();
 
-	return &errorType;
+	return errorType;
 }
 
-Type * Default::semCheck( SemCheckContext & scc ) const 
+sp<Type> Default::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canDefault() )
 	{
 		LOG( INV_DEFAULT );
-		return &errorType;
+		return errorType;
 	}
 	
 	return statement_->semCheck( scc );
 }
 
-Type * Continue::semCheck( SemCheckContext & scc ) const 
+sp<Type> Continue::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canContinue())
 	{
 		LOG( INV_CONTINUE );
-		return &errorType;
+		return errorType;
 	}
-	return &voidType;
+	return voidType;
 }
 
-Type * Break::semCheck( SemCheckContext & scc ) const 
+sp<Type> Break::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canBreak())
 	{
 		LOG( INV_BREAK );
-		return &errorType;
+		return errorType;
 	}
-	return &voidType;
+	return voidType;
 }
 
-Type * Return::semCheck( SemCheckContext & scc ) const 
+sp<Type> Return::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
-Type * Case::semCheck( SemCheckContext & scc ) const 
+sp<Type> Case::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
-Type * Switch::semCheck( SemCheckContext & scc ) const 
+sp<Type> Switch::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Switch);
 
 	if( scc.validBlockNesting() )
-		return &errorType;
+		return errorType;
 
 	if( cond_ )
 	{
 		auto ct = cond_->semCheck( scc );
-		if( ct != &errorType )
+		if( ct != errorType )
 		{
 			scc.pushSwitchCondType( ct );
 		}
 		else
-			return &errorType;
+			return errorType;
 	}
 	else
 	{
 		assert( varDef_ );
 
 		auto ct = varDef_->semCheck( scc );
-		if( ct != &errorType )
+		if( ct != errorType )
 		{
 			ct = varDef_->type();
 			scc.pushSwitchCondType( ct );
 		}
 		else
-			return &errorType;
+			return errorType;
 	}
 
 	auto rc = statement_->semCheck( scc );
@@ -490,10 +490,10 @@ Type * Switch::semCheck( SemCheckContext & scc ) const
 	return rc;
 }
 
-Type * FunDef::semCheck( SemCheckContext & scc ) const 
+sp<Type> FunDef::semCheck( SemCheckContext & scc ) const 
 {
 	TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 /////////////////////////////////////////////////////////////////////////////

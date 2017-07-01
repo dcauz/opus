@@ -3,7 +3,7 @@
 #include "void.h"
 
 
-VoidType	voidType;
+sp<VoidType> voidType( new VoidType );
 
 //////////////////////////////////////////////////
 
@@ -14,25 +14,25 @@ bool Void::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Void::semCheck( SemCheckContext & scc ) const
+sp<Type> Void::semCheck( SemCheckContext & scc ) const
 {
-	return &voidType;
+	return voidType;
 }
 
 bool VoidType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool VoidType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool VoidType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

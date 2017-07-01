@@ -3,7 +3,7 @@
 #include "bool.h"
 
 
-BoolType	boolType;
+sp<BoolType> boolType(new BoolType);
 
 //////////////////////////////////////////
 
@@ -13,25 +13,22 @@ bool Bool::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Bool::semCheck( SemCheckContext & scc ) const
+sp<Type> Bool::semCheck( SemCheckContext & scc ) const
 {
-	return &boolType;
+	return boolType;
 }
 
-bool BoolType::eqCompareTo( Type * ) const
+bool BoolType::eqCompareTo( Type * t ) const
 {
-	TODO
-	return false;
+	return t == this;
 }
 
 bool BoolType::compareTo( Type * )  const
 {
-	TODO
 	return false;
 }
 
-bool BoolType::assignableTo( Type * ) const
+bool BoolType::assignableTo( Type * t ) const
 {
-	TODO
-	return false;
+	return t == this;
 }

@@ -2,7 +2,7 @@
 #include "opus.h"
 #include "float.h"
 
-FloatType	floatType;
+sp<FloatType>	floatType(new FloatType);
 
 ////////////////////////////////////////////
 
@@ -16,25 +16,25 @@ bool Float::genCode( GenCodeContext & gcc ) const
 	return false;
 }
 
-Type * Float::semCheck( SemCheckContext & scc ) const
+sp<Type> Float::semCheck( SemCheckContext & scc ) const
 {
-	return &floatType;
+	return floatType;
 }
 
 bool FloatType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool FloatType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool FloatType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

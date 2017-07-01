@@ -10,7 +10,7 @@ public:
 	Bool( bool b ): value_(b) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	bool value_;
@@ -26,4 +26,4 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern BoolType	boolType;
+extern sp<BoolType>	boolType;

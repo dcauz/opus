@@ -10,10 +10,10 @@ TODO // genCode
 	return false;
 }
 
-Type * Constraints::semCheck( SemCheckContext & ) const
+sp<Type> Constraints::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
-	return &errorType;
+	return errorType;
 }
 
 

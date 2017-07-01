@@ -1,22 +1,22 @@
 #include "regex.h"
 
 
-RegExType	regexType;
+sp<RegExType>	regexType(new RegExType);
 
 bool RegExType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RegExType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool RegExType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

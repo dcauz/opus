@@ -13,4 +13,4 @@ public:
 };
 
 
-extern RegExType	regexType;
+extern sp<RegExType>	regexType;

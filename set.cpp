@@ -11,7 +11,7 @@ TODO // genCode
 	return false;
 }
 
-Type * Set::semCheck( SemCheckContext & scc ) const
+sp<Type> Set::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
 	return nullptr;
@@ -19,18 +19,18 @@ TODO // semCheck
 
 bool SetType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool SetType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool SetType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

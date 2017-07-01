@@ -12,7 +12,7 @@ public:
 	Vector( std::vector<up<Expr>> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	up<std::vector<up<Expr>>> values_;

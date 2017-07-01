@@ -50,14 +50,14 @@ public:
 
 	SymbolTable * topSymTbl() { return symtbl_.get(); }
 
-	void pushSwitchCondType( Type * ct ){ switchCondType_.push(ct); }
-	void popSwitchCondType()			{ switchCondType_.pop(); }
-	const Type * switchCondType() const { return switchCondType_.top(); }
+	void pushSwitchCondType( sp<Type> ct ){ switchCondType_.push(ct); }
+	void popSwitchCondType()			  { switchCondType_.pop(); }
+	const sp<Type> switchCondType() const { return switchCondType_.top(); }
 
 private:
 
 	std::vector<BlockOwner> blockOwners_;
 
 	up<SymbolTable> symtbl_;
-	std::stack<Type *> switchCondType_;
+	std::stack<sp<Type>> switchCondType_;
 };

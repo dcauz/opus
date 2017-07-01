@@ -17,7 +17,7 @@ public:
 	~Integer();
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	enum Form
@@ -50,5 +50,5 @@ public:
 
 };
 
-extern IntegerType	integerType;
-extern IntegerType	naturalType;
+extern sp<IntegerType>	integerType;
+extern sp<IntegerType>	naturalType;

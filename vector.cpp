@@ -11,26 +11,26 @@ TODO // genCode
 	return false;
 }
 
-Type * Vector::semCheck( SemCheckContext & scc ) const
+sp<Type> Vector::semCheck( SemCheckContext & scc ) const
 {
 TODO // semCheck
-	return nullptr;
+	return errorType;
 }
 
 bool VectorType::eqCompareTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool VectorType::compareTo( Type * )  const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }
 
 bool VectorType::assignableTo( Type * ) const
 {
-	TODO
+	TODO // comp/assign
 	return false;
 }

@@ -44,7 +44,7 @@ public:
 	bool assignableTo( Type * ) const override;
 };
 
-extern UnknownType unknownType;
+extern sp<UnknownType> unknownType;
 
 class ErrorType: public Type
 {
@@ -55,7 +55,7 @@ public:
 	bool assignableTo( Type * ) const override;
 };
 
-extern ErrorType errorType;
+extern sp<ErrorType> errorType;
 
 
 class TypeArg

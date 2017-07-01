@@ -17,7 +17,7 @@ public:
 	Complex( int r, int i );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	up<Expr> re_;

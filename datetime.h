@@ -45,10 +45,10 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern DateType		dateType;
-extern TimeType		timeType;
-extern DatetimeType	datetimeType;
-extern DurationType	durationType;
+extern sp<DateType>		dateType;
+extern sp<TimeType>		timeType;
+extern sp<DatetimeType>	datetimeType;
+extern sp<DurationType>	durationType;
 
 
 class Date: public Expr
@@ -60,7 +60,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	uint32_t value_;
@@ -75,7 +75,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	uint32_t secs_;
@@ -91,7 +91,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	Date date_;
@@ -107,7 +107,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	Type * semCheck( SemCheckContext & scc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
 	uint64_t value_;
