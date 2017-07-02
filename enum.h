@@ -7,13 +7,6 @@
 class Expr;
 
 
-class Enum: public Value
-{
-public:
-
-};
-
-
 class EnumMember
 {
 public:
@@ -24,9 +17,8 @@ public:
 
 private:
 	std::string	name_;
-	Expr		* value_;
+	Expr * value_;
 };
-
 
 class EnumType : public Type
 {
@@ -35,6 +27,16 @@ public:
     bool eqCompareTo( Type * ) const override;
     bool compareTo( Type * ) const override;
     bool assignableTo( Type * ) const override;
+
 private:
 	std::vector<EnumMember>	members_;
 };
+
+class Enum: public Value
+{
+public:
+
+private:
+	sp<EnumType> type_;
+};
+

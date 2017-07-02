@@ -6,6 +6,23 @@
 #include "value.h"
 
 
+class VectorType: public CollectionType
+{
+public:
+	VectorType( Type * ele, int d ):
+		CollectionType(ele), dim_(d) {}
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+
+	sp<Type> ele() const { return ele_; }
+	int      dim() const { return dim_; }
+
+private:
+	int dim_;
+};
+
 class Vector: public Value
 {
 public:
@@ -16,16 +33,5 @@ public:
 
 private:
 	up<std::vector<up<Expr>>> values_;
-};
-
-class VectorType: public CollectionType
-{
-public:
-	VectorType( Type * ele, int d ):CollectionType(ele), dim_(d) {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-private:
-	int dim_;
+	sp<VectorType>	type_;
 };

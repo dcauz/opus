@@ -24,7 +24,6 @@ private:
 	up<Expr> im_;
 };
 
-
 class ComplexType: public Type
 {
 public:

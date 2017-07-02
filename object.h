@@ -13,5 +13,4 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-
 extern ObjectType	objectType;

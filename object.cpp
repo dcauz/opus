@@ -5,18 +5,15 @@ ObjectType	objectType;
 
 bool ObjectType::eqCompareTo( Type * ) const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }
 
 bool ObjectType::compareTo( Type * )  const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }
 
 bool ObjectType::assignableTo( Type * ) const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }

@@ -1,4 +1,5 @@
 #include "multiset.h"
+#include "set.h"
 
 
 Multiset::Multiset( std::vector<up<Expr>> * v ):values_(v)
@@ -17,20 +18,47 @@ TODO // semCheck
 	return errorType;
 }
 
-bool MultisetType::eqCompareTo( Type * ) const
+bool MultisetType::eqCompareTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	SetType * st = dynamic_cast<SetType *>(t);
+	sp<Type> ele;
+	
+	if( st != nullptr )
+		ele = st->ele();
+	else if( MultisetType * mt = dynamic_cast<MultisetType *>(t))
+		ele = mt->ele();
+	else
+		return false;
+
+	return ele_->eqCompareTo( ele.get() );
 }
 
-bool MultisetType::compareTo( Type * )  const
+bool MultisetType::compareTo( Type * t )  const
 {
-	TODO // comp/assign
-	return false;
+	SetType * st = dynamic_cast<SetType *>(t);
+	sp<Type> ele;
+	
+	if( st != nullptr )
+		ele = st->ele();
+	else if( MultisetType * mt = dynamic_cast<MultisetType *>(t))
+		ele = mt->ele();
+	else
+		return false;
+
+	return ele_->compareTo( ele.get() );
 }
 
-bool MultisetType::assignableTo( Type * ) const
+bool MultisetType::assignableTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	SetType * st = dynamic_cast<SetType *>(t);
+	sp<Type> ele;
+	
+	if( st != nullptr )
+		ele = st->ele();
+	else if( MultisetType * mt = dynamic_cast<MultisetType *>(t))
+		ele = mt->ele();
+	else
+		return false;
+
+	return ele_->assignableTo( ele.get() );
 }

@@ -4,6 +4,16 @@
 #include "value.h"
 
 
+class MultisetType: public CollectionType
+{
+public:
+	MultisetType( Type * ele ):CollectionType(ele) {}
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+};
+
 class Multiset: public Value
 {
 public:
@@ -14,14 +24,5 @@ public:
 
 private:
 	up<std::vector<up<Expr>>> values_;
-};
-
-class MultisetType: public CollectionType
-{
-public:
-	MultisetType( Type * ele ):CollectionType(ele) {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+	sp<MultisetType>	type_;
 };

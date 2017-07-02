@@ -23,38 +23,32 @@ bool Nullable::assignableTo( Type * ) const
 
 bool UnknownType::eqCompareTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 
 bool UnknownType::compareTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 
 bool UnknownType::assignableTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 
 
 bool ErrorType::eqCompareTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 
 bool ErrorType::compareTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 
 bool ErrorType::assignableTo( Type * ) const
 {	
-	TODO // comp/assign
 	return false;
 }
 

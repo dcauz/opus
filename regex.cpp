@@ -3,20 +3,23 @@
 
 sp<RegExType>	regexType(new RegExType);
 
-bool RegExType::eqCompareTo( Type * ) const
+bool RegExType::eqCompareTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	RegExType * re = dynamic_cast<RegExType *>(t);
+
+	return nullptr != re;
 }
 
-bool RegExType::compareTo( Type * )  const
+bool RegExType::compareTo( Type * t )  const
 {
-	TODO // comp/assign
-	return false;
+	RegExType * re = dynamic_cast<RegExType *>(t);
+
+	return nullptr != re;
 }
 
-bool RegExType::assignableTo( Type * ) const
+bool RegExType::assignableTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	RegExType * re = dynamic_cast<RegExType *>(t);
+
+	return nullptr != re;
 }

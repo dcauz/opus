@@ -18,7 +18,6 @@ private:
 	Integer den_;
 };
 
-
 class RationalType: public Type
 {
 public:

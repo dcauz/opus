@@ -10,8 +10,8 @@ sp<VoidType> voidType( new VoidType );
 
 bool Void::genCode( GenCodeContext & gcc ) const
 {
- TODO // genCode
-	return false;
+// TODO: genCode
+	return true;
 }
 
 sp<Type> Void::semCheck( SemCheckContext & scc ) const
@@ -21,18 +21,15 @@ sp<Type> Void::semCheck( SemCheckContext & scc ) const
 
 bool VoidType::eqCompareTo( Type * ) const
 {
-	TODO // comp/assign
 	return false;
 }
 
 bool VoidType::compareTo( Type * )  const
 {
-	TODO // comp/assign
 	return false;
 }
 
 bool VoidType::assignableTo( Type * ) const
 {
-	TODO // comp/assign
 	return false;
 }

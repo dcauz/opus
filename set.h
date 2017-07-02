@@ -4,6 +4,16 @@
 #include "value.h"
 
 
+class SetType: public CollectionType
+{
+public:
+	SetType( Type * ele ):CollectionType(ele) {}
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+};
+
 class Set: public Value
 {
 public:
@@ -14,14 +24,5 @@ public:
 
 private:
 	up<std::vector<up<Expr>>> values_;
-};
-
-class SetType: public CollectionType
-{
-public:
-	SetType( Type * ele ):CollectionType(ele) {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+	sp<SetType> type_;
 };

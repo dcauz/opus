@@ -564,7 +564,7 @@ public:
 
 private:
 	up<Statement> var_;
-	up<Block> block_;
+	    up<Block> block_;
 };
 
 
@@ -580,7 +580,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Block>	block_;
+	                      up<Block> block_;
 	up<std::vector<up<CatchBlock>>>	catchBlocks_;
 };
 
@@ -605,8 +605,8 @@ public:
 
 private:
 
-	up<Expr>      cond_;
-	up<VarDef>    variable_;
+	     up<Expr> cond_;
+	   up<VarDef> variable_;
 	up<Statement> statement_;
 };
 
@@ -625,46 +625,55 @@ public:
 
 private:
 
-	up<Expr>      cond_;
+	     up<Expr> cond_;
 	up<Statement> statement_;
 };
 
 class Delete: public Statement
 {
 public:
-	Delete( int e, int s, const char *, Expr * ):Statement(e,s) {}
+	Delete( int e, int s, const char * n, Expr * c ):
+		Statement(e,s), table_(n), cond_(c) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
 private:
-
+	std::string table_;
+	   up<Expr> cond_;
 };
 
 class Insert: public Statement
 {
 public:
-	Insert( int e, int s, const char *, std::vector<std::string> *,
-			std::vector<up<Expr>> * ):Statement(e,s) {}
+	Insert( int e, int s, const char * t, std::vector<std::string> * cols,
+			std::vector<up<Expr>> * vals ):Statement(e,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
 private:
-
+                     std::string table_;
+	up<std::vector<std::string>> cols_;
+	   up<std::vector<up<Expr>>> vals_;
 };
 
 class Update: public Statement
 {
 public:
-	Update( int e, int s, const char *, 
-		std::vector<up<std::pair<std::string, up<Expr>>>> *, Expr * ):
-		Statement(e,s) 
+	Update( int e, int s, const char * t, 
+		std::vector<up<std::pair<std::string, up<Expr>>>> * cols, Expr * cond ):
+			Statement(e,s) ,
+			table_(t),
+			cols_(cols),
+			cond_(cond)
 	{}
 
 	bool genCode( GenCodeContext & ) const final;
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
 private:
-
+                                         std::string table_;
+up<std::vector<up<std::pair<std::string,up<Expr>>>>> cols_;
+                                            up<Expr> cond_;
 };

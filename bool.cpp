@@ -20,7 +20,7 @@ sp<Type> Bool::semCheck( SemCheckContext & scc ) const
 
 bool BoolType::eqCompareTo( Type * t ) const
 {
-	return t == this;
+	return dynamic_cast<BoolType *>(t) != nullptr;
 }
 
 bool BoolType::compareTo( Type * )  const
@@ -30,5 +30,5 @@ bool BoolType::compareTo( Type * )  const
 
 bool BoolType::assignableTo( Type * t ) const
 {
-	return t == this;
+	return dynamic_cast<BoolType *>(t) != nullptr;
 }

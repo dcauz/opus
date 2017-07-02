@@ -6,18 +6,15 @@ DynamicType	dynamicType;
 
 bool DynamicType::eqCompareTo( Type * ) const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }
 
 bool DynamicType::compareTo( Type * )  const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }
 
 bool DynamicType::assignableTo( Type * ) const
 {
-	TODO // comp/assign
-	return false;
+	return true;
 }

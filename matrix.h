@@ -16,6 +16,10 @@ public:
     bool eqCompareTo( Type * ) const override;
     bool compareTo( Type * ) const override;
     bool assignableTo( Type * ) const override;
+
+	int rows() const { return rows_; }
+	int cols() const { return cols_; }
+
 private:
 	int rows_;
 	int cols_;
@@ -29,6 +33,6 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
 private:
-	MatrixType	* type_;
+	sp<MatrixType> type_;
 };
 

@@ -23,20 +23,17 @@ sp<Type> String::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-bool StringType::eqCompareTo( Type * ) const
+bool StringType::eqCompareTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	return dynamic_cast<StringType *>(t) != nullptr;
 }
 
-bool StringType::compareTo( Type * )  const
+bool StringType::compareTo( Type * t )  const
 {
-	TODO // comp/assign
-	return false;
+	return dynamic_cast<StringType *>(t) != nullptr;
 }
 
-bool StringType::assignableTo( Type * ) const
+bool StringType::assignableTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	return dynamic_cast<StringType *>(t) != nullptr;
 }

@@ -1,7 +1,11 @@
 
 #include <cstring>
 #include "opus.h"
+#include "complex.h"
+#include "float.h"
+#include "integer.h"
 #include "rational.h"
+#include "real.h"
 
 
 RationalType	rationalType;
@@ -49,20 +53,29 @@ TODO // semCheck
 	return errorType;
 }
 
-bool RationalType::eqCompareTo( Type * ) const
+bool RationalType::eqCompareTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	return (nullptr != dynamic_cast<ComplexType *>(t) ) ||
+		(nullptr != dynamic_cast<FloatType *>(t) ) ||
+		(nullptr != dynamic_cast<IntegerType *>(t) ) ||
+		(nullptr != dynamic_cast<RationalType *>(t) ) ||
+		(nullptr != dynamic_cast<RealType *>(t) );
 }
 
-bool RationalType::compareTo( Type * )  const
+bool RationalType::compareTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	return (nullptr != dynamic_cast<ComplexType *>(t) ) ||
+		(nullptr != dynamic_cast<FloatType *>(t) ) ||
+		(nullptr != dynamic_cast<IntegerType *>(t) ) ||
+		(nullptr != dynamic_cast<RationalType *>(t) ) ||
+		(nullptr != dynamic_cast<RealType *>(t) );
 }
 
-bool RationalType::assignableTo( Type * ) const
+bool RationalType::assignableTo( Type * t ) const
 {
-	TODO // comp/assign
-	return false;
+	return (nullptr != dynamic_cast<ComplexType *>(t) ) ||
+		(nullptr != dynamic_cast<FloatType *>(t) ) ||
+		(nullptr != dynamic_cast<IntegerType *>(t) ) ||
+		(nullptr != dynamic_cast<RationalType *>(t) ) ||
+		(nullptr != dynamic_cast<RealType *>(t) );
 }
