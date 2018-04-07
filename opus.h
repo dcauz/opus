@@ -15,4 +15,4 @@ inline void throwNotImpl( const char * f, int l )
        throw std::string(msg);
 }
 
-#define        TODO    throwNotImpl( __FILE__, __LINE__ );
+#define        TODO    do { printf( "TODO:%s:%d\n", __FILE__, __LINE__ ); fflush(stdout); throwNotImpl( __FILE__, __LINE__ ); } while(false);
