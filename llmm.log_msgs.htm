@@ -1,0 +1,44 @@
+<html>
+<head>
+<style>
+.head { background:DarkSeaGreen; }
+.spacer { border-right-style:none; border-left-style:none;}
+</style>
+</head>
+<body>
+<h1>LLMM Log Messages</h1>
+<h2>Log Messages Levels</h2>
+<table cellspacing=0 border=1>
+<tr class=head><th>Level</th><th>Description</th></tr>
+<tr><td>AUDIT</td><td>Messages that must be output in order to meet company auditing requirements</td></tr>
+<tr><td>FATAL</td><td>Messages that diagnose an unrecoverable failure. The process should terminate immediately after a fatal failure.</td></tr>
+<tr><td>ERROR</td><td>Messages that diagnose an error has occurred. The process may continue with partial functionality.</td></tr>
+<tr><td>WARNING</td><td>Messages that diagnose a possible issue with process. The diagnosed behavior should be investigated to ensure it does not affect processing.</td></tr>
+<tr><td>INFO</td><td>These message report normal behavior. No actions are required.</td></tr>
+<tr><td>DEBUG</td><td>These messages are issued during product debugging.</td></tr>
+<tr><td>TRACE</td><td>These messages are issued during product debugging. Typically tracing messages provide a greater level of detail of what processing is done then debug level messages.</td></tr>
+</table>
+<h2>Log Messages</h2>
+<table class=spacer cellspacing=0 border=1>
+<tr><th class=head>Code</th><td>INV_BREAK</td></tr>
+<tr><th class=head>Level</th><td>FATAL</td></tr>
+<tr><th class=head>Text</th><td>break was not contained in nesting statement</td></tr>
+<tr class=spacer><td class=spacer colspan="2">&nbsp</td></tr>
+<tr><th class=head>Code</th><td>INV_CONTINUE</td></tr>
+<tr><th class=head>Level</th><td>FATAL</td></tr>
+<tr><th class=head>Text</th><td>continue was not contained in nesting statement</td></tr>
+<tr class=spacer><td class=spacer colspan="2">&nbsp</td></tr>
+<tr><th class=head>Code</th><td>INV_DEFAULT</td></tr>
+<tr><th class=head>Level</th><td>FATAL</td></tr>
+<tr><th class=head>Text</th><td>default statement must be enclosed by a switch statement</td></tr>
+<tr class=spacer><td class=spacer colspan="2">&nbsp</td></tr>
+<tr><th class=head>Code</th><td>INV_PRIVATE</td></tr>
+<tr><th class=head>Level</th><td>FATAL</td></tr>
+<tr><th class=head>Text</th><td>private declarator must be specified in class, interface or union definition</td></tr>
+<tr class=spacer><td class=spacer colspan="2">&nbsp</td></tr>
+<tr><th class=head>Code</th><td>TEXT</td></tr>
+<tr><th class=head>Level</th><td>INFO</td></tr>
+<tr><th class=head>Text</th><td>%s</td></tr>
+</table>
+</body>
+</html>

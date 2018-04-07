@@ -5,6 +5,7 @@ adcx.s \
 add.s \
 adox.s \
 and.s \
+bsf.s \
 cbw.s \
 clc.s \
 clac.s \
@@ -18,6 +19,7 @@ pop.s \
 push.s \
 sbb.s \
 sub.s \
+test.s \
 xor.s 
 
 OBJ := \
@@ -26,6 +28,7 @@ adcx.o \
 add.o \
 adox.o \
 and.o \
+bsf.o \
 cbw.o \
 clc.o \
 clac.o \
@@ -39,6 +42,7 @@ pop.o \
 push.o \
 sbb.o \
 sub.o \
+test.o \
 xor.o 
 
 ENC := \
@@ -47,6 +51,7 @@ adcx.e \
 add.e \
 adox.e \
 and.e \
+bsf.e \
 cbw.e \
 clc.e \
 clac.e \
@@ -60,6 +65,7 @@ pop.e \
 push.e \
 sbb.e \
 sub.e \
+test.e \
 xor.e 
 
 
@@ -78,6 +84,9 @@ adox.e: adox.o
 	objdump -d $< > $@
 
 and.e: and.o
+	objdump -d $< > $@
+
+bsf.e: bsf.o
 	objdump -d $< > $@
 
 clac.e: clac.o
@@ -119,6 +128,9 @@ sbb.e: sbb.o
 sub.e: sub.o
 	objdump -d $< > $@
 
+test.e: test.o
+	objdump -d $< > $@
+
 xor.e: xor.o
 	objdump -d $< > $@
 
@@ -138,6 +150,9 @@ adox.o: adox.s
 	as $< -o $@
 
 and.o: and.s
+	as $< -o $@
+
+bsf.o: bsf.s
 	as $< -o $@
 
 cmovCC.o: cmovCC.s
@@ -179,6 +194,9 @@ sbb.o: sbb.s
 sub.o: sub.s
 	as $< -o $@
 
+test.o: test.s
+	as $< -o $@
+
 xor.o: xor.s
 	as $< -o $@
 
@@ -203,6 +221,9 @@ sbb.s: adc.s
 
 sub.s: adc.s
 	sed 's/adc/sub/' < $< > $@
+
+test.s: adc.s
+	sed 's/adc/test/' < $< > $@
 
 xor.s: adc.s
 	sed 's/adc/xor/' < $< > $@

@@ -101,4 +101,52 @@ entrySize:0
 
 ----------------------------------------
 66 98
-     0:cbw 
+     0:cbtw
+#################
+TODO: elf/file.cpp:186
+
+66:0
+#################
+TODO: elf/file.cpp:252
+
+66:0
+
+.symtab
+.strtab
+.shstrtab
+.text
+.data
+.bss
+name:
+bind:local
+type:unspecified
+visibility:default
+section:0
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:1
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:2
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:3
+value:0
+size:0
+
+

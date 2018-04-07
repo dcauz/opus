@@ -216,6 +216,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x4f: printf( "cmovg %s,%s\n",  op1.c_str(), op2.c_str() );	break;
 		}
 	}
+	else if( (code[0] & 0xff) == 0xbc )
+	{
+		char cc = *code++;
+
+		code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+
+		printf( "bsf %s,%s\n",  op1.c_str(), op2.c_str() );
+	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffca )
 	{
 		code +=2;

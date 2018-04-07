@@ -124,6 +124,7 @@ test.adcx \
 test.add \
 test.adox \
 test.and \
+test.bsf \
 test.cbw \
 test.clac \
 test.clc \
@@ -137,70 +138,104 @@ test.pop \
 test.push \
 test.sbb \
 test.sub \
+test.test \
 test.xor
+
+TEST_OBJS := \
+elf/adc.o \
+elf/adcx.o \
+elf/add.o \
+elf/adox.o \
+elf/and.o \
+elf/bsf.o \
+elf/cbw.o \
+elf/clac.o \
+elf/clc.o \
+elf/cld.o \
+elf/cmc.o \
+elf/cmovCC.o \
+elf/cmp.o \
+elf/mov.o \
+elf/or.o \
+elf/pop.o \
+elf/push.o \
+elf/sbb.o \
+elf/sub.o \
+elf/test.o \
+elf/xor.o
+
 
 test.elf: $(ENC_TESTS)
 
-test.elfo: obj/elf/elf.o
+test.elfo: bin/elf obj/elf/elf.o
 	bin/elf  obj/elf/elf.o > out;diff out elf.e
 	
-test.adc: obj/elf/elf.o
+test.adc: bin/elf elf/adc.o
 	bin/elf  elf/adc.o > out; diff out adc.e
 	
-test.adcx: obj/elf/elf.o
+test.adcx: bin/elf elf/adcx.o
 	bin/elf  elf/adcx.o > out; diff out adcx.e
 	
-test.add: obj/elf/elf.o
+test.add: bin/elf elf/add.o
 	bin/elf  elf/add.o > out; diff out add.e
 	
-test.adox: obj/elf/elf.o
+test.adox: bin/elf elf/adox.o
 	bin/elf  elf/adox.o > out; diff out adox.e
 	
-test.and: obj/elf/elf.o
+test.and: bin/elf elf/and.o
 	bin/elf  elf/and.o > out; diff out and.e
 
-test.cbw: obj/elf/elf.o
+test.bsf: bin/elf elf/bsf.o
+	bin/elf  elf/bsf.o > out; diff out bsf.e
+
+test.cbw: bin/elf elf/cbw.o
 	bin/elf  elf/cbw.o > out; diff out cbw.e
 
-test.clac: obj/elf/elf.o
+test.clac: bin/elf elf/clac.o
 	bin/elf  elf/clac.o > out; diff out clac.e
 
-test.clc: obj/elf/elf.o
+test.clc: bin/elf elf/clc.o
 	bin/elf  elf/clc.o > out; diff out clc.e
 
-test.cld: obj/elf/elf.o
+test.cld: bin/elf elf/cld.o
 	bin/elf  elf/cld.o > out; diff out cld.e
 
-test.cmc: obj/elf/elf.o
+test.cmc: bin/elf elf/cmc.o
 	bin/elf  elf/cmc.o > out; diff out cmc.e
 
-test.cmovCC: obj/elf/elf.o
+test.cmovCC: bin/elf elf/cmovCC.o
 	bin/elf  elf/cmovCC.o > out; diff out cmovCC.e
 
-test.cmp: obj/elf/elf.o
+test.cmp: bin/elf elf/cmp.o
 	bin/elf  elf/cmp.o > out; diff out cmp.e
 
-test.mov: obj/elf/elf.o
+test.mov: bin/elf elf/mov.o
 	bin/elf  elf/mov.o > out; diff out mov.e
 
-test.or: obj/elf/elf.o
+test.or: bin/elf elf/or.o
 	bin/elf  elf/or.o > out; diff out or.e
 
-test.pop: obj/elf/elf.o
+test.pop: bin/elf elf/pop.o
 	bin/elf  elf/pop.o > out; diff out pop.e
 
-test.push: obj/elf/elf.o
+test.push: bin/elf elf/push.o
 	bin/elf  elf/push.o > out; diff out push.e
 
-test.sbb: obj/elf/elf.o
+test.sbb: bin/elf elf/sbb.o
 	bin/elf  elf/sbb.o > out; diff out sbb.e
 
-test.sub: obj/elf/elf.o
+test.sub: bin/elf elf/sub.o
 	bin/elf  elf/sub.o > out; diff out sub.e
 
-test.xor: obj/elf/elf.o
+test.test: bin/elf elf/test.o
+	bin/elf  elf/test.o > out; diff out test.e
+
+test.xor: bin/elf elf/xor.o
 	bin/elf  elf/xor.o > out; diff out xor.e
 	
+
+$(TEST_OBJS):
+	cd elf;make -f geninst.mak
 
 ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
