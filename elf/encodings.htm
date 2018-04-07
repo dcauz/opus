@@ -1,0 +1,4859 @@
+<html>
+<head>
+<style>
+.odd {background-color:lightgray;}
+.opcode {text-align:left; }
+tr {vertical-align:top; }
+</style>
+</head>
+
+<body>
+
+<h1>Intel Machine Code Encodings</h1>
+
+<h2>Structure of Instruction Encodings</h2>
+
+<table cellspacing=0 border=1>
+<tr><td><a href='#IP'>Instruction Prefixes (Optional)</a></td><td><a href='#OC'>Opcode</a></td><td><a href='#MRM'>Mod R/M (Optional)</a></td><td><a href='#SIB'>SIB (Optional)</a></td><td><a href='#D'>Displacement (Optional)</a></td><td><a href='#I>'Immediate (Optional)</a></td></tr>
+</table>
+
+<ul>
+<li>No instruction encoding can be longer than 15 bytes.</li>
+</ul>
+
+<h3 id='IP'>Instruction Prefixes</h3>
+
+<ul>
+<li>Legacy prefixes are divided into 4 groups. At most 1 prefix from each can be encoded.</li>
+<li>If the REX prefix is present, then it must be immediately before the opcode</li>
+<li>VEX/XOP prefixes are used for VEX/XOP instructions.</li>
+</ul>
+
+<h4>Legacy Prefixes</h4>
+<table cellspacing=0 border=1>
+<tr><th>Prefix</th><th>Group</th><th>Encoding</th><th>Description</th></tr>
+<tr> <td>LOCK</td><td>1</td><td>F0</td><td>Used to lock shared address</td> </tr>
+<tr> <td>REPNE/REPNZ</td><td>1</td><td>F2</td><td>Repeat not-zero applies to string and input/output instructions. Also a manditory prefix for some instructions.</td> </tr>
+<tr> <td>REP, REPE/REPZ</td><td>1</td><td>F3</td><td>Repeat zero applies to string and input/output instructions. Also a manditory prefix for POPCNT, LZCNT and ADOX</td> </tr>
+<tr> <td>BND</td><td>1</td><td>F2</td><td>Modifies CALL, RET, JMP and Jcc instructions.</td></tr>
+
+<tr> <td>CS segment override</td><td>2</td><td>2E</td><td>Override segment used by branch instructions.</td></tr>
+<tr> <td>SS segment override</td><td>2</td><td>36</td><td>Override segment used by branch instructions.</td></tr>
+<tr> <td>DS segment override</td><td>2</td><td>3E</td><td>Override segment used by branch instructions.</td></tr>
+<tr> <td>ES segment override</td><td>2</td><td>26</td><td>Override segment used by branch instructions.</td></tr>
+<tr> <td>FS segment override</td><td>2</td><td>64</td><td>Override segment used by branch instructions.</td></tr>
+<tr> <td>GS segment override</td><td>2</td><td>65</td><td>Override segment used by branch instructions.</td></tr>
+
+<tr> <td>Branch not taken</td><td>2</td><td>2E</td><td>Only used by Jcc instructions. Hint to CPU that this branch is usually not taken.</td></tr>
+<tr> <td>Branch taken</td><td>2</td><td>3E</td><td>Only used by Jcc instructions. Hint to CPU that this branch is usually taken.</td></tr>
+
+<tr> <td>Operand Size override</td><td>3</td><td>66</td><td>Overrides size of operand. Manditory for some instructions.</td></tr>
+
+<tr> <td>Address Size override</td><td>4</td><td>67</td><td>Overrides size of address.</td></tr>
+
+</table>
+
+<h4>REX Prefix</h4>
+
+<p>Encoding:</p>
+
+<table cellspacing=0 border=1>
+<tr><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>0</td><td>W</td><td>R</td><td>X</td><td>B</td></tr>
+</table>
+<br/>
+<table cellspacing=0 border=1>
+<tr><th>Bit</th><th>Description</th></tr>
+<tr><td>W</td><td>Changes operand size from 32-bits to 64-bits</td></tr>
+<tr><td>R</td><td>Modifies register referenced by reg component of Mod R/M.</td></tr>
+<tr><td>X</td><td>Modifies register referenced by SIB.index field.</td></tr>
+<tr><td>B</td><td>Modifies register referenced by SIB.base field, R/M field. Also modifies register referenced when reg field is part of opcode.</td></tr>
+</table>
+
+<h4>Operand / Address Size Overrides</h4>
+
+<table cellspacing=0 border=1>
+<tr><th>REX.W</th><th>0x66 Prefix</th><th>0x67 Prefix</th><th>Operand Size</th><th>Address Size</th></tr>
+<tr><td>0</td><td>No</td><td>No</td><td>32-bit</td><td>64-bit</td></tr>
+<tr><td>0</td><td>No</td><td>Yes</td><td>32-bit</td><td>32-bit</td></tr>
+<tr><td>0</td><td>Yes</td><td>No</td><td>16-bit</td><td>64-bit</td></tr>
+<tr><td>0</td><td>Yes</td><td>Yes</td><td>16-bit</td><td>32-bit</td></tr>
+<tr><td>1</td><td>Ignored</td><td>No</td><td>64-bit</td><td>64-bit</td></tr>
+<tr><td>1</td><td>ignored</td><td>Yes</td><td>64-bit</td><td>32-bit</td></tr>
+</table>
+
+
+<h3 id='OC'>Opcode</h3>
+
+<ul>
+<li>1,2 or 3 bytes</li>
+<li>An opcode byte may encode 1 or 2 registers, 3-bits per register.</li>
+</ul>
+
+<h3 id='MRM'>Mod R/M</h3>
+
+<ul>
+<li>Encoded as 
+<table cellspacing=0 border=1>
+<tr><td>7&nbsp;&nbsp;&nbsp;&nbsp;6</td><td>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</td><td>2&nbsp;&nbsp;&nbsp;0</td></li>
+<tr><td>Mod</td><td>Reg/Opcode</td><td>R/M</td></li>
+</table>
+</li>
+</ul>
+
+<ul>
+<li>mod - </li>
+<li>reg/opcode - This field can have one of two values:
+<ul>
+<li>A 3-bit opcode extension, which is used by some instructions but has no further meaning other than distinguishing the instruction from other instructions.</li>
+<li>A 3-bit register reference, which can be used as the source or the destination of an instruction (depending on the instruction). The referenced register depends on the operand-size of the instruction and the instruction itself. See Registers for the values to use for each of the registers. The REX.R, VEX.~R or XOP.~R field can extend this field to 4 bits.</li>
+</ul></li>
+<li>R/M - Specifies a direct or indirect register operand, optionally with a displacement. The REX.B, VEX.~B or XOP.~B field can extend this field to 4 bits.</li>
+</ul>
+
+<h4>mod</h4>
+
+<table cellspacing=0 border=1>
+<tr><th>mod</th><th>Addressing</th></tr>
+
+<tr><td>00</td><td>[R/M]</td></tr>
+<tr><td>01</td><td>[R/M + disp8]</td></tr>
+<tr><td>10</td><td>[R/M + disp32]</td></tr>
+<tr><td>11</td><td>R/M</td></tr>
+</table>
+
+<h4>R/M</h4>
+
+<table cellspacing=0 border=1>
+<tr><th>R/M</th><th>Register</th><th>B.Register</th><th>MMX</th><th>XMM</th></tr>
+
+<tr><td>000</td><td>EAX</td><td>R8</td><td>MMX0</td><td>XMM0</td></tr>
+<tr><td>001</td><td>ECX</td><td>R9</td><td>MMX1</td><td>XMM1</td></tr>
+<tr><td>010</td><td>EDX</td><td>R10</td><td>MMX2</td><td>XMM2</td></tr>
+<tr><td>011</td><td>EBX</td><td>R11</td><td>MMX3</td><td>XMM3</td></tr>
+<tr><td>100</td><td>Determined by SIB</td><td>R12</td><td>MMX4</td><td>XMM4</td></tr>
+<tr><td>101</td><td>disp32 when mod=00. Else, EBP</td><td>R13</td><td>MMX5</td><td>XMM5</td></tr>
+<tr><td>110</td><td>ESI</td><td>R14</td><td>MMX6</td><td>XMM6</td></tr>
+<tr><td>111</td><td>EDI</td><td>R15</td><td>MMX7</td><td>XMM7</td></tr>
+</table>
+
+<h3 id='SIB'>SIB</a></h3>
+
+<ul>
+<li>Scale Index Base.</li>
+<li>8 bits</li>
+<li>Encoded as 
+<table cellspacing=0 border=1>
+<tr><td>7&nbsp;&nbsp;&nbsp;&nbsp;6</td><td>5&nbsp;&nbsp;&nbsp;3</td><td>2&nbsp;&nbsp;&nbsp;0</td></li>
+<tr><td>Scale</td><td>Index</td><td>Base</td></li>
+</table>
+</li>
+</ul>
+
+<table cellspacing=0 border=1>
+<tr><th>Field</th><th>Length</th><th>Description</th></tr>
+<tr><td>SIB.scale</td><td>This field indicates the scaling factor of SIB.index, where s (as used in the tables) equals 2<sup>SIB.scale</sup.</td></tr>
+<tr><td>SIB.index</td><td>The index register to use. The REX.X, VEX.~X or XOP.~X field can extend this field with 1 most-significant bit to 4 bits total.</td></tr>
+<tr><td>SIB.base</td><td>The base register to use. The REX.B, VEX.~B or XOP.~B field can extend this field with 1 most-significant bit to 4 bits total. </td></tr>
+</table>
+
+<h3 id='D'>Displacement</h3>
+
+<ul>
+<li>Address displacement. Can be 1,2,4 or 8 bytes.</li>
+<li>When 8 byte displacement is used, no immediate operand is encoded.</li>
+</ul>
+
+<h3 id='I'>Immediate</h3>
+
+<ul>
+<li>Can be 1,2,4 or 8 bytes wide.</li>
+<li>When 8 byte immediate is used, no displacement operand is encoded.</li>
+</ul>
+
+<h3>Address calculation</h3>
+<p>The full address calculation is:</p>
+<code>
+BaseReg + (IndexReg * ScaleFactor) + Displacement
+</code>
+
+<h2>Registers</h2>
+
+<p>X.Reg is the value of a REX, VEX or XOP flag together with the reg encoding in instructions.</p>
+
+<table cellspacing=0 border=1>
+<tr><th>Name</th><th>Size</th><th>Type</th><th>X.Reg</th><th>Notes</th></tr>
+
+<!-- ES -->
+<tr><td>ES</td><td>16</td><td>Segment</td><td>0.000 (0)</td><td></td></tr>
+<tr><td>CS</td><td>16</td><td>Segment</td><td>0.001 (1)</td><td></td></tr>
+<tr><td>SS</td><td>16</td><td>Segment</td><td>0.010 (2)</td><td></td></tr>
+<tr><td>DS</td><td>16</td><td>Segment</td><td>0.011 (3)</td><td></td></tr>
+<tr><td>FS</td><td>16</td><td>Segment</td><td>0.100 (4)</td><td></td></tr>
+<tr><td>GS</td><td>16</td><td>Segment</td><td>0.101 (5)</td><td></td></tr>
+
+<!-- AL -->
+<tr><td>AL</td><td>8</td><td>General</td><td>0.000 (0)</td><td></td></tr>
+<tr><td>CL</td><td>8</td><td>General</td><td>0.001 (1)</td><td></td></tr>
+<tr><td>DL</td><td>8</td><td>General</td><td>0.010 (2)</td><td></td></tr>
+<tr><td>BL</td><td>8</td><td>General</td><td>0.011 (3)</td><td></td></tr>
+
+<tr><td>AH</td><td>8</td><td>General</td><td>0.100 (4)</td><td>When any REX prefix is used, SPL. Else, AH.</td></tr>
+<tr><td>CH</td><td>8</td><td>General</td><td>0.101 (5)</td><td>When any REX prefix is used, BPL. Else, CH.</td></tr>
+<tr><td>DH</td><td>8</td><td>General</td><td>0.110 (6)</td><td>When any REX prefix is used, SIL. Else, DH.</td></tr>
+<tr><td>BH</td><td>8</td><td>General</td><td>0.111 (7)</td><td>When any REX prefix is used, DIL. Else, BH.</td></tr>
+<tr><td>SPL</td><td>8</td><td>General</td><td>0.100 (4)</td><td>When any REX prefix is used, SPL. Else, AH.</td></tr>
+<tr><td>BPL</td><td>8</td><td>General</td><td>0.101 (5)</td><td>When any REX prefix is used, BPL. Else, CH.</td></tr>
+<tr><td>SIL</td><td>8</td><td>General</td><td>0.110 (6)</td><td>When any REX prefix is used, SIL. Else, DH.</td></tr>
+<tr><td>DIL</td><td>8</td><td>General</td><td>0.111 (7)</td><td>When any REX prefix is used, DIL. Else, BH.</td></tr>
+
+<tr><td>R8B - R15B</td><td>8</td><td>General</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- AX -->
+<tr><td>AX</td><td>16</td><td>General</td><td>0.000 (0)</td><td></td></tr>
+<tr><td>CX</td><td>16</td><td>General</td><td>0.001 (1)</td><td></td></tr>
+<tr><td>DX</td><td>16</td><td>General</td><td>0.010 (2)</td><td></td></tr>
+<tr><td>BX</td><td>16</td><td>General</td><td>0.011 (3)</td><td></td></tr>
+
+<tr><td>SP</td><td>16</td><td>General</td><td>0.100 (4)</td><td></td></tr>
+<tr><td>BP</td><td>16</td><td>General</td><td>0.101 (5)</td><td></td></tr>
+<tr><td>SI</td><td>16</td><td>General</td><td>0.110 (6)</td><td></td></tr>
+<tr><td>DI</td><td>16</td><td>General</td><td>0.111 (7)</td><td></td></tr>
+
+<tr><td>R8W - R15W</td><td>16</td><td>General</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- EAX -->
+<tr><td>EAX</td><td>32</td><td>General</td><td>0.000 (0)</td><td></td></tr>
+<tr><td>ECX</td><td>32</td><td>General</td><td>0.001 (1)</td><td></td></tr>
+<tr><td>EDX</td><td>32</td><td>General</td><td>0.010 (2)</td><td></td></tr>
+<tr><td>EBX</td><td>32</td><td>General</td><td>0.011 (3)</td><td></td></tr>
+<tr><td>ESP</td><td>32</td><td>General</td><td>0.100 (4)</td><td></td></tr>
+<tr><td>EBP</td><td>32</td><td>General</td><td>0.101 (5)</td><td></td></tr>
+<tr><td>ESI</td><td>32</td><td>General</td><td>0.110 (6)</td><td></td></tr>
+<tr><td>EDI</td><td>32</td><td>General</td><td>0.111 (7)</td><td></td></tr>
+<tr><td>R8D - R15D</td><td>32</td><td>General</td><td>1.000 (8) - 1.000 (15)</td><td></td></tr>
+
+<!-- RAX -->
+<tr><td>RAX</td><td>64</td><td>General (Index/Base)</td><td>0.000 (0)</td><td></td></tr>
+<tr><td>RCX</td><td>64</td><td>General (Index/Base)</td><td>0.001 (1)</td><td></td></tr>
+<tr><td>RDX</td><td>64</td><td>General (Index/Base)</td><td>0.010 (2)</td><td></td></tr>
+<tr><td>RBX</td><td>64</td><td>General (Index/Base)</td><td>0.011 (3)</td><td></td></tr>
+<tr><td>RSP</td><td>64</td><td>General (Base)</td><td>0.100 (4)</td><td></td></tr>
+<tr><td>RBP</td><td>64</td><td>General (Index/Base)</td><td>0.101 (5)</td><td></td></tr>
+<tr><td>RSI</td><td>64</td><td>General (Index/Base)</td><td>0.110 (6)</td><td></td></tr>
+<tr><td>RDI</td><td>64</td><td>General (Index/Base)</td><td>0.111 (7)</td><td></td></tr>
+<tr><td>R8 - R15</td><td>64</td><td>General (Index/Base)</td><td>1.000 (8) - 1.111 (15)</td><td>Index/Base register when REX.X/B</td></tr>
+
+<!-- ST0 -->
+<tr><td>ST0 - ST7</td><td>80</td><td>x87</td><td>0.000 (0) - 0.111 (7)</td><td></td></tr>
+
+<!-- MMX0 -->
+<tr><td>MMX0 - MMX7</td><td>64</td><td>MMX</td><td>0.000 (0) - 0.111 (7)
+<br/>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- XMM0 -->
+<tr><td>XMM0 - XMM7</td><td>128</td><td>XMM</td><td>0.000 (0) - 0.111 (7)</td><td></td></tr>
+<tr><td>XMM8 - XMM15</td><td>128</td><td>XMM</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- YMM0 -->
+<tr><td>YMM0 - YMM7</td><td>256</td><td>YMM</td><td>0.000 (0) - 0.111 (7)</td><td></td></tr>
+<tr><td>YMM8 - YMM15</td><td>256</td><td>YMM</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- CR0 -->
+<tr><td>CR0 - CR7</td><td>32</td><td>Control</td><td>0.000 (0) - 0.111 (7)</td><td></td></tr>
+<tr><td>CR8 - CR15</td><td>32</td><td>Control</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+<!-- DR0 -->
+<tr><td>DR0 - DR7</td><td>32</td><td>Debug</td><td>0.000 (0) - 0.111 (7)</td><td></td></tr>
+<tr><td>DR8 - DR15</td><td>32</td><td>Debug</td><td>1.000 (8) - 1.111 (15)</td><td></td></tr>
+
+</table>
+
+<h2>Instruction Encodings</h2>
+
+
+<table cellspacing=0 border=1>
+<tr>
+<th>Instruction</th>
+<th>Summary</th>
+<th>Category</th>
+<th>Group</th>
+<th>3.2 INSTRUCTION Page</th>
+<th>Section B.2 Page</th>
+<th>Section B.2.1 Page</th>
+</tr>
+
+<tr>
+<td>ADC</td>
+<td>Add with Carry</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>514</td>
+<td>1782</td>
+<td>1793</td></tr>
+<tr>
+<td>ADCX</td>
+<td>Unsigned Integer Addition of Two Operands with Carry Flag</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>517</td>
+<td>N/A</td>
+<td>N/A</td></tr>
+<tr>
+<td>ADD</td>
+<td>Add</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>519</td>
+<td>1782</td>
+<td>1793</td></tr>
+<tr>
+<td>ADDPD</td>
+<td>Add Packed Double-Precision Floating-Point Values</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>521</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADDPS</td>
+<td>Add Packed Single-Precision Floating-Point Values</td>
+<td>SSE SIMD Single-Precision Floating-Point Instructions</td><td>SSE Packed Arithmetic Instructions</td>
+<td>523</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADDSD</td>
+<td>Add Scalar Double-Precision Floating-Point Values</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>525</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADDSS</td>
+<td>Add Scalar Single-Precision Floating-Point Values</td>
+<td>SSE SIMD Single-Precision Floating-Point Instructions</td><td>Add scalar single-precision floating-point values</td>
+<td>526</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADDSUBPD</td>
+<td>Add Scalar Single-Precision Floating-Point Values</td>
+<td>SSE3 Instructions</td><td>SSE3 SIMD Floating-Point Packed ADD/SUB Instructions</td>
+<td>527</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADDSUBPS</td>
+<td>Packed Single-FP Add/Subtract</td>
+<td>SSE3 Instructions</td><td>SSE3 SIMD Floating-Point Packed ADD/SUB Instructions</td>
+<td>529</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>ADOX</td>
+<td>Unsigned Integer Addition of Two Operands with Overflow Flag</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>532</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESDEC</td>
+<td>Perform One Round of an AES Decryption Flow</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>534</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESDECLAST</td>
+<td>Perform Last Round of an AES Decryption Flow</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>536</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESENC</td>
+<td>Perform One Round of an AES Encryption Flow</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>538</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESENCLAST</td>
+<td>Perform Last Round of an AES Encryption Flow</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>540</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESIMC</td>
+<td>Perform the AES InvMixColumn Transformation</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>542</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AESKEYGENASSIST</td>
+<td>AES Round Key Generation Assist</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>543</td>
+<td>1782 </td>
+<td>1793</td></tr>
+<tr>
+<td>AND</td>
+<td>Logical AND</td>
+<td>General Purpose</td><td>Logical Instructions</td>
+<td>545</td>
+<td>1782</td>
+<td>1794</td></tr>
+<tr>
+<td>ANDN</td>
+<td>Bitwise AND of first operand with NOT'd second operand</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>547</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>ANDNPD</td>
+<td>Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values</td>
+<td>SSE2 INSTRUCTIONS</td><td>SSE2 Logical Instructions</td>
+<td>552</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>ANDNPS</td>
+<td>Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values</td>
+<td>SSE Logical Instructions</td><td>N/A</td>
+<td>554</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>ANDPD</td>
+<td>Bitwise Logical AND of Packed Double-Precision Floating-Point Values</td>
+<td>SSE2 INSTRUCTIONS</td><td>SSE2 Logical Instructions</td>
+<td>548</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>ANDPS</td>
+<td>Bitwise Logical AND of Packed Single-Precision Floating-Point Values</td>
+<td>SSE Logival Instructions</td><td>N/A</td>
+<td>550</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>ARPL</td>
+<td>Adjust RPL Field of Segment Selector</td>
+<td>System Instructions</td><td>N/A</td>
+<td>556</td>
+<td>1782 </td>
+<td>1794</td></tr>
+<tr>
+<td>BEXTR</td>
+<td>Contiguous bitwise extract</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>560</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLENDPD</td>
+<td>Conditionally copies specified double-precision floating-point data elements in the source
+operand to the corresponding data elements in the destination, using an immediate byte
+control.</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>558</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLENDPS</td>
+<td>Conditionally copies specified single-precision floating-point data elements in the source operand to the corresponding data elements in the destination, using an immediate byte control.
+</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>562</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLENDVPD</td>
+<td>
+Conditionally copies specified double-precision floating-point data elements in the source operand to the corresponding data elements in the destination, using an implied mask.
+</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>564</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLENDVPS</td>
+<td>
+Conditionally copies specified single-precision floating-point data elements in the source operand to the corresponding data elements in the destination, using an implied mask.
+</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>566</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLSI</td>
+<td>Extract lowest set bit</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>569</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLSMK</td>
+<td>Set all lower bits below first set bit to 1</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>570</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BLSR</td>
+<td>Reset lowest set bit</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>571</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BOUND</td>
+<td>Detect value out of range</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>572</td>
+<td>1783 </td>
+<td>1794</td></tr>
+<tr>
+<td>BSF</td>
+<td>Bit scan forward</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>574</td>
+<td>1783</td>
+<td>1794</td></tr>
+<tr>
+<td>BSR</td>
+<td>Bit scan reverse</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>576</td>
+<td>1783</td>
+<td>1794</td></tr>
+<tr>
+<td>BSWAP</td>
+<td>Byte swap</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>578</td>
+<td>1783</td>
+<td>1795</td></tr>
+<tr>
+<td>BT</td>
+<td>Bit test</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>579</td>
+<td>1783</td>
+<td>1795</td></tr>
+<tr>
+<td>BTC</td>
+<td>Bit test and complement</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>581</td>
+<td>1783</td>
+<td>1795</td></tr>
+<tr>
+<td>BTR</td>
+<td>Bit test reset</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>583</td>
+<td>1783</td>
+<td>1795</td></tr>
+<tr>
+<td>BTS</td>
+<td>Bit test set</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>585</td>
+<td>1783</td>
+<td>1795</td></tr>
+<tr>
+<td>BZHI</td>
+<td>Zero high bits starting from specified bit position</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>587</td>
+<td>1783 </td>
+<td>1795</td></tr>
+<tr>
+<td>CALL</td>
+<td>Call procedure</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>589</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CBW</td>
+<td>Convert byte to word</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>601</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CDQ</td>
+<td>Convert doubleword to quadword</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>720</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CDQE</td>
+<td>Convert doubleword to quadword</td>
+<td>General Purpose</td><td>64-BIT MODE INSTRUCTIONS</td>
+<td>601</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CLAC</td>
+<td>Clear AC Flag in EFLAGS register</td>
+<td>General Purpose</td><td>System Instructions</td>
+<td>603</td>
+<td>1783 </td>
+<td>1796</td></tr>
+<tr>
+<td>CLC</td>
+<td>Clear the carry flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>604</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CLD</td>
+<td>Clear the direction flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>605</td>
+<td>1783</td>
+<td>1796</td></tr>
+<tr>
+<td>CLFLUSH</td>
+<td>The CLFLUSH (flush cache line) instruction writes and invalidates the cache line associated with a specified linear address. The invalidation is for all levels of the processor's cache hierarchy, and it is broadcast throughout the cache coherency domain.</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>606</td>
+<td>1783 </td>
+<td>1796</td></tr>
+<tr>
+<td>CLI</td>
+<td>Clear the interrupt flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>608</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CLTS</td>
+<td>Clear the task-switched flag</td>
+<td>General Purpose</td><td>System Instructions</td>
+<td>610</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMC</td>
+<td>Complement the carry flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>611</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMOVcc</td>
+<td>Conditional move if cc is true</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>612</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMP</td>
+<td>Compare</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>616</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPPD</td>
+<td>Compare packed double-precision floating-point values</td>
+<td>SSE2 Instructions</td><td>SSE2 Compare Instructions</td>
+<td>618</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPPS</td>
+<td>Compare packed single-precision floating-point values</td>
+<td>SSE2 Instructions</td><td>SSE2 Compare Instructions</td>
+<td>625</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPS</td>
+<td>Compare string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>631</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPSB</td>
+<td>Compare byte string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>631</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPSD</td>
+<td>Compare double word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>635</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPSQ</td>
+<td>Compare quad word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>631</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPSS</td>
+<td>Compare scalar single-precision, floating-point values</td>
+<td>SSE Instructions</td><td>SSE Comparison Instructions</td>
+<td>639</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPSW</td>
+<td>Compare word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>631</td>
+<td>1784</td>
+<td>1796</td></tr>
+<tr>
+<td>CMPXCHG</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>643</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>CMPXCHG16B</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>645</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CMPXCHG8B</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>645</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>COMISD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>648</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>COMISS</td>
+<td>Perform ordered comparison of scalar single-precision floating-point values and set flags in
+EFLAGS register</td>
+<td>SSE Instructions</td><td>SSE Comparison Instructions</td>
+<td>650</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CPUID</td>
+<td>Processor identification</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>652</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>CRC32</td>
+<td>Provides hardware acceleration to calculate cyclic redundancy checks for fast and efficient implementation of data integrity protocols.</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>681</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTDQ2PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>684</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTDQ2PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>686</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPD2DQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>688</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPD2PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>691</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPI2PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>693</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPI2PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>694</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPS2DQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>695</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPS2PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>697</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTPS2PI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>699</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSD2SI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>700</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSD2SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>702</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSI2SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>704</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSI2SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>706</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSS2SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>708</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTSS2SI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>709</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTP2DQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>711</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTPD2PI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>711</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTPS2DQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>714</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTPS2PI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>716</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTSD2SI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>717</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CVTTSS2SI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>719</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>CWD</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>721</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>CDQ</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>721</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>CQO</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>721</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>CWDE</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>602</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>DEC</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>726</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>DIV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>728</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>DIVPD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>731</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>DIVPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>733</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>DIVSD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>735</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>DIVSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>736</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>DPPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>737</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>DPPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>739</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>EMMS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>742</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>ENTER</td>
+<td>High-level procedure entry</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>744</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>EXTRACTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>747</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>F2XM1</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>749</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FABS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>751</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FADD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>753</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FADDP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>753</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FIADD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>753</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FBLD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>756</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FBSTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>758</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCHS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>760</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCLEX</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>762</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNCLEX</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>762</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCMOVcc</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>764</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCOM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>766</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCOMP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>766</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCOMPP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>766</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCOMI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>769</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FUCOMI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>769</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FUCOMIP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>769</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FCOS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>772</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FDECSTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>774</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FDIV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>775</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FDIVP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>775</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FIDIV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>775</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FDIVR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>778</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FDIVRP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>778</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FIDIVR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>778</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FFREE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>781</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FICOM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>782</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FICOMP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>782</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FILD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>784</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FINCSTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>786</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FINIT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>787</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNINIT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>787</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FIST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>789</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FISTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>789</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FISTTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>792</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>794</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLD1</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDL2T</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDL2E</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDPI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDF2</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDN2</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDZ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>796</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDCW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>798</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FLDENV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>800</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FMUL</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>802</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FMULP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>802</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FIMUL</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>802</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNOP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>805</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FPATAN</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>806</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FPREM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>808</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FPREM1</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>810</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FPTAN</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>812</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FRNDINT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>814</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FRSTOR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>815</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSAVE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>817</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNSAVE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>817</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSCALE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>820</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSIN</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>822</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSINCOS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>824</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSQRT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>826</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>828</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSTP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>828</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSTCW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>830</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNSTCW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>830</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSTENV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>832</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNSTENV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>832</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSTSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>834</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FNSTSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>834</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSUB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>836</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSUBP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>836</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FISUB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>836</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSUBR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>839</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FSUBRP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>839</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FISUBR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>839</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FTST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>842</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FUCOM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>844</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FUCOMP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>844</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FUCOMPP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>844</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FXAM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>846</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FXCH</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>848</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FXRSTOR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>850</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FXSAVE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>853</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FXTRACT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>861</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FYL2X</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>863</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>FYL2XP1</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>865</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>HADDPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>867</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>HADDPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>870</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>HLT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>873</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>HSUBPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>874</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>HSUBPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>877</td>
+<td>1784 </td>
+<td>1797</td></tr>
+<tr>
+<td>IDIV</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>880</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>IMUL</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>883</td>
+<td>1784</td>
+<td>1797</td></tr>
+<tr>
+<td>IN</td>
+<td>Read from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>888</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INC</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>890</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INS</td>
+<td>Input string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>892</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INSB</td>
+<td>Input byte string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>892</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INSW</td>
+<td>Input word string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>892</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INSD</td>
+<td>Input double word string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>892</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INSERTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>895</td>
+<td>1785 </td>
+<td>1798</td></tr>
+<tr>
+<td>INT n</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>898</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INT</td>
+<td>Software interrupt</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>898</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INTO</td>
+<td>Interrupt on overflow</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>898</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>910</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INVLPG</td> 
+<td>?</td>
+<td>?</td><td>?</td>
+<td>912</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>INVPCID</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>914</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>IRET</td>
+<td>Return from interrupt</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>916</td>
+<td>1785</td>
+<tr>
+<td>IRETO</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>916</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>Jcc</td>
+<td>Conditional jump if cc</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>925</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>JMP</td>
+<td>Jump</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>930</td>
+<td>1785</td>
+<td>1798</td></tr>
+<tr>
+<td>LAHF</td>
+<td>Load flags into AH register</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>938</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LAR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>939</td>
+<td>1785</td>
+<td>1799</td></tr>
+<tr>
+<td>LDDQU</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>942</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LDMXCSR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>944</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LDS</td>
+<td>Load far pointer using DS</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>945</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LEA</td>
+<td>Load effective address</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>949</td>
+<td>1785</td>
+<td>1799</td></tr>
+<tr>
+<td>LEAVE</td>
+<td>High-level procedure exit</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>952</td>
+<td>1785</td>
+<td>1799</td></tr>
+<tr>
+<td>LES</td>
+<td>Load far pointer using ES</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>945</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LFENCE</td>
+<td>Serializes load operations</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>954</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LFS</td>
+<td>Load far pointer using FS</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>945</td>
+<td>1785</td>
+<td>1799</td></tr>
+<tr>
+<td>LGDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>954</td>
+<td>1785</td>
+<td>1799</td></tr>
+<tr>
+<td>LGS</td>
+<td>Load far pointer using GS</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>945</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LIDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>954</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LLDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>958</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LMSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>960</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LOCK</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>962</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LODS</td>
+<td>Load string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>964</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LODSB</td>
+<td>Load byte string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>964</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LODSW</td>
+<td>Load word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>964</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LODSD</td>
+<td>Load double word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>964</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LODSQ</td>
+<td>Load quad word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>964</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LOOP</td>
+<td>Loop with ECX register</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>967</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LOOPE</td>
+<td>Loop with ECX and equal</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>967</td>
+<td>1786</td>
+<td>1799</td></tr>
+<tr>
+<td>LOOPNE</td>
+<td>Loop with ECX and not equal</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>967</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>LOOPNZ</td>
+<td>Loop with ECX and not zero</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>967</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>LOOPZ</td>
+<td>Loop with ECX and zero</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>967</td>
+<td>1786</td>
+<td>?</td>
+<tr>
+<td>LSL</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>969</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>LSS</td>
+<td>Load far pointer using SS</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>945</td>
+<td>1785 </td>
+<td>1799</td></tr>
+<tr>
+<td>LTR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>972</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>LZCNT</td>
+<td>Count the number leading zero bits</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>974</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>MASKMOVDQU</td>
+<td>Non-temporal store of selected bytes from an XMM register into memory</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>976</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MASKMOVQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>978</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MAXPD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>980</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MAXPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>982</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MAXSD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>984</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MAXSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>986</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MFENCE</td>
+<td>Serializes load and store operations</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>988</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MINPD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>989</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MINPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>991</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MINSD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>993</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MINSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>995</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MONITOR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>997</td>
+<td>1786 </td>
+<td>1800</td></tr>
+<tr>
+<td>MOV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>999</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>MOVAPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1009</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>MOVAPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1011</td>
+<td>1786</td>
+<td>1800</td></tr>
+<tr>
+<td>MOVBE</td>
+<td>Move data after swapping data bytes</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1013</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1015</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1015</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVDDUP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1018</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVDQA</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1020</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVDQU</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1022</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVDQ2Q</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1024</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVHLPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1025</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVHPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1027</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVHPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1029</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVLHPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1031</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVLPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1033</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVLPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1035</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVMSKPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1037</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVMSKPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1039</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTDQA</td>
+<td>Non-temporal store of double quadword from an XMM register into memory</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>1041</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1043</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTI</td>
+<td>Non-temporal store of a doubleword from a general-purpose register into memory</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>1045</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTPD</td>
+<td>Non-temporal store of two packed double-precision floating-point values from an XMM register
+into memory</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>1047</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1049</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVNTQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1051</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1052</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVQ2DQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1054</td>
+<td>1787 </td>
+<td>1801</td></tr>
+<tr>
+<td>MOVS</td>
+<td>Move string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1055</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSB</td>
+<td>Move byte string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1055</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSW</td>
+<td>Move word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1055</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSD</td>
+<td>Move doubleword string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1059</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSQ</td>
+<td>Move quadword string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1055</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSHDUP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1061</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSLDUP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1063</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1065</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSX</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1067</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVSXD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1067</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVUPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1069</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVUPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1071</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MOVZX</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1073</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MPSADBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1075</td>
+<td>1787</td>
+<td>1801</td></tr>
+<tr>
+<td>MUL</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1083</td>
+<td>1787</td>
+<td>1802</td></tr>
+<tr>
+<td>MULPD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>1085</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>MULPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1087</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>MULSD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>1089</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>MULSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1090</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>MULX</td>
+<td>Unsigned multiply without affecting arithmetic flags</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1091</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>MWAIT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1093</td>
+<td>1787 </td>
+<td>1802</td></tr>
+<tr>
+<td>NEG</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>1102</td>
+<td>1787</td>
+<td>1802</td></tr>
+<tr>
+<td>NOP</td>
+<td>No operation</td>
+<td>General Purpose</td><td>Segment Register Instructions</td>
+<td>1104</td>
+<td>1787</td>
+<td>1802</td></tr>
+<tr>
+<td>NOT</td>
+<td>?</td>
+<td>General Purpose</td><td>Logical Instructions</td>
+<td>1105</td>
+<td>1787</td>
+<td>1802</td></tr>
+<tr>
+<td>OR</td>
+<td>?</td>
+<td>General Purpose</td><td>Logical Instructions</td>
+<td>1107</td>
+<td>1788</td>
+<td>1802</td></tr>
+<tr>
+<td>ORPD</td>
+<td>Perform bitwise logical OR of packed double-precision floating-point values</td>
+<td>SSE2 INSTRUCTIONS</td><td>SSE2 Logical Instructions</td>
+<td>1109</td>
+<td>1788 </td>
+<td>1802</td></tr>
+<tr>
+<td>ORPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1111</td>
+<td>1788 </td>
+<td>1802</td></tr>
+<tr>
+<td>OUT</td>
+<td>Write to port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>1113</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>OUTS</td>
+<td>Output string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>1115</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>OUTSB</td>
+<td>Output byte string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>1115</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>OUTSD</td>
+<td>Output double word string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>1115</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>OUTSW</td>
+<td>Output word string from port</td>
+<td>General Purpose</td><td>I/O Instructions</td>
+<td>1115</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PABSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1119</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PABSD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1119</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PABSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1119</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PACKSSWB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1123</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PACKSSDW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1123</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PACKUSDW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1128</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PACKUSWB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1131</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1134</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1134</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1134</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1138</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1140</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1140</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDUSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1143</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PADDUSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1143</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PALIGNR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1146</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PAND</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1149</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PANDN</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1151</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PAUSE</td>
+<td>Improves the performance of "spin-wait loops"</td>
+<td>SSE2 Extension</td><td>SSE2 Cacheability Control and Ordering Instructions</td>
+<td>1153</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PAVGB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1154</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PAVGW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1154</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PBLENDVB</td>
+<td>
+Conditionally copies specified byte elements in the source operand to the corresponding elements in the destination, using an implied mask.
+</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>1157</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PBLENDW</td>
+<td>
+Conditionally copies specified word elements in the source operand to the corresponding elements in the destination, using an immediate byte control.
+</td>
+<td>SSE4.1 Instructions</td><td>Packed Blending Instructions</td>
+<td>1160</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCLMULQDQ</td>
+<td>?</td>
+<td>AESNI AND PCLMULQDQ</td><td>N/A</td>
+<td>1164</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPEQB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1167</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPEQD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1167</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPEQW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1167</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPEQQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1171</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPESTRI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1173</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPESTRM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1175</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPGTB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1177</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPGTD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1177</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPGTW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1177</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPGTQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1181</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPISTRI</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1183</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PCMPISTRM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1185</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PDEP</td>
+<td>Parallel deposit of bits using a mask</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1187</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PEXT</td>
+<td>Parallel extraction of bits using a mask</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1189</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PEXTRB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1191</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PEXTRD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1191</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PEXTRW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1194</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHADDD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1197</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHADDW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1197</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHADDSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1201</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHMINPOSUW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1203</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHSUBD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1205</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHSUBSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1208</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PHSUBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1205</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PINSRB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1210</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PINSRD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1210</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PINSRQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1210</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PINSRW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1212</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMADDUBSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1214</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMADDWD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1216</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMAXSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1219</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMAXSD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1222</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMAXUB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1227</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMAXUD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1230</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMAXUW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1232</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1234</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINSD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1237</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1239</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINUB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1242</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINUD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1245</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMINUW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1247</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMOVMSKB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1249</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMOVSX</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1251</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMOVZX</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1255</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1259</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULHRSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1261</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULHUW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1264</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULHW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1268</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULLD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1271</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULLW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1273</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PMULUDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1276</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>POP</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1278</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPA</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1283</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPAD</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1283</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPCNT</td>
+<td>Calculates number of bits set to 1</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>1285</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPF</td>
+<td>Pop eflags from stack</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1287</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPFD</td>
+<td>Pop eflags from stack</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1287</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POPFQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1287</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>POR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1292</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PREFETCHh</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1294</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PREFETCHW</td>
+<td>Prefetch data into cache in anticipation of write</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1296</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PREFETCHWT1</td>
+<td>Prefetch hint T1 with intent to write</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1296</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSADBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1300</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSHUFB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1303</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSHUFD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1306</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSHUFHW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1308</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSHUFLW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1310</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSHUFW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1312</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSIGNB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1313</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSIGND</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1313</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSIGNW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1313</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSLLDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1317</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSLLD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1319</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSLLQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1319</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSLLW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1319</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRAD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1325</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRAW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1325</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRLDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1330</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRLD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1332</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRLQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1332</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSRLW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1332</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1338</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1338</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1338</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1343</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1345</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1345</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBUSB</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1348</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PSUBUSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1348</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PTEST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1351</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKHBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1353</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKHWD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1353</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKHDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1353</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKHQDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1353</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKLBW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1360</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKLWD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1360</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKLDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1360</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUNPCKLQDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1360</td>
+<td>1788 </td>
+<td>1803</td></tr>
+<tr>
+<td>PUSH</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1367</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>PUSHA</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1370</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>PUSHAD</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1370</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>PUSHF</td>
+<td>Push eflags onto stack</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1372</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>PUSHFD</td>
+<td>Push eflags onto stack</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1372</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>PXOR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1374</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RCL</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1376</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RCPPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1381</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RCPSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1383</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RCR</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1376</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RDFSBASE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1385</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RDGSBASE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1385</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RDMSR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1387</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RDPMC</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1389</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RDRAND</td>
+<td>Retrieves a random number generated from hardware</td>
+<td>General Purpose</td><td>Random Number Generator Instructions</td>
+<td>1393</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RDSEED</td>
+<td>Seeds the random number generated from hardware</td>
+<td>General Purpose</td><td>Random Number Generator Instructions</td>
+<td>1395</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RDTSC</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1397</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RDTSCP</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1399</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>REP <i>INS</i></td>
+<td>Repeat while ECX not zero</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1401</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>REPE <i>INS</i></td>
+<td>Repeat while zero</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1401</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>REPNE <i>INS</i></td>
+<td>Repeat while not equal</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1401</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>REPNZ <i>INS</i></td>
+<td>Repeat while not zero</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1401</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>REPZ <i>INS</i></td>
+<td>Repeat while zero</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1401</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>RET</td>
+<td>Return</td>
+<td>General Purpose</td><td>Control Transfer Instructions</td>
+<td>1405</td>
+<td>1789</td>
+<td>1804</td></tr>
+<tr>
+<td>ROL</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1376</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>ROR</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1376</td>
+<td>1788</td>
+<td>1803</td></tr>
+<tr>
+<td>RORX</td>
+<td>Rotate right without affecting arithmetic flags</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1415</td>
+<td>1790</td>
+<td>1805</td></tr>
+<tr>
+<td>ROUNDPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1416</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>ROUNDPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1419</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>ROUNDSD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1422</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>ROUNDSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1424</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>RSM</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1426</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>RSQRTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1428</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>RSQRTSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1430</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>SAHF</td>
+<td>Store AH register into flags</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>?</td>
+<td>?</td>
+<td>?</td></tr>
+<tr>
+<td>SAL</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1434</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>SAR</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1434</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>SARX</td>
+<td>Shift arithmetic right</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1439</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>SBB</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>1441</td>
+<td>1790</td>
+<td>1806</td></tr>
+<tr>
+<td>SCAS</td>
+<td>Scan string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1444</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SCASB</td>
+<td>Scan byte string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1444</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SCASW</td>
+<td>Scan word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1444</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SCASD</td>
+<td>Scan double word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1444</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SETcc</td>
+<td>Set byte if cc</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>1448</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SFENCE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1451</td>
+<td>1790 </td>
+<td>1807</td></tr>
+<tr>
+<td>SGDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1452</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SHL</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1434</td>
+<td>1790</td>
+<td>1807</td></tr>
+<tr>
+<td>SHLD</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1454</td>
+<td>1791</td>
+<td>1808</td></tr>
+<tr>
+<td>SHLX</td>
+<td>Shift logic left</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1439</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>SHR</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1434</td>
+<td>1791</td>
+<td>1808</td></tr>
+<tr>
+<td>SHRD</td>
+<td>?</td>
+<td>General Purpose</td><td>Shift and Rotate Instructions</td>
+<td>1457</td>
+<td>1791</td>
+<td>1808</td></tr>
+<tr>
+<td>SHRX</td>
+<td>Shift logic right</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1439</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>SHUFPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1460</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>SHUFPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1463</td>
+<td>1790 </td>
+<td>1806</td></tr>
+<tr>
+<td>SIDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1466</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>SLDT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1468</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>SMSW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1470</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>SQRTPD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>1472</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SQRTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1474</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SQRTSD</td>
+<td>?</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>1476</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SQRTSS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1477</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>STAC</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1478</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>STC</td>
+<td>Set carry flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1479</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STD</td>
+<td>Set the direction flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1480</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STI</td>
+<td>Set interrupt flag</td>
+<td>General Purpose</td><td>Flag Control Instructions</td>
+<td>1481</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STMXCSR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1483</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>STOS</td>
+<td>Store string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1484</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STOSB</td>
+<td>Store byte string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1484</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STOSD</td>
+<td>Store double word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1484</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STOSQ</td>
+<td>Store quad word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1484</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STOSW</td>
+<td>Store word string</td>
+<td>General Purpose</td><td>String Instructions</td>
+<td>1484</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>STR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1488</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>SUB</td>
+<td>?</td>
+<td>General Purpose</td><td>Binary Arithmetic Instructions</td>
+<td>1490</td>
+<td>1791</td>
+<td>1809</td></tr>
+<tr>
+<td>SUBPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1492</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SUBPS</td>
+<td>Subtract packed single-precision floating-point values</td>
+<td>SSE SIMD Single-Precision Floating-Point Instructions</td><td>SSE Packed Arithmetic Instructions</td>
+<td>1494</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SUBSD</td>
+<td>Subtract sclar double-precision floating-point values</td>
+<td>SSE2 Instructions</td><td>SSE2 Packed Arithmetic Instructions</td>
+<td>1496</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SUBSS</td>
+<td>Subtract scalar single-precision floating-point values</td>
+<td>SSE SIMD Single-Precision Floating-Point Instructions</td><td>SSE Packed Arithmetic Instructions</td>
+<td>1497</td>
+<td>1791 </td>
+<td>1809</td></tr>
+<tr>
+<td>SWAPGS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1499</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>SYSCALL</td>
+<td>Fast call to privege level 0 system procedures</td>
+<td>64-bit Mode Instructions</td><td>N/A</td>
+<td>1500</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>SYSENTER</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1502</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>SYSEXIT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1505</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>SYSRET</td>
+<td>Return from fast system call</td>
+<td>64-bit Mode Instructions</td><td>N/A</td>
+<td>1508</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>TEST</td>
+<td>Logical compare</td>
+<td>General Purpose</td><td>Bit and Byte Instructions</td>
+<td>1511</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>TZCNT</td>
+<td>Count the number trailing zero bits</td>
+<td>General Purpose</td><td>Bit processing (BMI1, BMI2)</td>
+<td>1513</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>UCOMISD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1515</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>UCOMISS</td>
+<td>Perform unordered comparison of scalar single-precision floating-point values and set flags in
+EFLAGS register</td>
+<td>SSE Instructions</td><td>SSE Comparison Instructions</td>
+<td>1517</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>UD2</td>
+<td>Undefined instruction</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1519</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>UNPCKHPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1520</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>UNPCKHPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1522</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>UNPCKLPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1524</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>UNPCKLPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1526</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VBROADCAST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1528</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VCVTPH2PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1532</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VCVTPS2PH</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1534</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VERR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1537</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VERW</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1537</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VEXTRACTF128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1539</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VEXTRACTI128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1540</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1541</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1541</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1541</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1544</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1544</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1544</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD132SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD213SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD231SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD132SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD213SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADD231SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1547</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1551</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1551</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1551</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1554</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1554</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMADDSUB231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1554</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1557</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1557</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1557</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1560</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1560</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUBADD231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1560</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1563</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1563</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1563</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1566</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1566</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1566</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB132SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1569</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB213SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1569</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB231SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1569</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB132SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1571</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB213SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1571</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFMSUB231SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1571</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1573</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1573</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1573</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1576</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1576</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1576</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD132SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1579</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD213SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1579</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD231SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1579</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD132SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1581</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD213SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1581</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMADD231SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1581</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB132PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1583</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB213PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1583</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB231PD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1583</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB132PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1586</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB213PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1586</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB231PS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1586</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB132SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1589</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB213SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1589</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB231SD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1589</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB132SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1591</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB213SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1591</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VFNMSUB231SS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1591</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VGATHERDPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1593</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VGATHERQPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1593</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VGATHERDPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1597</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VGATHERQPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1597</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPGATHERDD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1601</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPGATHERDQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1605</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPGATHERQD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1601</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPGATHERQQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1605</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VINSERTF128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1609</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VINSERTI128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1610</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VMASKMOV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1611</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPBLENDD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1614</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPBROADCAST</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1616</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1620</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1621</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1622</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1623</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERM2I128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1624</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMILPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1626</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERMILPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1629</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPERM2F128</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1632</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPMASKMOV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1634</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPSLLVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1637</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPSLLVQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1637</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPSRAVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1639</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPSRLVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1641</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VPSRLVQ</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1641</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VTESTPD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1643</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VTESTPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1643</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VZEROALL</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1646</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>VZEROUPPER</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1648</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>WAIT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1650</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>WBINVD</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1651</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>WRFSBASE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1653</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>WRGSBASE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1653</td>
+<td>1792 </td>
+<td>1810</td></tr>
+<tr>
+<td>WRMSR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1655</td>
+<td>1792</td>
+<td>1810</td></tr>
+<tr>
+<td>XABORT</td>
+<td>Abort an RTM transaction execution</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1660</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XACQUIRE</td>
+<td>Prefix hint to the beginning of an HLE transaction region</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1657</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XADD</td>
+<td>?</td>
+<td>General Purpose</td><td>Date TransferInstructions</td>
+<td>1662</td>
+<td>1792</td>
+<td>1811</td></tr>
+<tr>
+<td>XBEGIN</td>
+<td>Transaction begin of an RTM transaction region</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1664</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XCHG</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1667</td>
+<td>1792</td>
+<td>1811</td></tr>
+<tr>
+<td>XEND</td>
+<td>Transaction end of an RTM transaction region</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1669</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XGETBV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1671</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XLAT</td>
+<td>Table lookup translation</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1673</td>
+<td>1792</td>
+<td>1811</td></tr>
+<tr>
+<td>XLATB</td>
+<td>Table lookup translation</td>
+<td>General Purpose</td><td>Miscellaneous Instructions</td>
+<td>1673</td>
+<td>1792</td>
+<td>1811</td></tr>
+<tr>
+<td>XOR</td>
+<td>?</td>
+<td>General Purpose</td><td>Logical Instructions</td>
+<td>1675</td>
+<td>1792</td>
+<td>1811</td></tr>
+<tr>
+<td>XORPD</td>
+<td>Perform bitwise logical XOR of packed double-precision floating-point values</td>
+<td>SSE2 INSTRUCTIONS</td><td>SSE2 Logical Instructions</td>
+<td>1677</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XORPS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1679</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XRELEASE</td>
+<td>Prefix hint to the end of an HLE transaction region</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1657</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XRSTOR</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1681</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XRSTORS</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1685</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XSAVE</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1689</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XSAVEC</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1692</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XSAVEOPT</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1695</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XSAVES</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1698</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XSETBV</td>
+<td>?</td>
+<td>?</td><td>?</td>
+<td>1701</td>
+<td>1792 </td>
+<td>1811</td></tr>
+<tr>
+<td>XTEST</td>
+<td>Test if executing in a transactional region</td>
+<td>INTEL Transactional Synchronization Extensions</td><td>N/A</td>
+<td>1703</td>
+<td>1792 </td>
+<td>1811</td></tr>
+</table>
+
+</body>
+</html>
