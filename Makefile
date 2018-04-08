@@ -240,5 +240,6 @@ $(TEST_OBJS):
 ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
 -include $(patsubst %.cpp,.d/%.d,$(OPUS_SRC))
+-include $(patsubst %.cpp,.d/%.d,$(ELF_SRC))
 endif
 endif
