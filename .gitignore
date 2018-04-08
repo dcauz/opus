@@ -15,3 +15,13 @@ opus.vcxproj.filters
 git.pwd
 .d
 bin
+test/asm/add.s
+test/asm/and.s
+test/asm/cmp.s
+test/asm/mov.s
+test/asm/or.s
+test/asm/sar.s
+test/asm/sbb.s
+test/asm/sub.s
+test/asm/test.s
+test/asm/xor.s

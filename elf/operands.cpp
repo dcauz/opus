@@ -150,6 +150,142 @@ inline Register regToR(Register reg)
 	return static_cast<Register>((reg&0xef)+24);
 }
 
+const char * memStr(
+	const char * code,	// IN
+		unsigned prefix,// IN
+			 int s,		// IN
+			 int w,		// IN
+   std::string & op )	// OUT
+{
+	int mod;
+	int reg;
+	int rm;
+	mod_reg_rm( *code++, mod, reg, rm );
+
+	switch(mod)
+	{
+	case RM:
+		switch(rm)
+		{
+		case 0:	
+		case 1:	
+		case 2:	
+		case 3:	
+		case 5:	// disp32 when mod=00. Else, EBP	R13	
+		case 6:
+		case 7:
+		{
+			op = "(";
+			op += regStr( rm, AL, w, s, Base, prefix );
+			op += ")";
+			break;
+		}
+		case 4:	// Determined by SIB
+		{
+			int scale;
+			int index;
+			int base;
+
+			mod_reg_rm( *code++, scale, index, base );
+
+			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * i = regStr( index, AL, w, s, Index, prefix );
+
+			char addr[32];
+			sprintf( addr, "(%s,%s,%d)", b, i, static_cast<int>(pow(2,scale)) );
+			op = addr;
+			break;
+		}
+		}
+		break;
+	case RM_disp8:
+		switch(rm)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 5:
+		case 6:
+		case 7:
+		{
+			char disp[16];
+			code = imm8( code, disp );
+			op = disp;
+			op += "(";
+			op += regStr( rm, AL, w, s, Base, prefix );
+			op += ")";
+			break;
+		}
+		case 4:	// Determined by SIB	R12	
+		{
+			int scale;
+			int index;
+			int base;
+
+			mod_reg_rm( *code++, scale, index, base );
+
+			char imm[16];
+			code = imm8( code, imm );
+
+			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * i = regStr( index, AL, w, s, Index, prefix );
+
+			char addr[32];
+			sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
+			op = addr;
+			break;
+		}
+		}
+		break;
+	case RM_disp32:
+		switch(rm)
+		{
+		case 0:
+		case 1:
+		case 2:	
+		case 3:	
+		case 5:	// disp32 when mod=00. Else, EBP	R13	
+		case 6:
+		case 7:
+			char disp[16];
+			code = imm32( code, disp );
+			op = disp;
+			op += "(";
+			op += regStr( rm, AL, w, s, Base, prefix );
+			op += ")";
+			break;
+		case 4:	
+		{
+			int scale;
+			int index;
+			int base;
+
+			mod_reg_rm( *code++, scale, index, base );
+
+			char imm[16];
+			code = imm32( code, imm );
+
+			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * i = regStr( index, AL, w, s, Index, prefix );
+
+			char addr[32];
+			sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
+			op = addr;
+			break;
+		}
+		}
+		break;
+
+	case RM_regs:
+		// This function should not be called for mod = 11
+		op = "ERROR";
+		break;
+	}
+
+	return code;
+}
+
 const char * regStr( 
 	     int reg, 
 	Register base, 
@@ -170,8 +306,6 @@ const char * regStr(
 	case DR0:	return regToStr( r );
 	}
 
-// printf( "%d:prefix %x W:%d R:%d X:%d B:%d context:%d reg %d\n", __LINE__, prefix, W, R, X, B, context, reg );
-
 	if( prefix & REX)
 		r = regAHtoSPL( r );
 
@@ -182,12 +316,12 @@ const char * regStr(
 		break;
 
 	case Reg:
-		if( prefix & REX_R )
+		if(( prefix & REX_R ) == REX_R)
 		{
 			r = regToR(r);	
 		}
 
-		if( prefix & REX_W )
+		if( (prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
@@ -198,12 +332,12 @@ const char * regStr(
 		}
 		break;
 	case Reg2:
-		if( prefix & REX_B )
+		if(( prefix & REX_B ) == REX_B)
 		{
 			r = regToR(r);	
 		}
 
-		if( prefix & REX_W )
+		if(( prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
@@ -214,7 +348,7 @@ const char * regStr(
 		}
 		break;
 	case Index:
-		if( prefix & REX_X )
+		if(( prefix & REX_X ) == REX_X )
 		{
 			r = regToR(r);	
 		}
@@ -225,7 +359,7 @@ const char * regStr(
 			r = reg8to64(r);	
 		break;
 	case Base:
-		if( prefix & REX_B )
+		if(( prefix & REX_B ) == REX_B)
 		{
 			r = regToR(r);
 		}
@@ -253,12 +387,10 @@ const char * mod_reg_rm_ops(
 	std::string & op1,		// OUT
 	std::string & op2 )		// OUT
 {
-//fprintf( stderr, "mod_reg_rm_ops %x %x %d %d\n", *code, prefix, s, w );
 	int mod;
 	int reg;
 	int rm;
 	mod_reg_rm( *code++, mod, reg, rm );
-//fprintf( stderr, "mod %d reg %d rm %d\n", mod, reg, rm );
 
 	switch(mod)
 	{
@@ -266,18 +398,12 @@ const char * mod_reg_rm_ops(
 		switch(rm)
 		{
 		case 0:	
-			op2 = "(";
-			op2 += regStr( reg, AL, w, s, Reg, prefix );
-			op2 += ")";
-			op1 = regStr( rm, AL, w, s, Base, prefix );
-			break;
 		case 1:	
-TODO
-			break;
 		case 2:	
-TODO
-			break;
 		case 3:	
+		case 5:	// disp32 when mod=00. Else, EBP	R13	
+		case 6:
+		case 7:
 		{
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			op2 = "(";
@@ -303,37 +429,18 @@ TODO
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			break;
 		}
-		case 5:	// disp32 when mod=00. Else, EBP	R13	
-TODO
-			break;
-		case 6:
-TODO
-			break;
-		case 7:
-TODO
-			break;
 		}
 		break;
 	case RM_disp8:
 		switch(rm)
 		{
 		case 0:
-TODO
-			break;
 		case 1:
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
-			char disp[16];
-			code = imm8( code, disp );
-			op2 = disp;
-			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
-			op2 += ")";
-// AS REX.B 10 01 110 001 disp8 
-			break;
 		case 2:
-TODO
-			break;
 		case 3:
+		case 5:
+		case 6:
+		case 7:
 		{
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			char disp[16];
@@ -365,52 +472,19 @@ TODO
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			break;
 		}
-		case 5:
-		{
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-
-			char buff[12];
-			code = imm8( code, buff );
-			sprintf( buff, "%s", buff );
-
-			op2 = buff;
-			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
-			op2 += ")";
-			break;
-		}
-		case 6:
-		{
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-
-			char buff[12];
-			code = imm8( code, buff );
-			sprintf( buff, "%s", buff );
-
-			op2 = buff;
-			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
-			op2 += ")";
-			break;
-		}
-		case 7:
-TODO
-			break;
 		}
 		break;
 	case RM_disp32:
 		switch(rm)
 		{
 		case 0:
-TODO
-			break;
 		case 1:
-TODO
-			break;
 		case 2:	
-TODO
-			break;
 		case 3:	
+		case 5:
+		case 6:
+		case 7:
+		{
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			char disp[16];
 			code = imm32( code, disp );
@@ -419,6 +493,7 @@ TODO
 			op2 += regStr( rm, AL, w, s, Base, prefix );
 			op2 += ")";
 			break;
+		}
 		case 4:	
 		{
 			int scale;
@@ -440,15 +515,6 @@ TODO
 			op1 =  regStr( reg, AL, w, s, Reg, prefix );
 			break;
 		}
-		case 5:	// disp32 when mod=00. Else, EBP	R13	
-TODO
-			break;
-		case 6:
-TODO
-			break;
-		case 7:
-TODO
-			break;
 		}
 		break;
 
@@ -456,18 +522,12 @@ TODO
 		switch(rm)
 		{
 		case 0:
-TODO
-			break;
 		case 1:
-		{
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
-			break;
-		}
 		case 2:
-TODO
-			break;
 		case 3:
+		case 5:
+		case 6:
+		case 7:
 		{
 			op1 = regStr( reg, AL, w, s, Reg, prefix );
 			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
@@ -476,18 +536,6 @@ TODO
 		case 4:
 			op1 = regStr( reg, AL, w, s, Reg, prefix );
 			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
-			break;
-		case 5:	// disp32 when mod=00. Else, EBP	R13	
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
-			break;
-		case 6:
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
-			break;
-		case 7:
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm, AL, w, s, Reg2, prefix );
 			break;
 		}
 		break;
@@ -505,10 +553,6 @@ const char * imm_reg_ops(
 	std::string & op1,		// OUT
 	std::string & op2 )		// OUT
 {
-//   1c 25 imm32    adc    %ebx,0x3e8
-// 00 011 100   0010 0101 imm32
-
-//printf( "%d: %x %x\n", __LINE__, *code, prefix );
 	int mod;
 	int reg;
 	int rm;
@@ -517,8 +561,6 @@ const char * imm_reg_ops(
 	// Skip past SIB byte
 	if(mod != RM_regs )
 		++code;
-
-//printf( "%d: %x %x\n", __LINE__, *code, prefix );
 
 	if( !useReg )
 		op1 = regStr( rm, AL, w, 0, Reg, prefix );
@@ -545,7 +587,6 @@ const char * imm_mem_ops(
 	std::string & op1,		// OUT
 	std::string & op2 )		// OUT
 {
-//fprintf( stderr, "imm_mem_ops %x %x %d %d\n", *code, prefix, s, w );
 	int mod;
 	int reg;
 	int rm;
@@ -554,30 +595,155 @@ const char * imm_mem_ops(
 	switch(mod)
 	{
 	case RM:
-TODO
+	{
+		switch(rm)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 5:
+		case 6:
+		case 7:
+		{
+			// mod:reg:r/m:disp:imm
+			char imm[16];
+			code = imm8(code, imm);
+
+			op1 = imm;
+
+			op2 = "(";
+			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += ")";
+			break;
+		}
+		case 4:
+		{
+			int scale = (*code & 0xc0) >> 6;
+			int index = (*code & 0x38) >> 3;
+			int base  = *code & 0x07;
+
+			++code;
+
+			const char * i = regStr( index, AL, 0, 0, Index,prefix );
+			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+
+			char buff[128];
+			sprintf( buff, "(%s,%s,%d)", b, i, static_cast<int>(pow(2, scale)));
+			op2 = buff;
+
+			char imm[16];
+			code = imm8(code, imm);
+			op1 = imm;
+		}
+		}
 		break;
+	}
 	case RM_disp8:
 	{
-		// mod:reg:r/m:disp:imm
-		char disp[16];
-		char imm[16];
+		switch(rm)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 5:
+		case 6:
+		case 7:
+		{
+			// mod:reg:r/m:disp:imm
+			char disp[16];
+			char imm[16];
 
-		code = imm8(code, disp);
-		code = imm8(code, imm);
+			code = imm8(code, disp);
+			code = imm8(code, imm);
 
-//fprintf( stderr, "rm %x\n", rm );
+			op1 = imm;
 
-		op1 = imm;
+			op2 = disp;
+			op2 += "(";
+			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += ")";
+			break;
+		}
+		case 4:
+		{
+			int scale = (*code & 0xc0) >> 6;
+			int index = (*code & 0x38) >> 3;
+			int base  = *code & 0x07;
 
-		op2 = disp;
-		op2 += "(";
-		op2 += regStr( rm, AL, w, s, Base, prefix );
-		op2 += ")";
+			++code;
+
+			const char * i = regStr( index, AL, 0, 0, Index,prefix );
+			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+
+			char disp[12];
+			code = imm8(code, disp);
+			
+			char buff[128];
+			sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
+			op2 = buff;
+
+			char imm[16];
+			code = imm8(code, imm);
+			op1 = imm;
+		}
+		}
 		break;
 	}
 	case RM_disp32:
-TODO
+	{
+		switch(rm)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 5:
+		case 6:
+		case 7:
+		{
+			// mod:reg:r/m:disp:imm
+			char disp[16];
+			char imm[16];
+
+			code = imm32(code, disp);
+			code = imm8(code, imm);
+
+			op1 = imm;
+
+			op2 = disp;
+			op2 += "(";
+			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += ")";
+			break;
+		}
+		case 4:
+		{
+			int scale = (*code & 0xc0) >> 6;
+			int index = (*code & 0x38) >> 3;
+			int base  = *code & 0x07;
+
+			++code;
+
+			const char * i = regStr( index, AL, 0, 0, Index,prefix );
+			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+
+			char disp[16];
+			code = imm32(code, disp);
+			
+			char buff[128];
+			sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
+			op2 = buff;
+
+			char imm[16];
+			code = imm8(code, imm);
+			op1 = imm;
+			break;
+		}
+		}
 		break;
+	}
 	case RM_regs:
 TODO
 		break;
@@ -585,7 +751,6 @@ TODO
 
 	return code;
 }
-
 
 const char * reg8( int reg, int w, unsigned prefix )
 {
@@ -704,7 +869,6 @@ const char * reg32_64( int reg, unsigned prefix )
 	int ao  = 0; // prefix & PRE_AS;
 	int rex = prefix & REX;
 	prefix &= REX_MASK;
-//fprintf( stdout, "prefix %x ao %x rex %x\n", prefix, ao, rex );
 
 	switch(reg)
 	{
@@ -746,40 +910,6 @@ const char * reg32_64( int reg, unsigned prefix )
 	}	
 }
 
-
-/*
-       8f 03                popq (%rbx)
-          00 000 011
-       8f 46 disp8          popq 0x20(%rsi)
-          01 000 110
-REX.B  8f 41 disp8          popq 0x22(%r9)
-          01 000 001
-REX.B  8f 45 disp8          popq 0x21(%r13)
-          01 000 101
-       8f 46 20             popq 0x20(%rsi)
-		  01 000 110 disp8
-
-REX.X  8f 04 0b             popq (%rbx,%r9,1)
-          00 000 100:00 001 011
-
-       8f 44 1e disp8       popq 0x20(%rsi,%rbx,1)
-          01 000 100 00 011 110
-
-REX.X  8f 84 2e disp32      popq 0x2011(%rsi,%r13,1)
-          10 000 100 00 101 110
-
-REX.B  8f 84 19 disp32      popq 0x20123456(%r9,%rbx,1)
-          10 000 100 00 011 001
-
-REX.XB 8f 44 a9 disp8       popq 0x22(%r9,%r13,4)
-          10 000 100 10 101 001
-
-REX.XB ff 74 a9 22          pushq  0x22(%r9,%r13,4)
-          01 110 100 10 101 001 disp8
-
-       ff 34 25 01 00 00 00  pushq  0x1
-	      00 110 100 00 100 101 imm32
-*/
 const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 {
 	int mod = (*code & 0xc0) >> 6;
@@ -787,7 +917,6 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 
 	++code;
 
-//printf( "mod %d rm %d\n", mod, rm );
 	// If rm == 4, then there is a SIB byte
 	if( rm == 4 )
 	{
@@ -803,7 +932,6 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 		int scale = (*code & 0xc0) >> 6;
 		int index = (*code & 0x38) >> 3;
 		int base  = *code & 0x07;
-//printf( "scale %d index %d base %d\n", scale, index, base );
 
 		++code;
 
@@ -828,7 +956,6 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 
 		const char * i = regStr( index, AL, 0, 0, Index,prefix );
 		const char * b = regStr( base,  AL, 0, 0, Base, prefix );
-//printf( "index %s base %s\n", i, b );
 
 		char buff[128];
 		sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
@@ -856,7 +983,6 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 			TODO
 			break;
 		}
-//printf( "disp [%s]\n", disp );
 
 		char buff[128];
 		sprintf( buff, "%s(%s)", disp, r );

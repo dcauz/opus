@@ -20,6 +20,7 @@ test.mov \
 test.or \
 test.pop \
 test.push \
+test.sar \
 test.sbb \
 test.sub \
 test.test \
@@ -43,6 +44,7 @@ obj/mov.o \
 obj/or.o \
 obj/pop.o \
 obj/push.o \
+obj/sar.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -101,6 +103,9 @@ test.pop: $(ELF) obj/pop.o
 
 test.push: $(ELF) obj/push.o
 	$(ELF)  obj/push.o > out; diff out expected/push.e
+
+test.sar: $(ELF) obj/sar.o
+	$(ELF)  obj/sar.o > out; diff out expected/sar.e
 
 test.sbb: $(ELF) obj/sbb.o
 	$(ELF)  obj/sbb.o > out; diff out expected/sbb.e

@@ -17,6 +17,7 @@ asm/mov.s \
 asm/or.s \
 asm/pop.s \
 asm/push.s \
+asm/sar.s \
 asm/sbb.s \
 asm/sub.s \
 asm/test.s \
@@ -40,6 +41,7 @@ obj/mov.o \
 obj/or.o \
 obj/pop.o \
 obj/push.o \
+obj/sar.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -63,6 +65,7 @@ mov.e \
 or.e \
 pop.e \
 push.e \
+sar.e \
 sbb.e \
 sub.e \
 test.e \
@@ -120,6 +123,9 @@ push.e: obj/push.o
 	objdump -d $< > $@
 
 pop.e: obj/pop.o
+	objdump -d $< > $@
+
+sar.e: obj/sar.o
 	objdump -d $< > $@
 
 sbb.e: obj/sbb.o
@@ -186,6 +192,9 @@ obj/pop.o: asm/pop.s | obj
 	as $< -o $@
 
 obj/push.o: asm/push.s | obj
+	as $< -o $@
+
+obj/sar.o: asm/sar.s | obj
 	as $< -o $@
 
 obj/sbb.o: asm/sbb.s | obj

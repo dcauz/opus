@@ -1,7 +1,23 @@
 #pragma once
 
 #include <string>
+#include "opcodes.h"
 
+
+const char * regStr( 
+	     int reg, 
+	Register base, 
+		 int w, 
+		 int s, 
+  RegContext context, 
+	unsigned prefix );
+
+const char * memStr(
+    const char * code,  // IN
+        unsigned prefix,// IN
+             int s,     // IN
+             int w,     // IN
+   std::string & op );  // OUT
 
 const char * mod_reg_rm_ops(
 	const char * code,		// IN
