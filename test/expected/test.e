@@ -866,3 +866,51 @@ db 48 85 f3 4c 85 cb 4c  85 eb 48 85 de 48 85 f6
    c05:test %rsi,%r13
    c08:test %r9,%r13
    c0b:test %r13,%r13
+#################
+TODO: elf/file.cpp:186
+
+3150:0
+#################
+TODO: elf/file.cpp:252
+
+3150:0
+
+.symtab
+.strtab
+.shstrtab
+.text
+.data
+.bss
+name:
+bind:local
+type:unspecified
+visibility:default
+section:0
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:1
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:2
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:3
+value:0
+size:0
+
+

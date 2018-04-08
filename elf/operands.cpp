@@ -186,9 +186,6 @@ const char * regStr(
 		{
 			r = regToR(r);	
 		}
-		else
-		{
-		}
 
 		if( prefix & REX_W )
 			r = reg8to64(r);	
@@ -204,9 +201,6 @@ const char * regStr(
 		if( prefix & REX_B )
 		{
 			r = regToR(r);	
-		}
-		else
-		{
 		}
 
 		if( prefix & REX_W )
@@ -224,9 +218,6 @@ const char * regStr(
 		{
 			r = regToR(r);	
 		}
-		else
-		{
-		}
 
 		if( prefix & PRE_AS )
 			r = reg8to32(r);	
@@ -237,9 +228,6 @@ const char * regStr(
 		if( prefix & REX_B )
 		{
 			r = regToR(r);
-		}
-		else
-		{
 		}
 
 		if( prefix & PRE_AS )

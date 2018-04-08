@@ -177,17 +177,17 @@ entrySize:0
 00 00 88 45 ff 80 7d ff  00 74 07 b8 00 00 00 00
 eb 05 b8 01 00 00 00 c9  c3
      0:push %rbp
-     1:mov %rsp, %rbp
-     4:sub 0x20, %rsp
-     8:mov %edi, -0x14(%rbp)
-     b:mov %rsi, -0x20(%rbp)
-     f:mov -0x20(%rbp), %rax
-    13:add 0x8, %rax
-    17:mov (%rax), %rax
-    1a:mov %rax, %rdi
+     1:mov %rsp,%rbp
+     4:sub 0x20,%rsp
+     8:mov %edi,-0x14(%rbp)
+     b:mov %rsi,-0x20(%rbp)
+     f:mov -0x20(%rbp),%rax
+    13:add 0x8,%rax
+    17:mov (%rax),%rax
+    1a:mov %rax,%rdi
     1d:callq 0x0
-    22:mov %al, -0x1(%rbp)
-    25:cmpb 0x0, -0x1(%rbp)
+    22:mov %al,-0x1(%rbp)
+    25:cmpb 0x0,-0x1(%rbp)
     29:je 0x7
     2b:mov 0x0, %eax
     30:jmp 0x5
