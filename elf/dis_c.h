@@ -1,6 +1,23 @@
 
+inline const char * rsOp( int n )
+{
+	switch(n)
+	{
+	default:	return "ERROR";
+	case 0:		return "rol";
+	case 1:		return "ror";
+	case 2:		return "rcl";
+	case 3:		return "rcr";
+	case 4:		return "shl";
+	case 5:		return "shr";
+	case 7:		return "sar";
+	}
+}
+
 const char * dis_c0(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
     // if imm with reg
     if( (*code & 0xc0 ) == 0xc0 )
     {
@@ -12,7 +29,7 @@ const char * dis_c0(const char * code, unsigned prefix)
 
     	code = imm_reg_ops( code, prefix, 0, 8, false, op1, op2 );
 
-		printf( "sar $%s,%s\n", op2.c_str(), op1.c_str() );
+		printf( "%s $%s,%s\n", rsOp(inst), op2.c_str(), op1.c_str() );
 	}
     // else imm with mem
 	else
@@ -21,19 +38,16 @@ const char * dis_c0(const char * code, unsigned prefix)
         std::string op2;
         code = imm_mem_ops( code, prefix, 0, 0, op1, op2 );
 
-        printf( "sarb $%s,%s\n", op1.c_str(), op2.c_str() );
+        printf( "%sb $%s,%s\n", rsOp(inst), op1.c_str(), op2.c_str() );
     }
 
     return code;
 }
 
-// 67 66 c1 7c 33 14 04    sarw   $0x4,0x14(%ebx,%esi,1)
-// AS OS c1 0111 1100 0011 0011 disp8 imm8
-//          01 111 100 00 110 011
-//          md reg rm  sc i   b
-//
 const char * dis_c1(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
     // if imm with reg
     if( (*code & 0xc0 ) == 0xc0 )
     {
@@ -45,7 +59,7 @@ const char * dis_c1(const char * code, unsigned prefix)
 
 		code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
 
-		printf( "sar $%s,%s\n", op2.c_str(), op1.c_str() );
+		printf( "%s $%s,%s\n", rsOp(inst), op2.c_str(), op1.c_str() );
 	}
     // else imm with mem
 	else
@@ -55,11 +69,11 @@ const char * dis_c1(const char * code, unsigned prefix)
         code = imm_mem_ops( code, prefix, 0, 1, op1, op2 );
 
 		if( (prefix & REX_W ) == REX_W )
-        	printf( "sarq $%s,%s\n", op1.c_str(), op2.c_str() );
+        	printf( "%sq $%s,%s\n", rsOp(inst), op1.c_str(), op2.c_str() );
 		else if( prefix & PRE_OS )
-        	printf( "sarw $%s,%s\n", op1.c_str(), op2.c_str() );
+        	printf( "%sw $%s,%s\n", rsOp(inst), op1.c_str(), op2.c_str() );
 		else
-        	printf( "sarl $%s,%s\n", op1.c_str(), op2.c_str() );
+        	printf( "%sl $%s,%s\n", rsOp(inst), op1.c_str(), op2.c_str() );
     }
 
     return code;

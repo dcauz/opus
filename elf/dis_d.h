@@ -1,18 +1,14 @@
 
-// 227:   67 d0 bc 73 14 22 00    sarb   0x2214(%ebx,%esi,2)
-//              10 111 100 01 110 011 imm32
-
-// 267:   67 d0 bb 14 28 00 00    sarb   0x2814(%ebx)
-//              10 111 011
-
 const char * dis_d0(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
 	if( (*code & 0xc0) != 0xc0 )
 	{
 		std::string op;
 		code = memStr( code, prefix, 0, 0, op );
 
-		printf( "sarb %s\n", op.c_str() );
+		printf( "%sb %s\n", rsOp(inst), op.c_str() );
 	}
 	else
 	{
@@ -23,7 +19,7 @@ const char * dis_d0(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
 
-		printf( "sar %s\n", op );
+		printf( "%s %s\n", rsOp(inst), op );
 		++code;
 	}
 
@@ -32,17 +28,19 @@ const char * dis_d0(const char * code, unsigned prefix)
 
 const char * dis_d1(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
 	if( (*code & 0xc0) != 0xc0 )
 	{
 		std::string op;
 		code = memStr( code, prefix, 0, 1, op );
 
 		if( (prefix & REX_W ) == REX_W )
-			printf( "sarq %s\n", op.c_str() );
+			printf( "%sq %s\n", rsOp(inst), op.c_str() );
 		else if( prefix & PRE_OS )
-			printf( "sarw %s\n", op.c_str() );
+			printf( "%sw %s\n", rsOp(inst), op.c_str() );
 		else
-			printf( "sarl %s\n", op.c_str() );
+			printf( "%sl %s\n", rsOp(inst), op.c_str() );
 	}
 	else
 	{
@@ -53,7 +51,7 @@ const char * dis_d1(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
 
-		printf( "sar %s\n", op );
+		printf( "%s %s\n", rsOp(inst), op );
 		++code;
 	}
 
@@ -62,17 +60,19 @@ const char * dis_d1(const char * code, unsigned prefix)
 
 const char * dis_d2(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
 	if( (*code & 0xc0) != 0xc0 )
 	{
 		std::string op;
 		code = memStr( code, prefix, 0, 1, op );
 
 		if( (prefix & REX_W ) == REX_W )
-			printf( "sarq %%cl,%s\n", op.c_str() );
+			printf( "%sq %%cl,%s\n", rsOp(inst), op.c_str() );
 		else if( prefix & PRE_OS )
-			printf( "sarw %%cl,%s\n", op.c_str() );
+			printf( "%sw %%cl,%s\n", rsOp(inst), op.c_str() );
 		else
-			printf( "sarb %%cl,%s\n", op.c_str() );
+			printf( "%sb %%cl,%s\n", rsOp(inst), op.c_str() );
 	}
 	else
 	{
@@ -83,7 +83,7 @@ const char * dis_d2(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
 
-		printf( "sar %%cl,%s\n", op );
+		printf( "%s %%cl,%s\n", rsOp(inst), op );
 	}
 
 	return code;
@@ -91,17 +91,19 @@ const char * dis_d2(const char * code, unsigned prefix)
 
 const char * dis_d3(const char * code, unsigned prefix)
 {
+	int inst = (*code & 0x38) >> 3;
+
 	if( (*code & 0xc0) != 0xc0 )
 	{
 		std::string op;
 		code = memStr( code, prefix, 0, 1, op );
 
 		if( (prefix & REX_W ) == REX_W )
-			printf( "sarq %%cl,%s\n", op.c_str() );
+			printf( "%sq %%cl,%s\n", rsOp(inst), op.c_str() );
 		else if( prefix & PRE_OS )
-			printf( "sarw %%cl,%s\n", op.c_str() );
+			printf( "%sw %%cl,%s\n", rsOp(inst), op.c_str() );
 		else
-			printf( "sarl %%cl,%s\n", op.c_str() );
+			printf( "%sl %%cl,%s\n", rsOp(inst), op.c_str() );
 	}
 	else
 	{
@@ -112,7 +114,7 @@ const char * dis_d3(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
 
-		printf( "sar %%cl,%s\n", op );
+		printf( "%s %%cl,%s\n", rsOp(inst), op );
 	}
 
 	return code;

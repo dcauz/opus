@@ -17,7 +17,14 @@ asm/mov.s \
 asm/or.s \
 asm/pop.s \
 asm/push.s \
+asm/rcl.s \
+asm/rcr.s \
+asm/rol.s \
+asm/ror.s \
+asm/sal.s \
 asm/sar.s \
+asm/shl.s \
+asm/shr.s \
 asm/sbb.s \
 asm/sub.s \
 asm/test.s \
@@ -41,7 +48,14 @@ obj/mov.o \
 obj/or.o \
 obj/pop.o \
 obj/push.o \
+obj/rcl.o \
+obj/rcr.o \
+obj/rol.o \
+obj/ror.o \
+obj/sal.o \
 obj/sar.o \
+obj/shl.o \
+obj/shr.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -65,7 +79,14 @@ mov.e \
 or.e \
 pop.e \
 push.e \
+rcl.e \
+rcr.e \
+rol.e \
+ror.e \
+sal.e \
 sar.e \
+shl.e \
+shr.e \
 sbb.e \
 sub.e \
 test.e \
@@ -125,7 +146,28 @@ push.e: obj/push.o
 pop.e: obj/pop.o
 	objdump -d $< > $@
 
+rcl.e: obj/rcl.o
+	objdump -d $< > $@
+
+rcr.e: obj/rcr.o
+	objdump -d $< > $@
+
+rol.e: obj/rol.o
+	objdump -d $< > $@
+
+ror.e: obj/ror.o
+	objdump -d $< > $@
+
+sal.e: obj/sal.o
+	objdump -d $< > $@
+
 sar.e: obj/sar.o
+	objdump -d $< > $@
+
+shl.e: obj/shl.o
+	objdump -d $< > $@
+
+shr.e: obj/shr.o
 	objdump -d $< > $@
 
 sbb.e: obj/sbb.o
@@ -194,6 +236,27 @@ obj/pop.o: asm/pop.s | obj
 obj/push.o: asm/push.s | obj
 	as $< -o $@
 
+obj/rcl.o: asm/rcl.s | obj
+	as $< -o $@
+
+obj/rcr.o: asm/rcr.s | obj
+	as $< -o $@
+
+obj/rol.o: asm/rol.s | obj
+	as $< -o $@
+
+obj/ror.o: asm/ror.s | obj
+	as $< -o $@
+
+obj/shl.o: asm/shl.s | obj
+	as $< -o $@
+
+obj/shr.o: asm/shr.s | obj
+	as $< -o $@
+
+obj/sal.o: asm/sal.s | obj
+	as $< -o $@
+
 obj/sar.o: asm/sar.s | obj
 	as $< -o $@
 
@@ -236,6 +299,29 @@ asm/test.s: asm/adc.s
 
 asm/xor.s: asm/adc.s
 	sed 's/adc/xor/' < $< > $@
+
+
+asm/rcl.s: asm/sar.s
+	sed 's/sar/rcl/' < $< > $@
+
+asm/rcr.s: asm/sar.s
+	sed 's/sar/rcr/' < $< > $@
+
+asm/rol.s: asm/sar.s
+	sed 's/sar/rol/' < $< > $@
+
+asm/ror.s: asm/sar.s
+	sed 's/sar/ror/' < $< > $@
+
+asm/sal.s: asm/sar.s
+	sed 's/sar/sal/' < $< > $@
+
+asm/shl.s: asm/sar.s
+	sed 's/sar/shl/' < $< > $@
+
+asm/shr.s: asm/sar.s
+	sed 's/sar/shr/' < $< > $@
+
 
 obj:
 	mkdir $@

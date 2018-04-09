@@ -20,7 +20,13 @@ test.mov \
 test.or \
 test.pop \
 test.push \
+test.rcl \
+test.rcr \
+test.rol \
+test.ror \
 test.sar \
+test.shl \
+test.shr \
 test.sbb \
 test.sub \
 test.test \
@@ -44,7 +50,13 @@ obj/mov.o \
 obj/or.o \
 obj/pop.o \
 obj/push.o \
+obj/rcl.o \
+obj/rcr.o \
+obj/rol.o \
+obj/ror.o \
 obj/sar.o \
+obj/shl.o \
+obj/shr.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -103,6 +115,24 @@ test.pop: $(ELF) obj/pop.o
 
 test.push: $(ELF) obj/push.o
 	$(ELF)  obj/push.o > out; diff out expected/push.e
+
+test.rcl: $(ELF) obj/rcl.o
+	$(ELF)  obj/rcl.o > out; diff out expected/rcl.e
+
+test.rcr: $(ELF) obj/rcr.o
+	$(ELF)  obj/rcr.o > out; diff out expected/rcr.e
+
+test.rol: $(ELF) obj/rol.o
+	$(ELF)  obj/rol.o > out; diff out expected/rol.e
+
+test.ror: $(ELF) obj/ror.o
+	$(ELF)  obj/ror.o > out; diff out expected/ror.e
+
+test.shl: $(ELF) obj/shl.o
+	$(ELF)  obj/shl.o > out; diff out expected/shl.e
+
+test.shr: $(ELF) obj/shr.o
+	$(ELF)  obj/shr.o > out; diff out expected/shr.e
 
 test.sar: $(ELF) obj/sar.o
 	$(ELF)  obj/sar.o > out; diff out expected/sar.e
