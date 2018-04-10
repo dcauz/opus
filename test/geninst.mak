@@ -11,6 +11,7 @@ asm/btc.s \
 asm/btr.s \
 asm/bts.s \
 asm/cbw.s \
+asm/cdq.s \
 asm/clc.s \
 asm/clac.s \
 asm/cld.s \
@@ -48,6 +49,7 @@ asm/btc.o \
 asm/btr.o \
 asm/bts.o \
 obj/cbw.o \
+obj/cdq.o \
 obj/clc.o \
 obj/clac.o \
 obj/cld.o \
@@ -85,6 +87,7 @@ btc.e \
 btr.e \
 bts.e \
 cbw.e \
+cdq.e \
 clc.e \
 clac.e \
 cld.e \
@@ -147,6 +150,9 @@ clac.e: obj/clac.o
 	objdump -d $< > $@
 
 cbw.e: obj/cbw.o
+	objdump -d $< > $@
+
+cdq.e: obj/cdq.o
 	objdump -d $< > $@
 
 clc.e: obj/clc.o
@@ -261,6 +267,9 @@ obj/clac.o: asm/clac.s | obj
 	as $< -o $@
 
 obj/cbw.o: asm/cbw.s | obj
+	as $< -o $@
+
+obj/cdq.o: asm/cdq.s | obj
 	as $< -o $@
 
 obj/clc.o: asm/clc.s | obj

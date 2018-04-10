@@ -14,6 +14,7 @@ test.btc \
 test.btr \
 test.bts \
 test.cbw \
+test.cdq \
 test.clac \
 test.clc \
 test.cld \
@@ -50,6 +51,7 @@ obj/btc.o \
 obj/btr.o \
 obj/bts.o \
 obj/cbw.o \
+obj/cdq.o \
 obj/clac.o \
 obj/clc.o \
 obj/cld.o \
@@ -109,6 +111,9 @@ test.bts: $(ELF) obj/bts.o
 
 test.cbw: $(ELF) obj/cbw.o
 	$(ELF)  obj/cbw.o > out; diff out expected/cbw.e
+
+test.cdq: $(ELF) obj/cdq.o
+	$(ELF)  obj/cdq.o > out; diff out expected/cdq.e
 
 test.clac: $(ELF) obj/clac.o
 	$(ELF)  obj/clac.o > out; diff out expected/clac.e
