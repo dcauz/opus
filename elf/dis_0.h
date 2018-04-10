@@ -163,9 +163,6 @@ TODO
 	return code;
 }
 
-// 67 66 0f 38 f6 5b 14    adcx   0x14(%ebx),%ebx
-// AS OS 0f 38 f6 01 011 011 disp8
-
 const char * dis_0f(const char * code, unsigned prefix)
 {
     std::string op1;
@@ -219,9 +216,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	else if( (code[0] & 0xff) == 0xbc )
 	{
 		char cc = *code++;
-
 		code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
-
 		printf( "bsf %s,%s\n",  op1.c_str(), op2.c_str() );
 	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffca )
@@ -229,8 +224,103 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
+	else if((code[0] & 0xff) == 0xa3 )
+	{
+		++code;
+		if( code[1] == 0x25 )
+		{
+			std::string op1;
+			std::string op2;
+			code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+
+			printf( "bt %s,%s\n",  op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+			printf( "bt %s,%s\n",  op2.c_str(), op1.c_str() );
+		}
+	}
+	else if((code[0] & 0xff) == 0xb3 )
+	{
+		++code;
+		if( code[1] == 0x25 )
+		{
+			std::string op1;
+			std::string op2;
+			code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+
+			printf( "btr %s,%s\n",  op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+			printf( "btr %s,%s\n",  op2.c_str(), op1.c_str() );
+		}
+	}
+	else if((code[0] & 0xff) == 0xbb )
+	{
+		++code;
+		if( code[1] == 0x25 )
+		{
+			std::string op1;
+			std::string op2;
+			code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+
+			printf( "btc %s,%s\n",  op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+			printf( "btc %s,%s\n",  op2.c_str(), op1.c_str() );
+		}
+	}
+	else if((code[0] & 0xff) == 0xab )
+	{
+		++code;
+		if( code[1] == 0x25 )
+		{
+			std::string op1;
+			std::string op2;
+			code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+
+			printf( "bts %s,%s\n",  op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+			printf( "bts %s,%s\n",  op2.c_str(), op1.c_str() );
+		}
+	}
+	else if( ( code[0] & 0xff ) == 0xa5 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		printf( "shld %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xa4 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		char imm[12];
+		code = imm8(code,imm);
+		printf( "shld $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xad )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		printf( "shrd %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xac )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		char imm[12];
+		code = imm8(code,imm);
+		printf( "shrd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+	}
 	else
+	{
+		printf( "code %x\n", *code ); fflush(stdout);
 		TODO
+	}
 
     return code;
 }

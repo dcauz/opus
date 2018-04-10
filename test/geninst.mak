@@ -6,6 +6,10 @@ asm/add.s \
 asm/adox.s \
 asm/and.s \
 asm/bsf.s \
+asm/bt.s \
+asm/btc.s \
+asm/btr.s \
+asm/bts.s \
 asm/cbw.s \
 asm/clc.s \
 asm/clac.s \
@@ -24,7 +28,9 @@ asm/ror.s \
 asm/sal.s \
 asm/sar.s \
 asm/shl.s \
+asm/shld.s \
 asm/shr.s \
+asm/shrd.s \
 asm/sbb.s \
 asm/sub.s \
 asm/test.s \
@@ -37,6 +43,10 @@ obj/add.o \
 obj/adox.o \
 obj/and.o \
 obj/bsf.o \
+asm/bt.o \
+asm/btc.o \
+asm/btr.o \
+asm/bts.o \
 obj/cbw.o \
 obj/clc.o \
 obj/clac.o \
@@ -55,7 +65,9 @@ obj/ror.o \
 obj/sal.o \
 obj/sar.o \
 obj/shl.o \
+obj/shld.o \
 obj/shr.o \
+obj/shrd.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -68,6 +80,10 @@ add.e \
 adox.e \
 and.e \
 bsf.e \
+bt.e \
+btc.e \
+btr.e \
+bts.e \
 cbw.e \
 clc.e \
 clac.e \
@@ -86,7 +102,9 @@ ror.e \
 sal.e \
 sar.e \
 shl.e \
+shld.e \
 shr.e \
+shrd.e \
 sbb.e \
 sub.e \
 test.e \
@@ -111,6 +129,18 @@ and.e: obj/and.o
 	objdump -d $< > $@
 
 bsf.e: obj/bsf.o
+	objdump -d $< > $@
+
+bt.e: obj/bt.o
+	objdump -d $< > $@
+
+btc.e: obj/btc.o
+	objdump -d $< > $@
+
+btr.e: obj/btr.o
+	objdump -d $< > $@
+
+bts.e: obj/bts.o
 	objdump -d $< > $@
 
 clac.e: obj/clac.o
@@ -167,7 +197,13 @@ sar.e: obj/sar.o
 shl.e: obj/shl.o
 	objdump -d $< > $@
 
+shld.e: obj/shld.o
+	objdump -d $< > $@
+
 shr.e: obj/shr.o
+	objdump -d $< > $@
+
+shrd.e: obj/shrd.o
 	objdump -d $< > $@
 
 sbb.e: obj/sbb.o
@@ -201,6 +237,18 @@ obj/and.o: asm/and.s | obj
 	as $< -o $@
 
 obj/bsf.o: asm/bsf.s | obj
+	as $< -o $@
+
+obj/bt.o: asm/bt.s | obj
+	as $< -o $@
+
+obj/btc.o: asm/btc.s | obj
+	as $< -o $@
+
+obj/btr.o: asm/btr.s | obj
+	as $< -o $@
+
+obj/bts.o: asm/bts.s | obj
 	as $< -o $@
 
 obj/cmovCC.o: asm/cmovCC.s | obj
@@ -251,7 +299,13 @@ obj/ror.o: asm/ror.s | obj
 obj/shl.o: asm/shl.s | obj
 	as $< -o $@
 
+obj/shld.o: asm/shld.s | obj
+	as $< -o $@
+
 obj/shr.o: asm/shr.s | obj
+	as $< -o $@
+
+obj/shrd.o: asm/shrd.s | obj
 	as $< -o $@
 
 obj/sal.o: asm/sal.s | obj
@@ -322,6 +376,15 @@ asm/shl.s: asm/sar.s
 asm/shr.s: asm/sar.s
 	sed 's/sar/shr/' < $< > $@
 
+
+asm/btc.s: asm/bt.s
+	sed 's/bt/btc/' < $< > $@
+
+asm/btr.s: asm/bt.s
+	sed 's/bt/btr/' < $< > $@
+
+asm/bts.s: asm/bt.s
+	sed 's/bt/bts/' < $< > $@
 
 obj:
 	mkdir $@

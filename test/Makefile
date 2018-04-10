@@ -9,6 +9,10 @@ test.add \
 test.adox \
 test.and \
 test.bsf \
+test.bt \
+test.btc \
+test.btr \
+test.bts \
 test.cbw \
 test.clac \
 test.clc \
@@ -26,7 +30,9 @@ test.rol \
 test.ror \
 test.sar \
 test.shl \
+test.shld \
 test.shr \
+test.shrd \
 test.sbb \
 test.sub \
 test.test \
@@ -39,6 +45,10 @@ obj/add.o \
 obj/adox.o \
 obj/and.o \
 obj/bsf.o \
+obj/bt.o \
+obj/btc.o \
+obj/btr.o \
+obj/bts.o \
 obj/cbw.o \
 obj/clac.o \
 obj/clc.o \
@@ -56,7 +66,9 @@ obj/rol.o \
 obj/ror.o \
 obj/sar.o \
 obj/shl.o \
+obj/shld.o \
 obj/shr.o \
+obj/shrd.o \
 obj/sbb.o \
 obj/sub.o \
 obj/test.o \
@@ -82,6 +94,18 @@ test.and: $(ELF) obj/and.o
 
 test.bsf: $(ELF) obj/bsf.o
 	$(ELF)  obj/bsf.o > out; diff out expected/bsf.e
+
+test.bt: $(ELF) obj/bt.o
+	$(ELF)  obj/bt.o > out; diff out expected/bt.e
+
+test.btc: $(ELF) obj/btc.o
+	$(ELF)  obj/btc.o > out; diff out expected/btc.e
+
+test.btr: $(ELF) obj/btr.o
+	$(ELF)  obj/btr.o > out; diff out expected/btr.e
+
+test.bts: $(ELF) obj/bts.o
+	$(ELF)  obj/bts.o > out; diff out expected/bts.e
 
 test.cbw: $(ELF) obj/cbw.o
 	$(ELF)  obj/cbw.o > out; diff out expected/cbw.e
@@ -131,8 +155,14 @@ test.ror: $(ELF) obj/ror.o
 test.shl: $(ELF) obj/shl.o
 	$(ELF)  obj/shl.o > out; diff out expected/shl.e
 
+test.shld: $(ELF) obj/shld.o
+	$(ELF)  obj/shld.o > out; diff out expected/shld.e
+
 test.shr: $(ELF) obj/shr.o
 	$(ELF)  obj/shr.o > out; diff out expected/shr.e
+
+test.shrd: $(ELF) obj/shrd.o
+	$(ELF)  obj/shrd.o > out; diff out expected/shrd.e
 
 test.sar: $(ELF) obj/sar.o
 	$(ELF)  obj/sar.o > out; diff out expected/sar.e
