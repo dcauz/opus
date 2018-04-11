@@ -321,6 +321,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "cpuid\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x07 )
+	{
+		++code;
+		printf( "sysret\n" );
+	}
 	else if( ( code[0] & 0xff ) == 0x06 )
 	{
 		++code;

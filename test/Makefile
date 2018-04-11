@@ -3,6 +3,7 @@ ELF := ../bin/elf
 
 ENC_TESTS := \
 test.elfo \
+ \
 test.adc \
 test.adcx \
 test.add \
@@ -13,6 +14,7 @@ test.bt \
 test.btc \
 test.btr \
 test.bts \
+ \
 test.cbw \
 test.cdq \
 test.clac \
@@ -23,6 +25,7 @@ test.clts \
 test.cmc \
 test.cmovCC \
 test.cmp \
+ \
 test.cpuid \
 test.hlt \
 test.int \
@@ -33,6 +36,7 @@ test.push \
 test.rcl \
 test.rcr \
 test.rol \
+ \
 test.ror \
 test.sar \
 test.sbb \
@@ -42,6 +46,8 @@ test.shr \
 test.shrd \
 test.stc \
 test.sub \
+test.sysret \
+ \
 test.test \
 test.wait \
 test.xor
@@ -178,6 +184,9 @@ test.stc: obj/stc.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.sub: obj/sub.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.sysret: obj/sysret.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.test: obj/test.o | $(ELF)
