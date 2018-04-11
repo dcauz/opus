@@ -1,0 +1,3 @@
+insb
+insl
+insw

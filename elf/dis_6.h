@@ -49,13 +49,18 @@ TODO
 
 const char * dis_6c(const char * code, unsigned prefix)
 {
-TODO
+	printf( "insb (%%dx),%%es:(%%rdi)\n");
+
 	return code;
 }
 
 const char * dis_6d(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "insw (%%dx),%%es:(%%rdi)\n" );
+	else
+	   	printf( "insl (%%dx),%%es:(%%rdi)\n" );
+
 	return code;
 }
 
