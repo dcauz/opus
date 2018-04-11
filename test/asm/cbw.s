@@ -1,3 +1,3 @@
-cbw
-// cbde TODO NOT SUPPORTED BY GNU as
-// cbqe TODO NOT SUPPORTED BY GNU as
+cltq   
+cbtw   
+cltd   

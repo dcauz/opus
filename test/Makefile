@@ -22,6 +22,7 @@ test.cli \
 test.cmc \
 test.cmovCC \
 test.cmp \
+test.cpuid \
 test.mov \
 test.or \
 test.pop \
@@ -31,13 +32,15 @@ test.rcr \
 test.rol \
 test.ror \
 test.sar \
+test.sbb \
 test.shl \
 test.shld \
 test.shr \
 test.shrd \
-test.sbb \
+test.stc \
 test.sub \
 test.test \
+test.wait \
 test.xor
 
 
@@ -100,6 +103,9 @@ test.cmovCC: $(ELF) obj/cmovCC.o
 test.cmp: $(ELF) obj/cmp.o
 	$(ELF)  obj/cmp.o > out; diff out expected/cmp.e
 
+test.cpuid: $(ELF) obj/cpuid.o
+	$(ELF)  obj/cpuid.o > out; diff out expected/cpuid.e
+
 test.mov: $(ELF) obj/mov.o
 	$(ELF)  obj/mov.o > out; diff out expected/mov.e
 
@@ -142,11 +148,17 @@ test.sar: $(ELF) obj/sar.o
 test.sbb: $(ELF) obj/sbb.o
 	$(ELF)  obj/sbb.o > out; diff out expected/sbb.e
 
+test.stc: $(ELF) obj/stc.o
+	$(ELF)  obj/stc.o > out; diff out expected/stc.e
+
 test.sub: $(ELF) obj/sub.o
 	$(ELF)  obj/sub.o > out; diff out expected/sub.e
 
 test.test: $(ELF) obj/test.o
 	$(ELF)  obj/test.o > out; diff out expected/test.e
+
+test.wait: $(ELF) obj/wait.o
+	$(ELF)  obj/wait.o > out; diff out expected/wait.e
 
 test.xor: $(ELF) obj/xor.o
 	$(ELF)  obj/xor.o > out; diff out expected/xor.e
@@ -179,6 +191,7 @@ asm/cli.s \
 asm/cmc.s \
 asm/cmovCC.s \
 asm/cmp.s \
+asm/cpuid.s \
 asm/mov.s \
 asm/or.s \
 asm/pop.s \
@@ -189,13 +202,15 @@ asm/rol.s \
 asm/ror.s \
 asm/sal.s \
 asm/sar.s \
+asm/sbb.s \
 asm/shl.s \
 asm/shld.s \
 asm/shr.s \
 asm/shrd.s \
-asm/sbb.s \
+asm/stc.s \
 asm/sub.s \
 asm/test.s \
+asm/wait.s \
 asm/xor.s 
 
 
@@ -256,6 +271,9 @@ cmovCC.e: obj/cmovCC.o
 cmp.e: obj/cmp.o
 	objdump -d $< > $@
 
+cpuid.e: obj/cpuid.o
+	objdump -d $< > $@
+
 mov.e: obj/mov.o
 	objdump -d $< > $@
 
@@ -301,14 +319,21 @@ shrd.e: obj/shrd.o
 sbb.e: obj/sbb.o
 	objdump -d $< > $@
 
+stc.e: obj/stc.o
+	objdump -d $< > $@
+
 sub.e: obj/sub.o
 	objdump -d $< > $@
 
 test.e: obj/test.o
 	objdump -d $< > $@
 
+wait.e: obj/wait.o
+	objdump -d $< > $@
+
 xor.e: obj/xor.o
 	objdump -d $< > $@
+
 
 obj/adc.o: asm/adc.s | obj
 	as $< -o $@
@@ -344,6 +369,9 @@ obj/cmovCC.o: asm/cmovCC.s | obj
 	as $< -o $@
 
 obj/cmp.o: asm/cmp.s | obj
+	as $< -o $@
+
+obj/cpuid.o: asm/cpuid.s | obj
 	as $< -o $@
 
 obj/clac.o: asm/clac.s | obj
@@ -412,10 +440,16 @@ obj/sar.o: asm/sar.s | obj
 obj/sbb.o: asm/sbb.s | obj
 	as $< -o $@
 
+obj/stc.o: asm/stc.s | obj
+	as $< -o $@
+
 obj/sub.o: asm/sub.s | obj
 	as $< -o $@
 
 obj/test.o: asm/test.s | obj
+	as $< -o $@
+
+obj/wait.o: asm/wait.s | obj
 	as $< -o $@
 
 obj/xor.o: asm/xor.s | obj

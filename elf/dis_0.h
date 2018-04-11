@@ -316,6 +316,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = imm8(code,imm);
 		printf( "shrd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
 	}
+	else if( ( code[0] & 0xff ) == 0xa2 )
+	{
+		++code;
+		printf( "cpuid\n" );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);

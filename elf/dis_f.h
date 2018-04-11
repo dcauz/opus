@@ -37,7 +37,7 @@ const char * dis_f8(const char * code, unsigned prefix)
 
 const char * dis_f9(const char * code, unsigned prefix)
 {
-TODO
+    printf( "stc\n" );
 	return code;
 }
 

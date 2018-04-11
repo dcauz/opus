@@ -33,7 +33,7 @@ type:     Program data
 flags:    OCCUPIES MEMORY|Executable
 addr:     0
 offset:   64
-size:     5
+size:     2
 link:     0
 info:     0
 alignment:1
@@ -44,7 +44,7 @@ name:     .data
 type:     Program data
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   69
+offset:   66
 size:     0
 link:     0
 info:     0
@@ -56,7 +56,7 @@ name:     .bss
 type:     Program space with no data (bss)
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   69
+offset:   66
 size:     0
 link:     0
 info:     0
@@ -100,18 +100,16 @@ alignment:1
 entrySize:0
 
 ----------------------------------------
-48 98 66 98 99
-     0:cltq
-     2:cbtw
-     4:cltd
+0f a2
+     0:cpuid
 #################
 TODO: elf/file.cpp:186
 
-69:0
+66:0
 #################
 TODO: elf/file.cpp:252
 
-69:0
+66:0
 
 .symtab
 .strtab

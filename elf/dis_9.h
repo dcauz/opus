@@ -51,8 +51,11 @@ const char * dis_98(const char * code, unsigned prefix)
 {
 	if( prefix & PRE_OS )
 		printf( "cbtw\n" );
+	else if( prefix & REX_W )
+		printf( "cltq\n" );
 	else
-		TODO
+		printf( "cltd\n" );
+		
 	return code;
 }
 
@@ -76,7 +79,7 @@ TODO
 
 const char * dis_9b(const char * code, unsigned prefix)
 {
-TODO
+	printf( "fwait\n" );
 	return code;
 }
 
