@@ -145,13 +145,16 @@ TODO
 
 const char * dis_cc(const char * code, unsigned prefix)
 {
-TODO
+	printf( "int3\n" );
 	return code;
 }
 
 const char * dis_cd(const char * code, unsigned prefix)
 {
-TODO
+	char imm[9];
+	code = imm8( code, imm );
+	
+	printf( "int $%s\n", imm );
 	return code;
 }
 
