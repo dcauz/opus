@@ -19,6 +19,7 @@ test.clac \
 test.clc \
 test.cld \
 test.cli \
+test.clts \
 test.cmc \
 test.cmovCC \
 test.cmp \
@@ -45,91 +46,54 @@ test.test \
 test.wait \
 test.xor
 
-SRC := \
-asm/adc.s \
-asm/adcx.s \
-asm/add.s \
-asm/adox.s \
-asm/and.s \
-asm/bsf.s \
-asm/bt.s \
-asm/btc.s \
-asm/btr.s \
-asm/bts.s \
-asm/cbw.s \
-asm/cdq.s \
-asm/clc.s \
-asm/clac.s \
-asm/cld.s \
-asm/cli.s \
-asm/cmc.s \
-asm/cmovCC.s \
-asm/cmp.s \
-asm/cpuid.s \
-asm/hlt.s \
-asm/int.s \
-asm/mov.s \
-asm/or.s \
-asm/pop.s \
-asm/push.s \
-asm/rcl.s \
-asm/rcr.s \
-asm/rol.s \
-asm/ror.s \
-asm/sal.s \
-asm/sar.s \
-asm/sbb.s \
-asm/shl.s \
-asm/shld.s \
-asm/shr.s \
-asm/shrd.s \
-asm/stc.s \
-asm/sub.s \
-asm/test.s \
-asm/wait.s \
-asm/xor.s 
+SRC := $(patsubst test.%,asm/%.s,$(ENC))
+
+OBJS:= $(patsubst asm/%.s,obj/%.o,$(SRC))
 
 #######################################################
 
-test.elf: $(ENC_TESTS)
+all: $(ENC_TESTS)
 
 clean:
 	rm -f out core
-	rm -rf asm/*.o
+	rm -f *.e
+	rm -rf obj/*.o
+
+.PHONY: all clean $(ENC_TESTS)
 
 #######################################################
 
 test.adc: obj/adc.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-	
+
 test.adcx: obj/adcx.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-	
-test.add: obj/add.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-	
-test.adox: obj/adox.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-	
-test.and: obj/and.o | $(ELF)
+
+test.add : obj/add.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.bsf: obj/bsf.o | $(ELF)
+test.adox : obj/adox.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.bt: obj/bt.o | $(ELF)
+test.and : obj/and.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.btc: obj/btc.o | $(ELF)
+test.bsf : obj/bsf.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.btr: obj/btr.o | $(ELF)
+test.bt : obj/bt.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.bts: obj/bts.o | $(ELF)
+test.btc : obj/btc.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
-test.cbw: obj/cbw.o | $(ELF)
+test.btr : obj/btr.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.bts : obj/bts.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.cbw : obj/cbw.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.cdq: obj/cdq.o | $(ELF)
@@ -145,6 +109,9 @@ test.cld: obj/cld.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.cli: obj/cli.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.clts: obj/clts.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.cmc: obj/cmc.o | $(ELF)
@@ -189,6 +156,12 @@ test.rol: obj/rol.o | $(ELF)
 test.ror: obj/ror.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
+test.sar: obj/sar.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.sbb: obj/sbb.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
 test.shl: obj/shl.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
@@ -199,12 +172,6 @@ test.shr: obj/shr.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.shrd: obj/shrd.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sar: obj/sar.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sbb: obj/sbb.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.stc: obj/stc.o | $(ELF)
@@ -221,267 +188,21 @@ test.wait: obj/wait.o | $(ELF)
 
 test.xor: obj/xor.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-	
+
+
+$(ENC_TEST): test.%: obj/%.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+%.e: obj/%.o
+	objdump -d $< > $@
+
+obj/%.o: asm/%.s | obj
+	as $< -o $@
+
 
 test.elfo: ../obj/elf/elf.o | $(ELF)
 	$(ELF) ../obj/elf/elf.o > out;diff out expected/elf.e
 	
-#######################################################
-
-adc.e: obj/adc.o
-	objdump -d $< > $@
-
-adcx.e: obj/adcx.o
-	objdump -d $< > $@
-
-add.e: obj/add.o
-	objdump -d $< > $@
-
-adox.e: obj/adox.o
-	objdump -d $< > $@
-
-and.e: obj/and.o
-	objdump -d $< > $@
-
-bsf.e: obj/bsf.o
-	objdump -d $< > $@
-
-bt.e: obj/bt.o
-	objdump -d $< > $@
-
-btc.e: obj/btc.o
-	objdump -d $< > $@
-
-btr.e: obj/btr.o
-	objdump -d $< > $@
-
-bts.e: obj/bts.o
-	objdump -d $< > $@
-
-clac.e: obj/clac.o
-	objdump -d $< > $@
-
-cbw.e: obj/cbw.o
-	objdump -d $< > $@
-
-cdq.e: obj/cdq.o
-	objdump -d $< > $@
-
-clc.e: obj/clc.o
-	objdump -d $< > $@
-
-cld.e: obj/cld.o
-	objdump -d $< > $@
-
-cli.e: obj/cli.o
-	objdump -d $< > $@
-
-cmc.e: obj/cmc.o
-	objdump -d $< > $@
-
-cmovCC.e: obj/cmovCC.o
-	objdump -d $< > $@
-
-cmp.e: obj/cmp.o
-	objdump -d $< > $@
-
-cpuid.e: obj/cpuid.o
-	objdump -d $< > $@
-
-hlt.e: obj/hlt.o
-	objdump -d $< > $@
-
-int.e: obj/int.o
-	objdump -d $< > $@
-
-mov.e: obj/mov.o
-	objdump -d $< > $@
-
-or.e: obj/or.o
-	objdump -d $< > $@
-
-push.e: obj/push.o
-	objdump -d $< > $@
-
-pop.e: obj/pop.o
-	objdump -d $< > $@
-
-rcl.e: obj/rcl.o
-	objdump -d $< > $@
-
-rcr.e: obj/rcr.o
-	objdump -d $< > $@
-
-rol.e: obj/rol.o
-	objdump -d $< > $@
-
-ror.e: obj/ror.o
-	objdump -d $< > $@
-
-sal.e: obj/sal.o
-	objdump -d $< > $@
-
-sar.e: obj/sar.o
-	objdump -d $< > $@
-
-shl.e: obj/shl.o
-	objdump -d $< > $@
-
-shld.e: obj/shld.o
-	objdump -d $< > $@
-
-shr.e: obj/shr.o
-	objdump -d $< > $@
-
-shrd.e: obj/shrd.o
-	objdump -d $< > $@
-
-sbb.e: obj/sbb.o
-	objdump -d $< > $@
-
-stc.e: obj/stc.o
-	objdump -d $< > $@
-
-sub.e: obj/sub.o
-	objdump -d $< > $@
-
-test.e: obj/test.o
-	objdump -d $< > $@
-
-wait.e: obj/wait.o
-	objdump -d $< > $@
-
-xor.e: obj/xor.o
-	objdump -d $< > $@
-
-#######################################################
-
-obj/adc.o: asm/adc.s | obj
-	as $< -o $@
-
-obj/adcx.o: asm/adcx.s | obj
-	as $< -o $@
-
-obj/add.o: asm/add.s | obj
-	as $< -o $@
-
-obj/adox.o: asm/adox.s | obj
-	as $< -o $@
-
-obj/and.o: asm/and.s | obj
-	as $< -o $@
-
-obj/bsf.o: asm/bsf.s | obj
-	as $< -o $@
-
-obj/bt.o: asm/bt.s | obj
-	as $< -o $@
-
-obj/btc.o: asm/btc.s | obj
-	as $< -o $@
-
-obj/btr.o: asm/btr.s | obj
-	as $< -o $@
-
-obj/bts.o: asm/bts.s | obj
-	as $< -o $@
-
-obj/cmovCC.o: asm/cmovCC.s | obj
-	as $< -o $@
-
-obj/cmp.o: asm/cmp.s | obj
-	as $< -o $@
-
-obj/cpuid.o: asm/cpuid.s | obj
-	as $< -o $@
-
-obj/clac.o: asm/clac.s | obj
-	as $< -o $@
-
-obj/cbw.o: asm/cbw.s | obj
-	as $< -o $@
-
-obj/cdq.o: asm/cdq.s | obj
-	as $< -o $@
-
-obj/clc.o: asm/clc.s | obj
-	as $< -o $@
-
-obj/cld.o: asm/cld.s | obj
-	as $< -o $@
-
-obj/cli.o: asm/cli.s | obj
-	as $< -o $@
-
-obj/cmc.o: asm/cmc.s | obj
-	as $< -o $@
-
-obj/hlt.o: asm/hlt.s | obj
-	as $< -o $@
-
-obj/int.o: asm/int.s | obj
-	as $< -o $@
-
-obj/mov.o: asm/mov.s | obj
-	as $< -o $@
-
-obj/or.o: asm/or.s | obj
-	as $< -o $@
-
-obj/pop.o: asm/pop.s | obj
-	as $< -o $@
-
-obj/push.o: asm/push.s | obj
-	as $< -o $@
-
-obj/rcl.o: asm/rcl.s | obj
-	as $< -o $@
-
-obj/rcr.o: asm/rcr.s | obj
-	as $< -o $@
-
-obj/rol.o: asm/rol.s | obj
-	as $< -o $@
-
-obj/ror.o: asm/ror.s | obj
-	as $< -o $@
-
-obj/shl.o: asm/shl.s | obj
-	as $< -o $@
-
-obj/shld.o: asm/shld.s | obj
-	as $< -o $@
-
-obj/shr.o: asm/shr.s | obj
-	as $< -o $@
-
-obj/shrd.o: asm/shrd.s | obj
-	as $< -o $@
-
-obj/sal.o: asm/sal.s | obj
-	as $< -o $@
-
-obj/sar.o: asm/sar.s | obj
-	as $< -o $@
-
-obj/sbb.o: asm/sbb.s | obj
-	as $< -o $@
-
-obj/stc.o: asm/stc.s | obj
-	as $< -o $@
-
-obj/sub.o: asm/sub.s | obj
-	as $< -o $@
-
-obj/test.o: asm/test.s | obj
-	as $< -o $@
-
-obj/wait.o: asm/wait.s | obj
-	as $< -o $@
-
-obj/xor.o: asm/xor.s | obj
-	as $< -o $@
-
 #######################################################
 
 asm/add.s: asm/adc.s

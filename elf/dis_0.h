@@ -321,6 +321,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "cpuid\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x06 )
+	{
+		++code;
+		printf( "clts\n" );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);
