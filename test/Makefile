@@ -30,13 +30,14 @@ test.cpuid \
 test.hlt \
 test.ins \
 test.int \
+test.invd \
 test.mov \
 test.or \
 test.pop \
 test.push \
 test.rcl \
-test.rcr \
  \
+test.rcr \
 test.rol \
 test.ror \
 test.sar \
@@ -46,8 +47,8 @@ test.shld \
 test.shr \
 test.shrd \
 test.stc \
-test.sub \
  \
+test.sub \
 test.sysret \
 test.test \
 test.wait \
@@ -140,6 +141,9 @@ test.ins: obj/ins.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.int: obj/int.o | $(ELF)
+	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+
+test.invd: obj/invd.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 test.mov: obj/mov.o | $(ELF)

@@ -331,6 +331,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "clts\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x08 )
+	{
+		++code;
+		printf( "invd\n" );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);
