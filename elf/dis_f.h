@@ -43,7 +43,7 @@ TODO
 
 const char * dis_fa(const char * code, unsigned prefix)
 {
-TODO
+	printf( "cli\n" );
 	return code;
 }
 

@@ -24,7 +24,7 @@ test/asm/rcl.s
 test/asm/rcr.s
 test/asm/rol.s
 test/asm/ror.s
-test/asm/sar.s
+test/asm/sal.s
 test/asm/sbb.s
 test/asm/shl.s
 test/asm/shr.s
