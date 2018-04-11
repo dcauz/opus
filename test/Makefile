@@ -95,7 +95,7 @@ test.elf: $(ENC_TESTS)
 
 clean:
 	rm -f out core
-	rm -rf obj
+	rm -rf asm/*.o
 
 #######################################################
 
