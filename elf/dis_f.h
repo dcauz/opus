@@ -7,7 +7,7 @@ TODO
 
 const char * dis_f4(const char * code, unsigned prefix)
 {
-TODO
+    printf( "hlt\n" );
 	return code;
 }
 

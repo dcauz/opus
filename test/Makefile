@@ -23,6 +23,7 @@ test.cmc \
 test.cmovCC \
 test.cmp \
 test.cpuid \
+test.hlt \
 test.mov \
 test.or \
 test.pop \
@@ -105,6 +106,9 @@ test.cmp: $(ELF) obj/cmp.o
 
 test.cpuid: $(ELF) obj/cpuid.o
 	$(ELF)  obj/cpuid.o > out; diff out expected/cpuid.e
+
+test.hlt: $(ELF) obj/hlt.o
+	$(ELF)  obj/hlt.o > out; diff out expected/hlt.e
 
 test.mov: $(ELF) obj/mov.o
 	$(ELF)  obj/mov.o > out; diff out expected/mov.e
@@ -192,6 +196,7 @@ asm/cmc.s \
 asm/cmovCC.s \
 asm/cmp.s \
 asm/cpuid.s \
+asm/hlt.s \
 asm/mov.s \
 asm/or.s \
 asm/pop.s \
@@ -272,6 +277,9 @@ cmp.e: obj/cmp.o
 	objdump -d $< > $@
 
 cpuid.e: obj/cpuid.o
+	objdump -d $< > $@
+
+hlt.e: obj/hlt.o
 	objdump -d $< > $@
 
 mov.e: obj/mov.o
@@ -393,6 +401,9 @@ obj/cli.o: asm/cli.s | obj
 	as $< -o $@
 
 obj/cmc.o: asm/cmc.s | obj
+	as $< -o $@
+
+obj/hlt.o: asm/hlt.s | obj
 	as $< -o $@
 
 obj/mov.o: asm/mov.s | obj
