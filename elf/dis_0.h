@@ -292,6 +292,22 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "bts %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
 	}
+	else if( ( code[0] & 0xff ) == 0xc0 )
+	{
+    	if(code[2] == 0x25)
+        	code = imm_reg_ops( ++code, prefix, 0, 32, true, op1, op2 );
+    	else
+       		code = mod_reg_rm_ops( ++code, prefix, 0, 0, op1, op2 );
+		printf( "xadd %s,%s\n",  op1.c_str(), op2.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xc1 )
+	{
+    	if(code[2] == 0x25)
+        	code = imm_reg_ops( ++code, prefix, 1, 32, true, op1, op2 );
+    	else
+       		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2 );
+		printf( "xadd %s,%s\n",  op1.c_str(), op2.c_str() );
+	}
 	else if( ( code[0] & 0xff ) == 0xa5 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );

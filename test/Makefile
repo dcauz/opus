@@ -53,6 +53,7 @@ test.sub \
 test.sysret \
 test.test \
 test.wait \
+test.xadd \
 test.xor
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
