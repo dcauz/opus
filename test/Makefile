@@ -1,8 +1,7 @@
 
 ELF := ../bin/elf
 
-ENC_TESTS := \
-test.elfo \
+INST_TESTS := \
  \
 test.adc \
 test.adcx \
@@ -32,11 +31,12 @@ test.ins \
 test.int \
 test.invd \
 test.mov \
+test.mul \
 test.or \
 test.pop \
 test.push \
-test.rcl \
  \
+test.rcl \
 test.rcr \
 test.rol \
 test.ror \
@@ -46,17 +46,17 @@ test.shl \
 test.shld \
 test.shr \
 test.shrd \
-test.stc \
  \
+test.stc \
 test.sub \
 test.sysret \
 test.test \
 test.wait \
 test.xor
 
-SRC := $(patsubst test.%,asm/%.s,$(ENC))
-
-OBJS:= $(patsubst asm/%.s,obj/%.o,$(SRC))
+ENC_TESTS	:= test.elfo $(INST_TESTS)
+SRC 		:= $(patsubst test.%,asm/%.s,$(ENC))
+OBJS		:= $(patsubst asm/%.s,obj/%.o,$(SRC))
 
 #######################################################
 
@@ -71,143 +71,7 @@ clean:
 
 #######################################################
 
-test.adc: obj/adc.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.adcx: obj/adcx.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.add : obj/add.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.adox : obj/adox.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.and : obj/and.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.bsf : obj/bsf.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.bt : obj/bt.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.btc : obj/btc.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.btr : obj/btr.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.bts : obj/bts.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cbw : obj/cbw.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cdq: obj/cdq.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.clac: obj/clac.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.clc: obj/clc.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cld: obj/cld.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cli: obj/cli.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.clts: obj/clts.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cmc: obj/cmc.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cmovCC: obj/cmovCC.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cmp: obj/cmp.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.cpuid: obj/cpuid.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.hlt: obj/hlt.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.ins: obj/ins.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.int: obj/int.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.invd: obj/invd.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.mov: obj/mov.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.or: obj/or.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.pop: obj/pop.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.push: obj/push.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.rcl: obj/rcl.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.rcr: obj/rcr.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.rol: obj/rol.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.ror: obj/ror.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sar: obj/sar.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sbb: obj/sbb.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.shl: obj/shl.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.shld: obj/shld.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.shr: obj/shr.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.shrd: obj/shrd.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.stc: obj/stc.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sub: obj/sub.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.sysret: obj/sysret.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.test: obj/test.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.wait: obj/wait.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-test.xor: obj/xor.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
-
-
-$(ENC_TEST): test.%: obj/%.o | $(ELF)
+$(INST_TESTS):test.%: obj/%.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 %.e: obj/%.o
@@ -215,7 +79,6 @@ $(ENC_TEST): test.%: obj/%.o | $(ELF)
 
 obj/%.o: asm/%.s | obj
 	as $< -o $@
-
 
 test.elfo: ../obj/elf/elf.o | $(ELF)
 	$(ELF) ../obj/elf/elf.o > out;diff out expected/elf.e
@@ -226,7 +89,7 @@ asm/add.s: asm/adc.s
 	sed 's/adc/add/' < $< > $@
 
 asm/and.s: asm/adc.s
-	sed 's/adc/and/' < $< > $@
+	sed 's/adc/add/' < $< > $@
 
 asm/cmp.s: asm/adc.s
 	sed 's/adc/cmp/' < $< > $@

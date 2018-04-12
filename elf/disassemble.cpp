@@ -314,7 +314,7 @@ bool disassemble( const char * code, const char *end )
 		case -13:	prefix |= PRE_REP; ++code; printOff=false; break;
 		case -12:	code = dis_f4(++code, prefix); break;	// 0xf4
 		case -11:	code = dis_f5(++code, prefix); break;	// 0xf5
-		case -10:	code = dis_ff(++code, prefix); break;	// 0xf6
+		case -10:	code = dis_f6(++code, prefix); break;	// 0xf6
 		case -9:	code = dis_f7(++code, prefix); break;	// 0xf7
 		case -8:	code = dis_f8(++code, prefix); break;	// 0xf8
 		case -7:	code = dis_f9(++code, prefix); break;	// 0xf9
