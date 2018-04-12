@@ -19,7 +19,8 @@ const char * dis_f5(const char * code, unsigned prefix)
 
 const char * dis_f6(const char * code, unsigned prefix)
 {
-	int inst = (*code & 0x38) >> 3;
+	int reg = (*code & 0x38) >> 3;
+	const char * inst = (reg == 4)?"mul":"div";
 
 	if( (*code & 0xc0) != 0xc0 )
 	{
@@ -27,11 +28,11 @@ const char * dis_f6(const char * code, unsigned prefix)
 		code = memStr( code, prefix, 0, 0, op );
 
 		if( prefix & PRE_OS )
-			printf( "mulw %s\n", op.c_str() );
+			printf( "%sw %s\n", inst, op.c_str() );
 		else if( (prefix & REX_W ) == REX_W )
-			printf( "mulq %s\n", op.c_str() );
+			printf( "%sq %s\n", inst, op.c_str() );
 		else
-			printf( "mulb %s\n", op.c_str() );
+			printf( "%sb %s\n", inst, op.c_str() );
 	}
 	else
 	{
@@ -42,7 +43,7 @@ const char * dis_f6(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
 
-		printf( "mul %s\n", op );
+		printf( "%s %s\n", inst, op );
 		++code;
 	}
 
@@ -51,7 +52,8 @@ const char * dis_f6(const char * code, unsigned prefix)
 
 const char * dis_f7(const char * code, unsigned prefix)
 {
-	int inst = (*code & 0x38) >> 3;
+	int reg = (*code & 0x38) >> 3;
+	const char * inst = (reg == 4)?"mul":"div";
 
 	if( (*code & 0xc0) != 0xc0 )
 	{
@@ -59,11 +61,11 @@ const char * dis_f7(const char * code, unsigned prefix)
 		code = memStr( code, prefix, 0, 0, op );
 
 		if( prefix & PRE_OS )
-			printf( "mulw %s\n", op.c_str() );
+			printf( "%sw %s\n", inst, op.c_str() );
 		else if( (prefix & REX_W ) == REX_W )
-			printf( "mulq %s\n", op.c_str() );
+			printf( "%sq %s\n", inst, op.c_str() );
 		else
-			printf( "mull %s\n", op.c_str() );
+			printf( "%sl %s\n", inst, op.c_str() );
 	}
 	else
 	{
@@ -74,7 +76,7 @@ const char * dis_f7(const char * code, unsigned prefix)
 
 		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
 
-		printf( "mul %s\n", op );
+		printf( "%s %s\n", inst, op );
 		++code;
 	}
 
