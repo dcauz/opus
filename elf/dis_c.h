@@ -165,7 +165,11 @@ TODO
 
 const char * dis_cf(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & REX_W )
+		printf( "iretq\n");
+	else
+		printf( "iret\n");
+
 	return code;
 }
 

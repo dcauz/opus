@@ -31,11 +31,12 @@ test.hlt \
 test.ins \
 test.int \
 test.invd \
+test.iret \
 test.mov \
 test.mul \
 test.or \
-test.pop \
  \
+test.pop \
 test.push \
 test.rcl \
 test.rcr \
@@ -45,8 +46,8 @@ test.ror \
 test.sar \
 test.sbb \
 test.shl \
-test.shld \
  \
+test.shld \
 test.shr \
 test.shrd \
 test.stc \
@@ -56,8 +57,8 @@ test.sub \
 test.sysret \
 test.test \
 test.wait \
-test.xadd \
  \
+test.xadd \
 test.xlat \
 test.xor
 
