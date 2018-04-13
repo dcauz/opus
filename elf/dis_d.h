@@ -140,7 +140,11 @@ TODO
 
 const char * dis_d7(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_AS )
+		printf( "xlatb %%ds:(%%ebx)\n" );
+	else
+		printf( "xlat %%ds:(%%rbx)\n" );
+
 	return code;
 }
 

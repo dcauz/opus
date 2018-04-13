@@ -54,6 +54,7 @@ test.sysret \
 test.test \
 test.wait \
 test.xadd \
+test.xlat \
 test.xor
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
