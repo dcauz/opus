@@ -103,7 +103,7 @@ const char * dis_fa(const char * code, unsigned prefix)
 
 const char * dis_fb(const char * code, unsigned prefix)
 {
-TODO
+	printf( "sti\n" );
 	return code;
 }
 
@@ -115,7 +115,7 @@ const char * dis_fc(const char * code, unsigned prefix)
 
 const char * dis_fd(const char * code, unsigned prefix)
 {
-TODO
+	printf( "std\n" );
 	return code;
 }
 

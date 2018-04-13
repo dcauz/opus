@@ -39,21 +39,25 @@ test.pop \
 test.push \
 test.rcl \
 test.rcr \
+test.ret \
 test.rol \
 test.ror \
 test.sar \
 test.sbb \
 test.shl \
 test.shld \
-test.shr \
  \
+test.shr \
 test.shrd \
 test.stc \
+test.std \
+test.sti \
 test.sub \
 test.sysret \
 test.test \
 test.wait \
 test.xadd \
+ \
 test.xlat \
 test.xor
 
