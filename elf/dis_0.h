@@ -352,6 +352,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "invd\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x09 )
+	{
+		++code;
+		printf( "wbinvd\n" );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);
