@@ -1,7 +1,7 @@
 
 const char * dis_90(const char * code, unsigned prefix)
 {
-TODO
+	printf( "nop\n");
 	return code;
 }
 

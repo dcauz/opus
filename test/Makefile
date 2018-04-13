@@ -36,6 +36,7 @@ test.iret \
 test.mov \
 test.mul \
  \
+test.nop \
 test.or \
 test.pop \
 test.push \
@@ -45,8 +46,8 @@ test.ret \
 test.rol \
 test.ror \
 test.sar \
-test.sbb \
  \
+test.sbb \
 test.shl \
 test.shld \
 test.shr \
@@ -56,8 +57,8 @@ test.std \
 test.sti \
 test.sub \
 test.sysret \
-test.test \
  \
+test.test \
 test.wait \
 test.xadd \
 test.xlat \
