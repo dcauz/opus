@@ -25,13 +25,24 @@ TODO
 
 const char * dis_e4(const char * code, unsigned prefix)
 {
-TODO
+	char buff[12];
+	code = imm8(code, buff);
+
+	printf( "in $%s,%%al\n", buff );
+
 	return code;
 }
 
 const char * dis_e5(const char * code, unsigned prefix)
 {
-TODO
+	char buff[12];
+	code = imm8(code, buff);
+
+	if( prefix & PRE_OS )
+		printf( "in $%s,%%ax\n", buff );
+	else
+		printf( "in $%s,%%eax\n", buff );
+
 	return code;
 }
 
@@ -79,13 +90,18 @@ const char * dis_eb(const char * code, unsigned prefix)
 
 const char * dis_ec(const char * code, unsigned prefix)
 {
-TODO
+	printf( "in (%%dx),%%al\n" );
+
 	return code;
 }
 
 const char * dis_ed(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "in (%%dx),%%ax\n" );
+	else
+		printf( "in (%%dx),%%eax\n" );
+
 	return code;
 }
 

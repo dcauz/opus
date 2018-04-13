@@ -28,14 +28,15 @@ test.cmp \
 test.cpuid \
 test.div \
 test.hlt \
+test.in \
 test.ins \
 test.int \
 test.invd \
 test.iret \
 test.mov \
 test.mul \
-test.or \
  \
+test.or \
 test.pop \
 test.push \
 test.rcl \
@@ -45,8 +46,8 @@ test.rol \
 test.ror \
 test.sar \
 test.sbb \
-test.shl \
  \
+test.shl \
 test.shld \
 test.shr \
 test.shrd \
@@ -56,8 +57,8 @@ test.sti \
 test.sub \
 test.sysret \
 test.test \
-test.wait \
  \
+test.wait \
 test.xadd \
 test.xlat \
 test.xor
