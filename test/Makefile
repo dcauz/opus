@@ -33,9 +33,10 @@ test.ins \
 test.int \
 test.invd \
 test.iret \
+test.leave \
 test.mov \
-test.mul \
  \
+test.mul \
 test.nop \
 test.or \
 test.pop \
@@ -45,8 +46,8 @@ test.rcr \
 test.ret \
 test.rol \
 test.ror \
-test.sar \
  \
+test.sar \
 test.sbb \
 test.shl \
 test.shld \
@@ -56,8 +57,8 @@ test.stc \
 test.std \
 test.sti \
 test.sub \
-test.sysret \
  \
+test.sysret \
 test.test \
 test.wait \
 test.xadd \
