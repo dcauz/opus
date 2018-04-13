@@ -69,13 +69,27 @@ inline const char * imm8( const char * code, char * buff )
     return code;
 }
 
+inline const char * imm16( const char * code, char * buff )
+{
+	const unsigned char * uc = reinterpret_cast<const unsigned char *>(code);
+    unsigned imm = *uc++;
+    imm += *uc << 8;
+
+	if(static_cast<int>(imm) < 0 )
+		sprintf( buff, "-0x%x", -imm );
+	else
+		sprintf( buff, "0x%x", imm );
+
+    return code+2;
+}
+
 inline const char * imm32( const char * code, char * buff )
 {
 	const unsigned char * uc = reinterpret_cast<const unsigned char *>(code);
     unsigned imm = *uc++;
     imm += *uc++ << 8;
     imm += *uc++ << 16;
-    imm += *uc++ << 24;
+    imm += *uc << 24;
 
 	if(static_cast<int>(imm) < 0 )
 		sprintf( buff, "-0x%x", -imm );

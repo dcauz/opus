@@ -81,11 +81,10 @@ const char * dis_c1(const char * code, unsigned prefix)
 
 const char * dis_c2(const char * code, unsigned prefix)
 {
-    std::string op1;
-    std::string op2;
-    code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );
+	char buff[12];
+	code = imm16(code, buff );
 
-	printf( "cmov %s,%s\n", op1.c_str(), op2.c_str() );
+	printf( "retq $%s\n", buff );
     return code;
 }
 
