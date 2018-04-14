@@ -308,7 +308,13 @@ bool disassemble( const char * code, const char *end )
 		case -18:	code = dis_ee(++code, prefix); break;	// 0xee
 		case -17:	code = dis_ef(++code, prefix); break;	// 0xef
 	
-		case -16:	prefix |= PRE_LOCK; ++code; printOff=false; break;
+		case -16:											// 0xf0
+			prefix |= PRE_LOCK; 
+			++code; 
+			printf( "lock " );
+			printOff=false; 
+			break;
+
 		case -15:	code = dis_f1(++code, prefix); break;	// 0xf1
 		case -14:	prefix |= PRE_NE; ++code; printOff=false; break;
 		case -13:	prefix |= PRE_REP; ++code; printOff=false; break;

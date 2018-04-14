@@ -1,0 +1,21 @@
+bswap %eax
+bswap %ecx
+bswap %edx
+bswap %ebx
+bswap %esp
+bswap %ebp
+bswap %esi
+bswap %edi
+bswap %r10d
+bswap %r13d
+
+bswap %rax
+bswap %rcx
+bswap %rdx
+bswap %rbx
+bswap %rsp
+bswap %rbp
+bswap %rsi
+bswap %rdi
+bswap %r11
+bswap %r14

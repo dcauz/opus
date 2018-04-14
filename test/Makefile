@@ -9,11 +9,12 @@ test.add \
 test.adox \
 test.and \
 test.bsf \
+test.bswap \
 test.bt \
 test.btc \
 test.btr \
-test.bts \
  \
+test.bts \
 test.cbw \
 test.cdq \
 test.clac \
@@ -23,8 +24,8 @@ test.cli \
 test.clts \
 test.cmc \
 test.cmovCC \
-test.cmp \
  \
+test.cmp \
 test.cmpxchg \
 test.cpuid \
 test.dec \
@@ -34,8 +35,8 @@ test.in \
 test.inc \
 test.ins \
 test.int \
-test.invd \
  \
+test.invd \
 test.iret \
 test.leave \
 test.loop \
@@ -45,8 +46,8 @@ test.neg \
 test.nop \
 test.not \
 test.or \
-test.pop \
  \
+test.pop \
 test.push \
 test.rcl \
 test.rcr \
@@ -54,10 +55,11 @@ test.rdtsc \
 test.ret \
 test.rol \
 test.ror \
+test.rsm \
 test.sar \
+ \
 test.sbb \
 test.shl \
- \
 test.shld \
 test.shr \
 test.shrd \
@@ -66,9 +68,10 @@ test.std \
 test.sti \
 test.sub \
 test.sysret \
-test.test \
-test.wait \
  \
+test.test \
+test.ud2 \
+test.wait \
 test.wbinvd \
 test.xadd \
 test.xlat \
