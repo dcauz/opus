@@ -30,12 +30,13 @@ test.cmpxchg \
 test.cpuid \
 test.dec \
 test.div \
+test.enter \
 test.hlt \
 test.in \
 test.inc \
 test.ins \
-test.int \
  \
+test.int \
 test.invd \
 test.iret \
 test.leave \
@@ -45,8 +46,8 @@ test.mul \
 test.neg \
 test.nop \
 test.not \
-test.or \
  \
+test.or \
 test.pop \
 test.popf \
 test.pop.seg \
@@ -56,8 +57,8 @@ test.push.seg \
 test.rcl \
 test.rcr \
 test.rdmsr \
-test.rdpmc \
  \
+test.rdpmc \
 test.rdtsc \
 test.ret \
 test.rol \
@@ -67,19 +68,20 @@ test.sar \
 test.sbb \
 test.shl \
 test.shld \
-test.shr \
  \
+test.shr \
 test.shrd \
 test.stc \
 test.std \
 test.sti \
 test.sub \
+test.syscall \
 test.sysret \
 test.test \
 test.ud2 \
+ \
 test.wait \
 test.wbinvd \
- \
 test.xadd \
 test.xlat \
 test.xor

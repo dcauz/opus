@@ -120,7 +120,14 @@ TODO
 
 const char * dis_c8(const char * code, unsigned prefix)
 {
-TODO
+	char imm_16[12];
+	char imm_8[8];
+
+	code = imm16( code, imm_16 );
+	code = imm8( code, imm_8 );
+
+	printf( "enterq $%s, $%s\n", imm_16, imm_8 );
+
 	return code;
 }
 

@@ -179,6 +179,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code += 2;
 		printf( "rdtscp\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x05 )
+	{
+		++code;
+		printf( "syscall\n" );
+	}
 	else if( ( code[0] & 0xff ) == 0x06 )
 	{
 		++code;
