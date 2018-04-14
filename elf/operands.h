@@ -57,6 +57,18 @@ inline void mod_reg_rm( char b, int & mod, int & reg, int & rm )
     rm  = ( b & 0x07 );
 }
 
+inline const char * codeToInt( const char * code, int len, int & v )
+{
+	v = 0;
+	for( int i = 0; i < len; ++i )
+	{
+		unsigned c =  code[i];
+		v = c + (v << 8);
+	}
+
+	return code+len;
+}
+
 inline const char * imm8( const char * code, char * buff )
 {
     char imm = 0x00ff & *code++;

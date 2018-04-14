@@ -1,19 +1,28 @@
 
 const char * dis_e0(const char * code, unsigned prefix)
 {
-TODO
+	int dist;
+	code = codeToInt( code, 1, dist );
+
+	printf( "loopne %d\n", dist+3 );
 	return code;
 }
 
 const char * dis_e1(const char * code, unsigned prefix)
 {
-TODO
+	int dist;
+	code = codeToInt( code, 1, dist );
+
+	printf( "loope %d\n", dist+3 );
 	return code;
 }
 
 const char * dis_e2(const char * code, unsigned prefix)
 {
-TODO
+	int dist;
+	code = codeToInt( code, 1, dist );
+
+	printf( "loop %d\n", dist+3 );
 	return code;
 }
 
