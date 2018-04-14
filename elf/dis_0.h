@@ -357,6 +357,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "wbinvd\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x31 )
+	{
+		++code;
+		printf( "rdtsc\n" );
+	}
+	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0xff ) == 0xf9 ))
+	{
+		code += 2;
+		printf( "rdtscp\n" );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);

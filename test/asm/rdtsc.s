@@ -1,0 +1,2 @@
+rdtscp
+rdtsc

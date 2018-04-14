@@ -26,43 +26,49 @@ test.cmovCC \
 test.cmp \
  \
 test.cpuid \
+test.dec \
 test.div \
 test.hlt \
 test.in \
+test.inc \
 test.ins \
 test.int \
 test.invd \
 test.iret \
+ \
 test.leave \
 test.loop \
- \
 test.mov \
 test.mul \
+test.neg \
 test.nop \
+test.not \
 test.or \
 test.pop \
 test.push \
+ \
 test.rcl \
 test.rcr \
+test.rdtsc \
 test.ret \
 test.rol \
- \
 test.ror \
 test.sar \
 test.sbb \
 test.shl \
 test.shld \
+ \
 test.shr \
 test.shrd \
 test.stc \
 test.std \
 test.sti \
- \
 test.sub \
 test.sysret \
 test.test \
 test.wait \
 test.wbinvd \
+ \
 test.xadd \
 test.xlat \
 test.xor
@@ -156,6 +162,16 @@ asm/btr.s: asm/bt.s
 
 asm/bts.s: asm/bt.s
 	sed 's/bt/bts/' < $< > $@
+
+
+asm/not.s: asm/neg.s
+	sed 's/neg/not/' < $< > $@
+
+asm/inc.s: asm/neg.s
+	sed 's/neg/inc/' < $< > $@
+
+asm/dec.s: asm/neg.s
+	sed 's/neg/dec/' < $< > $@
 
 #######################################################
 
