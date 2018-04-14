@@ -211,6 +211,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "rdtsc\n" );
 	}
+	else if( ( code[0] & 0xff ) == 0x32 )
+	{
+		++code;
+		printf( "rdmsr\n" );
+	}
+	else if( ( code[0] & 0xff ) == 0x33 )
+	{
+		++code;
+		printf( "rdpmc\n" );
+	}
 	else if( code[0] == 0x38 && code[1] == 0xfffffff6 )
 	{
 		if( prefix & PRE_REP )
@@ -260,6 +270,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// a
+	else if( ( code[0] & 0xff ) == 0xa0 )
+	{
+		printf( "pushq %%fs\n");
+		++code;
+	}
+	else if( ( code[0] & 0xff ) == 0xa1 )
+	{
+		printf( "popq %%fs\n");
+		++code;
+	}
 	else if( ( code[0] & 0xff ) == 0xa2 )
 	{
 		++code;
@@ -293,6 +313,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
 		printf( "shld %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xa8 )
+	{
+		printf( "pushq %%gs\n");
+		++code;
+	}
+	else if( ( code[0] & 0xff ) == 0xa9 )
+	{
+		printf( "popq %%gs\n");
+		++code;
 	}
 	else if( ( code[0] & 0xff ) == 0xaa )
 	{

@@ -1,0 +1,2 @@
+push %fs
+push %gs

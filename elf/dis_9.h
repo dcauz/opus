@@ -85,13 +85,21 @@ const char * dis_9b(const char * code, unsigned prefix)
 
 const char * dis_9c(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "pushfq\n" );
+	else
+		printf( "pushfw\n" );
+
 	return code;
 }
 
 const char * dis_9d(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "popfq\n" );
+	else
+		printf( "popfw\n" );
+
 	return code;
 }
 

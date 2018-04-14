@@ -1,0 +1,2 @@
+popq %fs
+popq %gs
