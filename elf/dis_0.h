@@ -367,6 +367,49 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code += 2;
 		printf( "rdtscp\n" );
 	}
+	else if( (code[0] & 0xff ) == 0xc7 )
+	{
+		++code;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+	
+			const char * sz = ((prefix & REX_W) == REX_W) ? "16b": "8b";
+
+			printf( "cmpxchg%s %s\n", sz, op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+
+			if( (prefix & REX_B ) == REX_B )
+				prefix |= REX_R;
+
+			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+	
+			printf( "cmpxchg %s\n", op );
+			++code;
+		}
+	}
+	else if( ( code[0] & 0xff ) == 0xb0 )
+	{
+		if( code[2] == 0x25 )
+        	code = imm_reg_ops( ++code, prefix, 0, 32, true, op1, op2 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, 0, 0, op1, op2 );
+
+		printf( "cmpxchg %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else if( ( code[0] & 0xff ) == 0xb1 )
+	{
+		if( code[2] == 0x25 )
+        	code = imm_reg_ops( ++code, prefix, 1, 32, true, op1, op2 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2 );
+
+		printf( "cmpxchg %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);

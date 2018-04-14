@@ -25,6 +25,7 @@ test.cmc \
 test.cmovCC \
 test.cmp \
  \
+test.cmpxchg \
 test.cpuid \
 test.dec \
 test.div \
@@ -34,8 +35,8 @@ test.inc \
 test.ins \
 test.int \
 test.invd \
-test.iret \
  \
+test.iret \
 test.leave \
 test.loop \
 test.mov \
@@ -45,8 +46,8 @@ test.nop \
 test.not \
 test.or \
 test.pop \
-test.push \
  \
+test.push \
 test.rcl \
 test.rcr \
 test.rdtsc \
@@ -56,8 +57,8 @@ test.ror \
 test.sar \
 test.sbb \
 test.shl \
-test.shld \
  \
+test.shld \
 test.shr \
 test.shrd \
 test.stc \
@@ -67,8 +68,8 @@ test.sub \
 test.sysret \
 test.test \
 test.wait \
-test.wbinvd \
  \
+test.wbinvd \
 test.xadd \
 test.xlat \
 test.xor
