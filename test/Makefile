@@ -83,6 +83,7 @@ test.test \
 test.ud2 \
 test.wait \
 test.wbinvd \
+test.wrmsr \
 test.xadd \
 test.xchg \
 test.xlat \

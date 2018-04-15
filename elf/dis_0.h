@@ -211,6 +211,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// 3
+	else if( ( code[0] & 0xff ) == 0x30 )
+	{
+		++code;
+		printf( "wrmsr\n" );
+	}
 	else if( ( code[0] & 0xff ) == 0x31 )
 	{
 		++code;
