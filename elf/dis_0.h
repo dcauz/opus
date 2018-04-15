@@ -174,6 +174,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
+	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0xff ) == 0xf8 ))
+	{
+		code += 2;
+		printf( "swapgs\n" );
+	}
 	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0xff ) == 0xf9 ))
 	{
 		code += 2;

@@ -80,6 +80,7 @@ test.std \
 test.sti \
 test.sub \
  \
+test.swapgs \
 test.syscall \
 test.sysret \
 test.test \
@@ -89,8 +90,8 @@ test.wbinvd \
 test.wrmsr \
 test.xadd \
 test.xchg \
-test.xlat \
  \
+test.xlat \
 test.xor
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
