@@ -94,6 +94,7 @@ test.syscall \
 test.sysret \
 test.test \
 test.ud2 \
+test.verr \
 test.wait \
 test.wbinvd \
 test.wrmsr \

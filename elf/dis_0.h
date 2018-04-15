@@ -172,22 +172,67 @@ const char * dis_0f(const char * code, unsigned prefix)
 	if( ( code[0] & 0xff ) == 0 )
 	{
 		++code;
-		if( (*code & 0xc0) != 0xc0 )
+		if( (*code & 0x38) == 0x20 )
 		{
-			std::string op;
-			code = memStr( code, prefix, 0, 0, op );
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
 	
-			printf( "str %s\n", op.c_str() );
+				printf( "verr %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		
+				printf( "verr %s\n", op );
+				++code;
+			}
+		}
+		else if( (*code & 0x38) == 0x28 )
+		{
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "verw %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		
+				printf( "verw %s\n", op );
+				++code;
+			}
+		}
+		else if( (*code & 0x38) == 0x08 )
+		{	
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "str %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+		
+				printf( "str %s\n", op );
+				++code;
+			}
 		}
 		else
-		{
-			unsigned reg = *code & 0x07;
-
-			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
-	
-			printf( "str %s\n", op );
-			++code;
-		}
+			TODO
 	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffca )
 	{
