@@ -66,13 +66,19 @@ const char * dis_6d(const char * code, unsigned prefix)
 
 const char * dis_6e(const char * code, unsigned prefix)
 {
-TODO
+	printf( "outsb %%ds:(%%rsi),(%%dx)\n");
+
 	return code;
 }
 
 const char * dis_6f(const char * code, unsigned prefix)
 {
-TODO
+
+	if( prefix & PRE_OS )
+		printf( "outsw %%ds:(%%rsi),(%%dx)\n");
+	else
+		printf( "outsl %%ds:(%%rsi),(%%dx)\n");
+
 	return code;
 }
 

@@ -49,15 +49,17 @@ test.nop \
  \
 test.not \
 test.or \
+test.out \
+test.outs \
 test.pop \
 test.popf \
 test.pop.seg \
 test.push \
 test.pushf \
 test.push.seg \
+ \
 test.rcl \
 test.rcr \
- \
 test.rdmsr \
 test.rdpmc \
 test.rdtsc \
@@ -66,9 +68,9 @@ test.rol \
 test.ror \
 test.rsm \
 test.sar \
+ \
 test.sbb \
 test.scas \
- \
 test.shl \
 test.shld \
 test.shr \
@@ -77,9 +79,9 @@ test.stc \
 test.std \
 test.sti \
 test.sub \
+ \
 test.syscall \
 test.sysret \
- \
 test.test \
 test.ud2 \
 test.wait \
@@ -88,6 +90,7 @@ test.wrmsr \
 test.xadd \
 test.xchg \
 test.xlat \
+ \
 test.xor
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)

@@ -57,13 +57,24 @@ const char * dis_e5(const char * code, unsigned prefix)
 
 const char * dis_e6(const char * code, unsigned prefix)
 {
-TODO
+	char buff[12];
+	code = imm8(code, buff);
+
+	printf( "out %%al,$%s\n", buff );
+
 	return code;
 }
 
 const char * dis_e7(const char * code, unsigned prefix)
 {
-TODO
+	char buff[12];
+	code = imm8(code, buff);
+
+	if( prefix & PRE_OS )
+		printf( "out %%ax,$%s\n", buff );
+	else
+		printf( "out %%eax,$%s\n", buff );
+
 	return code;
 }
 
@@ -116,13 +127,18 @@ const char * dis_ed(const char * code, unsigned prefix)
 
 const char * dis_ee(const char * code, unsigned prefix)
 {
-TODO
+	printf( "out %%al,(%%dx)\n" );
+
 	return code;
 }
 
 const char * dis_ef(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "out %%ax,(%%dx)\n" );
+	else
+		printf( "out %%eax,(%%dx)\n" );
+
 	return code;
 }
 
