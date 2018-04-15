@@ -490,6 +490,22 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
 		printf( "lgs %s,%s\n", op1.c_str(), op2.c_str() );
 	}
+	else if((code[0] & 0xff) == 0xb6 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2, 8 );	
+
+		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
+
+		printf( "movzb%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+	}
+	else if((code[0] & 0xff) == 0xb7 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2, 16 );	
+
+		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
+
+		printf( "movzw%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+	}
 	else if((code[0] & 0xff) == 0xbb )
 	{
 		++code;

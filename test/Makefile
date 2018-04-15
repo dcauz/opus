@@ -50,6 +50,7 @@ test.loop \
 test.mov \
 test.movs \
 test.movsx \
+test.movzx \
 test.mul \
 test.neg \
 test.nop \
