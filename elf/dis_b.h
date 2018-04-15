@@ -100,7 +100,11 @@ TODO
 
 const char * dis_be(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+	code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+
+	TODO
 	return code;
 }
 

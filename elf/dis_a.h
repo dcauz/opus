@@ -74,7 +74,6 @@ const char * dis_aa(const char * code, unsigned prefix)
 
 const char * dis_ab(const char * code, unsigned prefix)
 {
-
 	if( prefix & PRE_OS )
 		printf( "stos %%ax,%%es:(%%rdi)\n" );
 	else if(prefix & REX_W )
@@ -87,13 +86,20 @@ const char * dis_ab(const char * code, unsigned prefix)
 
 const char * dis_ac(const char * code, unsigned prefix)
 {
-TODO
+	printf( "lods %%ds:(%%rsi),%%al\n" );
+
 	return code;
 }
 
 const char * dis_ad(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "lods %%ds:(%%rsi),%%ax\n" );
+	else if(prefix & REX_W )
+		printf( "lods %%ds:(%%rsi),%%rax\n" );
+	else
+		printf( "lods %%ds:(%%rsi),%%eax\n" );
+
 	return code;
 }
 

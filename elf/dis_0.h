@@ -169,7 +169,27 @@ const char * dis_0f(const char * code, unsigned prefix)
     std::string op2;
 
 	// 0
-	if(code[0] == 0x01 && code[1] == 0xffffffca )
+	if( ( code[0] & 0xff ) == 0 )
+	{
+		++code;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+	
+			printf( "str %s\n", op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+
+			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+	
+			printf( "str %s\n", op );
+			++code;
+		}
+	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffca )
 	{
 		code +=2;
 		printf( "clac\n" );
@@ -444,9 +464,31 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if( (code[0] & 0xff) == 0xbc )
 	{
-		char cc = *code++;
+		code++;
 		code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
 		printf( "bsf %s,%s\n",  op1.c_str(), op2.c_str() );
+	}
+	else if( (code[0] & 0xff) == 0xbd )
+	{
+		code++;
+		code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+		printf( "bsr %s,%s\n",  op1.c_str(), op2.c_str() );
+	}
+	else if((code[0] & 0xff) == 0xbe )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2, 8 );	
+
+		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
+
+		printf( "movsb%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+	}
+	else if((code[0] & 0xff) == 0xbf )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op1, op2, 16 );	
+
+		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
+
+		printf( "movsw%c %s,%s\n", s, op2.c_str(),op1.c_str() );
 	}
 
 	// c

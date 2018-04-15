@@ -1,0 +1,4 @@
+lodsb
+lodsw
+lodsl
+lodsq

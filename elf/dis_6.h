@@ -19,7 +19,13 @@ TODO
 
 const char * dis_63(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, 32 );	
+
+	printf( "movslq %s,%s\n", op2.c_str(),op1.c_str() );
+
 	return code;
 }
 

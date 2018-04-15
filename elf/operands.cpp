@@ -292,7 +292,8 @@ const char * regStr(
 		 int w, 
 		 int s, 
   RegContext context, 
-	unsigned prefix )
+	unsigned prefix,
+		 int opSize )
 {
 	Register r = static_cast<Register>(reg+base);
 
@@ -308,6 +309,22 @@ const char * regStr(
 
 	if( prefix & REX)
 		r = regAHtoSPL( r );
+
+	if(opSize > 0 )
+	{
+		if((( context == Reg  && ( prefix & REX_R ) == REX_R)) ||
+		( context == Reg2 && ( prefix & REX_B ) == REX_B))
+			r = regToR(r);	
+
+		if( opSize == 16 )
+			r =reg8to16(r);
+		else if( opSize == 32 )
+			r =reg8to32(r);
+		else if( opSize == 64 )
+			r =reg8to64(r);
+
+		return regToStr(r);
+	}
 
 	switch(context)
 	{
@@ -374,18 +391,14 @@ const char * regStr(
 	return regToStr(r);
 }
 
-/*
-67 41 10 71 14          adc    %sil,0x14(%r9d)
-// AS REX.B 10 01 110 001 disp8 
-*/
-
 const char * mod_reg_rm_ops(
 	const char * code,		// IN
 	unsigned 	  prefix,	// IN
 			  int s,		// IN
 			  int w,		// IN
 	std::string & op1,		// OUT
-	std::string & op2 )		// OUT
+	std::string & op2,		// OUT
+			int op2Size )	// IN
 {
 	int mod;
 	int reg;
@@ -529,13 +542,13 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
+			op1 = regStr( reg, AL, w, s,  Reg, prefix );
+			op2 = regStr( rm,  AL, w, s, Reg2, prefix, op2Size );
 			break;
 		}
 		case 4:
-			op1 = regStr( reg, AL, w, s, Reg, prefix );
-			op2 = regStr( rm,  AL, w, s,Reg2, prefix );
+			op1 = regStr( reg, AL, w, s,  Reg, prefix );
+			op2 = regStr( rm,  AL, w, s, Reg2, prefix, op2Size );
 			break;
 		}
 		break;
