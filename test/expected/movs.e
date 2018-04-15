@@ -100,11 +100,11 @@ alignment:1
 entrySize:0
 
 ----------------------------------------
-a6 66 a7 a7 48 a7
-     0:cmpsb %es:(%rdi),%ds:(%rsi)
-     1:cmpsw %es:(%rdi),%ds:(%rsi)
-     3:cmpsl %es:(%rdi),%ds:(%rsi)
-     4:cmpsq %es:(%rdi),%ds:(%rsi)
+a4 66 a5 a5 48 a5
+     0:movsb %ds:(%rsi),%es:(%rdi)
+     1:movsw %ds:(%rsi),%es:(%rdi)
+     3:movsl %ds:(%rsi),%es:(%rdi)
+     4:movsl %ds:(%rsi),%es:(%rdi)
 #################
 TODO: elf/file.cpp:186
 

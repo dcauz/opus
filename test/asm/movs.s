@@ -1,0 +1,4 @@
+movsb
+movsw
+movsd
+movsq

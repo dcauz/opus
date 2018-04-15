@@ -25,13 +25,19 @@ TODO
 
 const char * dis_a4(const char * code, unsigned prefix)
 {
-TODO
+	printf( "movsb %%ds:(%%rsi),%%es:(%%rdi)\n" );
 	return code;
 }
 
 const char * dis_a5(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "movsw %%ds:(%%rsi),%%es:(%%rdi)\n" );
+	else if( prefix & PRE_OS )
+		printf( "movsq %%ds:(%%rsi),%%es:(%%rdi)\n" );
+	else
+		printf( "movsl %%ds:(%%rsi),%%es:(%%rdi)\n" );
+
 	return code;
 }
 
@@ -44,11 +50,11 @@ const char * dis_a6(const char * code, unsigned prefix)
 const char * dis_a7(const char * code, unsigned prefix)
 {
 	if(prefix & PRE_OS )
-		printf("cmpsw  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+		printf("cmpsw %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	else if( prefix & REX_W )
-		printf("cmpsq  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+		printf("cmpsq %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	else
-		printf("cmpsl  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+		printf("cmpsl %%es:(%%rdi),%%ds:(%%rsi)\n" );
 
 	return code;
 }
