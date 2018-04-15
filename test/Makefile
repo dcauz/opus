@@ -40,6 +40,7 @@ test.ins \
 test.int \
 test.invd \
 test.iret \
+test.l_s \
 test.lea \
 test.leave \
 test.loop \

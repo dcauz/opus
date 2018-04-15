@@ -393,6 +393,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 
 		printf( "cmpxchg %s,%s\n", op1.c_str(), op2.c_str() );
 	}
+	else if((code[0] & 0xff) == 0xb2 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		printf( "lss %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else if((code[0] & 0xff) == 0xb3 )
 	{
 		++code;
@@ -409,6 +414,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
 			printf( "btr %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
+	}
+	else if((code[0] & 0xff) == 0xb4 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		printf( "lfs %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else if((code[0] & 0xff) == 0xb5 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1 );
+		printf( "lgs %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if((code[0] & 0xff) == 0xbb )
 	{
