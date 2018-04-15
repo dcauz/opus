@@ -1,0 +1,4 @@
+stosb
+stosw
+stosl
+stosq

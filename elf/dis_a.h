@@ -61,13 +61,21 @@ TODO
 
 const char * dis_aa(const char * code, unsigned prefix)
 {
-TODO
+	printf( "stos %%al,%%es:(%%rdi)\n");
+
 	return code;
 }
 
 const char * dis_ab(const char * code, unsigned prefix)
 {
-TODO
+
+	if( prefix & PRE_OS )
+		printf( "stos %%ax,%%es:(%%rdi)\n" );
+	else if(prefix & REX_W )
+		printf( "stos %%rax,%%es:(%%rdi)\n" );
+	else
+		printf( "stos %%eax,%%es:(%%rdi)\n" );
+
 	return code;
 }
 

@@ -78,8 +78,9 @@ test.shrd \
 test.stc \
 test.std \
 test.sti \
-test.sub \
+test.stos \
  \
+test.sub \
 test.swapgs \
 test.syscall \
 test.sysret \
@@ -89,8 +90,8 @@ test.wait \
 test.wbinvd \
 test.wrmsr \
 test.xadd \
-test.xchg \
  \
+test.xchg \
 test.xlat \
 test.xor
 
