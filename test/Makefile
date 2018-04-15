@@ -67,8 +67,9 @@ test.ror \
 test.rsm \
 test.sar \
 test.sbb \
-test.shl \
+test.scas \
  \
+test.shl \
 test.shld \
 test.shr \
 test.shrd \
@@ -78,8 +79,8 @@ test.sti \
 test.sub \
 test.syscall \
 test.sysret \
-test.test \
  \
+test.test \
 test.ud2 \
 test.wait \
 test.wbinvd \

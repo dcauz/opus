@@ -85,13 +85,19 @@ TODO
 
 const char * dis_ae(const char * code, unsigned prefix)
 {
-TODO
+	printf( "scas %%es:(%%rdi),%%al\n" );
 	return code;
 }
 
 const char * dis_af(const char * code, unsigned prefix)
 {
-TODO
+	if( prefix & PRE_OS )
+		printf( "scas %%es:(%%rdi),%%ax\n" );
+	else if( prefix & REX_W )
+		printf( "scas %%es:(%%rdi),%%rax\n" );
+	else
+		printf( "scas %%es:(%%rdi),%%eax\n" );
+
 	return code;
 }
 
