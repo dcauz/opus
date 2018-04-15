@@ -37,13 +37,19 @@ TODO
 
 const char * dis_a6(const char * code, unsigned prefix)
 {
-TODO
+	printf( "cmpsb %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	return code;
 }
 
 const char * dis_a7(const char * code, unsigned prefix)
 {
-TODO
+	if(prefix & PRE_OS )
+		printf("cmpsw  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+	else if( prefix & REX_W )
+		printf("cmpsq  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+	else
+		printf("cmpsl  %%es:(%%rdi),%%ds:(%%rsi)\n" );
+
 	return code;
 }
 

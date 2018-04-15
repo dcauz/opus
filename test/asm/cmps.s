@@ -1,0 +1,4 @@
+cmpsb
+cmpsw
+cmpsl
+cmpsq
