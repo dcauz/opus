@@ -101,13 +101,6 @@ const char * dis_84(const char * code, unsigned prefix)
 	return code;
 }
 
-// AS OS 85 0101 1011 disp8
-//          01 011 011 disp8
-//
-// bc:   67 66 85 5b 14          test   %bx,0x14(%ebx)
-//
-//    bc:test %bx,0x14(%ebx)
-//
 const char * dis_85(const char * code, unsigned prefix)
 {
 	std::string op1;
@@ -124,13 +117,30 @@ const char * dis_85(const char * code, unsigned prefix)
 
 const char * dis_86(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	if( code[1] == 0x25)
+		code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
+	else
+		code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+
+	printf( "xchg %s,%s\n", op1.c_str(), op2.c_str() ); 
+	return code;
 	return code;
 }
 
 const char * dis_87(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	if( code[1] == 0x25)
+		code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+	else
+		code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2 );	
+
+	printf( "xchg %s,%s\n", op1.c_str(), op2.c_str() ); 
 	return code;
 }
 
@@ -193,7 +203,11 @@ TODO
 
 const char * dis_8d(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+	code = mod_reg_rm_ops( code, prefix, 1, 1, op1, op2 );	
+
+	printf( "lea %s,%s\n", op2.c_str(), op1.c_str() ); 
 	return code;
 }
 

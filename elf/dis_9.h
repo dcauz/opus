@@ -1,49 +1,65 @@
 
+void printXCHG( int reg, unsigned prefix )
+{
+	const char * ax = (prefix & PRE_OS ) ? ( "%ax" ):
+					((( prefix & REX_W) == REX_W)? "%rax" : "%eax" );
+
+	const char * r = regStr( reg, AL, 1, 0, Reg2, prefix );
+
+	printf( "xchg %s,%s\n", ax, r );
+}
+
 const char * dis_90(const char * code, unsigned prefix)
 {
-	printf( "nop\n");
+	if( prefix == 0 )
+		printf( "nop\n");
+	else
+	{
+		printXCHG( 0, prefix );
+	}
+
 	return code;
 }
 
 const char * dis_91(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 1, prefix );
 	return code;
 }
 
 const char * dis_92(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 2, prefix );
 	return code;
 }
 
 const char * dis_93(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 3, prefix );
 	return code;
 }
 
 const char * dis_94(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 4, prefix );
 	return code;
 }
 
 const char * dis_95(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 5, prefix );
 	return code;
 }
 
 const char * dis_96(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 6, prefix );
 	return code;
 }
 
 const char * dis_97(const char * code, unsigned prefix)
 {
-TODO
+	printXCHG( 7, prefix );
 	return code;
 }
 
