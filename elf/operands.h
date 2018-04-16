@@ -4,6 +4,8 @@
 #include "opcodes.h"
 
 
+const char * regToStr( Register r );
+
 const char * regStr( 
 	     int reg, 
 	Register base, 

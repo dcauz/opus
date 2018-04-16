@@ -239,6 +239,44 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
+	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0x38) == 0x10 ))
+	{
+		std::string op;
+		if(( code[1] & 0x07) == 4 )
+		{
+			if( code[2] == 0x25 )
+			{
+				code += 3;
+				char imm[16];
+				code = imm32( code, imm );
+				op = imm;
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+		}
+		else
+			code = memStr( ++code, prefix, 0, 0, op );
+		printf( "lgdt %s\n", op.c_str());
+	}
+	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0x38) == 0x18 ))
+	{
+		std::string op;
+		if(( code[1] & 0x07) == 4 )
+		{
+			if( code[2] == 0x25 )
+			{
+				code += 3;
+				char imm[16];
+				code = imm32( code, imm );
+				op = imm;
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+		}
+		else
+			code = memStr( ++code, prefix, 0, 0, op );
+		printf( "lidt %s\n", op.c_str());
+	}
 	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0xff ) == 0xf8 ))
 	{
 		code += 2;
