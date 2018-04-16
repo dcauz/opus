@@ -387,6 +387,57 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 	}
 
+	else if( ( code[0] & 0xff ) >= 0x90 && ( code[0] & 0xff ) <= 0x9f )
+	{
+		const char * CC;
+		switch((code[0] & 0xff) - 0x90 )
+		{
+		case 0:  CC = "o";	break;
+		case 1:  CC = "no";	break;
+		case 2:  CC = "b";	break;
+		case 3:  CC = "ae";	break;
+		case 4:  CC = "e";	break;
+		case 5:  CC = "ne";	break;
+		case 6:  CC = "be";	break;
+		case 7:  CC = "a";	break;
+		case 8:  CC = "s";	break;
+		case 9:  CC = "ns";	break;
+		case 10: CC = "p";	break;
+		case 11: CC = "np";	break;
+		case 12: CC = "l";	break;
+		case 13: CC = "ge";	break;
+		case 14: CC = "le";	break;
+		case 15: CC = "g";	break;
+		}
+	
+		++code;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			if( code[1] == 0x25 )
+			{
+				code += 2;
+
+				char imm[16];
+				code = imm32( code, imm );
+				op = imm;				
+			}
+			else
+				code = memStr( code, prefix, 0, 0, op );
+
+			printf( "set%s %s\n", CC, op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+
+			const char * op = regStr( reg, AL, 0, 0, Reg2, prefix );
+	
+			printf( "set%s %s\n", CC, op );
+			++code;
+		}
+	}
+
 	// a
 	else if( ( code[0] & 0xff ) == 0xa0 )
 	{

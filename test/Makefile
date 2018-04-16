@@ -80,6 +80,7 @@ test.sar \
 test.sbb \
 test.scas \
  \
+test.setCC \
 test.shl \
 test.shld \
 test.shr \
@@ -89,8 +90,8 @@ test.std \
 test.sti \
 test.stos \
 test.str \
-test.sub \
  \
+test.sub \
 test.swapgs \
 test.syscall \
 test.sysret \
@@ -100,8 +101,8 @@ test.verr \
 test.wait \
 test.wbinvd \
 test.wrmsr \
-test.xadd \
  \
+test.xadd \
 test.xchg \
 test.xlat \
 test.xor
