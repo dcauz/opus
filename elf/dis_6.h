@@ -37,7 +37,21 @@ TODO
 
 const char * dis_69(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	int opSize = (prefix & PRE_OS )?16:(((prefix & REX_W) == REX_W)?64:32);
+
+	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, opSize );	
+
+	char imm[16];
+	if( prefix & PRE_OS )
+		code = imm16( code, imm );
+	else
+		code = imm32( code, imm );
+
+	printf( "imul $%s,%s,%s\n", imm, op2.c_str(),op1.c_str() );
+
 	return code;
 }
 
@@ -49,7 +63,18 @@ TODO
 
 const char * dis_6b(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	int opSize = (prefix & PRE_OS )?16:(((prefix & REX_W) == REX_W)?64:32);
+
+	code = mod_reg_rm_ops( code, prefix, 1, 1, op1, op2, opSize );	
+
+	char imm[10];
+	code = imm8( code, imm );
+
+	printf( "imul $%s,%s,%s\n", imm, op2.c_str(),op1.c_str() );
+
 	return code;
 }
 

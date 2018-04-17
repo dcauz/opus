@@ -20,7 +20,16 @@ const char * dis_f5(const char * code, unsigned prefix)
 const char * dis_f6(const char * code, unsigned prefix)
 {
 	int reg = (*code & 0x38) >> 3;
-	const char * inst = (reg == 4)?"mul":((reg == 3)?"neg":((reg == 2)?"not":"div"));
+	const char * inst;
+	switch(reg)
+	{
+	case 0: inst = "test";break;
+	case 2: inst = "not"; break;
+	case 3: inst = "neg"; break;
+	case 4:	inst = "mul"; break;
+	case 5: inst = "imul";break;
+	case 6: inst = "div"; break;
+	} 
 
 	if( (*code & 0xc0) != 0xc0 )
 	{
@@ -53,7 +62,16 @@ const char * dis_f6(const char * code, unsigned prefix)
 const char * dis_f7(const char * code, unsigned prefix)
 {
 	int reg = (*code & 0x38) >> 3;
-	const char * inst = (reg == 4)?"mul":((reg == 3)?"neg":((reg == 2)?"not":"div"));
+	const char * inst;
+	switch(reg)
+	{
+	case 0: inst = "test";break;
+	case 2: inst = "not"; break;
+	case 3: inst = "neg"; break;
+	case 4:	inst = "mul"; break;
+	case 5: inst = "imul";break;
+	case 6: inst = "div"; break;
+	} 
 
 	if( (*code & 0xc0) != 0xc0 )
 	{
