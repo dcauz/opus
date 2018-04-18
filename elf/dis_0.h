@@ -264,6 +264,25 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
+	{
+		std::string op;
+		if(( code[1] & 0x07) == 4 )
+		{
+			if( code[2] == 0x25 )
+			{
+				code += 3;
+				char imm[16];
+				code = imm32( code, imm );
+				op = imm;
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+		}
+		else
+			code = memStr( ++code, prefix, 0, 0, op );
+		printf( "sgdt %s\n", op.c_str());
+	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x10 ))
 	{
 		std::string op;
@@ -302,6 +321,25 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "lmsw %s\n", op );
 			++code;
 		}
+	}
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x08 ))
+	{
+		std::string op;
+		if(( code[1] & 0x07) == 4 )
+		{
+			if( code[2] == 0x25 )
+			{
+				code += 3;
+				char imm[16];
+				code = imm32( code, imm );
+				op = imm;
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+		}
+		else
+			code = memStr( ++code, prefix, 0, 0, op );
+		printf( "sidt %s\n", op.c_str());
 	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x18 ))
 	{

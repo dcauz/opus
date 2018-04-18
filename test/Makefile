@@ -87,10 +87,11 @@ test.sar \
 test.sbb \
 test.scas \
 test.setCC \
+test.sgdt \
 test.shl \
 test.shld \
-test.shr \
  \
+test.shr \
 test.shrd \
 test.smsw \
 test.stc \
@@ -100,8 +101,8 @@ test.stos \
 test.str \
 test.sub \
 test.swapgs \
-test.syscall \
  \
+test.syscall \
 test.sysret \
 test.test \
 test.ud2 \
@@ -111,8 +112,8 @@ test.wbinvd \
 test.wrmsr \
 test.xadd \
 test.xchg \
-test.xlat \
  \
+test.xlat \
 test.xor
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
