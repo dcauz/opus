@@ -172,6 +172,8 @@ const char * dis_0f(const char * code, unsigned prefix)
 	if( ( code[0] & 0xff ) == 0 )
 	{
 		++code;
+
+		// reg = 010 (2)
 		if( (*code & 0x38) == 0x20 )
 		{
 			if( (*code & 0xc0) != 0xc0 )
@@ -192,6 +194,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
+		// reg = 101 (5)
 		else if( (*code & 0x38) == 0x28 )
 		{
 			if( (*code & 0xc0) != 0xc0 )
@@ -212,6 +215,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
+		// reg = 001 (1)
 		else if( (*code & 0x38) == 0x08 )
 		{	
 			if( (*code & 0xc0) != 0xc0 )
@@ -228,6 +232,27 @@ const char * dis_0f(const char * code, unsigned prefix)
 				const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
 		
 				printf( "str %s\n", op );
+				++code;
+			}
+		}
+		// reg = 011 (3)
+		else if( (*code & 0x38) == 0x18 )
+		{	
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "ltr %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+		
+				printf( "ltr %s\n", op );
 				++code;
 			}
 		}
@@ -782,6 +807,26 @@ const char * dis_0f(const char * code, unsigned prefix)
 		const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
 		printf( "bswap %s\n", op );
 		++code;
+	}
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x20 ))
+	{
+		++code;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+
+			printf( "smsw %s\n", op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+			prefix |= PRE_OS;
+			const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+	
+			printf( "smsw %s\n", op );
+			++code;
+		}
 	}
 	else
 	{
