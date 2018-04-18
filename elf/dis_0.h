@@ -378,6 +378,50 @@ const char * dis_0f(const char * code, unsigned prefix)
 		   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 	}
+	else if( code[0] == 0x38 && code[1] == 0xfffffff0 )
+	{
+		code += 2;
+		if( code[1] == 0x25 )
+		{
+			unsigned reg = (*code & 0x38) >> 3;
+
+			const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+
+			code += 2;
+			char imm[16];
+			code = imm32( code, imm );
+
+	   		printf( "movbe %s,%s\n", op, imm );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+
+	   		printf( "movbe %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+	}
+	else if( code[0] == 0x38 && code[1] == 0xfffffff1 )
+	{
+		code += 2;
+		if( code[1] == 0x25 )
+		{
+			unsigned reg = (*code & 0x38) >> 3;
+
+			const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+
+			code += 2;
+			char imm[16];
+			code = imm32( code, imm );
+
+	   		printf( "movbe %s,%s\n", op, imm );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, 0, 1, op2, op1 );
+
+	   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+	}
 
 	// 4
 	else if( (code[0] & 0xf0) == 0x40 )

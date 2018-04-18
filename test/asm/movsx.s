@@ -227,5 +227,3 @@ movslq %eax, %rbx
 movslq %eax, %rbx
 movslq %r10d, %rbx
 movslq %r10d, %r11
-
-
