@@ -28,7 +28,14 @@ const char * dis_e2(const char * code, unsigned prefix)
 
 const char * dis_e3(const char * code, unsigned prefix)
 {
-TODO
+	char imm[12];
+	code = imm8( code, imm );
+
+	if( prefix & PRE_AS )
+		printf( "jecxz %s\n", imm );
+	else
+		printf( "jrcxz %s\n", imm );
+
 	return code;
 }
 

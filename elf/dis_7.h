@@ -1,5 +1,6 @@
 
 // tttn
+// 0000 O      Overflow
 // 0001 NO     No overflow
 // 0010 B, NAE Below, Not above or equal
 // 0011 NB, AE Not below, Above or equal
@@ -19,7 +20,10 @@
 
 const char * dis_70(const char * code, unsigned prefix)
 {
-TODO
+	char disp[16];
+	code = imm8( code, disp );
+	printf( "jo %s\n", disp );
+
 	return code;
 }
 

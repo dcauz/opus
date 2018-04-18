@@ -239,7 +239,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
-	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0x38) == 0x10 ))
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x10 ))
 	{
 		std::string op;
 		if(( code[1] & 0x07) == 4 )
@@ -258,7 +258,27 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = memStr( ++code, prefix, 0, 0, op );
 		printf( "lgdt %s\n", op.c_str());
 	}
-	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0x38) == 0x18 ))
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x30 ))
+	{
+		++code;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+
+			printf( "lmsw %s\n", op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+			prefix |= PRE_OS;
+			const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+	
+			printf( "lmsw %s\n", op );
+			++code;
+		}
+	}
+	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x18 ))
 	{
 		std::string op;
 		if(( code[1] & 0x07) == 4 )
@@ -387,6 +407,34 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 	}
 
+	else if( ( code[0] & 0xff ) >= 0x80 && ( code[0] & 0xff ) <= 0x8f )
+	{
+		const char * CC;
+		switch((code[0] & 0xff) - 0x80 )
+		{
+		case 0:  CC = "o";	break;
+		case 1:  CC = "no";	break;
+		case 2:  CC = "b";	break;
+		case 3:  CC = "ae";	break;
+		case 4:  CC = "e";	break;
+		case 5:  CC = "ne";	break;
+		case 6:  CC = "be";	break;
+		case 7:  CC = "a";	break;
+		case 8:  CC = "s";	break;
+		case 9:  CC = "ns";	break;
+		case 10: CC = "p";	break;
+		case 11: CC = "np";	break;
+		case 12: CC = "l";	break;
+		case 13: CC = "ge";	break;
+		case 14: CC = "le";	break;
+		case 15: CC = "g";	break;
+		}
+	
+		char imm[16];
+		code = imm32( ++code, imm );
+
+		printf( "j%s %s\n", CC, imm );
+	}
 	else if( ( code[0] & 0xff ) >= 0x90 && ( code[0] & 0xff ) <= 0x9f )
 	{
 		const char * CC;
