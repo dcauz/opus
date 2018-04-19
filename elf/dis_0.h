@@ -256,6 +256,48 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
+		// reg = 010 (2)
+		else if( (*code & 0x38) == 0x10 )
+		{	
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "lldt %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+		
+				printf( "lldt %s\n", op );
+				++code;
+			}
+		}
+		// reg = 000 (0)
+		else if( (*code & 0x38) == 0x00 )
+		{	
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "sldt %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+		
+				printf( "sldt %s\n", op );
+				++code;
+			}
+		}
 		else
 			TODO
 	}

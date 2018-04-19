@@ -49,6 +49,7 @@ test.lea \
  \
 test.leave \
 test.lgdt \
+test.lldt \
 test.lmsw \
 test.lods \
 test.loop \
@@ -93,6 +94,7 @@ test.shld \
  \
 test.shr \
 test.shrd \
+test.sldt \
 test.smsw \
 test.stc \
 test.std \
@@ -100,8 +102,8 @@ test.sti \
 test.stos \
 test.str \
 test.sub \
-test.swapgs \
  \
+test.swapgs \
 test.syscall \
 test.sysret \
 test.test \
@@ -111,8 +113,8 @@ test.wait \
 test.wbinvd \
 test.wrmsr \
 test.xadd \
-test.xchg \
  \
+test.xchg \
 test.xlat \
 test.xor
 
