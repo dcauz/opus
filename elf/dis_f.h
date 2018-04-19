@@ -212,6 +212,25 @@ const char * dis_ff(const char * code, unsigned prefix)
 			++code;
 		}
 	}
+    else if( reg == 0x10 )
+	{
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "callq *%s\n", op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+	
+			prefix |= REX_W;
+			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+
+			printf( "callq *%s\n", op );
+			++code;
+		}
+	}
     else
 	{
         TODO
