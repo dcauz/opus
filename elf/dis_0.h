@@ -402,6 +402,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = memStr( ++code, prefix, 0, 0, op );
 		printf( "lidt %s\n", op.c_str());
 	}
+	else if( code[0] == 0x02 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1, 16 );
+		printf( "lar %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else if( code[0] == 0x03 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, 0, 1, op2, op1, 16 );
+		printf( "lsl %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else if( (( code[0] & 0xff ) == 0x01 ) && (( code[1] & 0xff ) == 0xf8 ))
 	{
 		code += 2;
