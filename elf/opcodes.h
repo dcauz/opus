@@ -706,9 +706,9 @@ enum Prefix
 	PRE_OS   = 1 << 7,	// Operand Size Override	(66)
 	PRE_AS   = 1 << 8,	// Address Size Override	(67)
 
+	PRE_REP  = 1 << 15, // REP/REPZ (F3)
+	PRE_NE	 = 1 << 16, // REPNZ (F2)
 	PRE_LOCK = 1 << 17,	// Lock (F0)
-	PRE_NE   = 1 << 16,	// Repeat NE (F2)
-	PRE_REP  = 1 << 15,	// Repeat (F3)
 	PRE_BHNT = 1 << 18,	// Branch (2E)
 	PRE_BNHT = 1 << 19,	// Do not branch (3E)
 

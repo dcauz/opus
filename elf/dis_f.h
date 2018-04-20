@@ -5,6 +5,18 @@ TODO
 	return code;
 }
 
+const char * dis_f2(const char * code, unsigned prefix)
+{
+TODO
+	return code;
+}
+
+const char * dis_f3(const char * code, unsigned prefix)
+{
+TODO
+	return code;
+}
+
 const char * dis_f4(const char * code, unsigned prefix)
 {
     printf( "hlt\n" );

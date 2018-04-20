@@ -80,6 +80,9 @@ const char * dis_6b(const char * code, unsigned prefix)
 
 const char * dis_6c(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	printf( "insb (%%dx),%%es:(%%rdi)\n");
 
 	return code;
@@ -87,6 +90,9 @@ const char * dis_6c(const char * code, unsigned prefix)
 
 const char * dis_6d(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	if( prefix & PRE_OS )
 		printf( "insw (%%dx),%%es:(%%rdi)\n" );
 	else
@@ -97,13 +103,19 @@ const char * dis_6d(const char * code, unsigned prefix)
 
 const char * dis_6e(const char * code, unsigned prefix)
 {
-	printf( "outsb %%ds:(%%rsi),(%%dx)\n");
+	if( prefix & PRE_REP )
+		printf( "rep outsb %%ds:(%%rsi),(%%dx)\n" );
+	else
+		printf( "outsb %%ds:(%%rsi),(%%dx)\n");
 
 	return code;
 }
 
 const char * dis_6f(const char * code, unsigned prefix)
 {
+
+	if( prefix & PRE_REP )
+		printf( "rep ");
 
 	if( prefix & PRE_OS )
 		printf( "outsw %%ds:(%%rsi),(%%dx)\n");

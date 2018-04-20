@@ -25,12 +25,17 @@ TODO
 
 const char * dis_a4(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
 	printf( "movsb %%ds:(%%rsi),%%es:(%%rdi)\n" );
 	return code;
 }
 
 const char * dis_a5(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	if( prefix & PRE_OS )
 		printf( "movsw %%ds:(%%rsi),%%es:(%%rdi)\n" );
 	else if( prefix & PRE_OS )
@@ -43,12 +48,22 @@ const char * dis_a5(const char * code, unsigned prefix)
 
 const char * dis_a6(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "repz " );
+	else if( prefix & PRE_NE )
+		printf( "repnz " );
+
 	printf( "cmpsb %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	return code;
 }
 
 const char * dis_a7(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "repz " );
+	else if( prefix & PRE_NE )
+		printf( "repnz " );
+
 	if(prefix & PRE_OS )
 		printf("cmpsw %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	else if( prefix & REX_W )
@@ -73,6 +88,9 @@ TODO
 
 const char * dis_aa(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	printf( "stos %%al,%%es:(%%rdi)\n");
 
 	return code;
@@ -80,6 +98,9 @@ const char * dis_aa(const char * code, unsigned prefix)
 
 const char * dis_ab(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	if( prefix & PRE_OS )
 		printf( "stos %%ax,%%es:(%%rdi)\n" );
 	else if(prefix & REX_W )
@@ -92,6 +113,9 @@ const char * dis_ab(const char * code, unsigned prefix)
 
 const char * dis_ac(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	printf( "lods %%ds:(%%rsi),%%al\n" );
 
 	return code;
@@ -99,6 +123,9 @@ const char * dis_ac(const char * code, unsigned prefix)
 
 const char * dis_ad(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "rep " );
+
 	if( prefix & PRE_OS )
 		printf( "lods %%ds:(%%rsi),%%ax\n" );
 	else if(prefix & REX_W )
@@ -111,12 +138,22 @@ const char * dis_ad(const char * code, unsigned prefix)
 
 const char * dis_ae(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "repz " );
+	else if( prefix & PRE_NE )
+		printf( "repnz " );
+
 	printf( "scas %%es:(%%rdi),%%al\n" );
 	return code;
 }
 
 const char * dis_af(const char * code, unsigned prefix)
 {
+	if( prefix & PRE_REP )
+		printf( "repz " );
+	else if( prefix & PRE_NE )
+		printf( "repnz " );
+
 	if( prefix & PRE_OS )
 		printf( "scas %%es:(%%rdi),%%ax\n" );
 	else if( prefix & REX_W )

@@ -84,13 +84,14 @@ test.rcr \
 test.rdmsr \
 test.rdpmc \
 test.rdtsc \
+test.rep \
 test.ret \
 test.rol \
 test.ror \
 test.rsm \
 test.sar \
-test.sbb \
  \
+test.sbb \
 test.scas \
 test.setCC \
 test.sgdt \
@@ -100,8 +101,8 @@ test.shr \
 test.shrd \
 test.sldt \
 test.smsw \
-test.stc \
  \
+test.stc \
 test.std \
 test.sti \
 test.stos \
@@ -111,8 +112,8 @@ test.swapgs \
 test.syscall \
 test.sysret \
 test.test \
-test.ud2 \
  \
+test.ud2 \
 test.verr \
 test.wait \
 test.wbinvd \
@@ -121,6 +122,7 @@ test.xadd \
 test.xchg \
 test.xlat \
 test.xor
+
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
 SRC 		:= $(patsubst test.%,asm/%.s,$(ENC))
