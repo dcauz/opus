@@ -96,7 +96,10 @@ const char * dis_e8(const char * code, unsigned prefix)
 
 const char * dis_e9(const char * code, unsigned prefix)
 {
-TODO
+	char imm[16];
+	code = imm32( code, imm );
+	printf( "jmpq %s\n", imm );
+
 	return code;
 }
 

@@ -195,6 +195,27 @@ const char * dis_ff(const char * code, unsigned prefix)
 
         printf( "pushq %s\n", op.c_str() );
     }
+	else if( reg == 0x20 )
+	{
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+	
+			printf( "jmp *%s\n", op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+	
+			if( (prefix & PRE_OS) == 0 )
+				prefix |= REX_W;
+			const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+	
+			printf( "jmp *%s\n", op );
+			++code;
+		}
+	}
     else if( reg == 0x08 || reg == 0x00 )
 	{
 		const char * inst = (reg==0x08)?"dec":"inc";
