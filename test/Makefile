@@ -37,16 +37,17 @@ test.enter \
 test.hlt \
  \
 test.idiv \
+test.imul \
 test.in \
 test.inc \
-test.imul \
 test.ins \
 test.int \
 test.invd \
+test.invlpg \
 test.iret \
 test.jCC \
-test.l_s \
  \
+test.l_s \
 test.lar \
 test.lea \
 test.leave \
@@ -56,8 +57,8 @@ test.lmsw \
 test.lods \
 test.loop \
 test.lsl \
-test.ltr \
  \
+test.ltr \
 test.mov \
 test.movbe \
 test.movs \
@@ -67,8 +68,8 @@ test.mul \
 test.neg \
 test.nop \
 test.not \
-test.or \
  \
+test.or \
 test.out \
 test.outs \
 test.pop \
@@ -78,8 +79,8 @@ test.push \
 test.pushf \
 test.push.seg \
 test.rcl \
-test.rcr \
  \
+test.rcr \
 test.rdmsr \
 test.rdpmc \
 test.rdtsc \
@@ -89,8 +90,8 @@ test.ror \
 test.rsm \
 test.sar \
 test.sbb \
-test.scas \
  \
+test.scas \
 test.setCC \
 test.sgdt \
 test.shl \
@@ -100,8 +101,8 @@ test.shrd \
 test.sldt \
 test.smsw \
 test.stc \
-test.std \
  \
+test.std \
 test.sti \
 test.stos \
 test.str \
@@ -111,8 +112,8 @@ test.syscall \
 test.sysret \
 test.test \
 test.ud2 \
-test.verr \
  \
+test.verr \
 test.wait \
 test.wbinvd \
 test.wrmsr \
