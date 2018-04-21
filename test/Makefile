@@ -1,7 +1,7 @@
 
 ELF := ../bin/elf
 
-INST_TESTS := \
+GP_INST_TESTS := \
  \
 test.adc \
 test.adcx \
@@ -127,6 +127,100 @@ test.xchg \
  \
 test.xlat \
 test.xor
+
+
+FPU_INST_TESTS := \
+test.f2xm1  \
+test.fabs  \
+test.fadd  \
+test.faddp  \
+test.fbld  \
+test.fbstp  \
+test.fchs  \
+test.fclex  \
+test.fcmovbe  \
+test.fcmovb  \
+test.fcmove  \
+test.fcmovnbe  \
+test.fcmovnb  \
+test.fcmovne  \
+test.fcmovnu  \
+test.fcmovu  \
+test.fcom  \
+test.fcomi  \
+test.fcomip  \
+test.fcomp  \
+test.fcompp  \
+test.fcos  \
+test.fdecstp  \
+test.fdiv  \
+test.fdivp  \
+test.fdivr  \
+test.fdivrp  \
+test.ffree  \
+test.fiadd  \
+test.ficom  \
+test.ficomp  \
+test.fidiv  \
+test.fidivr  \
+test.fild  \
+test.fimul  \
+test.fincstp  \
+test.finit  \
+test.fistp  \
+test.fist  \
+test.fisubr  \
+test.fisub  \
+test.fld1  \
+test.fldcw  \
+test.fldenv  \
+test.fldl2e  \
+test.fldl2t  \
+test.fldlg2  \
+test.fldln2  \
+test.fld  \
+test.fldpi  \
+test.fldz  \
+test.fmul  \
+test.fmulp  \
+test.fnclex  \
+test.fninit  \
+test.fnop  \
+test.fnsave  \
+test.fnstcw  \
+test.fnstenv  \
+test.fnstsw  \
+test.fpatan  \
+test.fprem1  \
+test.fprem  \
+test.fptan  \
+test.frndint  \
+test.frstor  \
+test.fsave  \
+test.fscale  \
+test.fsincos  \
+test.fsin  \
+test.fsqrt  \
+test.fstcw  \
+test.fstenv  \
+test.fstp  \
+test.fst  \
+test.fstsw  \
+test.fsubp  \
+test.fsubrp  \
+test.fsubr  \
+test.fsub  \
+test.ftst  \
+test.fucomip  \
+test.fucomi  \
+test.fucompp  \
+test.fucomp  \
+test.fucom  \
+test.fxam  \
+test.fxch  \
+test.fxtract  \
+test.fyl2xp1  \
+test.fyl2x
 
 
 ENC_TESTS	:= test.elfo $(INST_TESTS)
