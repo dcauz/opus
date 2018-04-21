@@ -84,7 +84,7 @@ bool disassemble( const char * code, const char *end )
 		case 0x22:	code = dis_22(++code, prefix); break;
 		case 0x23:	code = dis_23(++code, prefix); break;
 
-		case 0x24:	prefix |= PRE_24; ++code; printOff=false; break;
+		case 0x24:	code = dis_24(++code, prefix); break;
 		case 0x25:	code = dis_25(++code, prefix); break;
 		case 0x26:	prefix |= PRE_26; ++code; printOff=false; break;
 		case 0x27:	code = dis_27(++code, prefix); break;

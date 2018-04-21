@@ -55,6 +55,12 @@ const char * dis_23(const char * code, unsigned prefix)
     return code;
 }
 
+const char * dis_24(const char * code, unsigned prefix)
+{
+TODO
+	return code;
+}
+
 const char * dis_25(const char * code, unsigned prefix)
 {
 TODO

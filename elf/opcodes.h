@@ -723,17 +723,17 @@ enum Prefix
 	REX_R = 4,	// 44
 	REX_W = 8,	// 48
 
-	PRE_24   = 1 << 9,
-	PRE_26   = 1 << 12,
-	PRE_36   = 1 << 10,
-	PRE_3E   = 1 << 11,
-	PRE_64   = 1 << 13,
-	PRE_65   = 1 << 14,
+	PRE_26   = 1 << 10,	// ES
+	PRE_2E   = 1 << 18,	// CS / Branch not taken
+	PRE_36   = 1 << 12,	// SS
+	PRE_3E   = 1 << 19,	// DS / Branch taken
+	PRE_64   = 1 << 14,	// FS
+	PRE_65   = 1 << 15,	// GS
 
 	PRE_OS   = 1 << 7,	// Operand Size Override	(66)
 	PRE_AS   = 1 << 8,	// Address Size Override	(67)
 
-	PRE_REP  = 1 << 15, // REP/REPZ (F3)
+	PRE_REP  = 1 << 20, // REP/REPZ (F3)
 	PRE_NE	 = 1 << 16, // REPNZ (F2)
 	PRE_LOCK = 1 << 17,	// Lock (F0)
 	PRE_BHNT = 1 << 18,	// Branch (2E)

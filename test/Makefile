@@ -64,6 +64,7 @@ test.mov \
 test.movbe \
 test.mov.cr \
 test.mov.dr \
+test.mov.sr \
 test.movs \
 test.movsx \
 test.movzx \
