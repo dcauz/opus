@@ -2,7 +2,6 @@
 ELF := ../bin/elf
 
 GP_INST_TESTS := \
- \
 test.adc \
 test.adcx \
 test.add \
@@ -13,7 +12,6 @@ test.bsr \
 test.bswap \
 test.bt \
 test.btc \
- \
 test.btr \
 test.bts \
 test.call \
@@ -24,7 +22,6 @@ test.clc \
 test.cld \
 test.cli \
 test.clts \
- \
 test.cmc \
 test.cmovCC \
 test.cmp \
@@ -35,7 +32,6 @@ test.dec \
 test.div \
 test.enter \
 test.hlt \
- \
 test.idiv \
 test.imul \
 test.in \
@@ -46,7 +42,6 @@ test.invd \
 test.invlpg \
 test.iret \
 test.jCC \
- \
 test.jmp \
 test.l_s \
 test.lar \
@@ -57,7 +52,6 @@ test.lldt \
 test.lmsw \
 test.lods \
 test.loop \
- \
 test.lsl \
 test.ltr \
 test.mov \
@@ -69,7 +63,6 @@ test.movs \
 test.movsx \
 test.movzx \
 test.mul \
- \
 test.neg \
 test.nop \
 test.not \
@@ -80,7 +73,6 @@ test.pop \
 test.popf \
 test.pop.seg \
 test.push \
- \
 test.pushf \
 test.push.seg \
 test.rcl \
@@ -91,7 +83,6 @@ test.rdtsc \
 test.rep \
 test.ret \
 test.rol \
- \
 test.ror \
 test.rsm \
 test.sar \
@@ -102,7 +93,6 @@ test.sgdt \
 test.shl \
 test.shld \
 test.shr \
- \
 test.shrd \
 test.sldt \
 test.smsw \
@@ -113,7 +103,6 @@ test.stos \
 test.str \
 test.sub \
 test.swapgs \
- \
 test.syscall \
 test.sysret \
 test.test \
@@ -124,7 +113,6 @@ test.wbinvd \
 test.wrmsr \
 test.xadd \
 test.xchg \
- \
 test.xlat \
 test.xor
 
@@ -223,7 +211,7 @@ test.fyl2xp1  \
 test.fyl2x
 
 
-ENC_TESTS	:= test.elfo $(INST_TESTS)
+ENC_TESTS	:= test.elfo $(GP_INST_TESTS) $(FPU_INST_TESTS)
 SRC 		:= $(patsubst test.%,asm/%.s,$(ENC))
 OBJS		:= $(patsubst asm/%.s,obj/%.o,$(SRC))
 
@@ -240,7 +228,11 @@ clean:
 
 #######################################################
 
-$(INST_TESTS):test.%: obj/%.o | $(ELF)
+gen.tests: $(GP_INST_TESTS)
+
+fpu.tests: $(FPU_INST_TESTS)
+
+$(GP_INST_TESTS) $(FPU_INST_TESTS):test.%: obj/%.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 %.e: obj/%.o
