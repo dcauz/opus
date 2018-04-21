@@ -15,7 +15,7 @@ const char * dis_b2(const char * code, unsigned prefix)
 {
 	std::string op1;
 	std::string op2;
-	code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );	
 
 TODO
 	return code;
@@ -31,7 +31,7 @@ const char * dis_b4(const char * code, unsigned prefix)
 {
 	std::string op1;
 	std::string op2;
-	code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );	
 
 TODO
 	return code;
@@ -41,7 +41,7 @@ const char * dis_b5(const char * code, unsigned prefix)
 {
 	std::string op1;
 	std::string op2;
-	code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );	
 
 TODO
 	return code;
@@ -52,7 +52,7 @@ const char * dis_b6(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, 32 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, 32 );	
 
 TODO
 	return code;
@@ -63,7 +63,7 @@ const char * dis_b7(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, 32 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, 32 );	
 
 TODO
 	return code;
@@ -112,7 +112,7 @@ const char * dis_be(const char * code, unsigned prefix)
 {
 	std::string op1;
 	std::string op2;
-	code = mod_reg_rm_ops( code, prefix, 0, 0, op1, op2 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );	
 
 	TODO
 	return code;

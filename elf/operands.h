@@ -10,7 +10,6 @@ const char * regStr(
 	     int reg, 
 	Register base, 
 		 int w, 
-		 int s, 
   RegContext context, 
 	unsigned prefix,
 		 int op2Size=-1);
@@ -25,7 +24,7 @@ const char * memStr(
 const char * mod_reg_rm_ops(
 	const char * code,		// IN
 	unsigned prefix,		// IN
-			  int s,		// IN
+		   OpRegs ors,		// IN
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2, 		// OUT

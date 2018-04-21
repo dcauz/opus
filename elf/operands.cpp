@@ -91,14 +91,14 @@ const char * regToStr( Register r )
 	case CR12:	return "%cr12"; case CR13:	return "%cr13";
 	case CR14:	return "%cr14"; case CR15:	return "%cr15";
 
-	case DR0:	return "%dr0";  case DR1:	return "%dr1";
-	case DR2:	return "%dr2";  case DR3:	return "%dr3";
-	case DR4:	return "%dr4";  case DR5:	return "%dr5";
-	case DR6:	return "%dr6";  case DR7:	return "%dr7";
-	case DR8:	return "%dr8";  case DR9:	return "%dr9";
-	case DR10:	return "%dr10"; case DR11:	return "%dr11";
-	case DR12:	return "%dr12"; case DR13:	return "%dr13";
-	case DR14:	return "%dr14"; case DR15:	return "%dr15";
+	case DR0:	return "%db0";  case DR1:	return "%db1";
+	case DR2:	return "%db2";  case DR3:	return "%db3";
+	case DR4:	return "%db4";  case DR5:	return "%db5";
+	case DR6:	return "%db6";  case DR7:	return "%db7";
+	case DR8:	return "%db8";  case DR9:	return "%db9";
+	case DR10:	return "%db10"; case DR11:	return "%db11";
+	case DR12:	return "%db12"; case DR13:	return "%db13";
+	case DR14:	return "%db14"; case DR15:	return "%db15";
 	}
 }
 
@@ -114,7 +114,10 @@ inline Register	reg8to32( Register r )
 
 inline Register	reg8to64( Register r )
 {
-	return static_cast<Register>((r&0xffef)+256);
+	if(r < AX )
+		return static_cast<Register>((r&0xffef)+256);
+	else
+		return r;
 }
 
 inline Register	reg16to32( Register r )
@@ -145,9 +148,19 @@ inline Register regToR(Register reg)
 	// AL-CH, SPL-DIL 	=> R8B - R15B
 	// AX-DI 			=> R8W - R15W
 	// EAX-EDI 			=> R8D - R15D
-	// RAX-RDI 			=> R8 - R15
+	// RAX-RDI 			=> R8  - R15
+	// CR0 - CR7		=> CR8 - CR15
+	// DR0 - DR7		=> DR8 - DR15
+	// XMM0 - XMM7		=> XMM8 - XMM15
+	// YMM0 - YMM7		=> YMM8 - YMM15
 
-	return static_cast<Register>((reg&0xef)+24);
+	if( (reg >= CR0 && reg < CR8 ) ||
+	    (reg >= DR0 && reg < DR8 ) ||
+	    (reg >= XMM0 && reg < XMM8 ) ||
+	    (reg >= YMM0 && reg < YMM8 ))
+		return static_cast<Register>(reg+8);
+	else
+		return static_cast<Register>((reg&0xef)+24);
 }
 
 const char * memStr(
@@ -176,7 +189,7 @@ const char * memStr(
 		case 7:
 		{
 			op = "(";
-			op += regStr( rm, AL, w, s, Base, prefix );
+			op += regStr( rm, AL, w, Base, prefix );
 			op += ")";
 			break;
 		}
@@ -188,11 +201,11 @@ const char * memStr(
 
 			mod_reg_rm( *code++, scale, index, base );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "(%s,%s,%d)", b, i, static_cast<int>(pow(2,scale)) );
@@ -223,7 +236,7 @@ const char * memStr(
 			code = imm8( code, disp );
 			op = disp;
 			op += "(";
-			op += regStr( rm, AL, w, s, Base, prefix );
+			op += regStr( rm, AL, w, Base, prefix );
 			op += ")";
 			break;
 		}
@@ -238,11 +251,11 @@ const char * memStr(
 			char imm[16];
 			code = imm8( code, imm );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
@@ -272,7 +285,7 @@ const char * memStr(
 			code = imm32( code, disp );
 			op = disp;
 			op += "(";
-			op += regStr( rm, AL, w, s, Base, prefix );
+			op += regStr( rm, AL, w, Base, prefix );
 			op += ")";
 			break;
 		case 4:	
@@ -286,11 +299,11 @@ const char * memStr(
 			char imm[16];
 			code = imm32( code, imm );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
@@ -320,22 +333,12 @@ const char * regStr(
 	     int reg, 
 	Register base, 
 		 int w, 
-		 int s, 
   RegContext context, 
 	unsigned prefix,
 		 int opSize )
 {
+//printf( "%s:%d reg %d base %d w %d prefix %x context %d opsize %d\n", __FILE__, __LINE__, reg, base, w, prefix, context, opSize );
 	Register r = static_cast<Register>(reg+base);
-
-	switch(base)
-	{
-	case ST0:	return regToStr( r );
-	case MMX0:	return regToStr( r );
-	case XMM0:	return regToStr( r );
-	case YMM0:	return regToStr( r );
-	case CR0:	return regToStr( r );
-	case DR0:	return regToStr( r );
-	}
 
 	if( prefix & REX)
 		r = regAHtoSPL( r );
@@ -421,10 +424,39 @@ const char * regStr(
 	return regToStr(r);
 }
 
+Register opReg( OpRegs ors, bool isReg )
+{
+	switch(ors)
+	{
+	case OpRegs::AL:		return AL;
+	case OpRegs::ST0:		return ST0;
+	case OpRegs::MMX0:		return MMX0;
+	case OpRegs::XMM0:		return XMM0;
+	case OpRegs::YMM0:		return YMM0;
+	case OpRegs::CR0:		return CR0;
+	case OpRegs::DR0:		return DR0;
+
+	case OpRegs::AL_ST0:	return isReg?AL:ST0;	
+	case OpRegs::ST0_AL:	return isReg?ST0:AL;
+
+	case OpRegs::AL_MMX0:	return isReg?AL:MMX0;
+	case OpRegs::MMX0_AL:	return isReg?MMX0:AL;
+
+	case OpRegs::AL_YMM0:	return isReg?AL:YMM0;
+	case OpRegs::YMM0_AL:	return isReg?YMM0:AL;
+
+	case OpRegs::AL_CR0:	return isReg?AL:CR0;
+	case OpRegs::CR0_AL:	return isReg?CR0:AL;
+
+	case OpRegs::AL_DR0:	return isReg?AL:DR0;
+	case OpRegs::DR0_AL:	return isReg?DR0:AL;
+	}
+}
+
 const char * mod_reg_rm_ops(
 	const char * code,		// IN
 	unsigned 	  prefix,	// IN
-			  int s,		// IN
+		   OpRegs opRegs,	// IN
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2,		// OUT
@@ -448,9 +480,9 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			op2 = "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -462,11 +494,11 @@ const char * mod_reg_rm_ops(
 
 			mod_reg_rm( *code++, scale, index, base );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "(%s,%s,%d)", b, i, static_cast<int>(pow(2,scale)) );
@@ -478,7 +510,7 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "(%s)", b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			break;
 		}
 		}
@@ -494,12 +526,12 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			char disp[16];
 			code = imm8( code, disp );
 			op2 = disp;
 			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -514,11 +546,11 @@ const char * mod_reg_rm_ops(
 			char imm[16];
 			code = imm8( code, imm );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
@@ -530,7 +562,7 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "%s(%s)", imm, b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			break;
 		}
 		}
@@ -546,12 +578,12 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			char disp[16];
 			code = imm32( code, disp );
 			op2 = disp;
 			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -566,11 +598,11 @@ const char * mod_reg_rm_ops(
 			char imm[16];
 			code = imm32( code, imm );
 
-			const char * b = regStr( base, AL, w, s, Base, prefix );
+			const char * b = regStr( base, AL, w, Base, prefix );
 	
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, w, s, Index, prefix );
+				const char * i = regStr( index, AL, w, Index, prefix );
 
 				char addr[32];
 				sprintf( addr, "%s(%s,%s,%d)", imm, b, i, static_cast<int>(pow(2,scale)) );
@@ -582,32 +614,15 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "%s(%s)", imm, b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, s, Reg, prefix );
+			op1 =  regStr( reg, AL, w, Reg, prefix );
 			break;
 		}
 		}
 		break;
 
 	case RM_regs:
-		switch(rm)
-		{
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 5:
-		case 6:
-		case 7:
-		{
-			op1 = regStr( reg, AL, w, s,  Reg, prefix );
-			op2 = regStr( rm,  AL, w, s, Reg2, prefix, op2Size );
-			break;
-		}
-		case 4:
-			op1 = regStr( reg, AL, w, s,  Reg, prefix );
-			op2 = regStr( rm,  AL, w, s, Reg2, prefix, op2Size );
-			break;
-		}
+		op1 = regStr( reg,  opReg(opRegs,true), w, Reg, prefix );
+		op2 = regStr( rm,  opReg(opRegs,false), w, Reg2, prefix, op2Size );
 		break;
 	}
 
@@ -633,9 +648,9 @@ const char * imm_reg_ops(
 		++code;
 
 	if( !useReg )
-		op1 = regStr( rm, AL, w, 0, Reg, prefix );
+		op1 = regStr( rm, AL, w, Reg, prefix );
 	else
-		op1 = regStr( reg, AL, w, 0, Reg, prefix );
+		op1 = regStr( reg, AL, w, Reg, prefix );
 	
 	char buff[16];
 	if(immSize == 32)
@@ -683,7 +698,7 @@ const char * imm_mem_ops(
 			op1 = imm;
 
 			op2 = "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -695,11 +710,11 @@ const char * imm_mem_ops(
 
 			++code;
 
-			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+			const char * b = regStr( base,  AL, 0, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, 0, 0, Index,prefix );
+				const char * i = regStr( index, AL, 0, Index,prefix );
 
 				char buff[128];
 				sprintf( buff, "(%s,%s,%d)", b, i, static_cast<int>(pow(2, scale)));
@@ -742,7 +757,7 @@ const char * imm_mem_ops(
 
 			op2 = disp;
 			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -754,14 +769,14 @@ const char * imm_mem_ops(
 
 			++code;
 
-			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+			const char * b = regStr( base,  AL, 0, Base, prefix );
 
 			char disp[12];
 			code = imm8(code, disp);
 			
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, 0, 0, Index,prefix );
+				const char * i = regStr( index, AL, 0, Index,prefix );
 
 				char buff[128];
 				sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
@@ -804,7 +819,7 @@ const char * imm_mem_ops(
 
 			op2 = disp;
 			op2 += "(";
-			op2 += regStr( rm, AL, w, s, Base, prefix );
+			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
 			break;
 		}
@@ -819,11 +834,11 @@ const char * imm_mem_ops(
 			char disp[16];
 			code = imm32(code, disp);
 			
-			const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+			const char * b = regStr( base,  AL, 0, Base, prefix );
 
 			if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 			{
-				const char * i = regStr( index, AL, 0, 0, Index,prefix );
+				const char * i = regStr( index, AL, 0, Index,prefix );
 
 				char buff[128];
 				sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
@@ -1054,11 +1069,11 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 			break;
 		}
 
-		const char * b = regStr( base,  AL, 0, 0, Base, prefix );
+		const char * b = regStr( base,  AL, 0, Base, prefix );
 
 		if( index != 4 || ( (prefix & REX_X ) == REX_X ))
 		{
-			const char * i = regStr( index, AL, 0, 0, Index,prefix );
+			const char * i = regStr( index, AL, 0, Index,prefix );
 
 			char buff[128];
 			sprintf( buff, "%s(%s,%s,%d)", disp, b, i, static_cast<int>(pow(2, scale)));
@@ -1072,7 +1087,7 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 	}
 	else
 	{
-		const char * r = regStr( rm, AL, 0, 0, Base, prefix );
+		const char * r = regStr( rm, AL, 0, Base, prefix );
 
 		char disp[16];
 		disp[0] = 0;

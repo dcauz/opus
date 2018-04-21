@@ -63,7 +63,7 @@ const char * dis_f6(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 0, Reg, prefix );
 
 		printf( "%s %s\n", inst, op );
 		++code;
@@ -105,7 +105,7 @@ const char * dis_f7(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 1, Reg, prefix );
 
 		printf( "%s %s\n", inst, op );
 		++code;
@@ -174,7 +174,7 @@ const char * dis_fe(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 1, Reg, prefix );
 
 		printf( "%s %s\n", inst, op );
 		++code;
@@ -210,7 +210,7 @@ const char * dis_ff(const char * code, unsigned prefix)
 	
 			if( (prefix & PRE_OS) == 0 )
 				prefix |= REX_W;
-			const char * op = regStr( reg, AL, 1, 0, Reg2, prefix );
+			const char * op = regStr( reg, AL, 1, Reg2, prefix );
 	
 			printf( "jmp *%s\n", op );
 			++code;
@@ -239,7 +239,7 @@ const char * dis_ff(const char * code, unsigned prefix)
 			if( (prefix & REX_B ) == REX_B )
 				prefix |= REX_R;
 	
-			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+			const char * op = regStr( reg, AL, 0, Reg, prefix );
 	
 			printf( "%s %s\n", inst, op );
 			++code;
@@ -258,7 +258,7 @@ const char * dis_ff(const char * code, unsigned prefix)
 			unsigned reg = *code & 0x07;
 	
 			prefix |= REX_W;
-			const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+			const char * op = regStr( reg, AL, 0, Reg, prefix );
 
 			printf( "callq *%s\n", op );
 			++code;

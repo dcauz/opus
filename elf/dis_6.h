@@ -22,7 +22,7 @@ const char * dis_63(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, 32 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, 32 );	
 
 	printf( "movslq %s,%s\n", op2.c_str(),op1.c_str() );
 
@@ -42,7 +42,7 @@ const char * dis_69(const char * code, unsigned prefix)
 
 	int opSize = (prefix & PRE_OS )?16:(((prefix & REX_W) == REX_W)?64:32);
 
-	code = mod_reg_rm_ops( code, prefix, 0, 1, op1, op2, opSize );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, opSize );	
 
 	char imm[16];
 	if( prefix & PRE_OS )
@@ -68,7 +68,7 @@ const char * dis_6b(const char * code, unsigned prefix)
 
 	int opSize = (prefix & PRE_OS )?16:(((prefix & REX_W) == REX_W)?64:32);
 
-	code = mod_reg_rm_ops( code, prefix, 1, 1, op1, op2, opSize );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, opSize );	
 
 	char imm[10];
 	code = imm8( code, imm );

@@ -4,7 +4,7 @@ void printXCHG( int reg, unsigned prefix )
 	const char * ax = (prefix & PRE_OS ) ? ( "%ax" ):
 					((( prefix & REX_W) == REX_W)? "%rax" : "%eax" );
 
-	const char * r = regStr( reg, AL, 1, 0, Reg2, prefix );
+	const char * r = regStr( reg, AL, 1, Reg2, prefix );
 
 	printf( "xchg %s,%s\n", ax, r );
 }

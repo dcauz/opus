@@ -17,7 +17,7 @@ const char * dis_d0(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 0, Reg, prefix );
 
 		printf( "%s %s\n", rsOp(inst), op );
 		++code;
@@ -49,7 +49,7 @@ const char * dis_d1(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 1, Reg, prefix );
 
 		printf( "%s %s\n", rsOp(inst), op );
 		++code;
@@ -81,7 +81,7 @@ const char * dis_d2(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 0, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 0, Reg, prefix );
 
 		printf( "%s %%cl,%s\n", rsOp(inst), op );
 	}
@@ -112,7 +112,7 @@ const char * dis_d3(const char * code, unsigned prefix)
 		if( (prefix & REX_B ) == REX_B )
 			prefix |= REX_R;
 
-		const char * op = regStr( reg, AL, 1, 0, Reg, prefix );
+		const char * op = regStr( reg, AL, 1, Reg, prefix );
 
 		printf( "%s %%cl,%s\n", rsOp(inst), op );
 	}

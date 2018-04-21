@@ -38,6 +38,33 @@ enum Register
 	ERROR
 };
 
+enum class OpRegs
+{
+	AL,		// 1 reg opcodes
+	ST0,
+	MMX0,
+	XMM0,
+	YMM0,
+	CR0,
+	DR0,
+
+	// reg r/m
+	AL_ST0,  
+	ST0_AL,	 
+
+	AL_MMX0, 
+	MMX0_AL, 
+
+	AL_YMM0, 
+	YMM0_AL,
+
+	AL_CR0,  
+	CR0_AL,
+
+	AL_DR0,  
+	DR0_AL,
+};
+
 enum Mnemonic
 {
 	OP_ADC,
