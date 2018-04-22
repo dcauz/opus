@@ -150,20 +150,45 @@ const char * dis_d7(const char * code, unsigned prefix)
 
 const char * dis_d8(const char * code, unsigned prefix)
 {
-	if( ( *code & 0xc0 ) == 0xc0 )
+	if( ( *code & 0xf0 ) == 0xc0 )
 	{
 		int r = *code & 0x0f;
 
 		printf( "fadd %%st(%d),%%st\n", r );
 		return ++code;
 	}
+	else if( ( *code & 0xf0 ) == 0xd0 )
+	{
+		int r = *code & 0x0f;
+
+		if( r < 8 )
+			printf( "fcom %%st(%d)\n", r );
+		else
+			printf( "fcomp %%st(%d)\n", r-8 );
+
+		return ++code;
+	}
 	else
 	{
-		std::string op;
-		code = memStr( code, prefix, 0, 0, op );
+		if( (*code & 0x38 ) == 0x10 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fcoms %s\n", op.c_str() );
+		}
+		else if((*code & 0x38 ) == 0x18 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fcomps %s\n", op.c_str() );
+		}
+		else
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fadds %s\n", op.c_str() );
+		}
 
-		printf( "fadds %s\n", op.c_str() );
-		
 		return code;
 	}
 }
@@ -184,8 +209,25 @@ const char * dis_d9(const char * code, unsigned prefix)
 
 const char * dis_da(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	int reg = *code & 0x0f;
+	if( ( *code & 0xf0 ) == 0xc0 )
+	{
+		if( reg < 8 )
+			printf( "fcmovb %%st(%d), %%st(0)\n", reg );
+		else
+			printf( "fcmove %%st(%d), %%st(0)\n", reg-8 );
+	}
+	else if( ( *code & 0xf0 ) == 0xd0 )
+	{
+		if( reg < 8 )
+			printf( "fcmovbe %%st(%d), %%st(0)\n", reg );
+		else
+			printf( "fcmovu %%st(%d), %%st(0)\n", reg-8 );
+	}
+	else
+		TODO
+
+	return ++code;
 }
 
 const char * dis_db(const char * code, unsigned prefix)
@@ -193,10 +235,28 @@ const char * dis_db(const char * code, unsigned prefix)
 	if( *code == 0xffffffe2 )
 		printf( "fnclex\n" );
 	else
-		TODO
-	++code;
+	{
+		int reg = *code & 0x0f;
 
-	return code;
+		if( ( *code & 0xf0 ) == 0xc0 )
+		{
+			if( reg < 8 )
+				printf( "fcmovnb %%st(%d), %%st(0)\n", reg );
+			else
+				printf( "fcmovne %%st(%d), %%st(0)\n", reg-8 );
+		}
+		else if( ( *code & 0xf0 ) == 0xd0 )
+		{
+			if( reg < 8 )
+				printf( "fcmovnbe %%st(%d), %%st(0)\n", reg );
+			else
+				printf( "fcmovnu %%st(%d), %%st(0)\n", reg-8 );
+		}
+		else
+			TODO
+	}
+
+	return ++code;
 }
 
 const char * dis_dc(const char * code, unsigned prefix)
@@ -215,11 +275,16 @@ TODO
 
 const char * dis_de(const char * code, unsigned prefix)
 {
-	if( ( *code & 0xc0 ) == 0xc0 )
+	if( ( *code & 0xf0 ) == 0xc0 )
 	{
 		int r = *code & 0x0f;
 
 		printf( "faddp %%st,%%st(%d)\n", r );
+		return ++code;
+	}
+	else if( ( *code & 0xff ) == 0xd9 )
+	{
+		printf( "fcompp\n" );
 		return ++code;
 	}
 	else

@@ -125,16 +125,8 @@ test.fbld  \
 test.fbstp  \
 test.fchs  \
 test.fclex  \
+test.fcmovCC \
 \
-test.fcmovbe  \
-\
-test.fcmovb  \
-test.fcmove  \
-test.fcmovnbe  \
-test.fcmovnb  \
-test.fcmovne  \
-test.fcmovnu  \
-test.fcmovu  \
 test.fcom  \
 test.fcomi  \
 test.fcomip  \
