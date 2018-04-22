@@ -95,7 +95,17 @@ TODO
 
 const char * dis_9b(const char * code, unsigned prefix)
 {
-	printf( "fwait\n" );
+	if( *code == 0xffffffdb )
+	{
+		++code;
+		if( *code == 0xffffffe2 )
+			printf( "fclex\n" );
+		else
+			TODO
+		++code;
+	}
+	else
+		printf( "fwait\n" );
 	return code;
 }
 

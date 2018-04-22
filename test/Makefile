@@ -125,7 +125,9 @@ test.fbld  \
 test.fbstp  \
 test.fchs  \
 test.fclex  \
+\
 test.fcmovbe  \
+\
 test.fcmovb  \
 test.fcmove  \
 test.fcmovnbe  \
@@ -136,6 +138,7 @@ test.fcmovu  \
 test.fcom  \
 test.fcomi  \
 test.fcomip  \
+\
 test.fcomp  \
 test.fcompp  \
 test.fcos  \
@@ -146,6 +149,7 @@ test.fdivr  \
 test.fdivrp  \
 test.ffree  \
 test.ficom  \
+\
 test.ficomp  \
 test.fidiv  \
 test.fidivr  \
@@ -156,6 +160,7 @@ test.finit  \
 test.fistp  \
 test.fist  \
 test.fisubr  \
+\
 test.fisub  \
 test.fld1  \
 test.fldcw  \
@@ -166,10 +171,10 @@ test.fldlg2  \
 test.fldln2  \
 test.fld  \
 test.fldpi  \
+\
 test.fldz  \
 test.fmul  \
 test.fmulp  \
-test.fnclex  \
 test.fninit  \
 test.fnop  \
 test.fnsave  \
@@ -177,6 +182,7 @@ test.fnstcw  \
 test.fnstenv  \
 test.fnstsw  \
 test.fpatan  \
+\
 test.fprem1  \
 test.fprem  \
 test.fptan  \
@@ -187,6 +193,7 @@ test.fscale  \
 test.fsincos  \
 test.fsin  \
 test.fsqrt  \
+\
 test.fstcw  \
 test.fstenv  \
 test.fstp  \
@@ -197,6 +204,7 @@ test.fsubrp  \
 test.fsubr  \
 test.fsub  \
 test.ftst  \
+\
 test.fucomip  \
 test.fucomi  \
 test.fucompp  \

@@ -174,6 +174,11 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "f2xm1\n" );
 	else if( *code == 0xffffffe1 )
 		printf( "fabs\n" );
+	else if( *code == 0xffffffe0 )
+		printf( "fchs\n" );
+	else
+		TODO
+
 	return ++code;
 }
 
@@ -185,7 +190,12 @@ TODO
 
 const char * dis_db(const char * code, unsigned prefix)
 {
-TODO
+	if( *code == 0xffffffe2 )
+		printf( "fnclex\n" );
+	else
+		TODO
+	++code;
+
 	return code;
 }
 
@@ -225,7 +235,16 @@ const char * dis_de(const char * code, unsigned prefix)
 
 const char * dis_df(const char * code, unsigned prefix)
 {
-TODO
+	int reg = ( *code & 0x38) >> 3;
+
+	std::string op;
+	code = memStr( code, prefix, 0, 1, op );
+
+	if( reg == 4 )
+		printf( "fbld %s\n", op.c_str() );
+	else // reg == 6
+		printf( "fbstp %s\n", op.c_str() );
+
 	return code;
 }
 
