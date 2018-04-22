@@ -121,7 +121,6 @@ FPU_INST_TESTS := \
 test.f2xm1  \
 test.fabs  \
 test.fadd  \
-test.faddp  \
 test.fbld  \
 test.fbstp  \
 test.fchs  \
@@ -146,7 +145,6 @@ test.fdivp  \
 test.fdivr  \
 test.fdivrp  \
 test.ffree  \
-test.fiadd  \
 test.ficom  \
 test.ficomp  \
 test.fidiv  \

@@ -213,9 +213,18 @@ const char * memStr(
 			}
 			else
 			{
-				char addr[32];
-				sprintf( addr, "(%s)", b );
-				op = addr;
+				if( base != 5 )
+				{
+					char addr[32];
+					sprintf( addr, "(%s)", b );
+					op = addr;
+				}
+				else
+				{
+					char imm[16];
+					code = imm32(code, imm );
+					op = imm;
+				}
 			}
 			break;
 		}
@@ -722,9 +731,16 @@ const char * imm_mem_ops(
 			}
 			else
 			{
-				char buff[128];
-				sprintf( buff, "(%s)", b );
-				op2 = buff;
+				if( base != 5 )
+				{
+					char buff[128];
+					sprintf( buff, "(%s)", b );
+					op2 = buff;
+				}
+				else
+				{
+TODO
+				}
 			}
 
 			char imm[16];

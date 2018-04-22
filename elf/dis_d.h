@@ -150,14 +150,31 @@ const char * dis_d7(const char * code, unsigned prefix)
 
 const char * dis_d8(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	if( ( *code & 0xc0 ) == 0xc0 )
+	{
+		int r = *code & 0x0f;
+
+		printf( "fadd %%st(%d),%%st\n", r );
+		return ++code;
+	}
+	else
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+
+		printf( "fadds %s\n", op.c_str() );
+		
+		return code;
+	}
 }
 
 const char * dis_d9(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	if( *code == 0xfffffff0 )
+		printf( "f2xm1\n" );
+	else if( *code == 0xffffffe1 )
+		printf( "fabs\n" );
+	return ++code;
 }
 
 const char * dis_da(const char * code, unsigned prefix)
@@ -174,8 +191,10 @@ TODO
 
 const char * dis_dc(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	int r = *code & 0x0f;
+
+	printf( "fadd %%st,%%st(%d)\n", r );
+	return ++code;
 }
 
 const char * dis_dd(const char * code, unsigned prefix)
@@ -186,8 +205,22 @@ TODO
 
 const char * dis_de(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	if( ( *code & 0xc0 ) == 0xc0 )
+	{
+		int r = *code & 0x0f;
+
+		printf( "faddp %%st,%%st(%d)\n", r );
+		return ++code;
+	}
+	else
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+
+		printf( "fiadd %s\n", op.c_str() );
+		
+		return code;
+	}
 }
 
 const char * dis_df(const char * code, unsigned prefix)
