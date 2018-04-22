@@ -17,11 +17,9 @@ test.bts \
 test.call \
 test.cbw \
 test.cdq \
-test.clac \
 test.clc \
 test.cld \
 test.cli \
-test.clts \
 test.cmc \
 test.cmovCC \
 test.cmp \
@@ -31,37 +29,26 @@ test.cpuid \
 test.dec \
 test.div \
 test.enter \
-test.hlt \
 test.idiv \
 test.imul \
 test.in \
 test.inc \
 test.ins \
 test.int \
-test.invd \
-test.invlpg \
 test.iret \
 test.jCC \
 test.jmp \
 test.l_s \
-test.lar \
 test.lea \
 test.leave \
-test.lgdt \
-test.lldt \
-test.lmsw \
 test.lods \
 test.loop \
-test.lsl \
-test.ltr \
 test.mov \
 test.movbe \
-test.mov.cr \
 test.mov.dr \
 test.mov.sr \
 test.movs \
 test.movsx \
-test.movzx \
 test.mul \
 test.neg \
 test.nop \
@@ -77,45 +64,30 @@ test.pushf \
 test.push.seg \
 test.rcl \
 test.rcr \
-test.rdmsr \
-test.rdpmc \
-test.rdtsc \
 test.rep \
 test.ret \
 test.rol \
 test.ror \
-test.rsm \
 test.sar \
 test.sbb \
 test.scas \
 test.setCC \
-test.sgdt \
 test.shl \
 test.shld \
 test.shr \
 test.shrd \
-test.sldt \
-test.smsw \
 test.stc \
 test.std \
 test.sti \
 test.stos \
-test.str \
 test.sub \
-test.swapgs \
-test.syscall \
-test.sysret \
 test.test \
 test.ud2 \
-test.verr \
 test.wait \
-test.wbinvd \
-test.wrmsr \
 test.xadd \
 test.xchg \
 test.xlat \
 test.xor
-
 
 FPU_INST_TESTS := \
 test.f2xm1  \
@@ -126,13 +98,10 @@ test.fbstp  \
 test.fchs  \
 test.fclex  \
 test.fcmovCC \
-\
 test.fcom  \
+\
 test.fcomi  \
 test.fcomip  \
-\
-test.fcomp  \
-test.fcompp  \
 test.fcos  \
 test.fdecstp  \
 test.fdiv  \
@@ -208,8 +177,403 @@ test.fxtract  \
 test.fyl2xp1  \
 test.fyl2x
 
+FPU_SIMD_INST_TESTS := \
+test.fxsave \
+test.fxrstor
 
-ENC_TESTS	:= test.elfo $(GP_INST_TESTS) $(FPU_INST_TESTS)
+MMX_INST_TESTS := \
+test.movd \
+test.movq \
+test.packsswb \
+test.packssdw \
+test.packuswb \
+test.punpckhbw \
+test.punpckhwd \
+test.punpckhdq \
+test.punpcklbw \
+test.punpcklwd \
+test.punpckldq \
+test.paddb \
+test.paddw \
+test.paddd \
+test.paddsb \
+test.paddsw \
+test.paddusb \
+test.paddusw \
+test.psubb \
+test.psubw \
+test.psubd \
+test.psubsb \
+test.psubsw \
+test.psubusb \
+test.psubusw \
+test.pmulhw \
+test.pmullw \
+test.pmaddwd \
+test.pcmpeqb \
+test.pcmpeqw \
+test.pcmpeqd \
+test.pcmpgtb \
+test.pcmpgtw \
+test.pcmpgtd \
+test.pand \
+test.pandn \
+test.por \
+test.pxor \
+test.psllw \
+test.pslld \
+test.psllq \
+test.psrlw \
+test.psrld \
+test.psrlq \
+test.psraw \
+test.psrad \
+test.emms
+
+SSE_INST_TESTS := \
+test.movaps \
+test.movups \
+test.movhps \
+test.movhlps \
+test.movlps \
+test.movlhps \
+test.movmskps \
+test.movss \
+test.addps \
+test.addss \
+test.subps \
+test.subss \
+test.mulps \
+test.mulss \
+test.divps \
+test.divss \
+test.rcpps \
+test.rcpss \
+test.sqrtps \
+test.sqrtss \
+test.rsqrtps \
+test.rsqrtss \
+test.maxps \
+test.maxss \
+test.minps \
+test.minss \
+test.cmpps \
+test.cmpss \
+test.comiss \
+test.ucomiss \
+test.andps \
+test.andnps \
+test.orps \
+test.xorps \
+test.shufps \
+test.unpckhps \
+test.unpcklps \
+test.cvtpi2ps \
+test.cvtsi2ss \
+test.cvtps2pi \
+test.cvttps2pi \
+test.cvtss2si \
+test.cvttss2si \
+test.ldmxcsr \
+test.stmxcsr \
+test.pavgb \
+test.pavgw \
+test.pextrw \
+test.pinsrw \
+test.pmaxub \
+test.pmaxsw \
+test.pminub \
+test.pminsw \
+test.pmovmskb \
+test.pmulhuw \
+test.psadbw \
+test.pshufw \
+test.maskmovq \
+test.movntq \
+test.movntps \
+test.prefetchh \
+test.sfence
+
+SSE2_INST_TESTS := \
+test.movapd \
+test.movupd \
+test.movhpd \
+test.movlpd \
+test.movmskpd \
+test.movsd \
+test.addpd \
+test.addsd \
+test.subpd \
+test.subsd \
+test.mulpd \
+test.mulsd \
+test.divpd \
+test.divsd \
+test.sqrtpd \
+test.sqrtsd \
+test.maxpd \
+test.maxsd \
+test.minpd \
+test.minsd \
+test.andpd \
+test.andnpd \
+test.orpd \
+test.xorpd \
+test.cmppd \
+test.cmpsd \
+test.comisd \
+test.ucomisd \
+test.shufpd \
+test.unpckhpd \
+test.unpcklpd \
+test.cvtpd2pi \
+test.cvttpd2pi \
+test.cvtpi2pd \
+test.cvtpd2dq \
+test.cvttpd2dq \
+test.cvtdq2pd \
+test.cvtps2pd \
+test.cvtpd2ps \
+test.cvtss2sd \
+test.cvtsd2ss \
+test.cvtsd2si \
+test.cvttsd2si \
+test.cvtsi2sd \
+test.cvtdq2ps \
+test.cvtps2dq \
+test.cvttps2dq \
+test.movdqa \
+test.movdqu \
+test.movq2dq \
+test.movdq2q \
+test.pmuludq \
+test.paddq \
+test.psubq \
+test.pshuflw \
+test.pshufhw \
+test.pshufd \
+test.pslldq \
+test.psrldq \
+test.punpckhqdq \
+test.punpcklqdq \
+test.clflush \
+test.lfence \
+test.mfence \
+test.pause \
+test.maskmovdqu \
+test.movntpd \
+test.movntdq \
+test.movnti
+
+SSE3_INST_TESTS := \
+test.fisttp \
+test.lddqu \
+test.addsubps \
+test.addsubpd \
+test.haddps \
+test.hsubps \
+test.haddpd \
+test.hsubpd \
+test.movshdup \
+test.movsldup \
+test.movddup \
+test.monitor \
+test.mwait
+
+SSSE3_INST_TESTS := \
+test.phaddw \
+test.phaddsw \
+test.phaddd \
+test.phsubw \
+test.phsubsw \
+test.phsubd \
+test.pabsb \
+test.pabsw \
+test.pabsd \
+test.pmaddubsw \
+test.pmulhrsw \
+test.pshufb \
+test.psignb \
+test.psignw \
+test.psignd \
+test.palignr
+
+SSE4_INST_TESTS := \
+test.pmulld \
+test.pmuldq \
+test.dppd \
+test.dpps \
+test.movntdqa \
+test.blendpd \
+test.blendps \
+test.blendvpd \
+test.blendvps \
+test.pblendvb \
+test.pblendw \
+test.pminuw \
+test.pminud \
+test.pminsb \
+test.pminsd \
+test.pmaxuw \
+test.pmaxud \
+test.pmaxsb \
+test.pmaxsd \
+test.roundps \
+test.roundpd \
+test.roundss \
+test.roundsd \
+test.extractps \
+test.insertps \
+test.pinsrb \
+test.pinsrd \
+test.pinsrq \
+test.pextrb \
+test.pextrw \
+test.pextrd \
+test.pextrq \
+test.pmovsxbw \
+test.pmovzxbw \
+test.pmovsxbd \
+test.pmovzxbd \
+test.pmovsxwd \
+test.pmovzxwd \
+test.pmovsxbq \
+test.pmovzxbq \
+test.pmovsxwq \
+test.pmovzxwq \
+test.pmovsxdq \
+test.pmovzxdq \
+test.mpsadbw \
+test.phminposuw \
+test.ptest \
+test.pcmpeqq \
+test.packusdw \
+test.pcmpestri \
+test.pcmpestrm \
+test.pcmpistri \
+test.pcmpistrm \
+test.pcmpgtq \
+test.aesdec \
+test.aesdeclast \
+test.aesenc \
+test.aesenclast \
+test.aesimc \
+test.aeskeygenassist \
+test.pclmulqdq
+
+AVX_INST_TESTS := \
+test.vcvtph2ps \
+test.vcvtps2ph
+
+TSX_INST_TESTS := \
+test.xabort \
+test.xacquire \
+test.xrelease \
+test.xbegin \
+test.xend \
+test.xtest
+
+SYSTEM_INST_TESTS := \
+test.arpl \
+test.clac \
+test.clts \
+test.hlt \
+test.invd \
+test.invlpg \
+test.invpcid \
+test.lar \
+test.lgdt \
+test.lidt \
+test.lldt \
+test.lmsw \
+test.lsl \
+test.ltr \
+test.mov.cr \
+test.rdfsbase \
+test.rdgsbase \
+test.rdmsr \
+test.rdpmc \
+test.rdtsc \
+test.rdtscp \
+test.rsm \
+test.sgdt \
+test.sidt \
+test.sldt \
+test.smsw \
+test.stac \
+test.str \
+test.sysenter \
+test.sysexit \
+test.verr \
+test.verw \
+test.wbinvd \
+test.wrfsbase \
+test.wrgsbase \
+test.wrmsr \
+test.xsave \
+test.xsaveopt \
+test.xrstor \
+test.xgetbv \
+test.xsetbv
+
+_64BIT_MODE_INST_TESTS := \
+test.cdqe \
+test.cmpsq \
+test.cmpxchg16b \
+test.lodsq \
+test.movsq \
+test.movzx \
+test.stosq \
+test.swapgs \
+test.syscall \
+test.sysret
+
+VM_INST_TESTS := \
+test.invept \
+test.invvpid \
+test.vmclear \
+test.vmfunc \
+test.vmlaunch \
+test.vmptrld \
+test.vmread \
+test.vmresume \
+test.vmwrite \
+test.vmxoff \
+test.vmxon \
+test.vmcall
+
+SAFER_MODE_INST_TESTS := \
+test.getsec_capabilities \
+test.getsec_enteraccs \
+test.getsec_exitac \
+test.getsec_senter \
+test.getsec_sexit \
+test.getsec_parameters \
+test.getsec_smcrtl \
+test.getsec_wakeup
+
+
+INST_TESTS := \
+$(GP_INST_TESTS) \
+$(FPU_INST_TESTS) \
+$(FPU_SIMD_INST_TESTS) \
+$(MMX_INST_TESTS) \
+$(SSE_INST_TESTS) \
+$(SSE2_INST_TESTS) \
+$(SSE3_INST_TESTS) \
+$(SSSE3_INST_TESTS) \
+$(SSE4_INST_TESTS) \
+$(AVX_INST_TESTS) \
+$(TSX_INST_TESTS) \
+$(SYSTEM_INST_TESTS) \
+$(_64BIT_MODE_INST_TESTS) \
+$(VM_INST_TESTS) \
+$(SAFER_MODE_INST_TESTS)
+
+ENC_TESTS	:= \
+test.elfo \
+$(INST_TESTS)
+
 SRC 		:= $(patsubst test.%,asm/%.s,$(ENC))
 OBJS		:= $(patsubst asm/%.s,obj/%.o,$(SRC))
 
@@ -230,7 +594,33 @@ gen.tests: $(GP_INST_TESTS)
 
 fpu.tests: $(FPU_INST_TESTS)
 
-$(GP_INST_TESTS) $(FPU_INST_TESTS):test.%: obj/%.o | $(ELF)
+fpu.smid.tests: $(FPU_SIMD_INST_TESTS)
+
+mmx.tests: $(MMX_INST_TESTS)
+
+sse.tests: $(SSE_INST_TESTS)
+
+sse2.tests: $(SSE2_INST_TESTS)
+
+sse3.tests: $(SSE3_INST_TESTS)
+
+ssse3.tests: $(SSSE3_INST_TESTS)
+
+sse4.tests: $(SSE4_INST_TESTS)
+
+avx.tests: $(AVX_INST_TESTS)
+
+tsx.tests: $(TSX_INST_TESTS)
+
+system.tests: $(SYSTEM_INST_TESTS)
+
+64bit.tests: $(_64BIT_MODE_INST_TESTS)
+
+vm.tests: $(VM_INST_TESTS)
+
+safer.tests: $(SAFER_MODE_INST_TESTS)
+
+$(INST_TESTS):test.%: obj/%.o | $(ELF)
 	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 %.e: obj/%.o
