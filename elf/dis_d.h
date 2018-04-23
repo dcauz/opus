@@ -217,14 +217,16 @@ const char * dis_d8(const char * code, unsigned prefix)
 
 const char * dis_d9(const char * code, unsigned prefix)
 {
-	if( *code == 0xfffffff0 )
-		printf( "f2xm1\n" );
+	if( *code == 0xffffffe0 )
+		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
 		printf( "fabs\n" );
-	else if( *code == 0xffffffe0 )
-		printf( "fchs\n" );
+	else if( *code == 0xfffffff0 )
+		printf( "f2xm1\n" );
 	else if( *code == 0xfffffff6 )
 		printf( "fdecstp\n" );
+	else if( *code == 0xfffffff7 )
+		printf( "fincstp\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
 	else
@@ -285,6 +287,12 @@ const char * dis_db(const char * code, unsigned prefix)
 		else if( ( *code & 0xf0 ) == 0xf0 )
 		{
 			printf( "fcomi %%st(%d), %%st(0)\n", reg );
+		}
+		else if( ( *code & 0xf8 ) == 0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fildl %s\n", op.c_str() );
 		}
 		else
 			TODO
@@ -388,7 +396,9 @@ const char * dis_df(const char * code, unsigned prefix)
 		std::string op;
 		code = memStr( code, prefix, 0, 1, op );
 
-		if( reg == 4 )
+		if( reg == 0 )
+			printf( "fild %s\n", op.c_str() );
+		else if( reg == 4 )
 			printf( "fbld %s\n", op.c_str() );
 		else // reg == 6
 			printf( "fbstp %s\n", op.c_str() );
