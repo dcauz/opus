@@ -674,9 +674,6 @@ asm/rol.s: asm/sar.s
 asm/ror.s: asm/sar.s
 	sed 's/sar/ror/' < $< > $@
 
-asm/sal.s: asm/sar.s
-	sed 's/sar/sal/' < $< > $@
-
 asm/shl.s: asm/sar.s
 	sed 's/sar/shl/' < $< > $@
 
