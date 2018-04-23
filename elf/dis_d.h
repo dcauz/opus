@@ -252,6 +252,14 @@ const char * dis_db(const char * code, unsigned prefix)
 			else
 				printf( "fcmovnu %%st(%d), %%st(0)\n", reg-8 );
 		}
+		else if( ( *code & 0xf8 ) == 0xe8 )
+		{
+			printf( "fucomi %%st(%d), %%st(0)\n", reg-8 );
+		}
+		else if( ( *code & 0xf0 ) == 0xf0 )
+		{
+			printf( "fcomi %%st(%d), %%st(0)\n", reg );
+		}
 		else
 			TODO
 	}
@@ -300,15 +308,30 @@ const char * dis_de(const char * code, unsigned prefix)
 
 const char * dis_df(const char * code, unsigned prefix)
 {
-	int reg = ( *code & 0x38) >> 3;
+	if( ( *code & 0xf0 ) == 0xf0 )
+	{
+		int reg = *code & 0x0f;
+		printf( "fcomip %%st(0), %%st(%d)\n", reg );
+		++code;
+	}
+	else if( ( *code & 0xf8 ) == 0xe8 )
+	{
+		int reg = *code & 0x07;
+		printf( "fucomip %%st(%d), %%st(0)\n", reg );
+		++code;
+	}
+	else
+	{
+		int reg = ( *code & 0x38) >> 3;
 
-	std::string op;
-	code = memStr( code, prefix, 0, 1, op );
+		std::string op;
+		code = memStr( code, prefix, 0, 1, op );
 
-	if( reg == 4 )
-		printf( "fbld %s\n", op.c_str() );
-	else // reg == 6
-		printf( "fbstp %s\n", op.c_str() );
+		if( reg == 4 )
+			printf( "fbld %s\n", op.c_str() );
+		else // reg == 6
+			printf( "fbstp %s\n", op.c_str() );
+	}
 
 	return code;
 }

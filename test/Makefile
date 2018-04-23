@@ -90,91 +90,81 @@ test.xlat \
 test.xor
 
 FPU_INST_TESTS := \
-test.f2xm1  \
-test.fabs  \
-test.fadd  \
-test.fbld  \
-test.fbstp  \
-test.fchs  \
-test.fclex  \
+test.f2xm1 \
+test.fabs \
+test.fadd \
+test.fbld \
+test.fbstp \
+test.fchs \
+test.fclex \
 test.fcmovCC \
-test.fcom  \
-\
-test.fcomi  \
-test.fcomip  \
-test.fcos  \
-test.fdecstp  \
-test.fdiv  \
-test.fdivp  \
-test.fdivr  \
-test.fdivrp  \
-test.ffree  \
-test.ficom  \
-\
-test.ficomp  \
-test.fidiv  \
-test.fidivr  \
-test.fild  \
-test.fimul  \
-test.fincstp  \
-test.finit  \
-test.fistp  \
-test.fist  \
-test.fisubr  \
-\
-test.fisub  \
-test.fld1  \
-test.fldcw  \
-test.fldenv  \
-test.fldl2e  \
-test.fldl2t  \
-test.fldlg2  \
-test.fldln2  \
-test.fld  \
-test.fldpi  \
-\
-test.fldz  \
-test.fmul  \
-test.fmulp  \
-test.fninit  \
-test.fnop  \
-test.fnsave  \
-test.fnstcw  \
-test.fnstenv  \
-test.fnstsw  \
-test.fpatan  \
-\
-test.fprem1  \
-test.fprem  \
-test.fptan  \
-test.frndint  \
-test.frstor  \
-test.fsave  \
-test.fscale  \
-test.fsincos  \
-test.fsin  \
-test.fsqrt  \
-\
-test.fstcw  \
-test.fstenv  \
-test.fstp  \
-test.fst  \
-test.fstsw  \
-test.fsubp  \
-test.fsubrp  \
-test.fsubr  \
-test.fsub  \
-test.ftst  \
-\
-test.fucomip  \
-test.fucomi  \
-test.fucompp  \
-test.fucomp  \
-test.fucom  \
-test.fxam  \
-test.fxch  \
-test.fxtract  \
-test.fyl2xp1  \
+test.fcom \
+test.fcomi \
+test.fcos \
+test.fdecstp \
+test.fdiv \
+test.fdivp \
+test.fdivr \
+test.fdivrp \
+test.ffree \
+test.ficom \
+test.ficomp \
+test.fidiv \
+test.fidivr \
+test.fild \
+test.fimul \
+test.fincstp \
+test.finit \
+test.fistp \
+test.fist \
+test.fisubr \
+test.fisub \
+test.fld1 \
+test.fldcw \
+test.fldenv \
+test.fldl2e \
+test.fldl2t \
+test.fldlg2 \
+test.fldln2 \
+test.fld \
+test.fldpi \
+test.fldz \
+test.fmul \
+test.fmulp \
+test.fninit \
+test.fnop \
+test.fnsave \
+test.fnstcw \
+test.fnstenv \
+test.fnstsw \
+test.fpatan \
+test.fprem1 \
+test.fprem \
+test.fptan \
+test.frndint \
+test.frstor \
+test.fsave \
+test.fscale \
+test.fsincos \
+test.fsin \
+test.fsqrt \
+test.fstcw \
+test.fstenv \
+test.fstp \
+test.fst \
+test.fstsw \
+test.fsubp \
+test.fsubrp \
+test.fsubr \
+test.fsub \
+test.ftst \
+test.fucompp \
+test.fucomp \
+test.fucom \
+test.fxam \
+test.fxch \
+test.fxtract \
+test.fyl2xp1 \
 test.fyl2x
 
 FPU_SIMD_INST_TESTS := \
@@ -572,7 +562,7 @@ $(SAFER_MODE_INST_TESTS)
 
 ENC_TESTS	:= \
 test.elfo \
-$(INST_TESTS)
+$(sort $(INST_TESTS))
 
 SRC 		:= $(patsubst test.%,asm/%.s,$(ENC))
 OBJS		:= $(patsubst asm/%.s,obj/%.o,$(SRC))
@@ -589,6 +579,9 @@ clean:
 .PHONY: all clean $(ENC_TESTS)
 
 #######################################################
+
+alpha.tests:
+	@echo $(ENC_TESTS)
 
 gen.tests: $(GP_INST_TESTS)
 
@@ -621,7 +614,7 @@ vm.tests: $(VM_INST_TESTS)
 safer.tests: $(SAFER_MODE_INST_TESTS)
 
 $(INST_TESTS):test.%: obj/%.o | $(ELF)
-	$(ELF)  $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+	$(ELF) $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
 
 %.e: obj/%.o
 	objdump -d $< > $@
