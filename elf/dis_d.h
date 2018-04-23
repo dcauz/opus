@@ -201,6 +201,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fabs\n" );
 	else if( *code == 0xffffffe0 )
 		printf( "fchs\n" );
+	else if( *code == 0xfffffff6 )
+		printf( "fdecstp\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
 	else
