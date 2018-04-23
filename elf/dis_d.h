@@ -168,6 +168,16 @@ const char * dis_d8(const char * code, unsigned prefix)
 
 		return ++code;
 	}
+	else if( ( *code & 0xf0 ) == 0xf0 )
+	{
+		int r = *code & 0x0f;
+
+		if( r < 8 )
+			printf( "fdiv %%st(%d),%%st\n", r );
+		else
+			printf( "fdivr %%st(%d),%%st\n", r-8 );
+		return ++code;
+	}
 	else
 	{
 		if( (*code & 0x38 ) == 0x10 )
@@ -175,6 +185,18 @@ const char * dis_d8(const char * code, unsigned prefix)
 			std::string op;
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "fcoms %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38 ) == 0x30 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fdivs %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38 ) == 0x38 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fdivrs %s\n", op.c_str() );
 		}
 		else if((*code & 0x38 ) == 0x18 )
 		{
@@ -275,7 +297,10 @@ const char * dis_dc(const char * code, unsigned prefix)
 {
 	int r = *code & 0x0f;
 
-	printf( "fadd %%st,%%st(%d)\n", r );
+	if( (*code & 0xf0) == 0xf0)
+		printf( "fdiv %%st,%%st(%d)\n", r );
+	else
+		printf( "fadd %%st,%%st(%d)\n", r );
 	return ++code;
 }
 
@@ -294,6 +319,13 @@ const char * dis_de(const char * code, unsigned prefix)
 		printf( "faddp %%st,%%st(%d)\n", r );
 		return ++code;
 	}
+	else if( ( *code & 0xf0 ) == 0xf0 )
+	{
+		int r = *code & 0x0f;
+
+		printf( "fdivp %%st,%%st(%d)\n", r );
+		return ++code;
+	}
 	else if( ( *code & 0xff ) == 0xd9 )
 	{
 		printf( "fcompp\n" );
@@ -302,9 +334,22 @@ const char * dis_de(const char * code, unsigned prefix)
 	else
 	{
 		std::string op;
-		code = memStr( code, prefix, 0, 0, op );
 
-		printf( "fiadd %s\n", op.c_str() );
+		if( (*code & 0x38) == 0x30)
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fidiv %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38) == 0x38)
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fidivr %s\n", op.c_str() );
+		}
+		else
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fiadd %s\n", op.c_str() );
+		}
 		
 		return code;
 	}

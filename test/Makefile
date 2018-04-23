@@ -103,9 +103,7 @@ test.fcomi \
 test.fcos \
 test.fdecstp \
 test.fdiv \
-test.fdivp \
 test.fdivr \
-test.fdivrp \
 test.ffree \
 test.ficom \
 test.ficomp \
