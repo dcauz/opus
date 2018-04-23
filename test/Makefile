@@ -106,9 +106,6 @@ test.fdiv \
 test.fdivr \
 test.ffree \
 test.ficom \
-test.ficomp \
-test.fidiv \
-test.fidivr \
 test.fild \
 test.fimul \
 test.fincstp \

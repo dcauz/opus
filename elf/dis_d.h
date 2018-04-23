@@ -306,8 +306,10 @@ const char * dis_dc(const char * code, unsigned prefix)
 
 const char * dis_dd(const char * code, unsigned prefix)
 {
-TODO
-	return code;
+	int r = *code & 0x07;
+
+	printf( "ffree %%st(%d)\n", r );
+	return ++code;
 }
 
 const char * dis_de(const char * code, unsigned prefix)
@@ -344,6 +346,16 @@ const char * dis_de(const char * code, unsigned prefix)
 		{
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "fidivr %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38) == 0x10)
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "ficom %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38) == 0x18)
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "ficomp %s\n", op.c_str() );
 		}
 		else
 		{

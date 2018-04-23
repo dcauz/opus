@@ -1,1 +1,8 @@
-ffree
+ffree %st(0)
+ffree %st(1)
+ffree %st(2)
+ffree %st(3)
+ffree %st(4)
+ffree %st(5)
+ffree %st(6)
+ffree %st(7)
