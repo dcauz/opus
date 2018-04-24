@@ -401,7 +401,6 @@ test.pinsrb \
 test.pinsrd \
 test.pinsrq \
 test.pextrb \
-test.pextrw \
 test.pextrd \
 test.pextrq \
 test.pmovsxbw \

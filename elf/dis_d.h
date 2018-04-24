@@ -243,6 +243,14 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
+	else if((*code & 0x38 ) == 0x28 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fldcw %s\n", op.c_str() );
+
+		return code;
+	}
 	else
 		TODO
 
