@@ -217,10 +217,24 @@ const char * dis_d8(const char * code, unsigned prefix)
 
 const char * dis_d9(const char * code, unsigned prefix)
 {
-	if( *code == 0xffffffe0 )
+	if(      *code == 0xffffffe0 )
 		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
 		printf( "fabs\n" );
+	else if( *code == 0xffffffe8 )
+		printf( "fld1\n" );
+	else if( *code == 0xffffffe9 )
+		printf( "fldl2t\n" );
+	else if( *code == 0xffffffea )
+		printf( "fldl2e\n" );
+	else if( *code == 0xffffffeb )
+		printf( "fldpi\n" );
+	else if( *code == 0xffffffec )
+		printf( "fldlg2\n" );
+	else if( *code == 0xffffffed )
+		printf( "fldln2\n" );
+	else if( *code == 0xffffffee )
+		printf( "fldz\n" );
 	else if( *code == 0xfffffff0 )
 		printf( "f2xm1\n" );
 	else if( *code == 0xfffffff6 )

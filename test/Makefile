@@ -110,18 +110,10 @@ test.fild \
 test.fincstp \
 test.finit \
 test.fist \
-test.fisubr \
-test.fisub \
 test.fld1 \
 test.fldcw \
 test.fldenv \
-test.fldl2e \
-test.fldl2t \
-test.fldlg2 \
-test.fldln2 \
 test.fld \
-test.fldpi \
-test.fldz \
 test.fmul \
 test.fmulp \
 test.fninit \
@@ -146,8 +138,6 @@ test.fstenv \
 test.fstp \
 test.fst \
 test.fstsw \
-test.fsubp \
-test.fsubrp \
 test.fsubr \
 test.fsub \
 test.ftst \
