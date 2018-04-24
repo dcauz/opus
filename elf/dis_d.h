@@ -261,7 +261,15 @@ const char * dis_da(const char * code, unsigned prefix)
 const char * dis_db(const char * code, unsigned prefix)
 {
 	if( *code == 0xffffffe2 )
+	{
 		printf( "fnclex\n" );
+		++code;
+	}
+	else if( *code == 0xffffffe3 )
+	{
+		printf( "fninit\n" );
+		++code;
+	}
 	else
 	{
 		int reg = *code & 0x0f;
@@ -272,6 +280,7 @@ const char * dis_db(const char * code, unsigned prefix)
 				printf( "fcmovnb %%st(%d), %%st(0)\n", reg );
 			else
 				printf( "fcmovne %%st(%d), %%st(0)\n", reg-8 );
+			++code;
 		}
 		else if( ( *code & 0xf0 ) == 0xd0 )
 		{
@@ -279,26 +288,43 @@ const char * dis_db(const char * code, unsigned prefix)
 				printf( "fcmovnbe %%st(%d), %%st(0)\n", reg );
 			else
 				printf( "fcmovnu %%st(%d), %%st(0)\n", reg-8 );
+			++code;
 		}
 		else if( ( *code & 0xf8 ) == 0xe8 )
 		{
 			printf( "fucomi %%st(%d), %%st(0)\n", reg-8 );
+			++code;
 		}
 		else if( ( *code & 0xf0 ) == 0xf0 )
 		{
 			printf( "fcomi %%st(%d), %%st(0)\n", reg );
+			++code;
 		}
-		else if( ( *code & 0xf8 ) == 0 )
+		else if( ( *code & 0xe0 ) == 0 )
 		{
 			std::string op;
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fildl %s\n", op.c_str() );
+
+			if( (*code & 0x38 ) == 0x10 )
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fistl %s\n", op.c_str() );
+			}
+			else if((*code & 0x38 ) == 0x18)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fistpl %s\n", op.c_str() );
+			}
+			else
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fildl %s\n", op.c_str() );
+			}	
 		}
 		else
 			TODO
 	}
 
-	return ++code;
+	return code;
 }
 
 const char * dis_dc(const char * code, unsigned prefix)
@@ -398,6 +424,10 @@ const char * dis_df(const char * code, unsigned prefix)
 
 		if( reg == 0 )
 			printf( "fild %s\n", op.c_str() );
+		else if( reg == 2 )
+			printf( "fist %s\n", op.c_str() );
+		else if( reg == 3 )
+			printf( "fistp %s\n",op.c_str() );
 		else if( reg == 4 )
 			printf( "fbld %s\n", op.c_str() );
 		else // reg == 6

@@ -109,7 +109,6 @@ test.ficom \
 test.fild \
 test.fincstp \
 test.finit \
-test.fistp \
 test.fist \
 test.fisubr \
 test.fisub \

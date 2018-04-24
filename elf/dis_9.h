@@ -100,6 +100,8 @@ const char * dis_9b(const char * code, unsigned prefix)
 		++code;
 		if( *code == 0xffffffe2 )
 			printf( "fclex\n" );
+		else if( *code == 0xffffffe3 )
+			printf( "finit\n" );
 		else
 			TODO
 		++code;
