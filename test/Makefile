@@ -115,8 +115,6 @@ test.fldcw \
 test.fldenv \
 test.fld \
 test.fmul \
-test.fmulp \
-test.fninit \
 test.fnop \
 test.fnsave \
 test.fnstcw \
