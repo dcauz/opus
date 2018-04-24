@@ -217,7 +217,9 @@ const char * dis_d8(const char * code, unsigned prefix)
 
 const char * dis_d9(const char * code, unsigned prefix)
 {
-	if(      *code == 0xffffffe0 )
+	if( *code >= 0xffffffc0 && *code <= 0xffffffc7 )
+		printf( "fld %%st(%d)\n", *code - 0xffffffc0 );
+	else if( *code == 0xffffffe0 )
 		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
 		printf( "fabs\n" );
@@ -243,6 +245,22 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
+	else if((*code & 0x38 ) == 0x00 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fld %s\n", op.c_str() );
+
+		return code;
+	}
+	else if((*code & 0x38 ) == 0x20 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fldenv %s\n", op.c_str() );
+
+		return code;
+	}
 	else if((*code & 0x38 ) == 0x28 )
 	{
 		std::string op;
