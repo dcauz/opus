@@ -160,6 +160,25 @@ const char * dis_9b(const char * code, unsigned prefix)
 
 			printf( "fsave %s\n", op.c_str() );
 		}
+		else if( *pref == 0xffffffd9 )
+		{
+			code = pref+1;
+
+			std::string op;
+
+			if( (*code & 0x38 ) == 0x38 )
+			{
+				code = memStr( code, prefix, 0, 1, op );
+				printf( "fstcw %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38 ) == 0x30 )
+			{
+				code = memStr( code, prefix, 0, 1, op );
+				printf( "fstenv %s\n", op.c_str() );
+			}
+			else
+				TODO
+		}
 		else
 			printf( "fwait\n" );
 	}

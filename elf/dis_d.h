@@ -268,6 +268,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xfffffff8 )
 		printf( "fprem\n" );
+	else if( *code == 0xfffffffa )
+		printf( "fsqrt\n" );
 	else if( *code == 0xfffffffb )
 		printf( "fsincos\n" );
 	else if( *code == 0xfffffffc )
@@ -299,6 +301,22 @@ const char * dis_d9(const char * code, unsigned prefix)
 		std::string op;
 		code = memStr( code, prefix, 0, 0, op );
 		printf( "fldcw %s\n", op.c_str() );
+
+		return code;
+	}
+	else if((*code & 0x38 ) == 0x30 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fnstenv %s\n", op.c_str() );
+
+		return code;
+	}
+	else if((*code & 0x38 ) == 0x38 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fnstcw %s\n", op.c_str() );
 
 		return code;
 	}
