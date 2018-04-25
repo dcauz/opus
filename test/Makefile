@@ -129,14 +129,11 @@ test.fsin \
 test.fsqrt \
 test.fstcw \
 test.fstenv \
-test.fstp \
 test.fst \
 test.fstsw \
 test.fsubr \
 test.fsub \
 test.ftst \
-test.fucompp \
-test.fucomp \
 test.fucom \
 test.fxam \
 test.fxch \
