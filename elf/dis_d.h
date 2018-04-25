@@ -232,6 +232,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 {
 	if( *code >= 0xffffffc0 && *code <= 0xffffffc7 )
 		printf( "fld %%st(%d)\n", *code - 0xffffffc0 );
+	else if( *code == 0xffffffd0 )
+		printf( "fnop\n" );
 	else if( *code == 0xffffffe0 )
 		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
