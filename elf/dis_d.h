@@ -254,10 +254,18 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fldz\n" );
 	else if( *code == 0xfffffff0 )
 		printf( "f2xm1\n" );
+	else if( *code == 0xfffffff2 )
+		printf( "fptan\n" );
+	else if( *code == 0xfffffff3 )
+		printf( "fpatan\n" );
+	else if( *code == 0xfffffff5 )
+		printf( "fprem1\n" );
 	else if( *code == 0xfffffff6 )
 		printf( "fdecstp\n" );
 	else if( *code == 0xfffffff7 )
 		printf( "fincstp\n" );
+	else if( *code == 0xfffffff8 )
+		printf( "fprem\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
 	else if((*code & 0x38 ) == 0x00 )

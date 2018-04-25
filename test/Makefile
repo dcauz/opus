@@ -117,8 +117,8 @@ test.fld \
 test.fmul \
 test.fnop \
 test.fpatan \
-test.fprem1 \
 test.fprem \
+test.fprem1 \
 test.fptan \
 test.frndint \
 test.frstor \
