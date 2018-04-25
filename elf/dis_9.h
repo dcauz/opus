@@ -93,6 +93,43 @@ TODO
 	return code;
 }
 
+inline bool isPrefix(char pref, unsigned & prefix )
+{
+	switch(pref)
+	{	
+	default:
+		return false;
+	case 0x26:	prefix |= PRE_26;	break;
+	case 0x2e:	prefix |= PRE_BHNT;	break;
+	case 0x36:	prefix |= PRE_36; 	break;
+	case 0x3e:	prefix |= PRE_3E; 	break;
+	case 0x40:	prefix |= pref; 	break;
+	case 0x41:	prefix |= pref; 	break;
+	case 0x42:	prefix |= pref; 	break;
+	case 0x43:	prefix |= pref; 	break;
+	case 0x44:	prefix |= pref; 	break;
+	case 0x45:	prefix |= pref; 	break;
+	case 0x46:	prefix |= pref; 	break;
+	case 0x47:	prefix |= pref; 	break;
+	case 0x48:	prefix |= pref; 	break;
+	case 0x49:	prefix |= pref; 	break;
+	case 0x4a:	prefix |= pref; 	break;
+	case 0x4b:	prefix |= pref; 	break;
+	case 0x4c:	prefix |= pref; 	break;
+	case 0x4d:	prefix |= pref; 	break;
+	case 0x4e:	prefix |= pref; 	break;
+	case 0x4f:	prefix |= pref; 	break;
+	case 0x64:	prefix |= PRE_64; 	break;
+	case 0x65:	prefix |= PRE_65; 	break;
+	case 0x66:	prefix |= PRE_OS; 	break;
+	case 0x67:	prefix |= PRE_AS; 	break;
+	case -14:	prefix |= PRE_NE; 	break;
+	case -13:	prefix |= PRE_REP;	break;
+	}
+
+	return true;
+}
+
 const char * dis_9b(const char * code, unsigned prefix)
 {
 	if( *code == 0xffffffdb )
@@ -107,7 +144,26 @@ const char * dis_9b(const char * code, unsigned prefix)
 		++code;
 	}
 	else
-		printf( "fwait\n" );
+	{
+		const char * pref = code;
+		unsigned prefix = 0;
+
+		while(isPrefix(*pref, prefix ))
+			++pref;
+
+		if( *pref == 0xffffffdd )
+		{
+			code = pref;
+
+			std::string op;
+			code = memStr( ++code, prefix, 0, 1, op );
+
+			printf( "fsave %s\n", op.c_str() );
+		}
+		else
+			printf( "fwait\n" );
+	}
+
 	return code;
 }
 

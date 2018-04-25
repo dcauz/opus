@@ -234,6 +234,7 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fld %%st(%d)\n", *code - 0xffffffc0 );
 	else if( *code == 0xffffffd0 )
 		printf( "fnop\n" );
+
 	else if( *code == 0xffffffe0 )
 		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
@@ -252,6 +253,7 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fldln2\n" );
 	else if( *code == 0xffffffee )
 		printf( "fldz\n" );
+
 	else if( *code == 0xfffffff0 )
 		printf( "f2xm1\n" );
 	else if( *code == 0xfffffff2 )
@@ -266,8 +268,14 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xfffffff8 )
 		printf( "fprem\n" );
+	else if( *code == 0xfffffffb )
+		printf( "fsincos\n" );
 	else if( *code == 0xfffffffc )
 		printf( "frndint\n" );
+	else if( *code == 0xfffffffd )
+		printf( "fscale\n" );
+	else if( *code == 0xfffffffe )
+		printf( "fsin\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
 	else if((*code & 0x38 ) == 0x00 )
@@ -407,10 +415,27 @@ const char * dis_dc(const char * code, unsigned prefix)
 
 const char * dis_dd(const char * code, unsigned prefix)
 {
-	int r = *code & 0x07;
+	if( (*code & 0x38 ) == 0x20 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "frstor %s\n", op.c_str() );
+		return code;
+	}
+	else if( (*code & 0x38 ) == 0x30 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fnsave %s\n", op.c_str() );
+		return code;
+	}
+	else
+	{
+		int r = *code & 0x07;
 
-	printf( "ffree %%st(%d)\n", r );
-	return ++code;
+		printf( "ffree %%st(%d)\n", r );
+		return ++code;
+	}
 }
 
 const char * dis_de(const char * code, unsigned prefix)
