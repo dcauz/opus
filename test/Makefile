@@ -116,9 +116,6 @@ test.fldenv \
 test.fld \
 test.fmul \
 test.fnop \
-test.fnstcw \
-test.fnstenv \
-test.fnstsw \
 test.fpatan \
 test.fprem1 \
 test.fprem \
