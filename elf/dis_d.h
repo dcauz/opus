@@ -266,6 +266,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xfffffff8 )
 		printf( "fprem\n" );
+	else if( *code == 0xfffffffc )
+		printf( "frndint\n" );
 	else if( *code == 0xffffffff )
 		printf( "fcos\n" );
 	else if((*code & 0x38 ) == 0x00 )
