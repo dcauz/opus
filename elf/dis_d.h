@@ -256,6 +256,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 
 	else if( *code == 0xfffffff0 )
 		printf( "f2xm1\n" );
+	else if( *code == 0xfffffff1 )
+		printf( "fyl2x\n" );
 	else if( *code == 0xfffffff2 )
 		printf( "fptan\n" );
 	else if( *code == 0xfffffff3 )
@@ -268,6 +270,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fincstp\n" );
 	else if( *code == 0xfffffff8 )
 		printf( "fprem\n" );
+	else if( *code == 0xfffffff9 )
+		printf( "fyl2xp1\n" );
 	else if( *code == 0xfffffffa )
 		printf( "fsqrt\n" );
 	else if( *code == 0xfffffffb )
