@@ -292,6 +292,22 @@ const char * dis_d9(const char * code, unsigned prefix)
 
 		return code;
 	}
+	else if((*code & 0x38 ) == 0x10 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 1, op );
+		printf( "fsts %s\n", op.c_str() );
+
+		return code;
+	}
+	else if((*code & 0x38 ) == 0x18 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 1, op );
+		printf( "fstps %s\n", op.c_str() );
+
+		return code;
+	}
 	else if((*code & 0x38 ) == 0x20 )
 	{
 		std::string op;
@@ -450,6 +466,20 @@ const char * dis_dd(const char * code, unsigned prefix)
 		code = memStr( code, prefix, 0, 0, op );
 		printf( "fnsave %s\n", op.c_str() );
 		return code;
+	}
+	else if((*code & 0xf8 ) == 0xd0 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fst %%st(%d)\n", r );
+		return ++code;
+	}
+	else if((*code & 0xf8 ) == 0xd8 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fstp %%st(%d)\n", r );
+		return ++code;
 	}
 	else
 	{
