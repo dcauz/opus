@@ -143,6 +143,8 @@ const char * dis_9b(const char * code, unsigned prefix)
 			TODO
 		++code;
 	}
+	else if( *code == 0xffffffdf && code[1] == 0xffffffe0 )
+		printf( "fstsw %%ax\n" );
 	else
 	{
 		const char * pref = code;
@@ -153,12 +155,20 @@ const char * dis_9b(const char * code, unsigned prefix)
 
 		if( *pref == 0xffffffdd )
 		{
-			code = pref;
+			code = pref+1;
 
 			std::string op;
-			code = memStr( ++code, prefix, 0, 1, op );
 
-			printf( "fsave %s\n", op.c_str() );
+			if( (*code & 0x38 ) == 0x38 )
+			{
+				code = memStr( code, prefix, 0, 1, op );
+				printf( "fstsw %s\n", op.c_str() );
+			}
+			else
+			{
+				code = memStr( code, prefix, 0, 1, op );
+				printf( "fsave %s\n", op.c_str() );
+			}
 		}
 		else if( *pref == 0xffffffd9 )
 		{

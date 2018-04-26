@@ -467,6 +467,13 @@ const char * dis_dd(const char * code, unsigned prefix)
 		printf( "fnsave %s\n", op.c_str() );
 		return code;
 	}
+	else if( (*code & 0x38 ) == 0x38 )
+	{
+		std::string op;
+		code = memStr( code, prefix, 0, 0, op );
+		printf( "fnstsw %s\n", op.c_str() );
+		return code;
+	}
 	else if((*code & 0xf8 ) == 0xd0 )
 	{
 		int r = *code & 0x07;
@@ -559,7 +566,12 @@ const char * dis_de(const char * code, unsigned prefix)
 
 const char * dis_df(const char * code, unsigned prefix)
 {
-	if( ( *code & 0xf0 ) == 0xf0 )
+	if( ( *code & 0xf8 ) == 0xe0 )
+	{
+		printf( "fnstsw %%ax\n" );
+		++code;
+	}
+	else if( ( *code & 0xf0 ) == 0xf0 )
 	{
 		int reg = *code & 0x0f;
 		printf( "fcomip %%st(0), %%st(%d)\n", reg );
