@@ -131,8 +131,8 @@ test.fstcw \
 test.fstenv \
 test.fst \
 test.fstsw \
-test.fsubr \
 test.fsub \
+test.fsubr \
 test.ftst \
 test.fucom \
 test.fxam \

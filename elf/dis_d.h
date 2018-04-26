@@ -175,6 +175,17 @@ const char * dis_d8(const char * code, unsigned prefix)
 
 		return ++code;
 	}
+	else if( ( *code & 0xf0 ) == 0xe0 )
+	{
+		int r = *code & 0x0f;
+
+		if( r < 8 )
+			printf( "fsub %%st(%d)\n", r );
+		else
+			printf( "fsubp %%st(%d)\n", r-8 );
+
+		return ++code;
+	}
 	else if( ( *code & 0xf0 ) == 0xf0 )
 	{
 		int r = *code & 0x0f;
@@ -192,6 +203,12 @@ const char * dis_d8(const char * code, unsigned prefix)
 			std::string op;
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "fcoms %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38 ) == 0x20 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fsubs %s\n", op.c_str() );
 		}
 		else if( (*code & 0x38 ) == 0x30 )
 		{
@@ -446,6 +463,8 @@ const char * dis_dc(const char * code, unsigned prefix)
 		printf( "fdiv %%st,%%st(%d)\n", r );
 	else if( (*code & 0xf8) == 0xc8)
 		printf( "fmul %%st,%%st(%d)\n", r-8 );
+	else if( (*code & 0xf8) == 0xe0)
+		printf( "fsub %%st,%%st(%d)\n", r );
 	else
 		printf( "fadd %%st,%%st(%d)\n", r );
 	return ++code;
@@ -513,6 +532,13 @@ const char * dis_de(const char * code, unsigned prefix)
 		printf( "fmulp %%st,%%st(%d)\n", r );
 		return ++code;
 	}
+	else if( ( *code & 0xf8 ) == 0xe8 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fsubp %%st,%%st(%d)\n", r );
+		return ++code;
+	}
 	else if( ( *code & 0xf0 ) == 0xf0 )
 	{
 		int r = *code & 0x0f;
@@ -544,10 +570,20 @@ const char * dis_de(const char * code, unsigned prefix)
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "ficom %s\n", op.c_str() );
 		}
+		else if( (*code & 0x38) == 0x20)
+		{
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fisub %s\n", op.c_str() );
+		}
 		else if( (*code & 0x38) == 0x18)
 		{
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "ficomp %s\n", op.c_str() );
+		}
+		else if( (*code & 0x38) == 0x20)
+		{
+			int reg = *code++ & 0x07;
+			printf( "fsubp %%s(%d)\n", reg );
 		}
 		else if( (*code & 0x38) == 0x08)
 		{
