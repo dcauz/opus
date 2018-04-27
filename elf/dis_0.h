@@ -806,6 +806,27 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "shrd %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
 	}
+	else if( ( code[0] & 0xff ) == 0xae )
+	{
+		++code;
+		int reg = (*code & 0x38 ) >> 3;
+
+		code = memStr( code, prefix, 0, 0, op1 );
+		if( ( prefix & REX_W ) == REX_W )
+		{
+			if( reg == 0 )
+				printf( "fxsave64 %s\n",  op1.c_str() );
+			else
+				printf( "fxrstor64 %s\n",  op1.c_str() );
+		}
+		else
+		{
+			if( reg == 0 )
+				printf( "fxsave %s\n",  op1.c_str() );
+			else
+				printf( "fxrstor %s\n",  op1.c_str() );
+		}
+	}
 
 	// b0
 	else if( ( code[0] & 0xff ) == 0xb0 )
