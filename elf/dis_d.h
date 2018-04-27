@@ -262,13 +262,19 @@ const char * dis_d9(const char * code, unsigned prefix)
 {
 	if( *code >= 0xffffffc0 && *code <= 0xffffffc7 )
 		printf( "fld %%st(%d)\n", *code - 0xffffffc0 );
+	else if( *code >= 0xffffffc8 && *code <= 0xffffffcf )
+		printf( "fxch %%st(%d)\n", *code - 0xffffffc8 );
+
 	else if( *code == 0xffffffd0 )
 		printf( "fnop\n" );
-
 	else if( *code == 0xffffffe0 )
 		printf( "fchs\n" );
 	else if( *code == 0xffffffe1 )
 		printf( "fabs\n" );
+	else if( *code == 0xffffffe4 )
+		printf( "ftst\n" );
+	else if( *code == 0xffffffe5 )
+		printf( "fxam\n" );
 	else if( *code == 0xffffffe8 )
 		printf( "fld1\n" );
 	else if( *code == 0xffffffe9 )
@@ -292,6 +298,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 		printf( "fptan\n" );
 	else if( *code == 0xfffffff3 )
 		printf( "fpatan\n" );
+	else if( *code == 0xfffffff4 )
+		printf( "fxtract\n" );
 	else if( *code == 0xfffffff5 )
 		printf( "fprem1\n" );
 	else if( *code == 0xfffffff6 )
@@ -393,6 +401,11 @@ const char * dis_da(const char * code, unsigned prefix)
 		else
 			printf( "fcmovu %%st(%d), %%st(0)\n", reg-8 );
 	}
+	else if( *code == 0xffffffe9 )
+	{
+		printf( "fucompp\n" );
+		++code;
+	}
 	else
 		TODO
 
@@ -487,7 +500,35 @@ const char * dis_dc(const char * code, unsigned prefix)
 
 const char * dis_dd(const char * code, unsigned prefix)
 {
-	if( (*code & 0x38 ) == 0x20 )
+	if((*code & 0xf8 ) == 0xd0 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fst %%st(%d)\n", r );
+		return ++code;
+	}
+	else if((*code & 0xf8 ) == 0xd8 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fstp %%st(%d)\n", r );
+		return ++code;
+	}
+	else if((*code & 0xf8 ) == 0xe0 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fucom %%st(%d)\n", r );
+		return ++code;
+	}
+	else if((*code & 0xf8 ) == 0xe8 )
+	{
+		int r = *code & 0x07;
+
+		printf( "fucomp %%st(%d)\n", r );
+		return ++code;
+	}
+	else if( (*code & 0x38 ) == 0x20 )
 	{
 		std::string op;
 		code = memStr( code, prefix, 0, 0, op );
@@ -507,20 +548,6 @@ const char * dis_dd(const char * code, unsigned prefix)
 		code = memStr( code, prefix, 0, 0, op );
 		printf( "fnstsw %s\n", op.c_str() );
 		return code;
-	}
-	else if((*code & 0xf8 ) == 0xd0 )
-	{
-		int r = *code & 0x07;
-
-		printf( "fst %%st(%d)\n", r );
-		return ++code;
-	}
-	else if((*code & 0xf8 ) == 0xd8 )
-	{
-		int r = *code & 0x07;
-
-		printf( "fstp %%st(%d)\n", r );
-		return ++code;
 	}
 	else
 	{
