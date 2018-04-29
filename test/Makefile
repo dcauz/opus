@@ -465,10 +465,10 @@ test.verr \
 test.wbinvd \
 test.wrfsbase \
 test.wrmsr \
+test.xgetbv \
+test.xrstor \
 test.xsave \
 test.xsaveopt \
-test.xrstor \
-test.xgetbv \
 test.xsetbv
 
 _64BIT_MODE_INST_TESTS := \

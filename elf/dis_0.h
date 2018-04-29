@@ -311,6 +311,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "stac\n" );
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffd0 )
+	{
+		code +=2;
+		printf( "xgetbv\n" );
+	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
 	{
 		std::string op;
@@ -879,6 +884,22 @@ const char * dis_0f(const char * code, unsigned prefix)
 				printf( "xsave64 %s\n", op1.c_str() );
 			else
 				printf( "xsave %s\n", op1.c_str() );
+		}
+		else if( reg == 5 )
+		{
+			code = memStr( code, prefix, 0, 0, op1 );
+			if( prefix & REX_W )
+				printf( "xrstor64 %s\n", op1.c_str() );
+			else
+				printf( "xrstor %s\n", op1.c_str() );
+		}
+		else if( reg == 6 )
+		{
+			code = memStr( code, prefix, 0, 0, op1 );
+			if( prefix & REX_W )
+				printf( "xsaveopt64 %s\n", op1.c_str() );
+			else
+				printf( "xsaveopt %s\n", op1.c_str() );
 		}
 		else if(mod == 3 )
 		{
