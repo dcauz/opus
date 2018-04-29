@@ -321,6 +321,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "xsetbv\n" );
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffd4 )
+	{
+		code +=2;
+		printf( "vmfunc\n" );
+	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
 	{
 		std::string op;
@@ -1091,7 +1096,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 	else if( (code[0] & 0xff ) == 0xc7 )
 	{
 		++code;
-		if( (*code & 0xc0) != 0xc0 )
+
+		if( (*code & 0x38 ) == 0x30)
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "vmclear %s\n", op.c_str() );
+		}
+		else if( (*code & 0xc0) != 0xc0 )
 		{
 			std::string op;
 			code = memStr( code, prefix, 0, 0, op );
