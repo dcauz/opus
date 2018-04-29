@@ -301,6 +301,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 		else
 			TODO
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffc2 )
+	{
+		code +=2;
+		printf( "vmlaunch\n" );
+	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffc3 )
+	{
+		code +=2;
+		printf( "vmresume\n" );
+	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffca )
 	{
 		code +=2;
@@ -1101,7 +1111,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 		{
 			std::string op;
 			code = memStr( code, prefix, 0, 0, op );
-			printf( "vmclear %s\n", op.c_str() );
+			if( prefix & PRE_OS )
+				printf( "vmclear %s\n", op.c_str() );
+			else
+				printf( "vmptrld %s\n", op.c_str() );
 		}
 		else if( (*code & 0xc0) != 0xc0 )
 		{
