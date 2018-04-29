@@ -877,10 +877,17 @@ const char * dis_0f(const char * code, unsigned prefix)
 			unsigned r = *code & 0x07;
 			const char * reg = regStr( r, AL, 1, Reg2, prefix );
 
-			if( *code & 0x08 )
-				printf( "rdfsbase %s\n",  reg );
+			if( ( *code & 0x38 ) == 0x10 )
+				printf( "wrfsbase %s\n",  reg );
+			else if( ( *code & 0x38 ) == 0x18 )
+				printf( "wrgsbase %s\n",  reg );
 			else
-				printf( "rdgsbase %s\n",  reg );
+			{
+				if( *code & 0x08 )
+					printf( "rdfsbase %s\n",  reg );
+				else
+					printf( "rdgsbase %s\n",  reg );
+			}
 			++code;
 		}
 		else

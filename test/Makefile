@@ -462,10 +462,8 @@ test.str \
 test.sysenter \
 test.sysexit \
 test.verr \
-test.verw \
 test.wbinvd \
 test.wrfsbase \
-test.wrgsbase \
 test.wrmsr \
 test.xsave \
 test.xsaveopt \
