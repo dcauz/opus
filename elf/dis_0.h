@@ -528,25 +528,35 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// 30
-	else if( ( code[0] & 0xff ) == 0x30 )
+	else if( code[0] == 0x30 )
 	{
 		++code;
 		printf( "wrmsr\n" );
 	}
-	else if( ( code[0] & 0xff ) == 0x31 )
+	else if( code[0] == 0x31 )
 	{
 		++code;
 		printf( "rdtsc\n" );
 	}
-	else if( ( code[0] & 0xff ) == 0x32 )
+	else if( code[0] == 0x32 )
 	{
 		++code;
 		printf( "rdmsr\n" );
 	}
-	else if( ( code[0] & 0xff ) == 0x33 )
+	else if( code[0] == 0x33 )
 	{
 		++code;
 		printf( "rdpmc\n" );
+	}
+	else if( code[0] == 0x34 )
+	{
+		++code;
+		printf( "sysenter\n" );
+	}
+	else if( code[0] == 0x35 )
+	{
+		++code;
+		printf( "sysexit\n" );
 	}
 	else if( code[0] == 0x38 && code[1] == 0xffffff82 )
 	{
