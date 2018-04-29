@@ -543,6 +543,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "rdpmc\n" );
 	}
+	else if( code[0] == 0x38 && code[1] == 0xffffff82 )
+	{
+		code += 2;
+		prefix |= REX_W;
+		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+		printf( "invpcid %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else if( code[0] == 0x38 && code[1] == 0xfffffff6 )
 	{
 		if( prefix & PRE_REP )
@@ -633,6 +640,44 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x4e: printf( "cmovle %s,%s\n", op1.c_str(), op2.c_str() );	break;
 		case 0x4f: printf( "cmovg %s,%s\n",  op1.c_str(), op2.c_str() );	break;
 		}
+	}
+
+	// 6e
+	else if( *code == 0x6e )
+	{
+		if( prefix & PRE_OS )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
+		printf( "movd %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+
+	// 6f
+	else if( *code == 0x6f )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
+		printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+
+	// 7e
+	else if( *code == 0x7e )
+	{
+		if( ((prefix & PRE_OS ) == PRE_OS) || (( prefix & PRE_REP ) == PRE_REP) )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
+
+		if( PRE_REP & prefix )
+			printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+			printf( "movd %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
+	// 7f
+	else if( *code == 0x7f )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
+		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
 	// 80 - 8f
@@ -809,22 +854,37 @@ const char * dis_0f(const char * code, unsigned prefix)
 	else if( ( code[0] & 0xff ) == 0xae )
 	{
 		++code;
+		int mod = (*code & 0xc0 ) >> 6;
 		int reg = (*code & 0x38 ) >> 3;
 
-		code = memStr( code, prefix, 0, 0, op1 );
-		if( ( prefix & REX_W ) == REX_W )
+		if(mod == 3 )
 		{
-			if( reg == 0 )
-				printf( "fxsave64 %s\n",  op1.c_str() );
+			unsigned r = *code & 0x07;
+			const char * reg = regStr( r, AL, 1, Reg2, prefix );
+
+			if( *code & 0x08 )
+				printf( "rdfsbase %s\n",  reg );
 			else
-				printf( "fxrstor64 %s\n",  op1.c_str() );
+				printf( "rdgsbase %s\n",  reg );
+			++code;
 		}
 		else
 		{
-			if( reg == 0 )
-				printf( "fxsave %s\n",  op1.c_str() );
+			code = memStr( code, prefix, 0, 0, op1 );
+			if( ( prefix & REX_W ) == REX_W )
+			{
+				if( reg == 0 )
+					printf( "fxsave64 %s\n",  op1.c_str() );
+				else
+					printf( "fxrstor64 %s\n",  op1.c_str() );
+			}
 			else
-				printf( "fxrstor %s\n",  op1.c_str() );
+			{
+				if( reg == 0 )
+					printf( "fxsave %s\n",  op1.c_str() );
+				else
+					printf( "fxrstor %s\n",  op1.c_str() );
+			}
 		}
 	}
 
@@ -991,6 +1051,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "bswap %s\n", op );
 		++code;
 	}
+
+	// d6
+	else if( *code == 0xffffffd6 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
 	else
 	{
 		printf( "code %x\n", *code ); fflush(stdout);

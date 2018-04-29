@@ -59,19 +59,27 @@ const char * regToStr( Register r )
 	case ST4:	return "%st4"; case ST5:	return "%st5";
 	case ST6:	return "%st6"; case ST7:	return "%st7";
 
-	case MMX0:	return "%mmx0"; case MMX1:	return "%mmx1";
-	case MMX2:	return "%mmx2"; case MMX3:	return "%mmx3";
-	case MMX4:	return "%mmx4"; case MMX5:	return "%mmx5";
-	case MMX6:	return "%mmx6"; case MMX7:	return "%mmx7";
+	case MM0:	return "%mm0"; case MM1:	return "%mm1";
+	case MM2:	return "%mm2"; case MM3:	return "%mm3";
+	case MM4:	return "%mm4"; case MM5:	return "%mm5";
+	case MM6:	return "%mm6"; case MM7:	return "%mm7";
 
-	case XMM0:	return "%mmx0"; case XMM1:	return "%mmx1";
-	case XMM2:	return "%mmx2"; case XMM3:	return "%mmx3";
-	case XMM4:	return "%mmx4"; case XMM5:	return "%mmx5";
-	case XMM6:	return "%mmx6"; case XMM7:	return "%mmx7";
-	case XMM8:	return "%mmx8"; case XMM9:	return "%mmx9";
-	case XMM10:	return "%mmx10";case XMM11:	return "%mmx11";
-	case XMM12:	return "%mmx12";case XMM13:	return "%mmx13";
-	case XMM14:	return "%mmx14";case XMM15:	return "%mmx15";
+	case XMM0:	return "%xmm0"; case XMM1:	return "%xmm1";
+	case XMM2:	return "%xmm2"; case XMM3:	return "%xmm3";
+	case XMM4:	return "%xmm4"; case XMM5:	return "%xmm5";
+	case XMM6:	return "%xmm6"; case XMM7:	return "%xmm7";
+	case XMM8:	return "%xmm8"; case XMM9:	return "%xmm9";
+	case XMM10:	return "%xmm10";case XMM11:	return "%xmm11";
+	case XMM12:	return "%xmm12";case XMM13:	return "%xmm13";
+	case XMM14:	return "%xmm14";case XMM15:	return "%xmm15";
+	case XMM16:	return "%xmm16";case XMM17:	return "%xmm17";
+	case XMM18:	return "%xmm18";case XMM19:	return "%xmm19";
+	case XMM20:	return "%xmm20";case XMM21:	return "%xmm21";
+	case XMM22:	return "%xmm22";case XMM23:	return "%xmm23";
+	case XMM24:	return "%xmm24";case XMM25:	return "%xmm25";
+	case XMM26:	return "%xmm26";case XMM27:	return "%xmm27";
+	case XMM28:	return "%xmm28";case XMM29:	return "%xmm29";
+	case XMM30:	return "%xmm30";case XMM31:	return "%xmm31";
 
 	case YMM0:	return "%ymm0"; case YMM1:	return "%ymm1";
 	case YMM2:	return "%ymm2"; case YMM3:	return "%ymm3";
@@ -81,6 +89,14 @@ const char * regToStr( Register r )
 	case YMM10:	return "%ymm10";case YMM11:	return "%ymm11";
 	case YMM12:	return "%ymm12";case YMM13:	return "%ymm13";
 	case YMM14:	return "%ymm14";case YMM15:	return "%ymm15";
+	case YMM16:	return "%ymm16";case YMM17:	return "%ymm17";
+	case YMM18:	return "%ymm18";case YMM19:	return "%ymm19";
+	case YMM20:	return "%ymm20";case YMM21:	return "%ymm21";
+	case YMM22:	return "%ymm22";case YMM23:	return "%ymm23";
+	case YMM24:	return "%ymm24";case YMM25:	return "%ymm25";
+	case YMM26:	return "%ymm26";case YMM27:	return "%ymm27";
+	case YMM28:	return "%ymm28";case YMM29:	return "%ymm29";
+	case YMM30:	return "%ymm30";case YMM31:	return "%ymm31";
 
 	case CR0:	return "%cr0";  case CR1:	return "%cr1";
 	case CR2:	return "%cr2";  case CR3:	return "%cr3";
@@ -433,32 +449,35 @@ const char * regStr(
 	return regToStr(r);
 }
 
-Register opReg( OpRegs ors, bool isReg )
+Register opReg( OpRegs ors, bool left )
 {
 	switch(ors)
 	{
 	case OpRegs::AL:		return AL;
 	case OpRegs::ST0:		return ST0;
-	case OpRegs::MMX0:		return MMX0;
+	case OpRegs::MM0:		return MM0;
 	case OpRegs::XMM0:		return XMM0;
 	case OpRegs::YMM0:		return YMM0;
 	case OpRegs::CR0:		return CR0;
 	case OpRegs::DR0:		return DR0;
 
-	case OpRegs::AL_ST0:	return isReg?AL:ST0;	
-	case OpRegs::ST0_AL:	return isReg?ST0:AL;
+	case OpRegs::AL_ST0:	return left?AL:ST0;	
+	case OpRegs::ST0_AL:	return left?ST0:AL;
 
-	case OpRegs::AL_MMX0:	return isReg?AL:MMX0;
-	case OpRegs::MMX0_AL:	return isReg?MMX0:AL;
+	case OpRegs::AL_MM0:	return left?AL:MM0;
+	case OpRegs::MM0_AL:	return left?MM0:AL;
 
-	case OpRegs::AL_YMM0:	return isReg?AL:YMM0;
-	case OpRegs::YMM0_AL:	return isReg?YMM0:AL;
+	case OpRegs::AL_YMM0:	return left?AL:YMM0;
+	case OpRegs::YMM0_AL:	return left?YMM0:AL;
 
-	case OpRegs::AL_CR0:	return isReg?AL:CR0;
-	case OpRegs::CR0_AL:	return isReg?CR0:AL;
+	case OpRegs::AL_XMM0:	return left?AL:XMM0;
+	case OpRegs::XMM0_AL:	return left?XMM0:AL;
 
-	case OpRegs::AL_DR0:	return isReg?AL:DR0;
-	case OpRegs::DR0_AL:	return isReg?DR0:AL;
+	case OpRegs::AL_CR0:	return left?AL:CR0;
+	case OpRegs::CR0_AL:	return left?CR0:AL;
+
+	case OpRegs::AL_DR0:	return left?AL:DR0;
+	case OpRegs::DR0_AL:	return left?DR0:AL;
 	}
 }
 
@@ -476,6 +495,7 @@ const char * mod_reg_rm_ops(
 	int rm;
 	mod_reg_rm( *code++, mod, reg, rm );
 
+//printf( "%s:%d mod %d reg %d rm %d\n", __FILE__, __LINE__, mod, reg, rm );
 	switch(mod)
 	{
 	case RM:
@@ -489,7 +509,7 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
 			op2 = "(";
 			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
@@ -519,7 +539,7 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "(%s)", b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs, true), w, Reg, prefix );
 			break;
 		}
 		}
@@ -535,7 +555,8 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
+
 			char disp[16];
 			code = imm8( code, disp );
 			op2 = disp;
@@ -571,7 +592,7 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "%s(%s)", imm, b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
 			break;
 		}
 		}
@@ -587,7 +608,8 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
+
 			char disp[16];
 			code = imm32( code, disp );
 			op2 = disp;
@@ -623,7 +645,7 @@ const char * mod_reg_rm_ops(
 				sprintf( addr, "%s(%s)", imm, b );
 				op2 = addr;
 			}
-			op1 =  regStr( reg, AL, w, Reg, prefix );
+			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
 			break;
 		}
 		}

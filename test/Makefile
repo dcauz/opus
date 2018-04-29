@@ -145,9 +145,8 @@ FPU_SIMD_INST_TESTS := \
 test.fxsave \
 test.fxrstor
 
-MMX_INST_TESTS := \
+MM_INST_TESTS := \
 test.movd \
-test.movq \
 test.packsswb \
 test.packssdw \
 test.packuswb \
@@ -437,7 +436,6 @@ test.xend \
 test.xtest
 
 SYSTEM_INST_TESTS := \
-test.arpl \
 test.clac \
 test.clts \
 test.hlt \
@@ -446,14 +444,12 @@ test.invlpg \
 test.invpcid \
 test.lar \
 test.lgdt \
-test.lidt \
 test.lldt \
 test.lmsw \
 test.lsl \
 test.ltr \
 test.mov.cr \
 test.rdfsbase \
-test.rdgsbase \
 test.rdmsr \
 test.rdpmc \
 test.rdtsc \
@@ -515,12 +511,11 @@ test.getsec_parameters \
 test.getsec_smcrtl \
 test.getsec_wakeup
 
-
 INST_TESTS := \
 $(GP_INST_TESTS) \
 $(FPU_INST_TESTS) \
 $(FPU_SIMD_INST_TESTS) \
-$(MMX_INST_TESTS) \
+$(MM_INST_TESTS) \
 $(SSE_INST_TESTS) \
 $(SSE2_INST_TESTS) \
 $(SSE3_INST_TESTS) \
@@ -562,7 +557,7 @@ fpu.tests: $(FPU_INST_TESTS)
 
 fpu.smid.tests: $(FPU_SIMD_INST_TESTS)
 
-mmx.tests: $(MMX_INST_TESTS)
+mm.tests: $(MM_INST_TESTS)
 
 sse.tests: $(SSE_INST_TESTS)
 
