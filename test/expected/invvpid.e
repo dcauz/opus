@@ -6,7 +6,7 @@ machine  =AMD x86-64 architecture
 version  =1
 entry pt virt addr:    0
 prog hdr tbl file off: 0
-sect hdr tbl file off: 224
+sect hdr tbl file off: 248
 proc spec flags:       0
 elf hdr size (bytes):  64
 prog hdr tbl ent size: 0
@@ -33,7 +33,7 @@ type:     Program data
 flags:    OCCUPIES MEMORY|Executable
 addr:     0
 offset:   64
-size:     10
+size:     37
 link:     0
 info:     0
 alignment:1
@@ -44,7 +44,7 @@ name:     .data
 type:     Program data
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   74
+offset:   101
 size:     0
 link:     0
 info:     0
@@ -56,7 +56,7 @@ name:     .bss
 type:     Program space with no data (bss)
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   74
+offset:   101
 size:     0
 link:     0
 info:     0
@@ -68,7 +68,7 @@ name:     .shstrtab
 type:     String table
 flags:    
 addr:     0
-offset:   177
+offset:   201
 size:     44
 link:     0
 info:     0
@@ -80,7 +80,7 @@ name:     .symtab
 type:     Symbol table
 flags:    
 addr:     0
-offset:   80
+offset:   104
 size:     96
 link:     6
 info:     4
@@ -92,7 +92,7 @@ name:     .strtab
 type:     String table
 flags:    
 addr:     0
-offset:   176
+offset:   200
 size:     1
 link:     0
 info:     0
@@ -100,21 +100,23 @@ alignment:1
 entrySize:0
 
 ----------------------------------------
-48 98 66 98 99 66 98 98  48 98
-     0:cltq
-     2:cbtw
-     4:cltd
-     5:cbtw
-     7:cltd
-     8:cltq
+66 45 0f 38 81 11 66 41  0f 38 81 19 67 66 45 0f
+38 81 11 67 66 41 0f 38  81 18 66 0f 38 81 1a 67
+66 0f 38 81 1e
+     0:invvpid (%r9),%r10
+     6:invvpid (%r9),%rbx
+     c:invvpid (%r9d),%r10
+    13:invvpid (%r8d),%rbx
+    1a:invvpid (%rdx),%rbx
+    1f:invvpid (%esi),%rbx
 #################
 TODO: elf/file.cpp:186
 
-74:0
+101:0
 #################
 TODO: elf/file.cpp:252
 
-74:0
+101:0
 
 .symtab
 .strtab

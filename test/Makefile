@@ -472,13 +472,7 @@ test.xsaveopt \
 test.xsetbv
 
 _64BIT_MODE_INST_TESTS := \
-test.cdqe \
-test.cmpsq \
-test.cmpxchg16b \
-test.lodsq \
-test.movsq \
 test.movzx \
-test.stosq \
 test.swapgs \
 test.syscall \
 test.sysret

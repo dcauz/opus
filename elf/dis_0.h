@@ -568,6 +568,20 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "sysexit\n" );
 	}
+	else if( code[0] == 0x38 && code[1] == 0xffffff80 )
+	{
+		code += 2;
+		prefix |= REX_W;
+		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+		printf( "invept %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else if( code[0] == 0x38 && code[1] == 0xffffff81 )
+	{
+		code += 2;
+		prefix |= REX_W;
+		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+		printf( "invvpid %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else if( code[0] == 0x38 && code[1] == 0xffffff82 )
 	{
 		code += 2;
