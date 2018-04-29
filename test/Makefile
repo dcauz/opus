@@ -453,10 +453,8 @@ test.rdfsbase \
 test.rdmsr \
 test.rdpmc \
 test.rdtsc \
-test.rdtscp \
 test.rsm \
 test.sgdt \
-test.sidt \
 test.sldt \
 test.smsw \
 test.stac \
