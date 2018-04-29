@@ -306,6 +306,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "clac\n" );
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffcb )
+	{
+		code +=2;
+		printf( "stac\n" );
+	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
 	{
 		std::string op;
