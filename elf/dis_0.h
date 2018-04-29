@@ -316,6 +316,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "xgetbv\n" );
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffd1 )
+	{
+		code +=2;
+		printf( "xsetbv\n" );
+	}
 	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
 	{
 		std::string op;
