@@ -1134,6 +1134,8 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = memStr( code, prefix, 0, 0, op );
 			if( prefix & PRE_OS )
 				printf( "vmclear %s\n", op.c_str() );
+			else if( prefix & PRE_REP )
+				printf( "vmxon %s\n", op.c_str() );
 			else
 				printf( "vmptrld %s\n", op.c_str() );
 		}
