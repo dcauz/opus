@@ -311,6 +311,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code +=2;
 		printf( "vmresume\n" );
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffc4 )
+	{
+		code +=2;
+		printf( "vmxoff\n" );
+	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffca )
 	{
 		code +=2;
@@ -719,6 +724,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "vmread %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
+	// 79
+	else if( *code == 0x79 )
+	{
+		prefix |= REX_W;
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
+		printf( "vmwrite %s,%s\n", op2.c_str(), op1.c_str() );
 	}
 
 	// 7e
