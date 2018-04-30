@@ -713,6 +713,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
 	}
 
+	// 78
+	else if( *code == 0x78 )
+	{
+		prefix |= REX_W;
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
+		printf( "vmread %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
 	// 7e
 	else if( *code == 0x7e )
 	{
