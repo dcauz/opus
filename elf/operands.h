@@ -4,6 +4,9 @@
 #include "opcodes.h"
 
 
+const char * VEX2( const char *, unsigned & );
+const char * VEX3( const char *, unsigned & );
+
 const char * regToStr( Register r );
 
 const char * regStr( 
@@ -28,7 +31,8 @@ const char * mod_reg_rm_ops(
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2, 		// OUT
-			int op2Size=-1);// IN
+			int op2Size=-1,	// IN
+			int dispMul=-1);// IN
 
 const char * imm_mem_ops(
 	const char * code,		// IN
@@ -80,6 +84,28 @@ inline const char * imm8( const char * code, char * buff )
 		sprintf( buff, "-0x%x", -imm );
 	else
 		sprintf( buff, "0x%x", imm );
+
+    return code;
+}
+
+inline const char * imm8( const char * code, char * buff, int dispMult )
+{
+    char imm = 0x00ff & *code++;
+
+	if( dispMult < 0 )
+	{
+		if( imm < 0 )
+			sprintf( buff, "-0x%x", -imm );
+		else
+			sprintf( buff, "0x%x", imm );
+	}
+	else
+	{
+		if( imm < 0 )
+			sprintf( buff, "-0x%x", -imm*dispMult );
+		else
+			sprintf( buff, "0x%x", imm*dispMult );
+	}
 
     return code;
 }

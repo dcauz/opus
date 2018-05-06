@@ -134,7 +134,11 @@ TODO
 
 const char * dis_d6(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );	
+	printf( "vmovq %s,%s\n", op1.c_str(), op2.c_str() );
+
 	return code;
 }
 

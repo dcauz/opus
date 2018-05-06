@@ -1,6 +1,7 @@
 #pragma once
 
 // http://ref.x86asm.net/geek64-abc.html
+// https://en.wikipedia.org/wiki/EVEX_prefix
 
 enum Register
 {
@@ -32,6 +33,11 @@ enum Register
 	YMM8, 	  YMM9,  YMM10, YMM11, YMM12, YMM13, YMM14, YMM15,	
 	YMM16, 	  YMM17, YMM18, YMM19, YMM20, YMM21, YMM22, YMM23,	
 	YMM24, 	  YMM25, YMM26, YMM27, YMM28, YMM29, YMM30, YMM31,	
+
+	ZMM0=332, ZMM1,  ZMM2,  ZMM3,  ZMM4,  ZMM5,  ZMM6,  ZMM7,		
+	ZMM8, 	  ZMM9,  ZMM10, ZMM11, ZMM12, ZMM13, ZMM14, ZMM15,	
+	ZMM16, 	  ZMM17, ZMM18, ZMM19, ZMM20, ZMM21, ZMM22, ZMM23,	
+	ZMM24, 	  ZMM25, ZMM26, ZMM27, ZMM28, ZMM29, ZMM30, ZMM31,	
 
 	CR0=400, CR1, CR2,  CR3,  CR4,  CR5,  CR6,  CR7,		
 	CR8, CR9, CR10, CR11, CR12, CR13, CR14, CR15,	
@@ -723,12 +729,14 @@ enum RegContext
 
 enum Prefix
 {
-	REX   = 64,	// 40
+	REX   = 64,	// 0x40
 
-	REX_B = 1,	// 41
-	REX_X = 2,	// 44
-	REX_R = 4,	// 44
-	REX_W = 8,	// 48
+	REX_B = 1,	// 0x41
+	REX_X = 2,	// 0x44
+	REX_R = 4,	// 0x44
+	REX_W = 8,	// 0x48
+
+	VEX	  = 16, // VEX prefix
 
 	PRE_26   = 1 << 10,	// ES
 	PRE_2E   = 1 << 18,	// CS / Branch not taken
@@ -745,8 +753,12 @@ enum Prefix
 	PRE_LOCK = 1 << 17,	// Lock (F0)
 	PRE_BHNT = 1 << 18,	// Branch (2E)
 	PRE_BNHT = 1 << 19,	// Do not branch (3E)
-	PRE_VEX2 = 1 << 21, // VEX (c5)
-	PRE_VEX3 = 1 << 21, // VEX (c4)
+	PRE_256  = 1 << 21, // 256-bit regs
+	PRE_38   = 1 << 22, // 38 prefix
+	PRE_3A   = 1 << 23, // 3A prefix
+	PRE_0F   = 1 << 24, // 0F prefix
+
+	PRE_EVEX = 1 << 25, // EVEX prefix
 
 	REX_MASK = REX_B | REX_X | REX_R | REX_W,
 

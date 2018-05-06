@@ -69,14 +69,28 @@ vmovd %xmm9, (%rcx)
 vmovd %xmm10, (%rcx)
 vmovd %xmm11, (%rcx)
 vmovd %xmm31, (%rcx)
+vmovd %xmm30, (%rcx)
+vmovd %xmm29, (%rcx)
+vmovd %xmm28, (%rcx)
+vmovd %xmm27, (%rcx)
+vmovd %xmm26, (%rcx)
+vmovd %xmm25, (%rcx)
+vmovd %xmm24, (%rcx)
+vmovd %xmm23, (%rcx)
+vmovd %xmm22, (%rcx)
+vmovd %xmm21, (%rcx)
+vmovd %xmm20, (%rcx)
+vmovd %xmm19, (%rcx)
+vmovd %xmm18, (%rcx)
+vmovd %xmm17, (%rcx)
+vmovd %xmm16, (%rcx)
+vmovd %xmm15, (%rcx)
 vmovd (%r10), %xmm0
 vmovd (%r10), %xmm1
 vmovd (%r10), %xmm3
 vmovd (%r10), %xmm5
 vmovd (%rdx), %xmm7
 vmovd (%r10), %xmm31
-vmovd (%r14), %xmm31
-vmovd (%r14d),%xmm31
 vmovd (%r14d),%xmm15
 
 
@@ -87,35 +101,116 @@ vmovq %xmm5, (%rcx)
 vmovq %xmm7, (%rcx)
 vmovq %xmm31, (%rcx)
 
-vmovq (%r10), %xmm0
-vmovq (%r10), %xmm1
-vmovq (%r10), %xmm2
-vmovq (%r10), %xmm3
-vmovq (%r10), %xmm4
+vmovq (%r11), %xmm0
+vmovq (%r12), %xmm1
+vmovq (%r13), %xmm2
+vmovq (%r14), %xmm3
+vmovq (%r15), %xmm4
 vmovq (%rdx), %xmm5
-vmovq (%r10), %xmm6
-vmovq (%r10), %xmm7
-vmovq (%r10), %xmm8
-vmovq (%r10), %xmm9
-vmovq (%r10), %xmm10
-vmovq (%r10), %xmm11
-vmovq (%r10), %xmm12
-vmovq (%r10), %xmm13
-vmovq (%r10), %xmm14
-vmovq (%r10), %xmm15
-vmovq (%r10), %xmm16
-vmovq (%r10), %xmm17
-vmovq (%r10), %xmm18
-vmovq (%r10), %xmm19
-vmovq (%r10), %xmm20
-vmovq (%r10), %xmm21
-vmovq (%r10), %xmm22
-vmovq (%r10), %xmm23
+vmovq (%r8),  %xmm6
+vmovq (%r9),  %xmm7
+vmovq (%r11), %xmm9
+vmovq (%r12), %xmm10
+vmovq (%r13), %xmm11
+vmovq (%r14), %xmm12
+vmovq (%r15), %xmm13
+vmovq (%r8),  %xmm14
+vmovq (%r9),  %xmm15
+vmovq (%r11), %xmm17
+vmovq (%r12), %xmm18
+vmovq (%r13), %xmm19
+vmovq (%r14), %xmm20
+vmovq (%r15), %xmm21
+vmovq (%r8),  %xmm22
+vmovq (%r9),  %xmm23
 vmovq (%r10), %xmm24
-vmovq (%r10), %xmm25
-vmovq (%r10), %xmm26
-vmovq (%r10), %xmm27
-vmovq (%r10), %xmm28
+vmovq (%r11), %xmm25
+vmovq (%r12), %xmm26
+vmovq (%r13), %xmm27
+vmovq (%r14), %xmm28
 vmovq (%rsi), %xmm29
-vmovq (%r10), %xmm30
-vmovq (%r10), %xmm31
+vmovq (%rdi), %xmm30
+vmovq (%rcx), %xmm31
+
+vmovd (%r8, %rdx,1), %xmm31
+vmovd (%r9, %rdx,1), %xmm31
+vmovd (%r10,%rdx,1), %xmm31
+vmovd (%r11,%rdx,1), %xmm31
+vmovd (%r12,%rdx,1), %xmm31
+vmovd (%r13,%rdx,1), %xmm31
+vmovd (%r14,%rdx,1), %xmm31
+vmovd (%r15,%rdx,1), %xmm31
+
+vmovd (%r8, %rdx,2), %xmm31
+vmovd (%r9, %rdx,2), %xmm31
+vmovd (%r10,%rdx,2), %xmm31
+vmovd (%r11,%rdx,2), %xmm31
+vmovd (%r12,%rdx,2), %xmm31
+vmovd (%r13,%rdx,2), %xmm31
+vmovd (%r14,%rdx,2), %xmm31
+vmovd (%r15,%rdx,2), %xmm31
+
+vmovd (%r8, %rdx,8), %xmm31
+vmovd (%r9, %rdx,8), %xmm31
+vmovd (%r10,%rdx,8), %xmm31
+vmovd (%r11,%rdx,8), %xmm31
+vmovd (%r12,%rdx,8), %xmm31
+vmovd (%r13,%rdx,8), %xmm31
+vmovd (%r14,%rdx,8), %xmm31
+vmovd (%r15,%rdx,8), %xmm31
+
+vmovd (%r8, %rdx,4), %xmm31
+vmovd (%r9, %rdx,4), %xmm31
+vmovd (%r10,%rdx,4), %xmm31
+vmovd (%r11,%rdx,4), %xmm31
+vmovd (%r12,%rdx,4), %xmm31
+vmovd (%r13,%rdx,4), %xmm31
+vmovd (%r14,%rdx,4), %xmm31
+vmovd (%r15,%rdx,4), %xmm31
+
+vmovd (%r8, %r15,1), %xmm31
+vmovd (%r9, %r14,1), %xmm31
+vmovd (%r10,%r13,1), %xmm31
+vmovd (%r11,%r12,1), %xmm31
+vmovd (%r12,%r11,1), %xmm31
+vmovd (%r13,%r10,1), %xmm31
+vmovd (%r14,%r9,1), %xmm31
+vmovd (%r15,%r8,1), %xmm31
+
+vmovd (%r8, %rcx,2), %xmm31
+vmovd (%r9, %rcx,2), %xmm31
+vmovd (%r10,%rcx,2), %xmm31
+vmovd (%r11,%rcx,2), %xmm31
+vmovd (%r12,%rcx,2), %xmm31
+vmovd (%r13,%rcx,2), %xmm31
+vmovd (%r14,%rcx,2), %xmm31
+vmovd (%r15,%rcx,2), %xmm31
+
+vmovd (%r8, %rdx,8), %xmm31
+vmovd (%r9, %rdx,8), %xmm31
+vmovd (%r10,%rdx,8), %xmm31
+vmovd (%r11,%rdx,8), %xmm31
+vmovd (%r12,%rdx,8), %xmm31
+vmovd (%r13,%rdx,8), %xmm31
+vmovd (%r14,%rdx,8), %xmm31
+vmovd (%r15,%rdx,8), %xmm31
+
+vmovd (%r8d, %edx,4), %xmm31
+vmovd (%r9d, %edx,4), %xmm31
+vmovd (%r10d,%edx,4), %xmm31
+vmovd (%r11d,%edx,4), %xmm31
+vmovd (%r12d,%edx,4), %xmm31
+vmovd (%r13d,%edx,4), %xmm31
+vmovd (%r14d,%edx,4), %xmm31
+vmovd (%r15d,%edx,4), %xmm31
+
+vmovd 0x10(%r8, %rdx,8), %xmm31
+vmovd 0x100(%r9, %rdx,8), %xmm31
+vmovq 0x10(%r8, %rdx,8), %xmm31
+vmovq 0x100(%r9, %rdx,8), %xmm31
+vmovd 0x1000(%r10,%rdx,8), %xmm31
+vmovd 0x1000(%r11,%rdx,8), %xmm31
+vmovd 0x1234(%r12,%rdx,8), %xmm31
+vmovd 0x1234(%r13,%rdx,8), %xmm31
+vmovd 0x1234(%r14,%rdx,8), %xmm31
+vmovd 0x1234(%r15,%rdx,8), %xmm31

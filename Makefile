@@ -57,6 +57,7 @@ elf/section.cpp \
 elf/stringtbl.cpp \
 elf/esymtbl.cpp \
 elf/disassemble.cpp \
+elf/evex.cpp \
 elf/file.cpp \
 elf/operands.cpp
 

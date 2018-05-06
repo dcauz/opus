@@ -5,7 +5,8 @@
 #include "opcodes.h"
 
 
-const char * regToStr( Register r )
+const char * 
+regToStr( Register r )
 {
 	switch(r)
 	{
@@ -98,6 +99,23 @@ const char * regToStr( Register r )
 	case YMM28:	return "%ymm28";case YMM29:	return "%ymm29";
 	case YMM30:	return "%ymm30";case YMM31:	return "%ymm31";
 
+	case ZMM0:	return "%zmm0"; case ZMM1:	return "%zmm1";
+	case ZMM2:	return "%zmm2"; case ZMM3:	return "%zmm3";
+	case ZMM4:	return "%zmm4"; case ZMM5:	return "%zmm5";
+	case ZMM6:	return "%zmm6"; case ZMM7:	return "%zmm7";
+	case ZMM8:	return "%zmm8"; case ZMM9:	return "%zmm9";
+	case ZMM10:	return "%zmm10";case ZMM11:	return "%zmm11";
+	case ZMM12:	return "%zmm12";case ZMM13:	return "%zmm13";
+	case ZMM14:	return "%zmm14";case ZMM15:	return "%zmm15";
+	case ZMM16:	return "%zmm16";case ZMM17:	return "%zmm17";
+	case ZMM18:	return "%ymm18";case ZMM19:	return "%ymm19";
+	case ZMM20:	return "%ymm20";case ZMM21:	return "%ymm21";
+	case ZMM22:	return "%ymm22";case ZMM23:	return "%ymm23";
+	case ZMM24:	return "%ymm24";case ZMM25:	return "%ymm25";
+	case ZMM26:	return "%ymm26";case ZMM27:	return "%ymm27";
+	case ZMM28:	return "%ymm28";case ZMM29:	return "%ymm29";
+	case ZMM30:	return "%zmm30";case ZMM31:	return "%zmm31";
+
 	case CR0:	return "%cr0";  case CR1:	return "%cr1";
 	case CR2:	return "%cr2";  case CR3:	return "%cr3";
 	case CR4:	return "%cr4";  case CR5:	return "%cr5";
@@ -118,17 +136,20 @@ const char * regToStr( Register r )
 	}
 }
 
-inline Register	reg8to16( Register r )
+inline Register	
+reg8to16( Register r )
 {
 	return static_cast<Register>((r&0xffef)+64);
 }
 
-inline Register	reg8to32( Register r )
+inline Register	
+reg8to32( Register r )
 {
 	return static_cast<Register>((r&0xffef)+128);
 }
 
-inline Register	reg8to64( Register r )
+inline Register	
+reg8to64( Register r )
 {
 	if(r < AX )
 		return static_cast<Register>((r&0xffef)+256);
@@ -136,22 +157,26 @@ inline Register	reg8to64( Register r )
 		return r;
 }
 
-inline Register	reg16to32( Register r )
+inline Register	
+reg16to32( Register r )
 {
 	return static_cast<Register>((r&0xffef)+64);
 }
 
-inline Register	reg16to64( Register r )
+inline Register	
+reg16to64( Register r )
 {
 	return static_cast<Register>((r&0xffef)+192);
 }
 
-inline Register	reg32to64( Register r )
+inline Register	
+reg32to64( Register r )
 {
 	return static_cast<Register>((r&0xffef)+128);
 }
 
-inline Register	regAHtoSPL( Register r )
+inline Register	
+regAHtoSPL( Register r )
 {
 	if( (r > BL ) && (r <= BH ))
 		return static_cast<Register>((r&0xffef)+16);
@@ -159,7 +184,8 @@ inline Register	regAHtoSPL( Register r )
 		return r;
 }
 
-inline Register regToR(Register reg)
+inline Register 
+regToR(Register reg)
 {
 	// AL-CH, SPL-DIL 	=> R8B - R15B
 	// AX-DI 			=> R8W - R15W
@@ -179,7 +205,8 @@ inline Register regToR(Register reg)
 		return static_cast<Register>((reg&0xef)+24);
 }
 
-const char * memStr(
+const char * 
+memStr(
 	const char * code,	// IN
 		unsigned prefix,// IN
 			 int s,		// IN
@@ -354,7 +381,8 @@ const char * memStr(
 	return code;
 }
 
-const char * regStr( 
+const char * 
+regStr( 
 	     int reg, 
 	Register base, 
 		 int w, 
@@ -364,9 +392,11 @@ const char * regStr(
 {
 //printf( "%s:%d reg %d base %d w %d prefix %x context %d opsize %d\n", __FILE__, __LINE__, reg, base, w, prefix, context, opSize );
 	Register r = static_cast<Register>(reg+base);
-
 	if( prefix & REX)
 		r = regAHtoSPL( r );
+
+	if( prefix & PRE_EVEX )
+		r = static_cast<Register>(r + 16);
 
 	if(opSize > 0 )
 	{
@@ -449,7 +479,8 @@ const char * regStr(
 	return regToStr(r);
 }
 
-Register opReg( OpRegs ors, bool left )
+Register 
+opReg( OpRegs ors, bool left )
 {
 	switch(ors)
 	{
@@ -481,14 +512,16 @@ Register opReg( OpRegs ors, bool left )
 	}
 }
 
-const char * mod_reg_rm_ops(
+const char * 
+mod_reg_rm_ops(
 	const char * code,		// IN
 	unsigned 	  prefix,	// IN
 		   OpRegs opRegs,	// IN
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2,		// OUT
-			int op2Size )	// IN
+			int op2Size,	// IN
+			int dispMult)	// IN
 {
 	int mod;
 	int reg;
@@ -509,7 +542,8 @@ const char * mod_reg_rm_ops(
 		case 6:
 		case 7:
 		{
-			op1 =  regStr( reg, opReg(opRegs,true), w, Reg, prefix );
+			Register r = opReg(opRegs,true);
+			op1 =  regStr( reg, r, w, Reg, prefix );
 			op2 = "(";
 			op2 += regStr( rm, AL, w, Base, prefix );
 			op2 += ")";
@@ -574,7 +608,10 @@ const char * mod_reg_rm_ops(
 			mod_reg_rm( *code++, scale, index, base );
 
 			char imm[16];
-			code = imm8( code, imm );
+			if( dispMult < 0 )
+				code = imm8( code, imm );
+			else
+				code = imm8( code, imm, dispMult );
 
 			const char * b = regStr( base, AL, w, Base, prefix );
 
@@ -660,7 +697,8 @@ const char * mod_reg_rm_ops(
 	return code;
 }
 
-const char * imm_reg_ops(
+const char * 
+imm_reg_ops(
 	const char * code,		// IN
 		 unsigned prefix,	// IN
 			  int w,		// IN
@@ -695,7 +733,8 @@ const char * imm_reg_ops(
 	return code;
 }
 
-const char * imm_mem_ops(
+const char * 
+imm_mem_ops(
 	const char * code,		// IN
 	unsigned 	  prefix,	// IN
 			  int s,		// IN
@@ -905,7 +944,8 @@ TODO
 	return code;
 }
 
-const char * reg8( int reg, int w, unsigned prefix )
+const char * 
+reg8( int reg, int w, unsigned prefix )
 {
 	int so  = prefix & PRE_OS;
 	int rex = prefix & REX;
@@ -1016,7 +1056,8 @@ const char * reg8( int reg, int w, unsigned prefix )
 	}	
 }
 
-const char * reg32_64( int reg, unsigned prefix )
+const char * 
+reg32_64( int reg, unsigned prefix )
 {
 	int so  = 0; // prefix & PRE_OS;
 	int ao  = 0; // prefix & PRE_AS;
@@ -1063,7 +1104,8 @@ const char * reg32_64( int reg, unsigned prefix )
 	}	
 }
 
-const char * pop_operand(const char * code, unsigned prefix, std::string & op )
+const char * 
+pop_operand(const char * code, unsigned prefix, std::string & op )
 {
 	int mod = (*code & 0xc0) >> 6;
 	int rm  = *code & 0x07;
@@ -1154,3 +1196,70 @@ const char * pop_operand(const char * code, unsigned prefix, std::string & op )
 	return code;
 }
 
+// 3-byte VEX
+// c4: RXB:m-mmmm W vvvv L pp
+//     765 4-0    7 6-3  2 10
+//
+const char * 
+VEX3( const char * code, unsigned & prefix )
+{
+	prefix |= VEX;
+
+	if( (*code & 0x80) == 0)	prefix |= REX_R;
+	if( (*code & 0x40) == 0)	prefix |= REX_X;
+	if( (*code & 0x20) == 0)	prefix |= REX_B;
+
+	int mmmm = *code & 0x1f;
+	switch(mmmm)
+	{
+	case 1:	prefix |= PRE_0F; break;
+	case 2:	prefix |= PRE_0F|PRE_38; break;
+	case 3:	prefix |= PRE_0F|PRE_3A; break;
+	}
+
+	if( *code & 0x80 )	prefix |= REX_W;
+	
+	++code;
+	prefix |= ( *code & 0x78 ) << 25;
+
+	if( *code & 0x04 )	prefix |= PRE_256;
+	int pp = ( *code & 0x03 );
+
+	switch(pp)
+	{
+	case 0:	break;
+	case 1:	prefix |= PRE_OS;  break;
+	case 2:	prefix |= PRE_REP; break;
+	case 3:	prefix |= PRE_NE;  break;
+	}
+
+	return ++code;
+}
+
+// 2-byte VEX
+// c5: R vvvv L pp
+//     7 6-3  2 10
+//
+const char * 
+VEX2( const char * code, unsigned & prefix )
+{
+	prefix |= VEX;
+
+	if((*code & 0x80) == 0)	prefix |= REX_R;
+
+	prefix |= ( *code & 0x78 ) << 25;
+
+	if( *code & 0x04 )	prefix |= PRE_256;
+
+	int pp = ( *code & 0x03 );
+
+	switch(pp)
+	{
+	case 0:	break;
+	case 1:	prefix |= PRE_OS;  break;
+	case 2:	prefix |= PRE_REP; break;
+	case 3:	prefix |= PRE_NE;  break;
+	}
+
+	return ++code;
+}

@@ -1,6 +1,7 @@
 #include "../opus.h"
 #include "opcodes.h"
 #include "operands.h"
+#include "evex.h"
 
 #include "dis_0.h"
 #include "dis_1.h"
@@ -26,16 +27,16 @@ bool disassemble( const char * code, const char *end )
 	const char * start = code;
 	unsigned prefix = 0;
 
-	bool printOff = true;
+	bool printOn = true;
 	while( code < end )
 	{
-		if(printOff)
+		if(printOn)
 		{
 			printf( "%6.1lx:", code-start );
 			prefix = 0;
 		}
 		else
-			printOff = true;
+			printOn = true;
 
 		switch(*code)
 		{
@@ -86,7 +87,7 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x24:	code = dis_24(++code, prefix); break;
 		case 0x25:	code = dis_25(++code, prefix); break;
-		case 0x26:	prefix |= PRE_26; ++code; printOff=false; break;
+		case 0x26:	prefix |= PRE_26; ++code; printOn=false; break;
 		case 0x27:	code = dis_27(++code, prefix); break;
 
 		case 0x28:	code = dis_28(++code, prefix); break;
@@ -96,7 +97,7 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x2c:	code = dis_2c(++code, prefix); break;
 		case 0x2d:	code = dis_2d(++code, prefix); break;
-		case 0x2e:	prefix |= PRE_BHNT; ++code; printOff=false; break;
+		case 0x2e:	prefix |= PRE_BHNT; ++code; printOn=false; break;
 		case 0x2f:	code = dis_2f(++code, prefix); break;
 	
 		case 0x30:	code = dis_30(++code, prefix); break;
@@ -106,7 +107,7 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x34:	code = dis_34(++code, prefix); break;
 		case 0x35:	code = dis_35(++code, prefix); break;
-		case 0x36:	prefix |= PRE_36; ++code; printOff=false; break;
+		case 0x36:	prefix |= PRE_36; ++code; printOn=false; break;
 		case 0x37:	code = dis_37(++code, prefix); break;
 
 		case 0x38:	code = dis_38(++code, prefix); break;
@@ -116,25 +117,25 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x3c:	code = dis_3c(++code, prefix); break;
 		case 0x3d:	code = dis_3d(++code, prefix); break;
-		case 0x3e:	prefix |= PRE_3E; ++code; printOff=false; break;
+		case 0x3e:	prefix |= PRE_3E; ++code; printOn=false; break;
 		case 0x3f:	code = dis_3f(++code, prefix); break;
 	
-		case 0x40:	prefix |= *code; ++code; printOff=false; break;
-		case 0x41:	prefix |= *code; ++code; printOff=false; break;
-		case 0x42:	prefix |= *code; ++code; printOff=false; break;
-		case 0x43:	prefix |= *code; ++code; printOff=false; break;
-		case 0x44:	prefix |= *code; ++code; printOff=false; break;
-		case 0x45:	prefix |= *code; ++code; printOff=false; break;
-		case 0x46:	prefix |= *code; ++code; printOff=false; break;
-		case 0x47:	prefix |= *code; ++code; printOff=false; break;
-		case 0x48:	prefix |= *code; ++code; printOff=false; break;
-		case 0x49:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4a:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4b:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4c:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4d:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4e:	prefix |= *code; ++code; printOff=false; break;
-		case 0x4f:	prefix |= *code; ++code; printOff=false; break;
+		case 0x40:	prefix |= *code; ++code; printOn=false; break;
+		case 0x41:	prefix |= *code; ++code; printOn=false; break;
+		case 0x42:	prefix |= *code; ++code; printOn=false; break;
+		case 0x43:	prefix |= *code; ++code; printOn=false; break;
+		case 0x44:	prefix |= *code; ++code; printOn=false; break;
+		case 0x45:	prefix |= *code; ++code; printOn=false; break;
+		case 0x46:	prefix |= *code; ++code; printOn=false; break;
+		case 0x47:	prefix |= *code; ++code; printOn=false; break;
+		case 0x48:	prefix |= *code; ++code; printOn=false; break;
+		case 0x49:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4a:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4b:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4c:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4d:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4e:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4f:	prefix |= *code; ++code; printOn=false; break;
 	
 		case 0x50:	
 		case 0x51:	
@@ -155,13 +156,13 @@ bool disassemble( const char * code, const char *end )
 	
 		case 0x60:	code = dis_60(++code, prefix); break;
 		case 0x61:	code = dis_61(++code, prefix); break;
-		case 0x62:	code = dis_62(++code, prefix); break;
+		case 0x62:	code = disEVEX( ++code, prefix );break;
 		case 0x63:	code = dis_63(++code, prefix); break;
 
-		case 0x64:	prefix |= PRE_64; ++code; printOff=false; break;
-		case 0x65:	prefix |= PRE_65; ++code; printOff=false; break;
-		case 0x66:	prefix |= PRE_OS; ++code; printOff = false; break;
-		case 0x67:	prefix |= PRE_AS; ++code; printOff = false; break;
+		case 0x64:	prefix |= PRE_64; ++code; printOn = false; break;
+		case 0x65:	prefix |= PRE_65; ++code; printOn = false; break;
+		case 0x66:	prefix |= PRE_OS; ++code; printOn = false; break;
+		case 0x67:	prefix |= PRE_AS; ++code; printOn = false; break;
 
 		case 0x68:	code = dis_68(++code, prefix); break;
 		case 0x69:	code = dis_69(++code, prefix); break;
@@ -261,8 +262,8 @@ bool disassemble( const char * code, const char *end )
 		case -63:	code = dis_c1(++code, prefix); break;	// 0xc1
 		case -62:	code = dis_c2(++code, prefix); break;	// 0xc2
 		case -61:	code = dis_c3(++code, prefix); break;	// 0xc3
-		case -60:	code = dis_c4(++code, prefix); break;	// 0xc4
-		case -59:	code = dis_c5(++code, prefix); break;	// 0xc5
+		case -60:	code = VEX3(++code,prefix);printOn=false; break;	// 0xc4
+		case -59:	code = VEX2(++code,prefix);printOn=false; break;	// 0xc5
 		case -58:	code = dis_c6(++code, prefix); break;	// 0xc6
 		case -57:	code = dis_c7(++code, prefix); break;	// 0xc7
 		case -56:	code = dis_c8(++code, prefix); break;	// 0xc8
@@ -312,12 +313,12 @@ bool disassemble( const char * code, const char *end )
 			prefix |= PRE_LOCK; 
 			++code; 
 			printf( "lock " );
-			printOff=false; 
+			printOn=false; 
 			break;
 
 		case -15:	code = dis_f1(++code, prefix); break;	// 0xf1
-		case -14:	prefix |= PRE_NE; ++code; printOff=false; break;	// 0xf2
-		case -13:	prefix |= PRE_REP; ++code; printOff=false; break;	// 0xf3
+		case -14:	prefix |= PRE_NE; ++code; printOn=false; break;	// 0xf2
+		case -13:	prefix |= PRE_REP; ++code; printOn=false; break;	// 0xf3
 		case -12:	code = dis_f4(++code, prefix); break;	// 0xf4
 		case -11:	code = dis_f5(++code, prefix); break;	// 0xf5
 		case -10:	code = dis_f6(++code, prefix); break;	// 0xf6

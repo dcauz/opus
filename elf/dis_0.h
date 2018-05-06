@@ -301,6 +301,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		else
 			TODO
 	}
+	else if(code[0] == 0x01 && code[1] == 0xffffffc1 )
+	{
+		code +=2;
+		printf( "vmcall\n" );
+	}
 	else if(code[0] == 0x01 && code[1] == 0xffffffc2 )
 	{
 		code +=2;

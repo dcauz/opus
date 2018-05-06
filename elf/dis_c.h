@@ -94,18 +94,6 @@ const char * dis_c3(const char * code, unsigned prefix)
 	return code;
 }
 
-const char * dis_c4(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_c5(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
 const char * dis_c6(const char * code, unsigned prefix)
 {
 TODO
