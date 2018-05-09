@@ -65,7 +65,7 @@ struct Evex
 // EVEX.L'L		Vector length/RC
 //
 //
-const char * EVEX( const char * code, Evex & evex )
+const char * EVEX( const char * code, Evex & evex, unsigned & prefix )
 {
 	evex.R = (*code & 0x80 ) != 0;
 	evex.X = (*code & 0x40 ) != 0;
@@ -88,6 +88,17 @@ const char * EVEX( const char * code, Evex & evex )
 	evex.Vprime	= (*code & 0x08) != 0;
 	evex.aaa    = (*code & 0x03);
 
+	prefix |= PRE_EVEX;
+	if( !evex.R )
+		prefix |= REX_R;
+	if( !evex.B )
+		prefix |= REX_B;
+	if( !evex.X )
+		prefix |= REX_X;
+
+	if( evex.Rprime )
+		prefix |= PRE_Rprime;
+
 	return ++code;
 }
 
@@ -95,7 +106,7 @@ const char * EVEX( const char * code, Evex & evex )
 const char * disEVEX( const char * code, unsigned prefix )
 {
 	Evex evex;
-	code = EVEX( code, evex );
+	code = EVEX( code, evex, prefix );
 
 	switch(*code)
 	{
@@ -103,18 +114,59 @@ const char * disEVEX( const char * code, unsigned prefix )
 printf( "EVEX opcode %x\n", *code );
 TODO
 		break;
+	case 0x63:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		if( evex.Lprime )
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+			printf( "vpacksswb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+			printf( "vpacksswb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		break;
+	}
+	case 0x6b:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		if( evex.Lprime )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+			printf( "vpackssdw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else if( evex.L )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+			printf( "vpackssdw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+			printf( "vpackssdw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		break;
+	}
 	case 0x6e:
 	{
 		std::string op1;
 		std::string	op2;
-
-		prefix |= PRE_EVEX;
-		if( !evex.R )
-			prefix |= REX_R;
-		if( !evex.B )
-			prefix |= REX_B;
-		if( !evex.X )
-			prefix |= REX_X;
 
 		if( evex.W )
 		{
@@ -132,14 +184,6 @@ TODO
 	{
 		std::string op1;
 		std::string	op2;
-
-		prefix |= PRE_EVEX;
-		if( !evex.R )
-			prefix |= REX_R;
-		if( !evex.B )
-			prefix |= REX_B;
-		if( !evex.X )
-			prefix |= REX_X;
 
 		if( evex.W )
 		{

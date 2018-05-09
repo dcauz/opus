@@ -55,6 +55,7 @@ enum class OpRegs
 	MM0,
 	XMM0,
 	YMM0,
+	ZMM0,
 	CR0,
 	DR0,
 
@@ -70,6 +71,9 @@ enum class OpRegs
 
 	AL_YMM0, 
 	YMM0_AL,
+
+	AL_ZMM0, 
+	ZMM0_AL,
 
 	AL_CR0,  
 	CR0_AL,
@@ -759,6 +763,7 @@ enum Prefix
 	PRE_0F   = 1 << 24, // 0F prefix
 
 	PRE_EVEX = 1 << 25, // EVEX prefix
+	PRE_Rprime=1 << 26, // EVEX.R'
 
 	REX_MASK = REX_B | REX_X | REX_R | REX_W,
 

@@ -108,12 +108,12 @@ regToStr( Register r )
 	case ZMM12:	return "%zmm12";case ZMM13:	return "%zmm13";
 	case ZMM14:	return "%zmm14";case ZMM15:	return "%zmm15";
 	case ZMM16:	return "%zmm16";case ZMM17:	return "%zmm17";
-	case ZMM18:	return "%ymm18";case ZMM19:	return "%ymm19";
-	case ZMM20:	return "%ymm20";case ZMM21:	return "%ymm21";
-	case ZMM22:	return "%ymm22";case ZMM23:	return "%ymm23";
-	case ZMM24:	return "%ymm24";case ZMM25:	return "%ymm25";
-	case ZMM26:	return "%ymm26";case ZMM27:	return "%ymm27";
-	case ZMM28:	return "%ymm28";case ZMM29:	return "%ymm29";
+	case ZMM18:	return "%zmm18";case ZMM19:	return "%zmm19";
+	case ZMM20:	return "%zmm20";case ZMM21:	return "%zmm21";
+	case ZMM22:	return "%zmm22";case ZMM23:	return "%zmm23";
+	case ZMM24:	return "%zmm24";case ZMM25:	return "%zmm25";
+	case ZMM26:	return "%zmm26";case ZMM27:	return "%zmm27";
+	case ZMM28:	return "%zmm28";case ZMM29:	return "%zmm29";
 	case ZMM30:	return "%zmm30";case ZMM31:	return "%zmm31";
 
 	case CR0:	return "%cr0";  case CR1:	return "%cr1";
@@ -198,8 +198,9 @@ regToR(Register reg)
 
 	if( (reg >= CR0 && reg < CR8 ) ||
 	    (reg >= DR0 && reg < DR8 ) ||
-	    (reg >= XMM0 && reg < XMM8 ) ||
-	    (reg >= YMM0 && reg < YMM8 ))
+	    (reg >= XMM0 && reg < XMM24 ) ||
+	    (reg >= YMM0 && reg < YMM24 ) ||
+	    (reg >= ZMM0 && reg < ZMM24 ))
 		return static_cast<Register>(reg+8);
 	else
 		return static_cast<Register>((reg&0xef)+24);
@@ -392,12 +393,10 @@ regStr(
 {
 //printf( "%s:%d reg %d base %d w %d prefix %x context %d opsize %d\n", __FILE__, __LINE__, reg, base, w, prefix, context, opSize );
 	Register r = static_cast<Register>(reg+base);
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 	if( prefix & REX)
 		r = regAHtoSPL( r );
-
-	if( prefix & PRE_EVEX )
-		r = static_cast<Register>(r + 16);
-
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 	if(opSize > 0 )
 	{
 		if((( context == Reg  && ( prefix & REX_R ) == REX_R)) ||
@@ -421,36 +420,54 @@ regStr(
 		break;
 
 	case Reg:
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
+		if((prefix & PRE_EVEX) && !(prefix & PRE_Rprime))
+			r = static_cast<Register>(r + 16);
+
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if(( prefix & REX_R ) == REX_R)
 		{
 			r = regToR(r);	
 		}
 
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if( (prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			if( prefix & PRE_OS )
 				r = reg8to16(r);
 			else
 				r = reg8to32(r);	
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		}
 		break;
 	case Reg2:
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
+		if((prefix & PRE_EVEX) && ( prefix & REX_X ))
+			r = static_cast<Register>(r + 16);
+
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if(( prefix & REX_B ) == REX_B)
 		{
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			r = regToR(r);	
 		}
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 
 		if(( prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			if( prefix & PRE_OS )
 				r = reg8to16(r);
 			else
 				r = reg8to32(r);	
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		}
+//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		break;
 	case Index:
 		if(( prefix & REX_X ) == REX_X )
@@ -489,6 +506,7 @@ opReg( OpRegs ors, bool left )
 	case OpRegs::MM0:		return MM0;
 	case OpRegs::XMM0:		return XMM0;
 	case OpRegs::YMM0:		return YMM0;
+	case OpRegs::ZMM0:		return ZMM0;
 	case OpRegs::CR0:		return CR0;
 	case OpRegs::DR0:		return DR0;
 
@@ -500,6 +518,9 @@ opReg( OpRegs ors, bool left )
 
 	case OpRegs::AL_YMM0:	return left?AL:YMM0;
 	case OpRegs::YMM0_AL:	return left?YMM0:AL;
+
+	case OpRegs::AL_ZMM0:	return left?AL:ZMM0;
+	case OpRegs::ZMM0_AL:	return left?ZMM0:AL;
 
 	case OpRegs::AL_XMM0:	return left?AL:XMM0;
 	case OpRegs::XMM0_AL:	return left?XMM0:AL;

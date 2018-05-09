@@ -148,7 +148,6 @@ test.fxrstor
 MM_INST_TESTS := \
 test.movd \
 test.packsswb \
-test.packssdw \
 test.packuswb \
 test.punpckhbw \
 test.punpckhwd \
