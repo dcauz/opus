@@ -1,3 +1,4 @@
+#include <cassert>
 #include "../opus.h"
 #include "opcodes.h"
 #include "operands.h"
@@ -161,8 +162,20 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x64:	prefix |= PRE_64; ++code; printOn = false; break;
 		case 0x65:	prefix |= PRE_65; ++code; printOn = false; break;
-		case 0x66:	prefix |= PRE_OS; ++code; printOn = false; break;
-		case 0x67:	prefix |= PRE_AS; ++code; printOn = false; break;
+		case 0x66:	
+			prefix |= PRE_OS; ++code; printOn = false; break;
+		case 0x67:	
+		{
+			if( prefix & VEX )
+				code = dis_67(++code, prefix);
+			else
+			{	
+				prefix |= PRE_AS; 
+				++code; 
+				printOn = false; 
+			}
+			break;
+		}
 
 		case 0x68:	code = dis_68(++code, prefix); break;
 		case 0x69:	code = dis_69(++code, prefix); break;
