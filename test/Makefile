@@ -151,8 +151,6 @@ test.packsswb \
 test.packuswb \
 test.punpckhbw \
 test.punpcklbw \
-test.punpcklwd \
-test.punpckldq \
 test.paddb \
 test.paddw \
 test.paddd \
@@ -314,7 +312,6 @@ test.pshufhw \
 test.pshufd \
 test.pslldq \
 test.psrldq \
-test.punpcklqdq \
 test.clflush \
 test.lfence \
 test.mfence \

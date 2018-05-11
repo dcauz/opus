@@ -157,7 +157,14 @@ bool disassemble( const char * code, const char *end )
 	
 		case 0x60:	code = dis_60(++code, prefix); break;
 		case 0x61:	code = dis_61(++code, prefix); break;
-		case 0x62:	code = disEVEX( ++code, prefix );break;
+		case 0x62:	
+		{
+			if( prefix & VEX )
+				code = dis_62(++code, prefix);
+			else
+				code = disEVEX( ++code, prefix );
+			break;
+		}
 		case 0x63:	code = dis_63(++code, prefix); break;
 
 		case 0x64:	prefix |= PRE_64; ++code; printOn = false; break;
@@ -176,7 +183,6 @@ bool disassemble( const char * code, const char *end )
 			}
 			break;
 		}
-
 		case 0x68:	code = dis_68(++code, prefix); break;
 		case 0x69:	code = dis_69(++code, prefix); break;
 		case 0x6a:	code = dis_6a(++code, prefix); break;
