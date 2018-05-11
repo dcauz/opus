@@ -150,8 +150,6 @@ test.movd \
 test.packsswb \
 test.packuswb \
 test.punpckhbw \
-test.punpckhwd \
-test.punpckhdq \
 test.punpcklbw \
 test.punpcklwd \
 test.punpckldq \
@@ -316,7 +314,6 @@ test.pshufhw \
 test.pshufd \
 test.pslldq \
 test.psrldq \
-test.punpckhqdq \
 test.punpcklqdq \
 test.clflush \
 test.lfence \
