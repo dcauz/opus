@@ -152,8 +152,6 @@ test.packuswb \
 test.punpckhbw \
 test.punpcklbw \
 test.paddb \
-test.paddw \
-test.paddd \
 test.paddsb \
 test.paddsw \
 test.paddusb \
@@ -305,7 +303,6 @@ test.movdqu \
 test.movq2dq \
 test.movdq2q \
 test.pmuludq \
-test.paddq \
 test.psubq \
 test.pshuflw \
 test.pshufhw \
