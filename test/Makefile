@@ -153,7 +153,6 @@ test.punpckhbw \
 test.punpcklbw \
 test.paddb \
 test.paddsb \
-test.paddsw \
 test.paddusb \
 test.paddusw \
 test.psubb \

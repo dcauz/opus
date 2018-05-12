@@ -1233,6 +1233,18 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
+	// ex
+	else if( *code == 0xffffffec )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "paddsb %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xffffffed )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "paddsw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+
 	// fx
 	else if( *code == 0xfffffffc )
 	{
