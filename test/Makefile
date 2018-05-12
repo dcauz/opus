@@ -154,7 +154,6 @@ test.punpcklbw \
 test.paddb \
 test.paddsb \
 test.paddusb \
-test.paddusw \
 test.psubb \
 test.psubw \
 test.psubd \
