@@ -155,8 +155,6 @@ test.paddb \
 test.paddsb \
 test.paddusb \
 test.psubb \
-test.psubw \
-test.psubd \
 test.psubsb \
 test.psubsw \
 test.psubusb \
@@ -301,7 +299,6 @@ test.movdqu \
 test.movq2dq \
 test.movdq2q \
 test.pmuludq \
-test.psubq \
 test.pshuflw \
 test.pshufhw \
 test.pshufd \

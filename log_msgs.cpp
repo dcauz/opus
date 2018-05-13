@@ -6,5 +6,7 @@
 // The second include defines the messages
 //
 #define  DEFINE_MSGS
-#include "log_msgs.h"
+//#include "log_msgs.h"
+#include "log.h"
+
 

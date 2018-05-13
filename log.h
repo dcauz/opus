@@ -7,7 +7,6 @@
 #include <thread>
 #include <condition_variable>
 #include "opus.h"
-#include "log_msgs.h"
 
 
 class Log
@@ -26,7 +25,7 @@ public:
 		ERR =  AUDIT | FATAL | ERROR | WARNING,
 		OUT =  INFO | DEBUG | TRACE,
 
-		ALL =  OUT | ERR 
+		ALL =  OUT | ERR
 	};
 	enum class Part
 	{
@@ -81,9 +80,9 @@ public:
 
 	void operator () ( const char *, int, int, ... );
 
-	void addLogger( const char *, Log::Level levels = Level::ALL, 
+	void addLogger( const char *, Log::Level levels = Level::ALL,
 								  Log::Part parts = Part::ALL );
-	void addLogger( FILE *, Log::Level levels = Level::ALL, 
+	void addLogger( FILE *, Log::Level levels = Level::ALL,
 							Log::Part part = Part::ALL );
 
 	std::mutex 				& mutex()	{ return mutex_; }
@@ -110,3 +109,5 @@ private:
 extern Log theLog;
 
 #define LOG( ... )	theLog( __FILE__, __LINE__,  __VA_ARGS__ );
+
+#include "log_msgs.h"

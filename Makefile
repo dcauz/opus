@@ -80,10 +80,10 @@ clobber: clean
 	rm -f bin/opus
 
 bin/opus: $(OPUS_OBJS) | bin
-	g++ -std=c++11 -o $@ $(OPUS_OBJS) -pthread
+	g++ -g -std=c++11 -o $@ $(OPUS_OBJS) -pthread
 
 bin/elf: $(ELF_OBJS) | bin
-	g++ -std=c++11 -o $@ $(ELF_OBJS) -pthread
+	g++ -g -std=c++11 -o $@ $(ELF_OBJS) -pthread
 
 ########################################
 
@@ -100,14 +100,18 @@ html.h: html.hpp
 ########################################
 
 obj/%.o: %.cpp .d/%.d | obj .d
-	g++ -std=c++11 -c -o $@ $<
+	g++ -g -std=c++11 -c -o $@ $<
 
 obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
-	g++ -std=c++11 -c -o $@ $<
+	g++ -g -std=c++11 -c -o $@ $<
 
 .d/%.d: %.cpp | .d obj
 	g++ -std=c++11 -c -MMD -MP -MF .d/$*.Td -o obj/$*.o $<
 	mv -f .d/$*.Td $@
+
+.d/elf/%.d: elf/%.cpp | .d/elf elf/obj
+	g++ -std=c++11 -c -MMD -MP -MF .d/elf/$*.Td -o elf/obj/$*.o $<
+	mv -f .d/elf/$*.Td $@
 
 obj obj/elf bin .d .d/elf:
 	mkdir $@

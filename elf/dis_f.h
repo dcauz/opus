@@ -116,25 +116,112 @@ const char * dis_f7(const char * code, unsigned prefix)
 
 const char * dis_f8(const char * code, unsigned prefix)
 {
-    printf( "clc\n" );
+	if( ( prefix & VEX ) == 0 )
+	    printf( "clc\n" );
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vpsubb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vpsubb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+
 	return code;
 }
 
 const char * dis_f9(const char * code, unsigned prefix)
 {
-    printf( "stc\n" );
+	if( ( prefix & VEX ) == 0 )
+	{
+		printf( "stc\n" );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vpsubw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vpsubw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+
 	return code;
 }
 
 const char * dis_fa(const char * code, unsigned prefix)
 {
-	printf( "cli\n" );
+	if( ( prefix & VEX ) == 0 )
+	{
+		printf( "cli\n" );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vpsubd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vpsubd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+
 	return code;
 }
 
 const char * dis_fb(const char * code, unsigned prefix)
 {
-	printf( "sti\n" );
+	if( ( prefix & VEX ) == 0 )
+		printf( "sti\n" );
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vpsubq %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vpsubq %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
 	return code;
 }
 

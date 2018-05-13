@@ -1256,6 +1256,26 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// fx
+	else if( *code == 0xfffffff8 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psubb %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xfffffff9 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psubw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xfffffffa )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psubd %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xfffffffb )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psubq %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0xfffffffc )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
