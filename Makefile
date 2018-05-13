@@ -97,6 +97,8 @@ opl.h: opl.hpp
 
 html.h: html.hpp
 
+$(patsubst %.cpp,.d/%.d,$(OPUS_SRC)): html.hpp opl.hpp
+
 ########################################
 
 obj/%.o: %.cpp .d/%.d | obj .d
@@ -106,15 +108,15 @@ obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
 	g++ -g -std=c++11 -c -o $@ $<
 
 .d/%.d: %.cpp | .d obj
-	g++ -std=c++11 -c -MMD -MP -MF .d/$*.Td -o obj/$*.o $<
+	g++ -std=c++11 -c -MMD -MP -MF .d/$*.Td $<
 	mv -f .d/$*.Td $@
 
 .d/elf/%.d: elf/%.cpp | .d/elf elf/obj
-	g++ -std=c++11 -c -MMD -MP -MF .d/elf/$*.Td -o elf/obj/$*.o $<
+	g++ -std=c++11 -c -MMD -MP -MF .d/elf/$*.Td $<
 	mv -f .d/elf/$*.Td $@
 
 obj obj/elf bin .d .d/elf:
-	mkdir $@
+	mkdir -p $@
 
 
 .PHONY: test
