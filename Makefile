@@ -108,11 +108,11 @@ obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
 	g++ -g -std=c++11 -c -o $@ $<
 
 .d/%.d: %.cpp | .d obj
-	g++ -std=c++11 -c -MMD -MP -MF .d/$*.Td $<
+	g++ -std=c++11 -c -MMD -MP -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/$*.Td $<
 	mv -f .d/$*.Td $@
 
 .d/elf/%.d: elf/%.cpp | .d/elf elf/obj
-	g++ -std=c++11 -c -MMD -MP -MF .d/elf/$*.Td $<
+	g++ -std=c++11 -c -MMD -MP -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/elf/$*.Td $<
 	mv -f .d/elf/$*.Td $@
 
 obj obj/elf bin .d .d/elf:
