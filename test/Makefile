@@ -157,7 +157,6 @@ test.paddusb \
 test.psubb \
 test.psubsb \
 test.psubusb \
-test.psubusw \
 test.pmulhw \
 test.pmullw \
 test.pmaddwd \
