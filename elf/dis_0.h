@@ -1227,6 +1227,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddq %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0xffffffd5 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pmullw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0xffffffd6 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
