@@ -87,18 +87,63 @@ const char * dis_e7(const char * code, unsigned prefix)
 
 const char * dis_e8(const char * code, unsigned prefix)
 {
-	char buff[16];
-	code = imm32( code, buff );
+	if( (prefix & VEX ) == 0 )
+	{
+		char buff[16];
+		code = imm32( code, buff );
 
-	printf( "callq %s\n", buff );
+		printf( "callq %s\n", buff );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpsubsb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpsubsb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+
 	return code;
 }
 
 const char * dis_e9(const char * code, unsigned prefix)
 {
-	char imm[16];
-	code = imm32( code, imm );
-	printf( "jmpq %s\n", imm );
+	if( (prefix & VEX ) == 0 )
+	{
+		char imm[16];
+		code = imm32( code, imm );
+		printf( "jmpq %s\n", imm );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpsubsw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpsubsw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
 
 	return code;
 }
