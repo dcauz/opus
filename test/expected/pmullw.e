@@ -641,3 +641,51 @@ d5 94 62 11 00 00 00 62  11 55 40 d5 94 a2 67 35
    a8f:vpmullw 0x10(%r10,%r12,1),%zmm23,%zmm30
    a9a:vpmullw 0x11(%r10,%r12,2),%zmm24,%zmm25
    aa5:vpmullw 0x3567(%r10,%r12,4),%zmm25,%zmm29
+#################
+TODO: elf/file.cpp:186
+
+2800:0
+#################
+TODO: elf/file.cpp:252
+
+2800:0
+
+.symtab
+.strtab
+.shstrtab
+.text
+.data
+.bss
+name:
+bind:local
+type:unspecified
+visibility:default
+section:0
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:1
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:2
+value:0
+size:0
+
+name:
+bind:local
+type:assoc-with-section
+visibility:default
+section:3
+value:0
+size:0
+
+

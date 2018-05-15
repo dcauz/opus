@@ -1286,6 +1286,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// fx
+	else if( *code == 0xfffffff5 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pmaddwd %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0xfffffff8 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
