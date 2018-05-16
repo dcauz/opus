@@ -161,8 +161,6 @@ test.pmulhw \
 test.pmullw \
 test.pmaddwd \
 test.pcmpeqb \
-test.pcmpeqw \
-test.pcmpeqd \
 test.pcmpgtb \
 test.pcmpgtw \
 test.pcmpgtd \
@@ -391,7 +389,6 @@ test.pmovzxdq \
 test.mpsadbw \
 test.phminposuw \
 test.ptest \
-test.pcmpeqq \
 test.packusdw \
 test.pcmpestri \
 test.pcmpestrm \

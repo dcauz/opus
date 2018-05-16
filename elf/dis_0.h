@@ -769,23 +769,34 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
 	}
 
-	// 78
+	// 7x
+	else if( *code == 0x74 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpeqb %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0x75 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpeqw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0x76 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpeqd %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0x78 )
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "vmread %s,%s\n", op1.c_str(), op2.c_str() );
 	}
-
-	// 79
 	else if( *code == 0x79 )
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "vmwrite %s,%s\n", op2.c_str(), op1.c_str() );
 	}
-
-	// 7e
 	else if( *code == 0x7e )
 	{
 		if( ((prefix & PRE_OS ) == PRE_OS) || (( prefix & PRE_REP ) == PRE_REP) )
@@ -798,8 +809,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		else
 			printf( "movd %s,%s\n", op1.c_str(), op2.c_str() );
 	}
-
-	// 7f
 	else if( *code == 0x7f )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
