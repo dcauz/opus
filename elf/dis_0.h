@@ -726,6 +726,21 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "packsswb %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0x64 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpgtb %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0x65 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpgtw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0x66 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pcmpgtd %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0x67 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );

@@ -162,8 +162,6 @@ test.pmullw \
 test.pmaddwd \
 test.pcmpeqb \
 test.pcmpgtb \
-test.pcmpgtw \
-test.pcmpgtd \
 test.pand \
 test.pandn \
 test.por \
@@ -394,7 +392,6 @@ test.pcmpestri \
 test.pcmpestrm \
 test.pcmpistri \
 test.pcmpistrm \
-test.pcmpgtq \
 test.aesdec \
 test.aesdeclast \
 test.aesenc \

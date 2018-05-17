@@ -167,10 +167,42 @@ bool disassemble( const char * code, const char *end )
 		}
 		case 0x63:	code = dis_63(++code, prefix); break;
 
-		case 0x64:	prefix |= PRE_64; ++code; printOn = false; break;
-		case 0x65:	prefix |= PRE_65; ++code; printOn = false; break;
+		case 0x64:	
+		{
+			if( prefix & VEX )
+				code = dis_64(++code, prefix);
+			else
+			{
+				prefix |= PRE_64; 
+				++code; 
+				printOn = false; 
+			}
+			break;
+		}
+		case 0x65:	
+		{
+			if( prefix & VEX )
+				code = dis_65(++code, prefix);
+			else
+			{
+				prefix |= PRE_65; 
+				++code; 
+				printOn = false; 
+			}
+			break;
+		}
 		case 0x66:	
-			prefix |= PRE_OS; ++code; printOn = false; break;
+		{
+			if( prefix & VEX )
+				code = dis_66(++code, prefix);
+			else
+			{
+				prefix |= PRE_OS; 
+				++code; 
+				printOn = false; 
+			}
+			break;
+		}
 		case 0x67:	
 		{
 			if( prefix & VEX )
