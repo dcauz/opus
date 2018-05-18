@@ -368,8 +368,30 @@ bool disassemble( const char * code, const char *end )
 			break;
 
 		case -15:	code = dis_f1(++code, prefix); break;	// 0xf1
-		case -14:	prefix |= PRE_NE; ++code; printOn=false; break;	// 0xf2
-		case -13:	prefix |= PRE_REP; ++code; printOn=false; break;	// 0xf3
+		case -14:											// 0xf2
+		{
+			if( prefix & VEX )
+				code = dis_f2(++code, prefix);
+			else
+			{	
+				prefix |= PRE_NE; 
+				++code; 
+				printOn=false; 
+			}
+			break;
+		}
+		case -13:											// 0xf3
+		{
+			if( prefix & VEX )
+				code = dis_f3(++code, prefix);
+			else
+			{	
+				prefix |= PRE_REP; 
+				++code; 
+				printOn=false; 
+			}
+			break;
+		}
 		case -12:	code = dis_f4(++code, prefix); break;	// 0xf4
 		case -11:	code = dis_f5(++code, prefix); break;	// 0xf5
 		case -10:	code = dis_f6(++code, prefix); break;	// 0xf6
