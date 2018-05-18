@@ -801,40 +801,62 @@ const char * dis_de(const char * code, unsigned prefix)
 
 const char * dis_df(const char * code, unsigned prefix)
 {
-	if( ( *code & 0xf8 ) == 0xe0 )
+	if( ( prefix & VEX ) == 0 )
 	{
-		printf( "fnstsw %%ax\n" );
-		++code;
-	}
-	else if( ( *code & 0xf0 ) == 0xf0 )
-	{
-		int reg = *code & 0x0f;
-		printf( "fcomip %%st(0), %%st(%d)\n", reg );
-		++code;
-	}
-	else if( ( *code & 0xf8 ) == 0xe8 )
-	{
-		int reg = *code & 0x07;
-		printf( "fucomip %%st(%d), %%st(0)\n", reg );
-		++code;
+		if( ( *code & 0xf8 ) == 0xe0 )
+		{
+			printf( "fnstsw %%ax\n" );
+			++code;
+		}
+		else if( ( *code & 0xf0 ) == 0xf0 )
+		{
+			int reg = *code & 0x0f;
+			printf( "fcomip %%st(0), %%st(%d)\n", reg );
+			++code;
+		}
+		else if( ( *code & 0xf8 ) == 0xe8 )
+		{
+			int reg = *code & 0x07;
+			printf( "fucomip %%st(%d), %%st(0)\n", reg );
+			++code;
+		}
+		else
+		{
+			int reg = ( *code & 0x38) >> 3;
+	
+			std::string op;
+			code = memStr( code, prefix, 0, 1, op );
+
+			if( reg == 0 )
+				printf( "fild %s\n", op.c_str() );
+			else if( reg == 2 )
+				printf( "fist %s\n", op.c_str() );
+			else if( reg == 3 )
+				printf( "fistp %s\n",op.c_str() );
+			else if( reg == 4 )
+				printf( "fbld %s\n", op.c_str() );
+			else // reg == 6
+				printf( "fbstp %s\n", op.c_str() );
+		}
 	}
 	else
 	{
-		int reg = ( *code & 0x38) >> 3;
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-		std::string op;
-		code = memStr( code, prefix, 0, 1, op );
-
-		if( reg == 0 )
-			printf( "fild %s\n", op.c_str() );
-		else if( reg == 2 )
-			printf( "fist %s\n", op.c_str() );
-		else if( reg == 3 )
-			printf( "fistp %s\n",op.c_str() );
-		else if( reg == 4 )
-			printf( "fbld %s\n", op.c_str() );
-		else // reg == 6
-			printf( "fbstp %s\n", op.c_str() );
+		std::string op1;
+		std::string op2;
+	
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpandn %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpandn %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 
 	return code;
