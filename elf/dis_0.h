@@ -1246,6 +1246,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// dx
+	else if( *code == 0xffffffd1 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psrlw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xffffffd2 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "psrld %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0xffffffd4 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );

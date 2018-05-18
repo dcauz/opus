@@ -167,9 +167,7 @@ test.pandn \
 test.por \
 test.pxor \
 test.pslld \
-test.psrlw \
 test.psrld \
-test.psrlq \
 test.psraw \
 test.psrad \
 test.emms
