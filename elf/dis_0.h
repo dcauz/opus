@@ -1323,6 +1323,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddsw %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0xffffffef )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pxor %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 
 	// fx
 	else if( *code == 0xfffffff5 )
