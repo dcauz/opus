@@ -261,3 +261,171 @@ vpackuswb (%r10,%r12,1),      %ymm22, %ymm31
 vpackuswb 0x10(%r10,%r12,1),  %ymm23, %ymm30
 vpackuswb 0x11(%r10,%r12,2),  %ymm24, %ymm25
 vpackuswb 0x3567(%r10,%r12,4),%ymm25, %ymm29
+
+vpackuswb %zmm0,%zmm3,%zmm1
+vpackuswb %zmm1,%zmm2,%zmm11
+vpackuswb %zmm2,%zmm1,%zmm22
+vpackuswb %zmm3,%zmm12,%zmm1
+vpackuswb %zmm4,%zmm13,%zmm15
+vpackuswb %zmm5,%zmm14,%zmm23
+vpackuswb %zmm6,%zmm24,%zmm2
+vpackuswb %zmm7,%zmm25,%zmm10
+vpackuswb %zmm0,%zmm26,%zmm27
+
+vpackuswb %zmm11,%zmm0,%zmm3
+vpackuswb %zmm12,%zmm0,%zmm11
+vpackuswb %zmm13,%zmm0,%zmm28
+vpackuswb %zmm14,%zmm10,%zmm4
+vpackuswb %zmm15,%zmm12,%zmm11
+vpackuswb %zmm11,%zmm13,%zmm29
+vpackuswb %zmm12,%zmm30,%zmm5
+vpackuswb %zmm13,%zmm31,%zmm11
+vpackuswb %zmm14,%zmm22,%zmm24
+
+vpackuswb %zmm20,%zmm0,%zmm6
+vpackuswb %zmm21,%zmm0,%zmm11
+vpackuswb %zmm22,%zmm0,%zmm30
+vpackuswb %zmm23,%zmm12,%zmm7
+vpackuswb %zmm24,%zmm13,%zmm10
+vpackuswb %zmm25,%zmm14,%zmm31
+vpackuswb %zmm26,%zmm22,%zmm1
+vpackuswb %zmm27,%zmm21,%zmm14
+vpackuswb %zmm28,%zmm20,%zmm29
+
+vpackuswb (%r10),             %zmm5, %zmm1
+vpackuswb (%r10,%r12,1),      %zmm5, %zmm2
+vpackuswb 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vpackuswb (%r10),             %zmm5, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm5, %zmm11
+vpackuswb 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vpackuswb 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vpackuswb (%r10),             %zmm1, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm2, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vpackuswb (%r10),             %zmm15, %zmm3
+vpackuswb (%r10,%r12,1),      %zmm15, %zmm3
+vpackuswb 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vpackuswb 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vpackuswb (%r10),             %zmm14, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm14, %zmm10
+vpackuswb 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vpackuswb 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vpackuswb 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vpackuswb (%r10),             %zmm11, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm12, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vpackuswb (%r10),             %zmm25, %zmm3
+vpackuswb (%r10,%r12,1),      %zmm25, %zmm3
+vpackuswb 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vpackuswb 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vpackuswb (%r10),             %zmm24, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm24, %zmm10
+vpackuswb 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vpackuswb 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vpackuswb 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vpackuswb (%r10),             %zmm21, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm22, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm25, %zmm29
+
+vpackuswb %zmm0,%zmm3,%zmm1
+vpackuswb %zmm1,%zmm2,%zmm11
+vpackuswb %zmm2,%zmm1,%zmm22
+vpackuswb %zmm3,%zmm12,%zmm1
+vpackuswb %zmm4,%zmm13,%zmm15
+vpackuswb %zmm5,%zmm14,%zmm23
+vpackuswb %zmm6,%zmm24,%zmm2
+vpackuswb %zmm7,%zmm25,%zmm10
+vpackuswb %zmm0,%zmm26,%zmm27
+
+vpackuswb %zmm11,%zmm0,%zmm3
+vpackuswb %zmm12,%zmm0,%zmm11
+vpackuswb %zmm13,%zmm0,%zmm28
+vpackuswb %zmm14,%zmm10,%zmm4
+vpackuswb %zmm15,%zmm12,%zmm11
+vpackuswb %zmm11,%zmm13,%zmm29
+vpackuswb %zmm12,%zmm30,%zmm5
+vpackuswb %zmm13,%zmm31,%zmm11
+vpackuswb %zmm14,%zmm22,%zmm24
+
+vpackuswb %zmm20,%zmm0,%zmm6
+vpackuswb %zmm21,%zmm0,%zmm11
+vpackuswb %zmm22,%zmm0,%zmm30
+vpackuswb %zmm23,%zmm12,%zmm7
+vpackuswb %zmm24,%zmm13,%zmm10
+vpackuswb %zmm25,%zmm14,%zmm31
+vpackuswb %zmm26,%zmm22,%zmm1
+vpackuswb %zmm27,%zmm21,%zmm14
+vpackuswb %zmm28,%zmm20,%zmm29
+
+vpackuswb (%r10),             %zmm5, %zmm1
+vpackuswb (%r10,%r12,1),      %zmm5, %zmm2
+vpackuswb 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vpackuswb (%r10),             %zmm5, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm5, %zmm11
+vpackuswb 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vpackuswb 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vpackuswb (%r10),             %zmm1, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm2, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vpackuswb (%r10),             %zmm15, %zmm3
+vpackuswb (%r10,%r12,1),      %zmm15, %zmm3
+vpackuswb 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vpackuswb 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vpackuswb (%r10),             %zmm14, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm14, %zmm10
+vpackuswb 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vpackuswb 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vpackuswb 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vpackuswb (%r10),             %zmm11, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm12, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vpackuswb (%r10),             %zmm25, %zmm3
+vpackuswb (%r10,%r12,1),      %zmm25, %zmm3
+vpackuswb 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vpackuswb 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vpackuswb 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vpackuswb (%r10),             %zmm24, %zmm10
+vpackuswb (%r10,%r12,1),      %zmm24, %zmm10
+vpackuswb 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vpackuswb 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vpackuswb 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vpackuswb (%r10),             %zmm21, %zmm20
+vpackuswb (%r10,%r12,1),      %zmm22, %zmm31
+vpackuswb 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vpackuswb 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vpackuswb 0x3567(%r10,%r12,4),%zmm25, %zmm29

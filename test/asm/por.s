@@ -612,3 +612,341 @@ vporq (%r10,%r12,1),      %ymm22, %ymm31
 vporq 0x10(%r10,%r12,1),  %ymm23, %ymm30
 vporq 0x11(%r10,%r12,2),  %ymm24, %ymm25
 vporq 0x3567(%r10,%r12,4),%ymm25, %ymm29
+
+
+vpord %zmm0,%zmm3,%zmm1
+vpord %zmm1,%zmm2,%zmm11
+vpord %zmm2,%zmm1,%zmm22
+vpord %zmm3,%zmm12,%zmm1
+vpord %zmm4,%zmm13,%zmm15
+vpord %zmm5,%zmm14,%zmm23
+vpord %zmm6,%zmm24,%zmm2
+vpord %zmm7,%zmm25,%zmm10
+vpord %zmm0,%zmm26,%zmm27
+
+vpord %zmm11,%zmm0,%zmm3
+vpord %zmm12,%zmm0,%zmm11
+vpord %zmm13,%zmm0,%zmm28
+vpord %zmm14,%zmm10,%zmm4
+vpord %zmm15,%zmm12,%zmm11
+vpord %zmm11,%zmm13,%zmm29
+vpord %zmm12,%zmm30,%zmm5
+vpord %zmm13,%zmm31,%zmm11
+vpord %zmm14,%zmm22,%zmm24
+
+vpord %zmm20,%zmm0,%zmm6
+vpord %zmm21,%zmm0,%zmm11
+vpord %zmm22,%zmm0,%zmm30
+vpord %zmm23,%zmm12,%zmm7
+vpord %zmm24,%zmm13,%zmm10
+vpord %zmm25,%zmm14,%zmm31
+vpord %zmm26,%zmm22,%zmm1
+vpord %zmm27,%zmm21,%zmm14
+vpord %zmm28,%zmm20,%zmm29
+
+vpord (%r10),             %zmm5, %zmm1
+vpord (%r10,%r12,1),      %zmm5, %zmm2
+vpord 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vpord (%r10),             %zmm5, %zmm10
+vpord (%r10,%r12,1),      %zmm5, %zmm11
+vpord 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vpord 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vpord (%r10),             %zmm1, %zmm20
+vpord (%r10,%r12,1),      %zmm2, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vpord (%r10),             %zmm15, %zmm3
+vpord (%r10,%r12,1),      %zmm15, %zmm3
+vpord 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vpord 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vpord (%r10),             %zmm14, %zmm10
+vpord (%r10,%r12,1),      %zmm14, %zmm10
+vpord 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vpord 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vpord 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vpord (%r10),             %zmm11, %zmm20
+vpord (%r10,%r12,1),      %zmm12, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vpord (%r10),             %zmm25, %zmm3
+vpord (%r10,%r12,1),      %zmm25, %zmm3
+vpord 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vpord 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vpord (%r10),             %zmm24, %zmm10
+vpord (%r10,%r12,1),      %zmm24, %zmm10
+vpord 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vpord 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vpord 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vpord (%r10),             %zmm21, %zmm20
+vpord (%r10,%r12,1),      %zmm22, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm25, %zmm29
+
+vpord %zmm0,%zmm3,%zmm1
+vpord %zmm1,%zmm2,%zmm11
+vpord %zmm2,%zmm1,%zmm22
+vpord %zmm3,%zmm12,%zmm1
+vpord %zmm4,%zmm13,%zmm15
+vpord %zmm5,%zmm14,%zmm23
+vpord %zmm6,%zmm24,%zmm2
+vpord %zmm7,%zmm25,%zmm10
+vpord %zmm0,%zmm26,%zmm27
+
+vpord %zmm11,%zmm0,%zmm3
+vpord %zmm12,%zmm0,%zmm11
+vpord %zmm13,%zmm0,%zmm28
+vpord %zmm14,%zmm10,%zmm4
+vpord %zmm15,%zmm12,%zmm11
+vpord %zmm11,%zmm13,%zmm29
+vpord %zmm12,%zmm30,%zmm5
+vpord %zmm13,%zmm31,%zmm11
+vpord %zmm14,%zmm22,%zmm24
+
+vpord %zmm20,%zmm0,%zmm6
+vpord %zmm21,%zmm0,%zmm11
+vpord %zmm22,%zmm0,%zmm30
+vpord %zmm23,%zmm12,%zmm7
+vpord %zmm24,%zmm13,%zmm10
+vpord %zmm25,%zmm14,%zmm31
+vpord %zmm26,%zmm22,%zmm1
+vpord %zmm27,%zmm21,%zmm14
+vpord %zmm28,%zmm20,%zmm29
+
+vpord (%r10),             %zmm5, %zmm1
+vpord (%r10,%r12,1),      %zmm5, %zmm2
+vpord 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vpord (%r10),             %zmm5, %zmm10
+vpord (%r10,%r12,1),      %zmm5, %zmm11
+vpord 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vpord 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vpord (%r10),             %zmm1, %zmm20
+vpord (%r10,%r12,1),      %zmm2, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vpord (%r10),             %zmm15, %zmm3
+vpord (%r10,%r12,1),      %zmm15, %zmm3
+vpord 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vpord 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vpord (%r10),             %zmm14, %zmm10
+vpord (%r10,%r12,1),      %zmm14, %zmm10
+vpord 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vpord 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vpord 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vpord (%r10),             %zmm11, %zmm20
+vpord (%r10,%r12,1),      %zmm12, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vpord (%r10),             %zmm25, %zmm3
+vpord (%r10,%r12,1),      %zmm25, %zmm3
+vpord 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vpord 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vpord 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vpord (%r10),             %zmm24, %zmm10
+vpord (%r10,%r12,1),      %zmm24, %zmm10
+vpord 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vpord 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vpord 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vpord (%r10),             %zmm21, %zmm20
+vpord (%r10,%r12,1),      %zmm22, %zmm31
+vpord 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vpord 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vpord 0x3567(%r10,%r12,4),%zmm25, %zmm29
+
+
+vporq %zmm0,%zmm3,%zmm1
+vporq %zmm1,%zmm2,%zmm11
+vporq %zmm2,%zmm1,%zmm22
+vporq %zmm3,%zmm12,%zmm1
+vporq %zmm4,%zmm13,%zmm15
+vporq %zmm5,%zmm14,%zmm23
+vporq %zmm6,%zmm24,%zmm2
+vporq %zmm7,%zmm25,%zmm10
+vporq %zmm0,%zmm26,%zmm27
+
+vporq %zmm11,%zmm0,%zmm3
+vporq %zmm12,%zmm0,%zmm11
+vporq %zmm13,%zmm0,%zmm28
+vporq %zmm14,%zmm10,%zmm4
+vporq %zmm15,%zmm12,%zmm11
+vporq %zmm11,%zmm13,%zmm29
+vporq %zmm12,%zmm30,%zmm5
+vporq %zmm13,%zmm31,%zmm11
+vporq %zmm14,%zmm22,%zmm24
+
+vporq %zmm20,%zmm0,%zmm6
+vporq %zmm21,%zmm0,%zmm11
+vporq %zmm22,%zmm0,%zmm30
+vporq %zmm23,%zmm12,%zmm7
+vporq %zmm24,%zmm13,%zmm10
+vporq %zmm25,%zmm14,%zmm31
+vporq %zmm26,%zmm22,%zmm1
+vporq %zmm27,%zmm21,%zmm14
+vporq %zmm28,%zmm20,%zmm29
+
+vporq (%r10),             %zmm5, %zmm1
+vporq (%r10,%r12,1),      %zmm5, %zmm2
+vporq 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vporq (%r10),             %zmm5, %zmm10
+vporq (%r10,%r12,1),      %zmm5, %zmm11
+vporq 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vporq 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vporq (%r10),             %zmm1, %zmm20
+vporq (%r10,%r12,1),      %zmm2, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vporq (%r10),             %zmm15, %zmm3
+vporq (%r10,%r12,1),      %zmm15, %zmm3
+vporq 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vporq 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vporq (%r10),             %zmm14, %zmm10
+vporq (%r10,%r12,1),      %zmm14, %zmm10
+vporq 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vporq 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vporq 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vporq (%r10),             %zmm11, %zmm20
+vporq (%r10,%r12,1),      %zmm12, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vporq (%r10),             %zmm25, %zmm3
+vporq (%r10,%r12,1),      %zmm25, %zmm3
+vporq 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vporq 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vporq (%r10),             %zmm24, %zmm10
+vporq (%r10,%r12,1),      %zmm24, %zmm10
+vporq 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vporq 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vporq 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vporq (%r10),             %zmm21, %zmm20
+vporq (%r10,%r12,1),      %zmm22, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm25, %zmm29
+
+vporq %zmm0,%zmm3,%zmm1
+vporq %zmm1,%zmm2,%zmm11
+vporq %zmm2,%zmm1,%zmm22
+vporq %zmm3,%zmm12,%zmm1
+vporq %zmm4,%zmm13,%zmm15
+vporq %zmm5,%zmm14,%zmm23
+vporq %zmm6,%zmm24,%zmm2
+vporq %zmm7,%zmm25,%zmm10
+vporq %zmm0,%zmm26,%zmm27
+
+vporq %zmm11,%zmm0,%zmm3
+vporq %zmm12,%zmm0,%zmm11
+vporq %zmm13,%zmm0,%zmm28
+vporq %zmm14,%zmm10,%zmm4
+vporq %zmm15,%zmm12,%zmm11
+vporq %zmm11,%zmm13,%zmm29
+vporq %zmm12,%zmm30,%zmm5
+vporq %zmm13,%zmm31,%zmm11
+vporq %zmm14,%zmm22,%zmm24
+
+vporq %zmm20,%zmm0,%zmm6
+vporq %zmm21,%zmm0,%zmm11
+vporq %zmm22,%zmm0,%zmm30
+vporq %zmm23,%zmm12,%zmm7
+vporq %zmm24,%zmm13,%zmm10
+vporq %zmm25,%zmm14,%zmm31
+vporq %zmm26,%zmm22,%zmm1
+vporq %zmm27,%zmm21,%zmm14
+vporq %zmm28,%zmm20,%zmm29
+
+vporq (%r10),             %zmm5, %zmm1
+vporq (%r10,%r12,1),      %zmm5, %zmm2
+vporq 0x10(%r10,%r12,1),  %zmm5, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm5, %zmm4
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm0
+
+vporq (%r10),             %zmm5, %zmm10
+vporq (%r10,%r12,1),      %zmm5, %zmm11
+vporq 0x10(%r10,%r12,1),  %zmm5, %zmm12
+vporq 0x11(%r10,%r12,2),  %zmm5, %zmm13
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm14
+
+vporq (%r10),             %zmm1, %zmm20
+vporq (%r10,%r12,1),      %zmm2, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm3, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm4, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm5, %zmm29
+
+vporq (%r10),             %zmm15, %zmm3
+vporq (%r10,%r12,1),      %zmm15, %zmm3
+vporq 0x10(%r10,%r12,1),  %zmm14, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm14, %zmm3
+vporq 0x3567(%r10,%r12,4),%zmm13, %zmm3
+
+vporq (%r10),             %zmm14, %zmm10
+vporq (%r10,%r12,1),      %zmm14, %zmm10
+vporq 0x10(%r10,%r12,1),  %zmm15, %zmm10
+vporq 0x11(%r10,%r12,2),  %zmm11, %zmm10
+vporq 0x3567(%r10,%r12,4),%zmm11, %zmm10
+
+vporq (%r10),             %zmm11, %zmm20
+vporq (%r10,%r12,1),      %zmm12, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm13, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm14, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm15, %zmm29
+
+vporq (%r10),             %zmm25, %zmm3
+vporq (%r10,%r12,1),      %zmm25, %zmm3
+vporq 0x10(%r10,%r12,1),  %zmm24, %zmm3
+vporq 0x11(%r10,%r12,2),  %zmm24, %zmm3
+vporq 0x3567(%r10,%r12,4),%zmm23, %zmm3
+
+vporq (%r10),             %zmm24, %zmm10
+vporq (%r10,%r12,1),      %zmm24, %zmm10
+vporq 0x10(%r10,%r12,1),  %zmm25, %zmm10
+vporq 0x11(%r10,%r12,2),  %zmm21, %zmm10
+vporq 0x3567(%r10,%r12,4),%zmm21, %zmm10
+
+vporq (%r10),             %zmm21, %zmm20
+vporq (%r10,%r12,1),      %zmm22, %zmm31
+vporq 0x10(%r10,%r12,1),  %zmm23, %zmm30
+vporq 0x11(%r10,%r12,2),  %zmm24, %zmm25
+vporq 0x3567(%r10,%r12,4),%zmm25, %zmm29

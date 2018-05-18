@@ -166,9 +166,7 @@ test.pand \
 test.pandn \
 test.por \
 test.pxor \
-test.psllw \
 test.pslld \
-test.psllq \
 test.psrlw \
 test.psrld \
 test.psrlq \
