@@ -1271,6 +1271,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubusw %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0xffffffdb )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "pand %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0xffffffdc )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
