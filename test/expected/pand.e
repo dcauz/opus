@@ -6,7 +6,7 @@ machine  =AMD x86-64 architecture
 version  =1
 entry pt virt addr:    0
 prog hdr tbl file off: 0
-sect hdr tbl file off: 4168
+sect hdr tbl file off: 6472
 proc spec flags:       0
 elf hdr size (bytes):  64
 prog hdr tbl ent size: 0
@@ -33,7 +33,7 @@ type:     Program data
 flags:    OCCUPIES MEMORY|Executable
 addr:     0
 offset:   64
-size:     3953
+size:     6257
 link:     0
 info:     0
 alignment:1
@@ -44,7 +44,7 @@ name:     .data
 type:     Program data
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   4017
+offset:   6321
 size:     0
 link:     0
 info:     0
@@ -56,7 +56,7 @@ name:     .bss
 type:     Program space with no data (bss)
 flags:    OCCUPIES MEMORY|Writable
 addr:     0
-offset:   4017
+offset:   6321
 size:     0
 link:     0
 info:     0
@@ -68,7 +68,7 @@ name:     .shstrtab
 type:     String table
 flags:    
 addr:     0
-offset:   4121
+offset:   6425
 size:     44
 link:     0
 info:     0
@@ -80,7 +80,7 @@ name:     .symtab
 type:     Symbol table
 flags:    
 addr:     0
-offset:   4024
+offset:   6328
 size:     96
 link:     6
 info:     4
@@ -92,7 +92,7 @@ name:     .strtab
 type:     String table
 flags:    
 addr:     0
-offset:   4120
+offset:   6424
 size:     1
 link:     0
 info:     0
@@ -347,6 +347,150 @@ a2 67 35 00 00 62 51 bd  20 db 12 62 11 bd 20 db
 35 00 00 62 c1 d5 20 db  22 62 01 cd 20 db 3c 22
 62 01 c5 20 db b4 22 10  00 00 00 62 01 bd 20 db
 8c 62 11 00 00 00 62 01  b5 20 db ac a2 67 35 00
+00 62 f1 65 48 db c8 62  71 6d 48 db d9 62 e1 75
+48 db f2 62 f1 1d 48 db  cb 62 71 15 48 db fc 62
+e1 0d 48 db fd 62 f1 3d  40 db d6 62 71 35 40 db
+d7 62 61 2d 40 db d8 62  d1 7d 48 db db 62 51 7d
+48 db dc 62 41 7d 48 db  e5 62 d1 2d 48 db e6 62
+51 1d 48 db df 62 41 15  48 db eb 62 d1 0d 40 db
+ec 62 51 05 40 db dd 62  41 4d 40 db c6 62 b1 7d
+48 db f4 62 31 7d 48 db  dd 62 21 7d 48 db f6 62
+b1 1d 48 db ff 62 11 15  48 db d0 62 01 0d 48 db
+f9 62 91 4d 40 db ca 62  11 55 40 db f3 62 01 5d
+40 db ec 62 d1 55 48 db  0a 62 91 55 48 db 14 22
+62 91 55 48 db 9c 22 10  00 00 00 62 91 55 48 db
+a4 62 11 00 00 00 62 91  55 48 db 84 a2 67 35 00
+00 62 51 55 48 db 12 62  11 55 48 db 1c 22 62 11
+55 48 db a4 22 10 00 00  00 62 11 55 48 db ac 62
+11 00 00 00 62 11 55 48  db b4 a2 67 35 00 00 62
+c1 75 48 db 22 62 01 6d  48 db 3c 22 62 01 65 48
+db b4 22 10 00 00 00 62  01 5d 48 db 8c 62 11 00
+00 00 62 01 55 48 db ac  a2 67 35 00 00 62 d1 05
+48 db 1a 62 91 05 48 db  1c 22 62 91 0d 48 db 9c
+22 10 00 00 00 62 91 0d  48 db 9c 62 11 00 00 00
+62 91 15 48 db 9c a2 67  35 00 00 62 51 0d 48 db
+12 62 11 0d 48 db 14 22  62 11 05 48 db 94 22 10
+00 00 00 62 11 25 48 db  94 62 11 00 00 00 62 11
+25 48 db 94 a2 67 35 00  00 62 c1 25 48 db 22 62
+01 1d 48 db 3c 22 62 01  15 48 db b4 22 10 00 00
+00 62 01 0d 48 db 8c 62  11 00 00 00 62 01 05 48
+db ac a2 67 35 00 00 62  d1 35 40 db 1a 62 91 35
+40 db 1c 22 62 91 3d 40  db 9c 22 10 00 00 00 62
+91 3d 40 db 9c 62 11 00  00 00 62 91 45 40 db 9c
+a2 67 35 00 00 62 51 3d  40 db 12 62 11 3d 40 db
+14 22 62 11 35 40 db 94  22 10 00 00 00 62 11 55
+40 db 94 62 11 00 00 00  62 11 55 40 db 94 a2 67
+35 00 00 62 c1 55 40 db  22 62 01 4d 40 db 3c 22
+62 01 45 40 db b4 22 10  00 00 00 62 01 3d 40 db
+8c 62 11 00 00 00 62 01  35 40 db ac a2 67 35 00
+00 62 f1 65 48 db c8 62  71 6d 48 db d9 62 e1 75
+48 db f2 62 f1 1d 48 db  cb 62 71 15 48 db fc 62
+e1 0d 48 db fd 62 f1 3d  40 db d6 62 71 35 40 db
+d7 62 61 2d 40 db d8 62  d1 7d 48 db db 62 51 7d
+48 db dc 62 41 7d 48 db  e5 62 d1 2d 48 db e6 62
+51 1d 48 db df 62 41 15  48 db eb 62 d1 0d 40 db
+ec 62 51 05 40 db dd 62  41 4d 40 db c6 62 b1 7d
+48 db f4 62 31 7d 48 db  dd 62 21 7d 48 db f6 62
+b1 1d 48 db ff 62 11 15  48 db d0 62 01 0d 48 db
+f9 62 91 4d 40 db ca 62  11 55 40 db f3 62 01 5d
+40 db ec 62 d1 55 48 db  0a 62 91 55 48 db 14 22
+62 91 55 48 db 9c 22 10  00 00 00 62 91 55 48 db
+a4 62 11 00 00 00 62 91  55 48 db 84 a2 67 35 00
+00 62 51 55 48 db 12 62  11 55 48 db 1c 22 62 11
+55 48 db a4 22 10 00 00  00 62 11 55 48 db ac 62
+11 00 00 00 62 11 55 48  db b4 a2 67 35 00 00 62
+c1 75 48 db 22 62 01 6d  48 db 3c 22 62 01 65 48
+db b4 22 10 00 00 00 62  01 5d 48 db 8c 62 11 00
+00 00 62 01 55 48 db ac  a2 67 35 00 00 62 d1 05
+48 db 1a 62 91 05 48 db  1c 22 62 91 0d 48 db 9c
+22 10 00 00 00 62 91 0d  48 db 9c 62 11 00 00 00
+62 91 15 48 db 9c a2 67  35 00 00 62 51 0d 48 db
+12 62 11 0d 48 db 14 22  62 11 05 48 db 94 22 10
+00 00 00 62 11 25 48 db  94 62 11 00 00 00 62 11
+25 48 db 94 a2 67 35 00  00 62 c1 25 48 db 22 62
+01 1d 48 db 3c 22 62 01  15 48 db b4 22 10 00 00
+00 62 01 0d 48 db 8c 62  11 00 00 00 62 01 05 48
+db ac a2 67 35 00 00 62  d1 35 40 db 1a 62 91 35
+40 db 1c 22 62 91 3d 40  db 9c 22 10 00 00 00 62
+91 3d 40 db 9c 62 11 00  00 00 62 91 45 40 db 9c
+a2 67 35 00 00 62 51 3d  40 db 12 62 11 3d 40 db
+14 22 62 11 35 40 db 94  22 10 00 00 00 62 11 55
+40 db 94 62 11 00 00 00  62 11 55 40 db 94 a2 67
+35 00 00 62 c1 55 40 db  22 62 01 4d 40 db 3c 22
+62 01 45 40 db b4 22 10  00 00 00 62 01 3d 40 db
+8c 62 11 00 00 00 62 01  35 40 db ac a2 67 35 00
+00 62 f1 e5 48 db c8 62  71 ed 48 db d9 62 e1 f5
+48 db f2 62 f1 9d 48 db  cb 62 71 95 48 db fc 62
+e1 8d 48 db fd 62 f1 bd  40 db d6 62 71 b5 40 db
+d7 62 61 ad 40 db d8 62  d1 fd 48 db db 62 51 fd
+48 db dc 62 41 fd 48 db  e5 62 d1 ad 48 db e6 62
+51 9d 48 db df 62 41 95  48 db eb 62 d1 8d 40 db
+ec 62 51 85 40 db dd 62  41 cd 40 db c6 62 b1 fd
+48 db f4 62 31 fd 48 db  dd 62 21 fd 48 db f6 62
+b1 9d 48 db ff 62 11 95  48 db d0 62 01 8d 48 db
+f9 62 91 cd 40 db ca 62  11 d5 40 db f3 62 01 dd
+40 db ec 62 d1 d5 48 db  0a 62 91 d5 48 db 14 22
+62 91 d5 48 db 9c 22 10  00 00 00 62 91 d5 48 db
+a4 62 11 00 00 00 62 91  d5 48 db 84 a2 67 35 00
+00 62 51 d5 48 db 12 62  11 d5 48 db 1c 22 62 11
+d5 48 db a4 22 10 00 00  00 62 11 d5 48 db ac 62
+11 00 00 00 62 11 d5 48  db b4 a2 67 35 00 00 62
+c1 f5 48 db 22 62 01 ed  48 db 3c 22 62 01 e5 48
+db b4 22 10 00 00 00 62  01 dd 48 db 8c 62 11 00
+00 00 62 01 d5 48 db ac  a2 67 35 00 00 62 d1 85
+48 db 1a 62 91 85 48 db  1c 22 62 91 8d 48 db 9c
+22 10 00 00 00 62 91 8d  48 db 9c 62 11 00 00 00
+62 91 95 48 db 9c a2 67  35 00 00 62 51 8d 48 db
+12 62 11 8d 48 db 14 22  62 11 85 48 db 94 22 10
+00 00 00 62 11 a5 48 db  94 62 11 00 00 00 62 11
+a5 48 db 94 a2 67 35 00  00 62 c1 a5 48 db 22 62
+01 9d 48 db 3c 22 62 01  95 48 db b4 22 10 00 00
+00 62 01 8d 48 db 8c 62  11 00 00 00 62 01 85 48
+db ac a2 67 35 00 00 62  d1 b5 40 db 1a 62 91 b5
+40 db 1c 22 62 91 bd 40  db 9c 22 10 00 00 00 62
+91 bd 40 db 9c 62 11 00  00 00 62 91 c5 40 db 9c
+a2 67 35 00 00 62 51 bd  40 db 12 62 11 bd 40 db
+14 22 62 11 b5 40 db 94  22 10 00 00 00 62 11 d5
+40 db 94 62 11 00 00 00  62 11 d5 40 db 94 a2 67
+35 00 00 62 c1 d5 40 db  22 62 01 cd 40 db 3c 22
+62 01 c5 40 db b4 22 10  00 00 00 62 01 bd 40 db
+8c 62 11 00 00 00 62 01  b5 40 db ac a2 67 35 00
+00 62 f1 e5 48 db c8 62  71 ed 48 db d9 62 e1 f5
+48 db f2 62 f1 9d 48 db  cb 62 71 95 48 db fc 62
+e1 8d 48 db fd 62 f1 bd  40 db d6 62 71 b5 40 db
+d7 62 61 ad 40 db d8 62  d1 fd 48 db db 62 51 fd
+48 db dc 62 41 fd 48 db  e5 62 d1 ad 48 db e6 62
+51 9d 48 db df 62 41 95  48 db eb 62 d1 8d 40 db
+ec 62 51 85 40 db dd 62  41 cd 40 db c6 62 b1 fd
+48 db f4 62 31 fd 48 db  dd 62 21 fd 48 db f6 62
+b1 9d 48 db ff 62 11 95  48 db d0 62 01 8d 48 db
+f9 62 91 cd 40 db ca 62  11 d5 40 db f3 62 01 dd
+40 db ec 62 d1 d5 48 db  0a 62 91 d5 48 db 14 22
+62 91 d5 48 db 9c 22 10  00 00 00 62 91 d5 48 db
+a4 62 11 00 00 00 62 91  d5 48 db 84 a2 67 35 00
+00 62 51 d5 48 db 12 62  11 d5 48 db 1c 22 62 11
+d5 48 db a4 22 10 00 00  00 62 11 d5 48 db ac 62
+11 00 00 00 62 11 d5 48  db b4 a2 67 35 00 00 62
+c1 f5 48 db 22 62 01 ed  48 db 3c 22 62 01 e5 48
+db b4 22 10 00 00 00 62  01 dd 48 db 8c 62 11 00
+00 00 62 01 d5 48 db ac  a2 67 35 00 00 62 d1 85
+48 db 1a 62 91 85 48 db  1c 22 62 91 8d 48 db 9c
+22 10 00 00 00 62 91 8d  48 db 9c 62 11 00 00 00
+62 91 95 48 db 9c a2 67  35 00 00 62 51 8d 48 db
+12 62 11 8d 48 db 14 22  62 11 85 48 db 94 22 10
+00 00 00 62 11 a5 48 db  94 62 11 00 00 00 62 11
+a5 48 db 94 a2 67 35 00  00 62 c1 a5 48 db 22 62
+01 9d 48 db 3c 22 62 01  95 48 db b4 22 10 00 00
+00 62 01 8d 48 db 8c 62  11 00 00 00 62 01 85 48
+db ac a2 67 35 00 00 62  d1 b5 40 db 1a 62 91 b5
+40 db 1c 22 62 91 bd 40  db 9c 22 10 00 00 00 62
+91 bd 40 db 9c 62 11 00  00 00 62 91 c5 40 db 9c
+a2 67 35 00 00 62 51 bd  40 db 12 62 11 bd 40 db
+14 22 62 11 b5 40 db 94  22 10 00 00 00 62 11 d5
+40 db 94 62 11 00 00 00  62 11 d5 40 db 94 a2 67
+35 00 00 62 c1 d5 40 db  22 62 01 cd 40 db 3c 22
+62 01 c5 40 db b4 22 10  00 00 00 62 01 bd 40 db
+8c 62 11 00 00 00 62 01  b5 40 db ac a2 67 35 00
 00
      0:pand %mm0,%mm1
      3:pand %mm2,%mm7
@@ -869,14 +1013,302 @@ a2 67 35 00 00 62 51 bd  20 db 12 62 11 bd 20 db
    f50:vpandq 0x10(%r10,%r12,1),%ymm23,%ymm30
    f5b:vpandq 0x11(%r10,%r12,2),%ymm24,%ymm25
    f66:vpandq 0x3567(%r10,%r12,4),%ymm25,%ymm29
+   f71:vpandd %zmm0,%zmm3,%zmm1
+   f77:vpandd %zmm1,%zmm2,%zmm11
+   f7d:vpandd %zmm2,%zmm1,%zmm22
+   f83:vpandd %zmm3,%zmm12,%zmm1
+   f89:vpandd %zmm4,%zmm13,%zmm15
+   f8f:vpandd %zmm5,%zmm14,%zmm23
+   f95:vpandd %zmm6,%zmm24,%zmm2
+   f9b:vpandd %zmm7,%zmm25,%zmm10
+   fa1:vpandd %zmm0,%zmm26,%zmm27
+   fa7:vpandd %zmm11,%zmm0,%zmm3
+   fad:vpandd %zmm12,%zmm0,%zmm11
+   fb3:vpandd %zmm13,%zmm0,%zmm28
+   fb9:vpandd %zmm14,%zmm10,%zmm4
+   fbf:vpandd %zmm15,%zmm12,%zmm11
+   fc5:vpandd %zmm11,%zmm13,%zmm29
+   fcb:vpandd %zmm12,%zmm30,%zmm5
+   fd1:vpandd %zmm13,%zmm31,%zmm11
+   fd7:vpandd %zmm14,%zmm22,%zmm24
+   fdd:vpandd %zmm20,%zmm0,%zmm6
+   fe3:vpandd %zmm21,%zmm0,%zmm11
+   fe9:vpandd %zmm22,%zmm0,%zmm30
+   fef:vpandd %zmm23,%zmm12,%zmm7
+   ff5:vpandd %zmm24,%zmm13,%zmm10
+   ffb:vpandd %zmm25,%zmm14,%zmm31
+  1001:vpandd %zmm26,%zmm22,%zmm1
+  1007:vpandd %zmm27,%zmm21,%zmm14
+  100d:vpandd %zmm28,%zmm20,%zmm29
+  1013:vpandd (%r10),%zmm5,%zmm1
+  1019:vpandd (%r10,%r12,1),%zmm5,%zmm2
+  1020:vpandd 0x10(%r10,%r12,1),%zmm5,%zmm3
+  102b:vpandd 0x11(%r10,%r12,2),%zmm5,%zmm4
+  1036:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm0
+  1041:vpandd (%r10),%zmm5,%zmm10
+  1047:vpandd (%r10,%r12,1),%zmm5,%zmm11
+  104e:vpandd 0x10(%r10,%r12,1),%zmm5,%zmm12
+  1059:vpandd 0x11(%r10,%r12,2),%zmm5,%zmm13
+  1064:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm14
+  106f:vpandd (%r10),%zmm1,%zmm20
+  1075:vpandd (%r10,%r12,1),%zmm2,%zmm31
+  107c:vpandd 0x10(%r10,%r12,1),%zmm3,%zmm30
+  1087:vpandd 0x11(%r10,%r12,2),%zmm4,%zmm25
+  1092:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm29
+  109d:vpandd (%r10),%zmm15,%zmm3
+  10a3:vpandd (%r10,%r12,1),%zmm15,%zmm3
+  10aa:vpandd 0x10(%r10,%r12,1),%zmm14,%zmm3
+  10b5:vpandd 0x11(%r10,%r12,2),%zmm14,%zmm3
+  10c0:vpandd 0x3567(%r10,%r12,4),%zmm13,%zmm3
+  10cb:vpandd (%r10),%zmm14,%zmm10
+  10d1:vpandd (%r10,%r12,1),%zmm14,%zmm10
+  10d8:vpandd 0x10(%r10,%r12,1),%zmm15,%zmm10
+  10e3:vpandd 0x11(%r10,%r12,2),%zmm11,%zmm10
+  10ee:vpandd 0x3567(%r10,%r12,4),%zmm11,%zmm10
+  10f9:vpandd (%r10),%zmm11,%zmm20
+  10ff:vpandd (%r10,%r12,1),%zmm12,%zmm31
+  1106:vpandd 0x10(%r10,%r12,1),%zmm13,%zmm30
+  1111:vpandd 0x11(%r10,%r12,2),%zmm14,%zmm25
+  111c:vpandd 0x3567(%r10,%r12,4),%zmm15,%zmm29
+  1127:vpandd (%r10),%zmm25,%zmm3
+  112d:vpandd (%r10,%r12,1),%zmm25,%zmm3
+  1134:vpandd 0x10(%r10,%r12,1),%zmm24,%zmm3
+  113f:vpandd 0x11(%r10,%r12,2),%zmm24,%zmm3
+  114a:vpandd 0x3567(%r10,%r12,4),%zmm23,%zmm3
+  1155:vpandd (%r10),%zmm24,%zmm10
+  115b:vpandd (%r10,%r12,1),%zmm24,%zmm10
+  1162:vpandd 0x10(%r10,%r12,1),%zmm25,%zmm10
+  116d:vpandd 0x11(%r10,%r12,2),%zmm21,%zmm10
+  1178:vpandd 0x3567(%r10,%r12,4),%zmm21,%zmm10
+  1183:vpandd (%r10),%zmm21,%zmm20
+  1189:vpandd (%r10,%r12,1),%zmm22,%zmm31
+  1190:vpandd 0x10(%r10,%r12,1),%zmm23,%zmm30
+  119b:vpandd 0x11(%r10,%r12,2),%zmm24,%zmm25
+  11a6:vpandd 0x3567(%r10,%r12,4),%zmm25,%zmm29
+  11b1:vpandd %zmm0,%zmm3,%zmm1
+  11b7:vpandd %zmm1,%zmm2,%zmm11
+  11bd:vpandd %zmm2,%zmm1,%zmm22
+  11c3:vpandd %zmm3,%zmm12,%zmm1
+  11c9:vpandd %zmm4,%zmm13,%zmm15
+  11cf:vpandd %zmm5,%zmm14,%zmm23
+  11d5:vpandd %zmm6,%zmm24,%zmm2
+  11db:vpandd %zmm7,%zmm25,%zmm10
+  11e1:vpandd %zmm0,%zmm26,%zmm27
+  11e7:vpandd %zmm11,%zmm0,%zmm3
+  11ed:vpandd %zmm12,%zmm0,%zmm11
+  11f3:vpandd %zmm13,%zmm0,%zmm28
+  11f9:vpandd %zmm14,%zmm10,%zmm4
+  11ff:vpandd %zmm15,%zmm12,%zmm11
+  1205:vpandd %zmm11,%zmm13,%zmm29
+  120b:vpandd %zmm12,%zmm30,%zmm5
+  1211:vpandd %zmm13,%zmm31,%zmm11
+  1217:vpandd %zmm14,%zmm22,%zmm24
+  121d:vpandd %zmm20,%zmm0,%zmm6
+  1223:vpandd %zmm21,%zmm0,%zmm11
+  1229:vpandd %zmm22,%zmm0,%zmm30
+  122f:vpandd %zmm23,%zmm12,%zmm7
+  1235:vpandd %zmm24,%zmm13,%zmm10
+  123b:vpandd %zmm25,%zmm14,%zmm31
+  1241:vpandd %zmm26,%zmm22,%zmm1
+  1247:vpandd %zmm27,%zmm21,%zmm14
+  124d:vpandd %zmm28,%zmm20,%zmm29
+  1253:vpandd (%r10),%zmm5,%zmm1
+  1259:vpandd (%r10,%r12,1),%zmm5,%zmm2
+  1260:vpandd 0x10(%r10,%r12,1),%zmm5,%zmm3
+  126b:vpandd 0x11(%r10,%r12,2),%zmm5,%zmm4
+  1276:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm0
+  1281:vpandd (%r10),%zmm5,%zmm10
+  1287:vpandd (%r10,%r12,1),%zmm5,%zmm11
+  128e:vpandd 0x10(%r10,%r12,1),%zmm5,%zmm12
+  1299:vpandd 0x11(%r10,%r12,2),%zmm5,%zmm13
+  12a4:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm14
+  12af:vpandd (%r10),%zmm1,%zmm20
+  12b5:vpandd (%r10,%r12,1),%zmm2,%zmm31
+  12bc:vpandd 0x10(%r10,%r12,1),%zmm3,%zmm30
+  12c7:vpandd 0x11(%r10,%r12,2),%zmm4,%zmm25
+  12d2:vpandd 0x3567(%r10,%r12,4),%zmm5,%zmm29
+  12dd:vpandd (%r10),%zmm15,%zmm3
+  12e3:vpandd (%r10,%r12,1),%zmm15,%zmm3
+  12ea:vpandd 0x10(%r10,%r12,1),%zmm14,%zmm3
+  12f5:vpandd 0x11(%r10,%r12,2),%zmm14,%zmm3
+  1300:vpandd 0x3567(%r10,%r12,4),%zmm13,%zmm3
+  130b:vpandd (%r10),%zmm14,%zmm10
+  1311:vpandd (%r10,%r12,1),%zmm14,%zmm10
+  1318:vpandd 0x10(%r10,%r12,1),%zmm15,%zmm10
+  1323:vpandd 0x11(%r10,%r12,2),%zmm11,%zmm10
+  132e:vpandd 0x3567(%r10,%r12,4),%zmm11,%zmm10
+  1339:vpandd (%r10),%zmm11,%zmm20
+  133f:vpandd (%r10,%r12,1),%zmm12,%zmm31
+  1346:vpandd 0x10(%r10,%r12,1),%zmm13,%zmm30
+  1351:vpandd 0x11(%r10,%r12,2),%zmm14,%zmm25
+  135c:vpandd 0x3567(%r10,%r12,4),%zmm15,%zmm29
+  1367:vpandd (%r10),%zmm25,%zmm3
+  136d:vpandd (%r10,%r12,1),%zmm25,%zmm3
+  1374:vpandd 0x10(%r10,%r12,1),%zmm24,%zmm3
+  137f:vpandd 0x11(%r10,%r12,2),%zmm24,%zmm3
+  138a:vpandd 0x3567(%r10,%r12,4),%zmm23,%zmm3
+  1395:vpandd (%r10),%zmm24,%zmm10
+  139b:vpandd (%r10,%r12,1),%zmm24,%zmm10
+  13a2:vpandd 0x10(%r10,%r12,1),%zmm25,%zmm10
+  13ad:vpandd 0x11(%r10,%r12,2),%zmm21,%zmm10
+  13b8:vpandd 0x3567(%r10,%r12,4),%zmm21,%zmm10
+  13c3:vpandd (%r10),%zmm21,%zmm20
+  13c9:vpandd (%r10,%r12,1),%zmm22,%zmm31
+  13d0:vpandd 0x10(%r10,%r12,1),%zmm23,%zmm30
+  13db:vpandd 0x11(%r10,%r12,2),%zmm24,%zmm25
+  13e6:vpandd 0x3567(%r10,%r12,4),%zmm25,%zmm29
+  13f1:vpandq %zmm0,%zmm3,%zmm1
+  13f7:vpandq %zmm1,%zmm2,%zmm11
+  13fd:vpandq %zmm2,%zmm1,%zmm22
+  1403:vpandq %zmm3,%zmm12,%zmm1
+  1409:vpandq %zmm4,%zmm13,%zmm15
+  140f:vpandq %zmm5,%zmm14,%zmm23
+  1415:vpandq %zmm6,%zmm24,%zmm2
+  141b:vpandq %zmm7,%zmm25,%zmm10
+  1421:vpandq %zmm0,%zmm26,%zmm27
+  1427:vpandq %zmm11,%zmm0,%zmm3
+  142d:vpandq %zmm12,%zmm0,%zmm11
+  1433:vpandq %zmm13,%zmm0,%zmm28
+  1439:vpandq %zmm14,%zmm10,%zmm4
+  143f:vpandq %zmm15,%zmm12,%zmm11
+  1445:vpandq %zmm11,%zmm13,%zmm29
+  144b:vpandq %zmm12,%zmm30,%zmm5
+  1451:vpandq %zmm13,%zmm31,%zmm11
+  1457:vpandq %zmm14,%zmm22,%zmm24
+  145d:vpandq %zmm20,%zmm0,%zmm6
+  1463:vpandq %zmm21,%zmm0,%zmm11
+  1469:vpandq %zmm22,%zmm0,%zmm30
+  146f:vpandq %zmm23,%zmm12,%zmm7
+  1475:vpandq %zmm24,%zmm13,%zmm10
+  147b:vpandq %zmm25,%zmm14,%zmm31
+  1481:vpandq %zmm26,%zmm22,%zmm1
+  1487:vpandq %zmm27,%zmm21,%zmm14
+  148d:vpandq %zmm28,%zmm20,%zmm29
+  1493:vpandq (%r10),%zmm5,%zmm1
+  1499:vpandq (%r10,%r12,1),%zmm5,%zmm2
+  14a0:vpandq 0x10(%r10,%r12,1),%zmm5,%zmm3
+  14ab:vpandq 0x11(%r10,%r12,2),%zmm5,%zmm4
+  14b6:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm0
+  14c1:vpandq (%r10),%zmm5,%zmm10
+  14c7:vpandq (%r10,%r12,1),%zmm5,%zmm11
+  14ce:vpandq 0x10(%r10,%r12,1),%zmm5,%zmm12
+  14d9:vpandq 0x11(%r10,%r12,2),%zmm5,%zmm13
+  14e4:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm14
+  14ef:vpandq (%r10),%zmm1,%zmm20
+  14f5:vpandq (%r10,%r12,1),%zmm2,%zmm31
+  14fc:vpandq 0x10(%r10,%r12,1),%zmm3,%zmm30
+  1507:vpandq 0x11(%r10,%r12,2),%zmm4,%zmm25
+  1512:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm29
+  151d:vpandq (%r10),%zmm15,%zmm3
+  1523:vpandq (%r10,%r12,1),%zmm15,%zmm3
+  152a:vpandq 0x10(%r10,%r12,1),%zmm14,%zmm3
+  1535:vpandq 0x11(%r10,%r12,2),%zmm14,%zmm3
+  1540:vpandq 0x3567(%r10,%r12,4),%zmm13,%zmm3
+  154b:vpandq (%r10),%zmm14,%zmm10
+  1551:vpandq (%r10,%r12,1),%zmm14,%zmm10
+  1558:vpandq 0x10(%r10,%r12,1),%zmm15,%zmm10
+  1563:vpandq 0x11(%r10,%r12,2),%zmm11,%zmm10
+  156e:vpandq 0x3567(%r10,%r12,4),%zmm11,%zmm10
+  1579:vpandq (%r10),%zmm11,%zmm20
+  157f:vpandq (%r10,%r12,1),%zmm12,%zmm31
+  1586:vpandq 0x10(%r10,%r12,1),%zmm13,%zmm30
+  1591:vpandq 0x11(%r10,%r12,2),%zmm14,%zmm25
+  159c:vpandq 0x3567(%r10,%r12,4),%zmm15,%zmm29
+  15a7:vpandq (%r10),%zmm25,%zmm3
+  15ad:vpandq (%r10,%r12,1),%zmm25,%zmm3
+  15b4:vpandq 0x10(%r10,%r12,1),%zmm24,%zmm3
+  15bf:vpandq 0x11(%r10,%r12,2),%zmm24,%zmm3
+  15ca:vpandq 0x3567(%r10,%r12,4),%zmm23,%zmm3
+  15d5:vpandq (%r10),%zmm24,%zmm10
+  15db:vpandq (%r10,%r12,1),%zmm24,%zmm10
+  15e2:vpandq 0x10(%r10,%r12,1),%zmm25,%zmm10
+  15ed:vpandq 0x11(%r10,%r12,2),%zmm21,%zmm10
+  15f8:vpandq 0x3567(%r10,%r12,4),%zmm21,%zmm10
+  1603:vpandq (%r10),%zmm21,%zmm20
+  1609:vpandq (%r10,%r12,1),%zmm22,%zmm31
+  1610:vpandq 0x10(%r10,%r12,1),%zmm23,%zmm30
+  161b:vpandq 0x11(%r10,%r12,2),%zmm24,%zmm25
+  1626:vpandq 0x3567(%r10,%r12,4),%zmm25,%zmm29
+  1631:vpandq %zmm0,%zmm3,%zmm1
+  1637:vpandq %zmm1,%zmm2,%zmm11
+  163d:vpandq %zmm2,%zmm1,%zmm22
+  1643:vpandq %zmm3,%zmm12,%zmm1
+  1649:vpandq %zmm4,%zmm13,%zmm15
+  164f:vpandq %zmm5,%zmm14,%zmm23
+  1655:vpandq %zmm6,%zmm24,%zmm2
+  165b:vpandq %zmm7,%zmm25,%zmm10
+  1661:vpandq %zmm0,%zmm26,%zmm27
+  1667:vpandq %zmm11,%zmm0,%zmm3
+  166d:vpandq %zmm12,%zmm0,%zmm11
+  1673:vpandq %zmm13,%zmm0,%zmm28
+  1679:vpandq %zmm14,%zmm10,%zmm4
+  167f:vpandq %zmm15,%zmm12,%zmm11
+  1685:vpandq %zmm11,%zmm13,%zmm29
+  168b:vpandq %zmm12,%zmm30,%zmm5
+  1691:vpandq %zmm13,%zmm31,%zmm11
+  1697:vpandq %zmm14,%zmm22,%zmm24
+  169d:vpandq %zmm20,%zmm0,%zmm6
+  16a3:vpandq %zmm21,%zmm0,%zmm11
+  16a9:vpandq %zmm22,%zmm0,%zmm30
+  16af:vpandq %zmm23,%zmm12,%zmm7
+  16b5:vpandq %zmm24,%zmm13,%zmm10
+  16bb:vpandq %zmm25,%zmm14,%zmm31
+  16c1:vpandq %zmm26,%zmm22,%zmm1
+  16c7:vpandq %zmm27,%zmm21,%zmm14
+  16cd:vpandq %zmm28,%zmm20,%zmm29
+  16d3:vpandq (%r10),%zmm5,%zmm1
+  16d9:vpandq (%r10,%r12,1),%zmm5,%zmm2
+  16e0:vpandq 0x10(%r10,%r12,1),%zmm5,%zmm3
+  16eb:vpandq 0x11(%r10,%r12,2),%zmm5,%zmm4
+  16f6:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm0
+  1701:vpandq (%r10),%zmm5,%zmm10
+  1707:vpandq (%r10,%r12,1),%zmm5,%zmm11
+  170e:vpandq 0x10(%r10,%r12,1),%zmm5,%zmm12
+  1719:vpandq 0x11(%r10,%r12,2),%zmm5,%zmm13
+  1724:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm14
+  172f:vpandq (%r10),%zmm1,%zmm20
+  1735:vpandq (%r10,%r12,1),%zmm2,%zmm31
+  173c:vpandq 0x10(%r10,%r12,1),%zmm3,%zmm30
+  1747:vpandq 0x11(%r10,%r12,2),%zmm4,%zmm25
+  1752:vpandq 0x3567(%r10,%r12,4),%zmm5,%zmm29
+  175d:vpandq (%r10),%zmm15,%zmm3
+  1763:vpandq (%r10,%r12,1),%zmm15,%zmm3
+  176a:vpandq 0x10(%r10,%r12,1),%zmm14,%zmm3
+  1775:vpandq 0x11(%r10,%r12,2),%zmm14,%zmm3
+  1780:vpandq 0x3567(%r10,%r12,4),%zmm13,%zmm3
+  178b:vpandq (%r10),%zmm14,%zmm10
+  1791:vpandq (%r10,%r12,1),%zmm14,%zmm10
+  1798:vpandq 0x10(%r10,%r12,1),%zmm15,%zmm10
+  17a3:vpandq 0x11(%r10,%r12,2),%zmm11,%zmm10
+  17ae:vpandq 0x3567(%r10,%r12,4),%zmm11,%zmm10
+  17b9:vpandq (%r10),%zmm11,%zmm20
+  17bf:vpandq (%r10,%r12,1),%zmm12,%zmm31
+  17c6:vpandq 0x10(%r10,%r12,1),%zmm13,%zmm30
+  17d1:vpandq 0x11(%r10,%r12,2),%zmm14,%zmm25
+  17dc:vpandq 0x3567(%r10,%r12,4),%zmm15,%zmm29
+  17e7:vpandq (%r10),%zmm25,%zmm3
+  17ed:vpandq (%r10,%r12,1),%zmm25,%zmm3
+  17f4:vpandq 0x10(%r10,%r12,1),%zmm24,%zmm3
+  17ff:vpandq 0x11(%r10,%r12,2),%zmm24,%zmm3
+  180a:vpandq 0x3567(%r10,%r12,4),%zmm23,%zmm3
+  1815:vpandq (%r10),%zmm24,%zmm10
+  181b:vpandq (%r10,%r12,1),%zmm24,%zmm10
+  1822:vpandq 0x10(%r10,%r12,1),%zmm25,%zmm10
+  182d:vpandq 0x11(%r10,%r12,2),%zmm21,%zmm10
+  1838:vpandq 0x3567(%r10,%r12,4),%zmm21,%zmm10
+  1843:vpandq (%r10),%zmm21,%zmm20
+  1849:vpandq (%r10,%r12,1),%zmm22,%zmm31
+  1850:vpandq 0x10(%r10,%r12,1),%zmm23,%zmm30
+  185b:vpandq 0x11(%r10,%r12,2),%zmm24,%zmm25
+  1866:vpandq 0x3567(%r10,%r12,4),%zmm25,%zmm29
 #################
 TODO: elf/file.cpp:186
 
-4017:0
+6321:0
 #################
 TODO: elf/file.cpp:252
 
-4017:0
+6321:0
 
 .symtab
 .strtab
