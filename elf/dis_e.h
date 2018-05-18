@@ -10,19 +10,64 @@ const char * dis_e0(const char * code, unsigned prefix)
 
 const char * dis_e1(const char * code, unsigned prefix)
 {
-	int dist;
-	code = codeToInt( code, 1, dist );
+	if( ( prefix & VEX ) == 0 )
+	{
+		int dist;
+		code = codeToInt( code, 1, dist );
 
-	printf( "loope %d\n", dist+3 );
+		printf( "loope %d\n", dist+3 );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpsraw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpsraw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+
 	return code;
 }
 
 const char * dis_e2(const char * code, unsigned prefix)
 {
-	int dist;
-	code = codeToInt( code, 1, dist );
+	if( ( prefix & VEX ) == 0 )
+	{
+		int dist;
+		code = codeToInt( code, 1, dist );
 
-	printf( "loop %d\n", dist+3 );
+		printf( "loop %d\n", dist+3 );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpsrad %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpsrad %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
 	return code;
 }
 

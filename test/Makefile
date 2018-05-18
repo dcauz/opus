@@ -168,7 +168,6 @@ test.por \
 test.pxor \
 test.pslld \
 test.psrld \
-test.psraw \
 test.psrad \
 test.emms
 
