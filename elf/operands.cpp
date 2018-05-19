@@ -420,54 +420,42 @@ regStr(
 		break;
 
 	case Reg:
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if((prefix & PRE_EVEX) && !(prefix & PRE_Rprime))
 			r = static_cast<Register>(r + 16);
 
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if(( prefix & REX_R ) == REX_R)
 		{
 			r = regToR(r);	
 		}
 
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if( (prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			if( prefix & PRE_OS )
 				r = reg8to16(r);
 			else
 				r = reg8to32(r);	
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		}
 		break;
 	case Reg2:
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if((prefix & PRE_EVEX) && ( prefix & REX_X ))
 			r = static_cast<Register>(r + 16);
 
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		if(( prefix & REX_B ) == REX_B)
 		{
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			r = regToR(r);	
 		}
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 
 		if(( prefix & REX_W ) == REX_W )
 			r = reg8to64(r);	
 		else if(w)
 		{
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 			if( prefix & PRE_OS )
 				r = reg8to16(r);
 			else
 				r = reg8to32(r);	
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		}
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 		break;
 	case Index:
 		if(( prefix & REX_X ) == REX_X )
@@ -1283,4 +1271,41 @@ VEX2( const char * code, unsigned & prefix )
 	}
 
 	return ++code;
+}
+
+
+void dumpPrefix( unsigned prefix )
+{
+#define check(f)	if( (prefix & f ) == f )	printf( #f " " );
+	check(REX);
+    check(VEX);
+
+#define checkr(f)	if( (prefix & REX_ ## f ) == REX_ ##f )	printf( #f " " );
+    checkr(B);
+    checkr(X);
+    checkr(R);
+    checkr(W);
+
+#define checkp(f)	if( (prefix & PRE_ ## f ) == PRE_ ##f )	printf( #f " " );
+    checkp(26);
+    checkp(2E);
+    checkp(36);
+    checkp(3E);
+    checkp(64);
+    checkp(65);
+    checkp(OS);
+    checkp(AS);
+    checkp(REP);
+    checkp(NE);
+    checkp(LOCK);
+    checkp(BHNT);
+    checkp(BNHT);
+    checkp(256);
+    checkp(38);
+    checkp(3A);
+    checkp(0F);
+    checkp(EVEX);
+    checkp(Rprime);
+
+	printf( "\n" );
 }
