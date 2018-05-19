@@ -6,7 +6,9 @@
 
 const char * VEX2( const char *, unsigned & );
 const char * VEX3( const char *, unsigned & );
+
 void dumpPrefix( unsigned prefix );
+void dumpModRegRM( unsigned code );
 
 const char * regToStr( Register r );
 

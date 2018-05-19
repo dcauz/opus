@@ -4,12 +4,21 @@ const char * dis_10(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	if(code[1] == 0x25)
-		code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );	
+	if( (prefix & VEX ) == 0 )
+	{
+		if(code[1] == 0x25)
+			code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );
+	
+		printf( "adc %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else
-		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );
+	{
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vmovups %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 
-	printf( "adc %s,%s\n", op1.c_str(), op2.c_str() );
 	return code;
 }
 
@@ -18,12 +27,21 @@ const char * dis_11(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	if( code[1] == 0x25)
-		code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );	
-	else
-		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+	if( ( prefix & VEX ) == 0 )
+	{
+		if( code[1] == 0x25)
+			code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
 
-	printf( "adc %s,%s\n", op1.c_str(), op2.c_str() );
+		printf( "adc %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else
+	{
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vmovups %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
 	return code;
 }
 

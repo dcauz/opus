@@ -1309,3 +1309,13 @@ void dumpPrefix( unsigned prefix )
 
 	printf( "\n" );
 }
+
+void dumpModRegRM( unsigned code )
+{
+	int mod;
+	int reg;
+	int rm;
+	mod_reg_rm( code, mod, reg, rm );
+
+	printf( "%x:mod %d reg %d rm %d\n", 0xff & code, mod, reg, rm );
+}
