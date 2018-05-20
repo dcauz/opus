@@ -141,21 +141,29 @@ TODO
 
 const char * dis_16(const char * code, unsigned prefix)
 {
+	std::string op1;
+	std::string op2;
+
 	int vvvv = prefix >> 28;
 	vvvv = vvvv ^ 0xf;
 
-	std::string op1;
-	std::string op2;
+	int mod = (*code & 0xc0 ) >> 6;
 
 	if( prefix & PRE_256 )
 	{
 		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "vmovhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		if( mod != 3 )
+			printf( "vmovhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		else
+			printf( "vmovlhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 	else
 	{
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		if( mod != 3 )
+			printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		else
+			printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;

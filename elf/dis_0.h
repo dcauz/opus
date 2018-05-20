@@ -560,8 +560,18 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if( code[0]  == 0x16 )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
-		printf( "movhps %s,%s\n", op2.c_str(), op1.c_str() );
+		++code;
+		int mod = (0xc0 & *code ) >> 6;
+		if( mod != 3 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+			printf( "movhps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movlhps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 	}
 	else if( code[0]  == 0x17 )
 	{
