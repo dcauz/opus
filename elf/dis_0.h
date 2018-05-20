@@ -544,8 +544,19 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if( code[0]  == 0x12 )
 	{
+		++code;
+		int mod = (*code & 0xc0) >> 6;
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		if( mod == 3 )
+			printf( "movhlps %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+			printf( "movlps %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( code[0]  == 0x13 )
+	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "movhlps %s,%s\n", op2.c_str(), op1.c_str() );
+		printf( "movlps %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( code[0]  == 0x16 )
 	{
