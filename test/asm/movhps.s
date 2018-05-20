@@ -1,4 +1,6 @@
 
+movhps %xmm5, (%r10)
+
 movhps (%r10),             %xmm5
 movhps (%r10,%r12,1),      %xmm2
 movhps 0x10(%r10,%r12,1),  %xmm3
