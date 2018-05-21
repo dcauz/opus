@@ -1229,9 +1229,11 @@ VEX3( const char * code, unsigned & prefix )
 	case 3:	prefix |= PRE_0F|PRE_3A; break;
 	}
 
-	if( *code & 0x80 )	prefix |= REX_W;
 	
 	++code;
+
+	if( *code & 0x80 )	prefix |= REX_W;
+
 	prefix |= ( *code & 0x78 ) << 25;
 
 	if( *code & 0x04 )	prefix |= PRE_256;

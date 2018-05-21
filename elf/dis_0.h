@@ -539,8 +539,21 @@ const char * dis_0f(const char * code, unsigned prefix)
 	// 10
 	else if( code[0]  == 0x10 )
 	{
+		if( ( prefix & PRE_REP ) == 0 )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movups %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movss %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+	}
+	else if( code[0]  == 0x11 )
+	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "movups %s,%s\n", op2.c_str(), op1.c_str() );
+		printf( "movss %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( code[0]  == 0x12 )
 	{
