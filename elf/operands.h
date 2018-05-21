@@ -34,6 +34,7 @@ const char * mod_reg_rm_ops(
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2, 		// OUT
+			int op1Size=-1,	// IN
 			int op2Size=-1,	// IN
 			int dispMul=-1);// IN
 

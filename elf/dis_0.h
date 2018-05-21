@@ -168,7 +168,7 @@ const char * dis_0f(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-	// 0x
+	// 0x0
 	if( code[0] == 0 )
 	{
 		++code;
@@ -494,15 +494,15 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 	}
 
-	// 02
+	// 0x0X
 	else if( code[0] == 0x02 )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, 16 );
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, -1, 16, -1 );
 		printf( "lar %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( code[0] == 0x03 )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, 16 );
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, -1, 16, -1 );
 		printf( "lsl %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( code[0] == 0x05 )
@@ -754,6 +754,14 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 	}
 
+	// 0x5X
+	else if( *code == 0x50 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
+		printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+
+	// 0x6X
 	else if( *code == 0x60 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
@@ -1175,7 +1183,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if((code[0] & 0xff) == 0xb6 )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, 8 );	
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 8, -1 );	
 
 		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
 
@@ -1183,7 +1191,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if((code[0] & 0xff) == 0xb7 )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, 16 );	
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 16, -1 );	
 
 		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
 
@@ -1220,7 +1228,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if((code[0] & 0xff) == 0xbe )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, 8 );	
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 8, -1 );	
 
 		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
 
@@ -1228,7 +1236,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if((code[0] & 0xff) == 0xbf )
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, 16 );	
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 16, -1 );	
 
 		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
 

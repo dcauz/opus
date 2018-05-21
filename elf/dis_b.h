@@ -52,7 +52,7 @@ const char * dis_b6(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, 32 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, -1, 32, -1 );	
 
 TODO
 	return code;
@@ -63,7 +63,7 @@ const char * dis_b7(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, 32 );	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2, -1, 32, -1 );	
 
 TODO
 	return code;

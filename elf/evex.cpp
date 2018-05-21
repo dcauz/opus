@@ -127,17 +127,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovhlps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovhlps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -154,17 +154,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovlhps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovlhps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -181,17 +181,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklbw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklbw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklbw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -208,17 +208,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklwd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklwd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklwd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -235,17 +235,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckldq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckldq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckldq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -262,17 +262,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpacksswb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpacksswb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpacksswb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -289,17 +289,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackuswb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackuswb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackuswb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -316,17 +316,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhbw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhbw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhbw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -343,17 +343,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhwd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhwd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhwd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -370,17 +370,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhdq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhdq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhdq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -397,17 +397,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackssdw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackssdw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpackssdw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -424,17 +424,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklqdq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklqdq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpcklqdq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -451,17 +451,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhqdq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhqdq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpunpckhqdq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -473,12 +473,12 @@ TODO
 
 		if( evex.W )
 		{
-        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 8 );
+        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 8 );
 			printf( "vmovq %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
-        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 4 );
+        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 4 );
 			printf( "vmovd %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		break;
@@ -490,12 +490,12 @@ TODO
 
 		if( evex.W )
 		{
-        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 8 );
+        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 8 );
 			printf( "vmovq %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 		else
 		{
-        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 4 );
+        	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 4 );
 			printf( "vmovd %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 		break;
@@ -512,17 +512,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -539,17 +539,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrld %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrld %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrld %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -566,17 +566,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsrlq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -593,17 +593,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -620,17 +620,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmullw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmullw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmullw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -647,17 +647,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -674,17 +674,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubusw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -703,17 +703,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -730,17 +730,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -757,17 +757,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddusw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -786,17 +786,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -816,17 +816,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -845,17 +845,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -872,17 +872,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmulhw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmulhw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmulhw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -899,17 +899,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -926,17 +926,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubsw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -955,17 +955,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -982,17 +982,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1009,17 +1009,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddsw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1038,17 +1038,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%zmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1066,17 +1066,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1093,17 +1093,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpslld %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpslld %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpslld %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1120,17 +1120,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsllq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1147,17 +1147,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmaddwd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmaddwd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpmaddwd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1174,17 +1174,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1201,17 +1201,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1228,17 +1228,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1255,17 +1255,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubq %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubq %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpsubq %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1282,17 +1282,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddb %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddb %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddb %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1309,17 +1309,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddw %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddw %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddw %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;
@@ -1336,17 +1336,17 @@ TODO
 
 		if( evex.Lprime )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else if( evex.L )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, 16 );
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vpaddd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
 		break;

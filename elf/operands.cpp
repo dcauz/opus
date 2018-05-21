@@ -145,7 +145,10 @@ reg8to16( Register r )
 inline Register	
 reg8to32( Register r )
 {
-	return static_cast<Register>((r&0xffef)+128);
+	if(r < AX )
+		return static_cast<Register>((r&0xffef)+128);
+	else
+		return r;
 }
 
 inline Register	
@@ -393,10 +396,9 @@ regStr(
 {
 //printf( "%s:%d reg %d base %d w %d prefix %x context %d opsize %d\n", __FILE__, __LINE__, reg, base, w, prefix, context, opSize );
 	Register r = static_cast<Register>(reg+base);
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
+
 	if( prefix & REX)
 		r = regAHtoSPL( r );
-//printf( "%s:%d r=%d\n", __FILE__, __LINE__, r );
 	if(opSize > 0 )
 	{
 		if((( context == Reg  && ( prefix & REX_R ) == REX_R)) ||
@@ -529,6 +531,7 @@ mod_reg_rm_ops(
 			  int w,		// IN
 	std::string & op1,		// OUT
 	std::string & op2,		// OUT
+			int op1Size,	// IN
 			int op2Size,	// IN
 			int dispMult)	// IN
 {
@@ -698,7 +701,7 @@ mod_reg_rm_ops(
 		break;
 
 	case RM_regs:
-		op1 = regStr( reg,  opReg(opRegs,true), w, Reg, prefix );
+		op1 = regStr( reg,  opReg(opRegs,true), w, Reg, prefix, op1Size );
 		op2 = regStr( rm,  opReg(opRegs,false), w, Reg2, prefix, op2Size );
 		break;
 	}
