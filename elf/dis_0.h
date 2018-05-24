@@ -773,6 +773,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
 		printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0x58 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+		printf( "addps %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 
 	// 0x6X
 	else if( *code == 0x60 )
@@ -835,8 +840,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "packssdw %s,%s\n", op2.c_str(), op1.c_str() );
 	}
-
-	// 6e
 	else if( *code == 0x6e )
 	{
 		if( prefix & PRE_OS )
@@ -845,8 +848,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
 		printf( "movd %s,%s\n", op2.c_str(), op1.c_str() );
 	}
-
-	// 6f
 	else if( *code == 0x6f )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
