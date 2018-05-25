@@ -166,7 +166,7 @@ bool disassemble( const char * code, const char *end )
 			if( prefix & VEX )
 				code = dis_59(++code, prefix);
 			else
-				code = dis_push(code, prefix); 
+				code = dis_pop(code, prefix); 
 			break;
 		}
 		case 0x5a:	
@@ -176,11 +176,18 @@ bool disassemble( const char * code, const char *end )
 			if( prefix & VEX )
 				code = dis_5c(++code, prefix);
 			else
-				code = dis_push(code, prefix); 
+				code = dis_pop(code, prefix); 
 			break;
 		}
-		case 0x5d:	
+		case 0x5d:	code = dis_pop(code, prefix); break;
 		case 0x5e:	
+		{
+			if( prefix & VEX )
+				code = dis_5e(++code, prefix);
+			else
+				code = dis_pop(code, prefix); 
+			break;
+		}
 		case 0x5f:	code = dis_pop(code, prefix); break;
 	
 		case 0x60:	code = dis_60(++code, prefix); break;
