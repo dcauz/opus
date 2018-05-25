@@ -773,6 +773,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
 		printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0x53 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+		printf( "rcpps %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0x58 )
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "addss":"addps";
