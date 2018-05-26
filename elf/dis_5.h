@@ -71,17 +71,33 @@ const char * dis_53(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	const char * inst = ( prefix & PRE_REP ) ? "vrcpss" : "vrcpps";
-
-	if( prefix & PRE_256 )
+	if( prefix & PRE_REP )
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vrcpss %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vrcpss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 	else
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vrcpps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vrcpps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 	}
 
 	return code;
