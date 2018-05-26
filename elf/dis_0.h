@@ -775,8 +775,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	else if( *code == 0x51 )
 	{
+		const char * inst = ( prefix & PRE_REP ) ? "sqrtss":"sqrtps";
+
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );
-		printf( "sqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
 	}
 	else if( *code == 0x53 )
 	{

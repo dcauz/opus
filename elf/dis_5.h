@@ -72,31 +72,67 @@ const char * dis_51(const char * code, unsigned prefix)
     std::string op2;
 
 	int mod = ( *code & 0xc0 ) >> 6;
-	if( mod == 3 )
+
+	if( prefix & PRE_REP )
 	{
-    	if( prefix & PRE_256 )
-	    {
-   	    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2, 32 );
-   	     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
-    	}
-    	else
-	    {
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
-        	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
-    	}
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		if( mod == 3 )
+		{
+   		 	if( prefix & PRE_256 )
+		    {
+   		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2, 32 );
+   		     	printf( "vsqrtss %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+   		 	}
+   		 	else
+		    {
+   		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
+   		     	printf( "vsqrtss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+   		 	}
+		}
+		else
+		{
+   		 	if( prefix & PRE_256 )
+		    {
+   		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_AL, 0, op1, op2, 32 );
+   		     	printf( "vsqrtss %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+   		 	}
+   		 	else
+		    {
+   		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, 32 );
+   		     	printf( "vsqrtss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+   		 	}
+		}
 	}
 	else
 	{
-    	if( prefix & PRE_256 )
-	    {
-   	    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_AL, 0, op1, op2, 32 );
-   	     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
-    	}
-    	else
-	    {
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, 32 );
-        	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
-    	}
+		if( mod == 3 )
+		{
+   		 	if( prefix & PRE_256 )
+		    {
+   		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2, 32 );
+   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+   		 	}
+   		 	else
+		    {
+   		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
+   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+   		 	}
+		}
+		else
+		{
+   		 	if( prefix & PRE_256 )
+		    {
+   		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_AL, 0, op1, op2, 32 );
+   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+   		 	}
+   		 	else
+		    {
+   		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, 32 );
+   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+   		 	}
+		}
 	}
 
     return code;
