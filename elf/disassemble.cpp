@@ -147,6 +147,13 @@ bool disassemble( const char * code, const char *end )
 			break;
 		}
 		case 0x51:	
+		{
+			if( prefix & VEX )
+				code = dis_51(++code, prefix);
+			else
+				code = dis_push(code, prefix); 
+			break;
+		}
 		case 0x52:	code = dis_push(code, prefix); break;
 		case 0x53:	
 		{

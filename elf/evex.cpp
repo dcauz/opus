@@ -220,6 +220,48 @@ TODO
 		}
 		break;
 	}
+
+	case 0x51:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		const char * inst;
+		int dispN;
+
+		if( evex.pp == 2 )
+		{
+			inst = "vsqrtss";
+			dispN= 4;
+		}
+		else
+		{
+			inst = "vsqrtps";
+			dispN= 16;
+		}
+
+		if( evex.Lprime )
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, dispN );
+			printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		}
+		else if( evex.L )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, dispN );
+			printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, dispN );
+			printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		}
+		break;
+	}
 	case 0x58:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;
