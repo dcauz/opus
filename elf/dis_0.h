@@ -1339,6 +1339,42 @@ const char * dis_0f(const char * code, unsigned prefix)
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2 );
 		printf( "xadd %s,%s\n",  op1.c_str(), op2.c_str() );
 	}
+	else if( code[0] == 0xffffffc2 )
+	{
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+
+		char imm[12];
+		code = imm8(code,imm);
+
+		long i = strtol( imm, nullptr, 16 );
+
+		if( i >= 8 )
+			printf( "cmpps $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		else
+		{
+			const char * inst;
+			switch(i)
+			{
+			case 0:  inst = "cmpeqps"; 		break;
+			case 1:  inst = "cmpltps"; 		break;
+			case 2:  inst = "cmpleps"; 		break;
+			case 3:  inst = "cmpunordps"; 	break;
+			case 4:  inst = "cmpneqps"; 	break;
+			case 5:  inst = "cmpnltps"; 	break;
+			case 6:  inst = "cmpnleps"; 	break;
+			case 7:  inst = "cmpordps"; 	break;
+			case 8:  inst = "cmpeqps"; break;
+			case 9:  inst = "cmpeqps"; break;
+			case 10: inst = "cmpeqps"; break;
+			case 11: inst = "cmpeqps"; break;
+			case 12: inst = "cmpeqps"; break;
+			case 13: inst = "cmpeqps"; break;
+			case 14: inst = "cmpeqps"; break;
+			case 15: inst = "cmpeqps"; break;
+			}
+			printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		}
+	}
 	else if( (code[0] & 0xff ) == 0xc7 )
 	{
 		++code;

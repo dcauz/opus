@@ -79,12 +79,101 @@ const char * dis_c1(const char * code, unsigned prefix)
     return code;
 }
 
+const char * cmppsInst( long i )
+{
+	const char * inst = "ERROR";
+
+	switch(i)
+	{
+	case 0: inst = "vcmpeqps";			break;
+	case 1: inst = "vcmpltps";			break;
+	case 2: inst = "vcmpleps";			break;
+	case 3: inst = "vcmpunordps";		break;
+	case 4: inst = "vcmpneqps";			break;
+	case 5: inst = "vcmpnltps";			break;
+	case 6: inst = "vcmpnleps";			break;
+	case 7: inst = "vcmpordps";			break;
+	case 8: inst = "vcmpeq_uqps";		break;
+	case 9: inst = "vcmpngeps";			break;
+	case 10: inst = "vcmpngtps";		break;
+	case 11: inst = "vcmpfalseps";		break;
+	case 12: inst = "vcmpneq_oqps";		break;
+	case 13: inst = "vcmpgeps";			break;
+	case 14: inst = "vcmpgtps";			break;
+	case 15: inst = "vcmptrueps";		break;
+	case 16: inst = "vcmpeq_osps";		break;
+	case 17: inst = "vcmplt_oqps";		break;
+	case 18: inst = "vcmple_oqps";		break;
+	case 19: inst = "vcmpunord_sps";	break;
+	case 20: inst = "vcmpneq_usps";		break;
+	case 21: inst = "vcmpnlt_uqps";		break;
+	case 22: inst = "vcmpnle_uqps";		break;
+	case 23: inst = "vcmpord_sps";		break;
+	case 24: inst = "vcmpeq_usps";		break;
+	case 25: inst = "vcmpnge_uqps";		break;
+	case 26: inst = "vcmpngt_uqps";		break;
+	case 27: inst = "vcmpfalse_osps";	break;
+	case 28: inst = "vcmpneq_osps";		break;
+	case 29: inst = "vcmpge_oqps";		break;
+	case 30: inst = "vcmpgt_oqps";		break;
+	case 31: inst = "vcmptrue_usps";	break;
+	}
+	return inst;
+}
+
 const char * dis_c2(const char * code, unsigned prefix)
 {
-	char buff[12];
-	code = imm16(code, buff );
+	if(( prefix & VEX ) == 0 )
+	{
+		char buff[12];
+		code = imm16(code, buff );
 
-	printf( "retq $%s\n", buff );
+		printf( "retq $%s\n", buff );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+
+			char imm[8];
+			code = imm8(code, imm );
+
+			long i = strtol( imm, nullptr, 16 );
+
+			if( i >= 32 )
+				printf( "vcmpps $%s,%s,%%ymm%d,%s\n", imm,op2.c_str(), vvvv, op1.c_str() );
+			else
+			{
+				const char * inst = cmppsInst( i );
+				printf( "%s %s,%%ymm%d,%s\n", inst ,op2.c_str(), vvvv, op1.c_str() );
+			}
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+			char imm[8];
+			code = imm8(code, imm );
+
+			long i = strtol( imm, nullptr, 16 );
+
+			if( i >= 32 )
+				printf( "vcmpps $%s,%s,%%xmm%d,%s\n", imm,op2.c_str(), vvvv, op1.c_str() );
+			else
+			{
+				const char * inst = cmppsInst( i );
+				printf( "%s %s,%%xmm%d,%s\n", inst ,op2.c_str(), vvvv, op1.c_str() );
+			}
+		}
+	}
+
     return code;
 }
 
