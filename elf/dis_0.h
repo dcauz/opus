@@ -804,6 +804,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
 	}
+	else if( *code == 0x54 )
+	{
+		const char * inst = "andps";
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0x58 )
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "addss":"addps";
