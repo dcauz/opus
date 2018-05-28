@@ -195,6 +195,17 @@ TODO
 	return code;
 }
 
+const char * dis_2e(const char * code, unsigned prefix)
+{
+	std::string op1;
+	std::string op2;
+	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+	printf( "vucomiss %s,%s\n", op2.c_str(), op1.c_str() );
+
+	return code;
+}
+
 const char * dis_2f(const char * code, unsigned prefix)
 {
 	std::string op1;

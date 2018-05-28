@@ -98,7 +98,18 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x2c:	code = dis_2c(++code, prefix); break;
 		case 0x2d:	code = dis_2d(++code, prefix); break;
-		case 0x2e:	prefix |= PRE_BHNT; ++code; printOn=false; break;
+		case 0x2e:	
+		{
+			if( prefix & VEX )
+				code = dis_2e(++code, prefix);
+			else
+			{
+				prefix |= PRE_BHNT; 
+				++code; 
+				printOn=false; 
+			}
+			break;
+		}
 		case 0x2f:	code = dis_2f(++code, prefix); break;
 	
 		case 0x30:	code = dis_30(++code, prefix); break;
