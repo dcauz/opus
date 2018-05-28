@@ -79,44 +79,44 @@ const char * dis_c1(const char * code, unsigned prefix)
     return code;
 }
 
-const char * cmppsInst( long i )
+const char * cmpXsInst( long i, bool isP )
 {
 	const char * inst = "ERROR";
 
 	switch(i)
 	{
-	case 0: inst = "vcmpeqps";			break;
-	case 1: inst = "vcmpltps";			break;
-	case 2: inst = "vcmpleps";			break;
-	case 3: inst = "vcmpunordps";		break;
-	case 4: inst = "vcmpneqps";			break;
-	case 5: inst = "vcmpnltps";			break;
-	case 6: inst = "vcmpnleps";			break;
-	case 7: inst = "vcmpordps";			break;
-	case 8: inst = "vcmpeq_uqps";		break;
-	case 9: inst = "vcmpngeps";			break;
-	case 10: inst = "vcmpngtps";		break;
-	case 11: inst = "vcmpfalseps";		break;
-	case 12: inst = "vcmpneq_oqps";		break;
-	case 13: inst = "vcmpgeps";			break;
-	case 14: inst = "vcmpgtps";			break;
-	case 15: inst = "vcmptrueps";		break;
-	case 16: inst = "vcmpeq_osps";		break;
-	case 17: inst = "vcmplt_oqps";		break;
-	case 18: inst = "vcmple_oqps";		break;
-	case 19: inst = "vcmpunord_sps";	break;
-	case 20: inst = "vcmpneq_usps";		break;
-	case 21: inst = "vcmpnlt_uqps";		break;
-	case 22: inst = "vcmpnle_uqps";		break;
-	case 23: inst = "vcmpord_sps";		break;
-	case 24: inst = "vcmpeq_usps";		break;
-	case 25: inst = "vcmpnge_uqps";		break;
-	case 26: inst = "vcmpngt_uqps";		break;
-	case 27: inst = "vcmpfalse_osps";	break;
-	case 28: inst = "vcmpneq_osps";		break;
-	case 29: inst = "vcmpge_oqps";		break;
-	case 30: inst = "vcmpgt_oqps";		break;
-	case 31: inst = "vcmptrue_usps";	break;
+	case 0:  inst = isP?"vcmpeqps"      :"vcmpeqss";		break;
+	case 1:  inst = isP?"vcmpltps"      :"vcmpltss";		break;
+	case 2:  inst = isP?"vcmpleps"      :"vcmpless";		break;
+	case 3:  inst = isP?"vcmpunordps"   :"vcmpunordss";		break;
+	case 4:  inst = isP?"vcmpneqps"     :"vcmpneqss";		break;
+	case 5:  inst = isP?"vcmpnltps"     :"vcmpnltss";		break;
+	case 6:  inst = isP?"vcmpnleps"     :"vcmpnless";		break;
+	case 7:  inst = isP?"vcmpordps"     :"vcmpordss";		break;
+	case 8:  inst = isP?"vcmpeq_uqps"   :"vcmpeq_uqss";		break;
+	case 9:  inst = isP?"vcmpngeps"     :"vcmpngess";		break;
+	case 10: inst = isP?"vcmpngtps"     :"vcmpngtss";		break;
+	case 11: inst = isP?"vcmpfalseps"   :"vcmpfalsess";		break;
+	case 12: inst = isP?"vcmpneq_oqps"  :"vcmpneq_oqss";	break;
+	case 13: inst = isP?"vcmpgeps"      :"vcmpgess";		break;
+	case 14: inst = isP?"vcmpgtps"      :"vcmpgtss";		break;
+	case 15: inst = isP?"vcmptrueps"    :"vcmptruess";		break;
+	case 16: inst = isP?"vcmpeq_osps"   :"vcmpeq_osss";		break;
+	case 17: inst = isP?"vcmplt_oqps"   :"vcmplt_oqss";		break;
+	case 18: inst = isP?"vcmple_oqps"   :"vcmple_oqss";		break;
+	case 19: inst = isP?"vcmpunord_sps" :"vcmpunord_sss";	break;
+	case 20: inst = isP?"vcmpneq_usps"  :"vcmpneq_usss";	break;
+	case 21: inst = isP?"vcmpnlt_uqps"  :"vcmpnlt_uqss";	break;
+	case 22: inst = isP?"vcmpnle_uqps"  :"vcmpnle_uqss";	break;
+	case 23: inst = isP?"vcmpord_sps"   :"vcmpord_sss";		break;
+	case 24: inst = isP?"vcmpeq_usps"   :"vcmpeq_usss";		break;
+	case 25: inst = isP?"vcmpnge_uqps"  :"vcmpnge_uqss";	break;
+	case 26: inst = isP?"vcmpngt_uqps"  :"vcmpngt_uqss";	break;
+	case 27: inst = isP?"vcmpfalse_osps":"vcmpfalse_osss";	break;
+	case 28: inst = isP?"vcmpneq_osps"  :"vcmpneq_osss";	break;
+	case 29: inst = isP?"vcmpge_oqps"   :"vcmpge_oqss";		break;
+	case 30: inst = isP?"vcmpgt_oqps"   :"vcmpgt_oqss";		break;
+	case 31: inst = isP?"vcmptrue_usps" :"vcmptrue_usss";	break;
 	}
 	return inst;
 }
@@ -151,7 +151,7 @@ const char * dis_c2(const char * code, unsigned prefix)
 				printf( "vcmpps $%s,%s,%%ymm%d,%s\n", imm,op2.c_str(), vvvv, op1.c_str() );
 			else
 			{
-				const char * inst = cmppsInst( i );
+				const char * inst = cmpXsInst( i, true );
 				printf( "%s %s,%%ymm%d,%s\n", inst ,op2.c_str(), vvvv, op1.c_str() );
 			}
 		}
@@ -165,10 +165,14 @@ const char * dis_c2(const char * code, unsigned prefix)
 			long i = strtol( imm, nullptr, 16 );
 
 			if( i >= 32 )
-				printf( "vcmpps $%s,%s,%%xmm%d,%s\n", imm,op2.c_str(), vvvv, op1.c_str() );
+			{
+				const char * inst = (( prefix & PRE_REP ) == 0)?"vcmpps":"vcmpss";
+
+				printf( "%s $%s,%s,%%xmm%d,%s\n", inst, imm,op2.c_str(), vvvv, op1.c_str() );
+			}
 			else
 			{
-				const char * inst = cmppsInst( i );
+				const char * inst = cmpXsInst( i, ( prefix & PRE_REP ) == 0 );
 				printf( "%s %s,%%xmm%d,%s\n", inst ,op2.c_str(), vvvv, op1.c_str() );
 			}
 		}
