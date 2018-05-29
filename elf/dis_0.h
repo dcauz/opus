@@ -1415,6 +1415,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 		}
 	}
+	else if( code[0] == 0xffffffc6 )
+	{
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+		char imm[12];
+		code = imm8(code, imm );
+		printf( "shufps $%s,%s,%s\n",  imm, op2.c_str(), op1.c_str() );
+	}
 	else if( (code[0] & 0xff ) == 0xc7 )
 	{
 		++code;
