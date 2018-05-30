@@ -571,6 +571,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "movlps %s,%s\n", op1.c_str(), op2.c_str() );
 	}
+	else if( code[0]  == 0x14 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		printf( "unpcklps %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else if( code[0]  == 0x15 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
@@ -1217,19 +1223,25 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		else if(mod == 3 )
 		{
-			unsigned r = *code & 0x07;
-			const char * reg = regStr( r, AL, 1, Reg2, prefix );
-
-			if( ( *code & 0x38 ) == 0x10 )
-				printf( "wrfsbase %s\n",  reg );
-			else if( ( *code & 0x38 ) == 0x18 )
-				printf( "wrgsbase %s\n",  reg );
+			if( ( *code & 0x38 ) == 0x38 )
+				printf( "sfence\n" );
 			else
 			{
-				if( *code & 0x08 )
-					printf( "rdfsbase %s\n",  reg );
+				unsigned r = *code & 0x07;
+
+				const char * reg = regStr( r, AL, 1, Reg2, prefix );
+
+				if( ( *code & 0x38 ) == 0x10 )
+					printf( "wrfsbase %s\n",  reg );
+				else if( ( *code & 0x38 ) == 0x18 )
+					printf( "wrgsbase %s\n",  reg );
 				else
-					printf( "rdgsbase %s\n",  reg );
+				{
+					if( *code & 0x08 )
+						printf( "rdfsbase %s\n",  reg );
+					else
+						printf( "rdgsbase %s\n",  reg );
+				}
 			}
 			++code;
 		}

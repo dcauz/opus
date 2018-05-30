@@ -193,6 +193,33 @@ TODO
 		}
 		break;
 	}
+	case 0x14:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		if( evex.Lprime )
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vunpcklps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else if( evex.L )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vunpcklps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vunpcklps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		break;
+	}
 	case 0x15:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;
