@@ -505,6 +505,7 @@ opReg( OpRegs ors, bool left )
 
 	case OpRegs::AL_MM0:	return left?AL:MM0;
 	case OpRegs::MM0_AL:	return left?MM0:AL;
+	case OpRegs::MM0_XMM0:	return left?MM0:XMM0;
 
 	case OpRegs::AL_YMM0:	return left?AL:YMM0;
 	case OpRegs::YMM0_AL:	return left?YMM0:AL;
