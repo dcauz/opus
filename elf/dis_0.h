@@ -634,6 +634,19 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "movaps %s,%s\n", op2.c_str(), op1.c_str() );
 	}
+	else if( code[0]  == 0x2a )
+	{
+		if( prefix & PRE_REP )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );
+			printf( "cvtsi2ss %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "cvtpi2ps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+	}
 	else if( code[0]  == 0x2e )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );

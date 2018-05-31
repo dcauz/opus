@@ -157,15 +157,32 @@ const char * dis_29(const char * code, unsigned prefix)
 
 const char * dis_2a(const char * code, unsigned prefix)
 {
-    std::string op1;
-    std::string op2;
+	if( ( prefix & VEX ) == 0 )
+	{
+    	std::string op1;
+	    std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+		if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
 
-    printf( "sub %s,%s\n", op1.c_str(), op2.c_str() );
+    	printf( "sub %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+	
+		bool isCmp =  (prefix & PRE_0F );
+
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );	
+		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+	}
+
     return code;
 }
 

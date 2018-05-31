@@ -275,6 +275,22 @@ TODO
 		break;
 	}
 
+	case 0x2a:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+		if( evex.W )
+			prefix |= REX_W;
+
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2, -1, -1, 16 );
+		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		break;
+	}
 	case 0x2e:
 	{
 		std::string op1;
