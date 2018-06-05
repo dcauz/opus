@@ -1241,6 +1241,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = memStr( code, prefix, 0, 0, op1 );
 			printf( "ldmxcsr %s\n", op1.c_str() );
 		}
+		else if( reg == 3 )
+		{
+			code = memStr( code, prefix, 0, 0, op1 );
+			printf( "stmxcsr %s\n", op1.c_str() );
+		}
 		else if( reg == 4 )
 		{
 			code = memStr( code, prefix, 0, 0, op1 );
