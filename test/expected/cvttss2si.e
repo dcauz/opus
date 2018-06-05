@@ -100,25 +100,25 @@ alignment:1
 entrySize:0
 
 ----------------------------------------
-f3 4c 0f 2d d0 f3 4d 0f  2d 10 67 f3 4d 0f 2d 10
-f3 44 0f 2d d0 f3 45 0f  2d 10 67 f3 45 0f 2d 10
-c4 61 fa 2d d0 c4 41 fa  2d 10 67 c4 41 fa 2d 10
-c5 7a 2d d0 c4 41 7a 2d  10 67 c4 41 7a 2d 10 62
-31 fe 08 2d d4 62 31 7e  08 2d d4
-     0:cvtss2si %xmm0,%r10
-     5:cvtss2si (%r8),%r10
-     a:cvtss2si (%r8d),%r10
-    10:cvtss2si %xmm0,%r10d
-    15:cvtss2si (%r8),%r10d
-    1a:cvtss2si (%r8d),%r10d
-    20:vcvtss2si %xmm0,%r10
-    25:vcvtss2si (%r8),%r10
-    2a:vcvtss2si (%r8d),%r10
-    30:vcvtss2si %xmm0,%r10d
-    34:vcvtss2si (%r8),%r10d
-    39:vcvtss2si (%r8d),%r10d
-    3f:vcvtss2si %xmm20,%r10
-    45:vcvtss2si %xmm20,%r10d
+f3 4c 0f 2c d0 f3 4d 0f  2c 10 67 f3 4d 0f 2c 10
+f3 44 0f 2c d0 f3 45 0f  2c 10 67 f3 45 0f 2c 10
+c4 61 fa 2c d0 c4 41 fa  2c 10 67 c4 41 fa 2c 10
+c5 7a 2c d0 c4 41 7a 2c  10 67 c4 41 7a 2c 10 62
+31 fe 08 2c d4 62 31 7e  08 2c d4
+     0:cvttss2si %xmm0,%r10
+     5:cvttss2si (%r8),%r10
+     a:cvttss2si (%r8d),%r10
+    10:cvttss2si %xmm0,%r10d
+    15:cvttss2si (%r8),%r10d
+    1a:cvttss2si (%r8d),%r10d
+    20:vcvttss2si %xmm0,%r10
+    25:vcvttss2si (%r8),%r10
+    2a:vcvttss2si (%r8d),%r10
+    30:vcvttss2si %xmm0,%r10d
+    34:vcvttss2si (%r8),%r10d
+    39:vcvttss2si (%r8d),%r10d
+    3f:vcvttss2si %xmm20,%r10
+    45:vcvttss2si %xmm20,%r10d
 #################
 TODO: elf/file.cpp:186
 

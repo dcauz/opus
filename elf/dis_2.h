@@ -202,7 +202,12 @@ const char * dis_2b(const char * code, unsigned prefix)
 
 const char * dis_2c(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );	
+	printf( "vcvttss2si %s,%s\n", op2.c_str(), op1.c_str() );
+
 	return code;
 }
 

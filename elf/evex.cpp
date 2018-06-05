@@ -291,6 +291,20 @@ TODO
 		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		break;
 	}
+	case 0x2c:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+		if( evex.W )
+			prefix |= REX_W;
+
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
+		printf( "vcvttss2si %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0x2d:
 	{
 		std::string op1;
