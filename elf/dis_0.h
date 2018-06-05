@@ -1236,7 +1236,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		int mod = (*code & 0xc0 ) >> 6;
 		int reg = (*code & 0x38 ) >> 3;
 
-		if( reg == 4 )
+		if( reg == 2 )
+		{
+			code = memStr( code, prefix, 0, 0, op1 );
+			printf( "ldmxcsr %s\n", op1.c_str() );
+		}
+		else if( reg == 4 )
 		{
 			code = memStr( code, prefix, 0, 0, op1 );
 			if( prefix & REX_W )
