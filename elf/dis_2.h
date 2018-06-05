@@ -208,7 +208,12 @@ TODO
 
 const char * dis_2d(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );	
+	printf( "vcvtss2si %s,%s\n", op2.c_str(), op1.c_str() );
+
 	return code;
 }
 
