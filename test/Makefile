@@ -218,7 +218,6 @@ test.cvttss2si \
 test.ldmxcsr \
 test.stmxcsr \
 test.pavgb \
-test.pavgw \
 test.pextrw \
 test.pinsrw \
 test.pmaxub \
