@@ -363,9 +363,6 @@ test.insertps \
 test.pinsrb \
 test.pinsrd \
 test.pinsrq \
-test.pextrb \
-test.pextrd \
-test.pextrq \
 test.pmovsxbw \
 test.pmovzxbw \
 test.pmovsxbd \

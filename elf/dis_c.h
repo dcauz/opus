@@ -187,6 +187,21 @@ const char * dis_c3(const char * code, unsigned prefix)
 	return code;
 }
 
+const char * dis_c5(const char * code, unsigned prefix)
+{
+	std::string op1;
+	std::string op2;
+
+	code = mod_reg_rm_ops( code, prefix, OpRegs::AL_XMM0, 0, op1, op2 , 32);	
+
+	char imm[12];
+	code = imm8( code, imm );
+
+	printf( "vpextrw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+
+	return code;
+}
+
 const char * dis_c6(const char * code, unsigned prefix)
 {
     int vvvv = prefix >> 28;

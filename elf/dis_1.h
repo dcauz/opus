@@ -167,21 +167,36 @@ const char * dis_13(const char * code, unsigned prefix)
 
 const char * dis_14(const char * code, unsigned prefix)
 {
-	std::string op1;
-	std::string op2;
-
-	int vvvv = prefix >> 28;
-	vvvv = vvvv ^ 0xf;
-
-	if( prefix & PRE_256 )
+	if( ( prefix & PRE_3A ) == 0 )
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "vunpcklps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vunpcklps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vunpcklps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 	else
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vunpcklps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 , -1, 32);	
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vpextrb $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
 	}
 
 	return code;
@@ -189,21 +204,36 @@ const char * dis_14(const char * code, unsigned prefix)
 
 const char * dis_15(const char * code, unsigned prefix)
 {
-	std::string op1;
-	std::string op2;
-
-	int vvvv = prefix >> 28;
-	vvvv = vvvv ^ 0xf;
-
-	if( prefix & PRE_256 )
+	if( ( prefix & PRE_3A ) == 0 )
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "vunpckhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vunpckhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vunpckhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 	else
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vunpckhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 , -1, 32);	
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vpextrw $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
 	}
 
 	return code;
@@ -211,29 +241,46 @@ const char * dis_15(const char * code, unsigned prefix)
 
 const char * dis_16(const char * code, unsigned prefix)
 {
-	std::string op1;
-	std::string op2;
-
-	int vvvv = prefix >> 28;
-	vvvv = vvvv ^ 0xf;
-
-	int mod = (*code & 0xc0 ) >> 6;
-
-	if( prefix & PRE_256 )
+	if( ( prefix & PRE_3A ) == 0 )
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		if( mod != 3 )
-			printf( "vmovhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		int mod = (*code & 0xc0 ) >> 6;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			if( mod != 3 )
+				printf( "vmovhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			else
+				printf( "vmovlhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 		else
-			printf( "vmovlhps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			if( mod != 3 )
+				printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			else
+				printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 	else
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		if( mod != 3 )
-			printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		else
-			printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		std::string op1;
+		std::string op2;
+
+		int opSize = (prefix & REX_W)?64:32;
+		char inst =  (prefix & REX_W)?'q':'d';
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 , -1, opSize );	
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vpextr%c $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
 	}
 
 	return code;

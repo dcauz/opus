@@ -423,7 +423,17 @@ bool disassemble( const char * code, const char *end )
 		case -62:	code = dis_c2(++code, prefix); break;	// 0xc2
 		case -61:	code = dis_c3(++code, prefix); break;	// 0xc3
 		case -60:	code = VEX3(++code,prefix);printOn=false; break;	// 0xc4
-		case -59:	code = VEX2(++code,prefix);printOn=false; break;	// 0xc5
+		case -59:											// 0xc5
+		{
+			if( prefix & VEX )
+				code = dis_c5(++code, prefix);
+			else
+			{
+				code = VEX2(++code,prefix);
+				printOn=false;
+			}
+			break;
+		}
 		case -58:	code = dis_c6(++code, prefix); break;	// 0xc6
 		case -57:	code = dis_c7(++code, prefix); break;	// 0xc7
 		case -56:	code = dis_c8(++code, prefix); break;	// 0xc8

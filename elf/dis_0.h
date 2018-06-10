@@ -799,6 +799,30 @@ const char * dis_0f(const char * code, unsigned prefix)
 	   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 	}
+	else if( code[0] == 0x3a )
+	{
+		++code;
+		const char * inst = "error";
+		switch(*code)
+		{
+		case 20:	inst = "pextrb"; break;
+		case 21:	inst = "pextrw"; break;
+		case 22:	
+			inst = ((prefix & REX_W) == REX_W) ? "pextrq":"pextrd"; 
+			break;
+		}
+
+		std::string op1;
+		std::string op2;
+
+		int opsize = ((prefix & REX_W) == REX_W) ? 64:32;
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
+
+		char imm[10];
+		code = imm8( code, imm );
+
+		printf( "%s $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
+	}
 
 	// 40
 	else if( ( code[0] & 0xf0 ) == 0x40 )
@@ -1481,6 +1505,18 @@ const char * dis_0f(const char * code, unsigned prefix)
 			}
 			printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 		}
+	}
+	else if( code[0] == 0xffffffc5 )
+	{
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 0, op1, op2, 32 );
+
+		char imm[10];
+		code = imm8( code, imm );
+
+		printf( "pextrw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
 	}
 	else if( code[0] == 0xffffffc6 )
 	{
