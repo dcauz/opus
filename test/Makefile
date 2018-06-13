@@ -360,9 +360,6 @@ test.roundss \
 test.roundsd \
 test.extractps \
 test.insertps \
-test.pinsrb \
-test.pinsrd \
-test.pinsrq \
 test.pmovsxbw \
 test.pmovzxbw \
 test.pmovsxbd \

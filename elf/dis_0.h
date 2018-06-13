@@ -803,12 +803,22 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		++code;
 		const char * inst = "error";
+		bool isPinsr = false;
+
 		switch(*code)
 		{
 		case 20:	inst = "pextrb"; break;
 		case 21:	inst = "pextrw"; break;
 		case 22:	
 			inst = ((prefix & REX_W) == REX_W) ? "pextrq":"pextrd"; 
+			break;
+		case 32:	
+			inst = "pinsrb"; 
+			isPinsr = true;
+			break;
+		case 34:	
+			inst = ((prefix & REX_W) == REX_W) ? "pinsrq":"pinsrd"; 
+			isPinsr = true;
 			break;
 		}
 
@@ -821,7 +831,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 		char imm[10];
 		code = imm8( code, imm );
 
-		printf( "%s $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
+		if( isPinsr )
+			printf( "%s $%s,%s,%s\n", inst, imm, op2.c_str(), op1.c_str() );
+		else
+			printf( "%s $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
 	}
 
 	// 40
@@ -1505,6 +1518,18 @@ const char * dis_0f(const char * code, unsigned prefix)
 			}
 			printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 		}
+	}
+	else if( code[0] == 0xffffffc4 )
+	{
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 32 );
+
+		char imm[10];
+		code = imm8( code, imm );
+
+		printf( "pinsrw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
 	}
 	else if( code[0] == 0xffffffc5 )
 	{
