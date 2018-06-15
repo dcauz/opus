@@ -778,89 +778,113 @@ const char * dis_dd(const char * code, unsigned prefix)
 
 const char * dis_de(const char * code, unsigned prefix)
 {
-	if( ( *code & 0xf8 ) == 0xc0 )
+	if( ( prefix & VEX ) == 0 )
 	{
-		int r = *code & 0x0f;
-
-		printf( "faddp %%st,%%st(%d)\n", r );
-		return ++code;
-	}
-	else if( ( *code & 0xf8 ) == 0xc8 )
-	{
-		int r = *code & 0x07;
-
-		printf( "fmulp %%st,%%st(%d)\n", r );
-		return ++code;
-	}
-	else if( ( *code & 0xf8 ) == 0xe8 )
-	{
-		int r = *code & 0x07;
-
-		printf( "fsubp %%st,%%st(%d)\n", r );
-		return ++code;
-	}
-	else if( ( *code & 0xf0 ) == 0xf0 )
-	{
-		int r = *code & 0x0f;
-
-		printf( "fdivp %%st,%%st(%d)\n", r );
-		return ++code;
-	}
-	else if( ( *code & 0xff ) == 0xd9 )
-	{
-		printf( "fcompp\n" );
-		return ++code;
-	}
-	else
-	{
-		std::string op;
-
-		if( (*code & 0x38) == 0x30)
+		if( ( *code & 0xf8 ) == 0xc0 )
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fidiv %s\n", op.c_str() );
+			int r = *code & 0x0f;
+	
+			printf( "faddp %%st,%%st(%d)\n", r );
+			return ++code;
 		}
-		else if( (*code & 0x38) == 0x38)
+		else if( ( *code & 0xf8 ) == 0xc8 )
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fidivr %s\n", op.c_str() );
+			int r = *code & 0x07;
+	
+			printf( "fmulp %%st,%%st(%d)\n", r );
+			return ++code;
 		}
-		else if( (*code & 0x38) == 0x10)
+		else if( ( *code & 0xf8 ) == 0xe8 )
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "ficom %s\n", op.c_str() );
+			int r = *code & 0x07;
+	
+			printf( "fsubp %%st,%%st(%d)\n", r );
+			return ++code;
 		}
-		else if( (*code & 0x38) == 0x28)
+		else if( ( *code & 0xf0 ) == 0xf0 )
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fisubr %s\n", op.c_str() );
+			int r = *code & 0x0f;
+	
+			printf( "fdivp %%st,%%st(%d)\n", r );
+			return ++code;
 		}
-		else if( (*code & 0x38) == 0x20)
+		else if( ( *code & 0xff ) == 0xd9 )
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fisub %s\n", op.c_str() );
-		}
-		else if( (*code & 0x38) == 0x18)
-		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "ficomp %s\n", op.c_str() );
-		}
-		else if( (*code & 0x38) == 0x20)
-		{
-			int reg = *code++ & 0x07;
-			printf( "fsubp %%s(%d)\n", reg );
-		}
-		else if( (*code & 0x38) == 0x08)
-		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fmul %s\n", op.c_str() );
+			printf( "fcompp\n" );
+			return ++code;
 		}
 		else
 		{
-			code = memStr( code, prefix, 0, 0, op );
-			printf( "fiadd %s\n", op.c_str() );
+			std::string op;
+	
+			if( (*code & 0x38) == 0x30)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fidiv %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x38)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fidivr %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x10)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "ficom %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x28)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fisubr %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x20)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fisub %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x18)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "ficomp %s\n", op.c_str() );
+			}
+			else if( (*code & 0x38) == 0x20)
+			{
+				int reg = *code++ & 0x07;
+				printf( "fsubp %%s(%d)\n", reg );
+			}
+			else if( (*code & 0x38) == 0x08)
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fmul %s\n", op.c_str() );
+			}
+			else
+			{
+				code = memStr( code, prefix, 0, 0, op );
+				printf( "fiadd %s\n", op.c_str() );
+			}
+			
+			return code;
 		}
-		
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+	
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpmaxub %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpmaxub %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+
 		return code;
 	}
 }

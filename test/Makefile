@@ -350,7 +350,6 @@ test.pminuw \
 test.pminud \
 test.pminsb \
 test.pminsd \
-test.pmaxuw \
 test.pmaxud \
 test.pmaxsb \
 test.pmaxsd \

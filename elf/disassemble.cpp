@@ -129,7 +129,18 @@ bool disassemble( const char * code, const char *end )
 
 		case 0x3c:	code = dis_3c(++code, prefix); break;
 		case 0x3d:	code = dis_3d(++code, prefix); break;
-		case 0x3e:	prefix |= PRE_3E; ++code; printOn=false; break;
+		case 0x3e:	
+		{
+			if( prefix & VEX )
+				code = dis_3e(++code, prefix);
+			else
+			{
+				prefix |= PRE_3E; 
+				++code; 
+				printOn=false; 
+			}	
+			break;
+		}
 		case 0x3f:	code = dis_3f(++code, prefix); break;
 	
 		case 0x40:	prefix |= *code; ++code; printOn=false; break;
