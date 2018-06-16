@@ -242,10 +242,21 @@ const char * dis_d6(const char * code, unsigned prefix)
 
 const char * dis_d7(const char * code, unsigned prefix)
 {
-	if( prefix & PRE_AS )
-		printf( "xlatb %%ds:(%%ebx)\n" );
+	if( ( prefix & VEX ) == 0 )
+	{
+		if( prefix & PRE_AS )
+			printf( "xlatb %%ds:(%%ebx)\n" );
+		else
+			printf( "xlat %%ds:(%%rbx)\n" );
+	}
 	else
-		printf( "xlat %%ds:(%%rbx)\n" );
+	{
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( code, prefix, OpRegs::AL_YMM0, 0, op1, op2, 32 );	
+		printf( "vpmovmskb %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 
 	return code;
 }
