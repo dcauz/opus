@@ -534,30 +534,54 @@ const char * dis_d9(const char * code, unsigned prefix)
 
 const char * dis_da(const char * code, unsigned prefix)
 {
-	int reg = *code & 0x0f;
-	if( ( *code & 0xf0 ) == 0xc0 )
+	if( (prefix & VEX ) == 0 )
 	{
-		if( reg < 8 )
-			printf( "fcmovb %%st(%d), %%st(0)\n", reg );
+		int reg = *code & 0x0f;
+		if( ( *code & 0xf0 ) == 0xc0 )
+		{
+			if( reg < 8 )
+				printf( "fcmovb %%st(%d), %%st(0)\n", reg );
+			else
+				printf( "fcmove %%st(%d), %%st(0)\n", reg-8 );
+		}
+		else if( ( *code & 0xf0 ) == 0xd0 )
+		{
+			if( reg < 8 )
+				printf( "fcmovbe %%st(%d), %%st(0)\n", reg );
+			else
+				printf( "fcmovu %%st(%d), %%st(0)\n", reg-8 );
+		}
+		else if( *code == 0xffffffe9 )
+		{
+			printf( "fucompp\n" );
+			++code;
+		}
 		else
-			printf( "fcmove %%st(%d), %%st(0)\n", reg-8 );
-	}
-	else if( ( *code & 0xf0 ) == 0xd0 )
-	{
-		if( reg < 8 )
-			printf( "fcmovbe %%st(%d), %%st(0)\n", reg );
-		else
-			printf( "fcmovu %%st(%d), %%st(0)\n", reg-8 );
-	}
-	else if( *code == 0xffffffe9 )
-	{
-		printf( "fucompp\n" );
-		++code;
+			TODO
+	
+		return ++code;
 	}
 	else
-		TODO
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-	return ++code;
+		std::string op1;
+		std::string op2;
+	
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpminub %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpminub %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+
+		return code;
+	}
 }
 
 const char * dis_db(const char * code, unsigned prefix)

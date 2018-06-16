@@ -346,7 +346,6 @@ test.blendvpd \
 test.blendvps \
 test.pblendvb \
 test.pblendw \
-test.pminuw \
 test.pminud \
 test.pminsb \
 test.pminsd \
