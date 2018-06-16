@@ -131,10 +131,32 @@ const char * dis_e3(const char * code, unsigned prefix)
 
 const char * dis_e4(const char * code, unsigned prefix)
 {
-	char buff[12];
-	code = imm8(code, buff);
+	if( ( prefix & VEX ) == 0 )
+	{
+		char buff[12];
+		code = imm8(code, buff);
 
-	printf( "in $%s,%%al\n", buff );
+		printf( "in $%s,%%al\n", buff );
+	}
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vpmulhuw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vpmulhuw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
 
 	return code;
 }
