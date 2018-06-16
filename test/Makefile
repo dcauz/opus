@@ -221,7 +221,7 @@ test.pavgb \
 test.pextrw \
 test.pinsrw \
 test.pmaxub \
-test.pmaxsw \
+test.pmaxsb \
 test.pminub \
 test.pminsw \
 test.pmovmskb \
@@ -351,8 +351,6 @@ test.pminud \
 test.pminsb \
 test.pminsd \
 test.pmaxud \
-test.pmaxsb \
-test.pmaxsd \
 test.roundps \
 test.roundpd \
 test.roundss \
