@@ -223,7 +223,7 @@ test.pinsrw \
 test.pmaxub \
 test.pmaxsb \
 test.pminub \
-test.pminsw \
+test.pminsb \
 test.pmovmskb \
 test.pmulhuw \
 test.psadbw \
@@ -347,8 +347,6 @@ test.blendvps \
 test.pblendvb \
 test.pblendw \
 test.pminud \
-test.pminsb \
-test.pminsd \
 test.pmaxud \
 test.roundps \
 test.roundpd \

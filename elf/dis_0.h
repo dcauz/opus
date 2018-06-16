@@ -715,6 +715,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "sysexit\n" );
 	}
+	else if( code[0] == 0x38 && code[1] == 0x38 )
+	{
+		code += 2;
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		printf( "pminsb %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else if( code[0] == 0x38 && code[1] == 0x3a )
 	{
 		code += 2;
@@ -1732,6 +1738,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubsw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( code[0] == 0xffffffea )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		printf( "pminsw %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( *code == 0xffffffeb )
 	{
