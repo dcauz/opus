@@ -174,7 +174,8 @@ const char * dis_f7(const char * code, unsigned prefix)
 	case 3: inst = "neg"; break;
 	case 4:	inst = "mul"; break;
 	case 5: inst = "imul";break;
-	case 6: inst = "div"; break;
+	case 6: inst = "div";break;
+	case 7: inst = "idiv";break;
 	} 
 
 	if( (*code & 0xc0) != 0xc0 )
