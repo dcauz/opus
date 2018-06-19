@@ -80,6 +80,15 @@ inline const char * codeToInt( const char * code, int len, int & v )
 	return code+len;
 }
 
+inline const char * uimm8( const char * code, char * buff )
+{
+    unsigned char imm = 0x00ff & *code++;
+
+	sprintf( buff, "0x%x", imm );
+
+    return code;
+}
+
 inline const char * imm8( const char * code, char * buff )
 {
     char imm = 0x00ff & *code++;

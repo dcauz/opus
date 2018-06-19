@@ -1070,6 +1070,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 
 	// 7x
+	else if( *code == 0x70 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		char imm[12];
+		code = uimm8( code, imm );
+		printf( "pshufw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+	}
 	else if( *code == 0x74 )
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
