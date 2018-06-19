@@ -301,196 +301,199 @@ const char * dis_0f(const char * code, unsigned prefix)
 		else
 			TODO
 	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffc1 )
+	else if(code[0] == 0x01 )
 	{
-		code +=2;
-		printf( "vmcall\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffc2 )
-	{
-		code +=2;
-		printf( "vmlaunch\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffc3 )
-	{
-		code +=2;
-		printf( "vmresume\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffc4 )
-	{
-		code +=2;
-		printf( "vmxoff\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffca )
-	{
-		code +=2;
-		printf( "clac\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffcb )
-	{
-		code +=2;
-		printf( "stac\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffd0 )
-	{
-		code +=2;
-		printf( "xgetbv\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffd1 )
-	{
-		code +=2;
-		printf( "xsetbv\n" );
-	}
-	else if(code[0] == 0x01 && code[1] == 0xffffffd4 )
-	{
-		code +=2;
-		printf( "vmfunc\n" );
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x00 ))
-	{
-		std::string op;
-		if(( code[1] & 0x07) == 4 )
+		if( code[1] == 0xffffffc1 )
 		{
-			if( code[2] == 0x25 )
-			{
-				code += 3;
-				char imm[16];
-				code = imm32( code, imm );
-				op = imm;
-			}
-			else
-				code = memStr( ++code, prefix, 0, 0, op );
+			code +=2;
+			printf( "vmcall\n" );
 		}
-		else
-			code = memStr( ++code, prefix, 0, 0, op );
-		printf( "sgdt %s\n", op.c_str());
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x10 ))
-	{
-		std::string op;
-		if(( code[1] & 0x07) == 4 )
+		else if( code[1] == 0xffffffc2 )
 		{
-			if( code[2] == 0x25 )
-			{
-				code += 3;
-				char imm[16];
-				code = imm32( code, imm );
-				op = imm;
-			}
-			else
-				code = memStr( ++code, prefix, 0, 0, op );
+			code +=2;
+			printf( "vmlaunch\n" );
 		}
-		else
-			code = memStr( ++code, prefix, 0, 0, op );
-		printf( "lgdt %s\n", op.c_str());
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x30 ))
-	{
-		++code;
-		if( (*code & 0xc0) != 0xc0 )
+		else if( code[1] == 0xffffffc3 )
+		{
+			code +=2;
+			printf( "vmresume\n" );
+		}
+		else if( code[1] == 0xffffffc4 )
+		{
+			code +=2;
+			printf( "vmxoff\n" );
+		}
+		else if( code[1] == 0xffffffca )
+		{
+			code +=2;
+			printf( "clac\n" );
+		}
+		else if( code[1] == 0xffffffcb )
+		{
+			code +=2;
+			printf( "stac\n" );
+		}
+		else if( code[1] == 0xffffffd0 )
+		{
+			code +=2;
+			printf( "xgetbv\n" );
+		}
+		else if( code[1] == 0xffffffd1 )
+		{
+			code +=2;
+			printf( "xsetbv\n" );
+		}
+		else if( code[1] == 0xffffffd4 )
+		{
+			code +=2;
+			printf( "vmfunc\n" );
+		}
+		else if( (( code[1] & 0x38) == 0x00 ))
 		{
 			std::string op;
-			code = memStr( code, prefix, 0, 0, op );
-
-			printf( "lmsw %s\n", op.c_str() );
-		}
-		else
-		{
-			unsigned reg = *code & 0x07;
-			prefix |= PRE_OS;
-			const char * op = regStr( reg, AL, 1, Reg2, prefix );
-	
-			printf( "lmsw %s\n", op );
-			++code;
-		}
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x08 ))
-	{
-		std::string op;
-		if(( code[1] & 0x07) == 4 )
-		{
-			if( code[2] == 0x25 )
+			if(( code[1] & 0x07) == 4 )
 			{
-				code += 3;
-				char imm[16];
-				code = imm32( code, imm );
-				op = imm;
+				if( code[2] == 0x25 )
+				{
+					code += 3;
+					char imm[16];
+					code = imm32( code, imm );
+					op = imm;
+				}
+				else
+					code = memStr( ++code, prefix, 0, 0, op );
 			}
 			else
 				code = memStr( ++code, prefix, 0, 0, op );
+			printf( "sgdt %s\n", op.c_str());
 		}
-		else
-			code = memStr( ++code, prefix, 0, 0, op );
-		printf( "sidt %s\n", op.c_str());
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x18 ))
-	{
-		std::string op;
-		if(( code[1] & 0x07) == 4 )
+		else if( (( code[1] & 0x38) == 0x10 ))
 		{
-			if( code[2] == 0x25 )
+			std::string op;
+			if(( code[1] & 0x07) == 4 )
 			{
-				code += 3;
-				char imm[16];
-				code = imm32( code, imm );
-				op = imm;
+				if( code[2] == 0x25 )
+				{
+					code += 3;
+					char imm[16];
+					code = imm32( code, imm );
+					op = imm;
+				}
+				else
+					code = memStr( ++code, prefix, 0, 0, op );
 			}
 			else
 				code = memStr( ++code, prefix, 0, 0, op );
+			printf( "lgdt %s\n", op.c_str());
 		}
-		else
-			code = memStr( ++code, prefix, 0, 0, op );
-		printf( "lidt %s\n", op.c_str());
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x20 ))
-	{
-		++code;
-		if( (*code & 0xc0) != 0xc0 )
+		else if( (( code[1] & 0x38) == 0x30 ))
+		{
+			++code;
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "lmsw %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, Reg2, prefix );
+		
+				printf( "lmsw %s\n", op );
+				++code;
+			}
+		}
+		else if( (( code[1] & 0x38) == 0x08 ))
 		{
 			std::string op;
-			code = memStr( code, prefix, 0, 0, op );
-
-			printf( "smsw %s\n", op.c_str() );
+			if(( code[1] & 0x07) == 4 )
+			{
+				if( code[2] == 0x25 )
+				{
+					code += 3;
+					char imm[16];
+					code = imm32( code, imm );
+					op = imm;
+				}
+				else
+					code = memStr( ++code, prefix, 0, 0, op );
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+			printf( "sidt %s\n", op.c_str());
 		}
-		else
-		{
-			unsigned reg = *code & 0x07;
-			prefix |= PRE_OS;
-			const char * op = regStr( reg, AL, 1, Reg2, prefix );
-	
-			printf( "smsw %s\n", op );
-			++code;
-		}
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0xff ) == 0xf9 ))
-	{
-		code += 2;
-		printf( "rdtscp\n" );
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0xff ) == 0xf8 ))
-	{
-		code += 2;
-		printf( "swapgs\n" );
-	}
-	else if( ( code[0] == 0x01 ) && (( code[1] & 0x38) == 0x38 ))
-	{	
-		++code;
-		if( (*code & 0xc0) != 0xc0 )
+		else if( (( code[1] & 0x38) == 0x18 ))
 		{
 			std::string op;
-			code = memStr( code, prefix, 0, 0, op );
-
-			printf( "invlpg %s\n", op.c_str() );
+			if(( code[1] & 0x07) == 4 )
+			{
+				if( code[2] == 0x25 )
+				{
+					code += 3;
+					char imm[16];
+					code = imm32( code, imm );
+					op = imm;
+				}
+				else
+					code = memStr( ++code, prefix, 0, 0, op );
+			}
+			else
+				code = memStr( ++code, prefix, 0, 0, op );
+			printf( "lidt %s\n", op.c_str());
 		}
-		else
+		else if( (( code[1] & 0x38) == 0x20 ))
 		{
-			unsigned reg = *code & 0x07;
-
-			prefix |= PRE_OS;
-			const char * op = regStr( reg, AL, 1, Reg2, prefix );
-	
-			printf( "invlpg %s\n", op );
 			++code;
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "smsw %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, Reg2, prefix );
+		
+				printf( "smsw %s\n", op );
+				++code;
+			}
+		}
+		else if( (( code[1] & 0xff ) == 0xf9 ))
+		{
+			code += 2;
+			printf( "rdtscp\n" );
+		}
+		else if( (( code[1] & 0xff ) == 0xf8 ))
+		{
+			code += 2;
+			printf( "swapgs\n" );
+		}
+		else if( ( code[1] & 0x38) == 0x38 )
+		{	
+			++code;
+			if( (*code & 0xc0) != 0xc0 )
+			{
+				std::string op;
+				code = memStr( code, prefix, 0, 0, op );
+	
+				printf( "invlpg %s\n", op.c_str() );
+			}
+			else
+			{
+				unsigned reg = *code & 0x07;
+	
+				prefix |= PRE_OS;
+				const char * op = regStr( reg, AL, 1, Reg2, prefix );
+		
+				printf( "invlpg %s\n", op );
+				++code;
+			}
 		}
 	}
 
@@ -715,112 +718,115 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "sysexit\n" );
 	}
-	else if( code[0] == 0x38 && code[1] == 0x38 )
+	else if( code[0] == 0x38 )
 	{
-		code += 2;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
-		printf( "pminsb %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0x3a )
-	{
-		code += 2;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
-		printf( "pminuw %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0x3c )
-	{
-		code += 2;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
-		printf( "pmaxsb %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0x3e )
-	{
-		code += 2;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
-		printf( "pmaxuw %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0xffffff80 )
-	{
-		code += 2;
-		prefix |= REX_W;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-		printf( "invept %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0xffffff81 )
-	{
-		code += 2;
-		prefix |= REX_W;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-		printf( "invvpid %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0xffffff82 )
-	{
-		code += 2;
-		prefix |= REX_W;
-		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-		printf( "invpcid %s,%s\n", op1.c_str(), op2.c_str() );
-	}
-	else if( code[0] == 0x38 && code[1] == 0xfffffff6 )
-	{
-		if( prefix & PRE_REP )
+		if( code[1] == 0x38 )
 		{
 			code += 2;
-			prefix &= ~PRE_OS;
-			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-
-		   	printf( "adox %s,%s\n", op1.c_str(), op2.c_str() );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pminsb %s,%s\n", op1.c_str(), op2.c_str() );
 		}
-		else
+		else if( code[1] == 0x3a )
 		{
 			code += 2;
-			prefix &= ~PRE_OS;
-			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-
-		   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pminuw %s,%s\n", op1.c_str(), op2.c_str() );
 		}
-	}
-	else if( code[0] == 0x38 && code[1] == 0xfffffff0 )
-	{
-		code += 2;
-		if( code[1] == 0x25 )
+		else if( code[1] == 0x3c )
 		{
-			unsigned reg = (*code & 0x38) >> 3;
-
-			const char * op = regStr( reg, AL, 1, Reg, prefix );
-
 			code += 2;
-			char imm[16];
-			code = imm32( code, imm );
-
-	   		printf( "movbe %s,%s\n", op, imm );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmaxsb %s,%s\n", op1.c_str(), op2.c_str() );
 		}
-		else
+		else if( code[1] == 0x3e )
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-
-	   		printf( "movbe %s,%s\n", op1.c_str(), op2.c_str() );
-		}
-	}
-	else if( code[0] == 0x38 && code[1] == 0xfffffff1 )
-	{
-		code += 2;
-		if( code[1] == 0x25 )
-		{
-			unsigned reg = (*code & 0x38) >> 3;
-
-			const char * op = regStr( reg, AL, 1, Reg, prefix );
-
 			code += 2;
-			char imm[16];
-			code = imm32( code, imm );
-
-	   		printf( "movbe %s,%s\n", op, imm );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmaxuw %s,%s\n", op1.c_str(), op2.c_str() );
 		}
-		else
+		else if( code[1] == 0xffffff80 )
 		{
+			code += 2;
+			prefix |= REX_W;
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-
-	   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
+			printf( "invept %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0xffffff81 )
+		{
+			code += 2;
+			prefix |= REX_W;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+			printf( "invvpid %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0xffffff82 )
+		{
+			code += 2;
+			prefix |= REX_W;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+			printf( "invpcid %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0xfffffff6 )
+		{
+			if( prefix & PRE_REP )
+			{
+				code += 2;
+				prefix &= ~PRE_OS;
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+			   	printf( "adox %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+			else
+			{
+				code += 2;
+				prefix &= ~PRE_OS;
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+			   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+		}
+		else if( code[1] == 0xfffffff0 )
+		{
+			code += 2;
+			if( code[1] == 0x25 )
+			{
+				unsigned reg = (*code & 0x38) >> 3;
+	
+				const char * op = regStr( reg, AL, 1, Reg, prefix );
+	
+				code += 2;
+				char imm[16];
+				code = imm32( code, imm );
+	
+		   		printf( "movbe %s,%s\n", op, imm );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+		   		printf( "movbe %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+		}
+		else if( code[1] == 0xfffffff1 )
+		{
+			code += 2;
+			if( code[1] == 0x25 )
+			{
+				unsigned reg = (*code & 0x38) >> 3;
+	
+				const char * op = regStr( reg, AL, 1, Reg, prefix );
+	
+				code += 2;
+				char imm[16];
+				code = imm32( code, imm );
+	
+		   		printf( "movbe %s,%s\n", op, imm );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+		   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
+			}
 		}
 	}
 	else if( code[0] == 0x3a )
@@ -1748,6 +1754,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pmulhw %s,%s\n", op2.c_str(), op1.c_str() );
+	}
+	else if( *code == 0xffffffe7 )
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
+		printf( "movntq %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 	else if( *code == 0xffffffe8 )
 	{
