@@ -1,1 +1,5 @@
-prefetchh
+prefetcht0 (%rdx)
+prefetcht1 (%rdx)
+prefetcht2 (%rdx)
+prefetchnta (%rdx)
+prefetchwt1 (%rdx)

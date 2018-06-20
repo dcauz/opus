@@ -538,6 +538,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		printf( "ud2\n" );
 	}
+	else if( code[0]  == 0x0d )
+	{
+		code = memStr( ++code, prefix, 0, 0, op1 );
+		printf( "prefetchwt1 %s\n", op1.c_str() );
+	}
 
 	// 10
 	else if( code[0]  == 0x10 )
@@ -605,6 +610,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
 		printf( "movhps %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else if( code[0]  == 0x18 )
+	{
+		unsigned reg = (*++code & 0x38) >> 3;
+
+		code = memStr( code, prefix, 0, 0, op1 );
+		if( reg )
+			printf( "prefetcht%d %s\n", reg-1, op1.c_str() );
+		else
+			printf( "prefetchnta %s\n", op1.c_str() );
 	}
 
 	// 20
