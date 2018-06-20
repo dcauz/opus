@@ -239,15 +239,27 @@ const char * dis_2a(const char * code, unsigned prefix)
 
 const char * dis_2b(const char * code, unsigned prefix)
 {
-    std::string op1;
+   	std::string op1;
     std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 32, false, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	if( ( prefix & VEX ) == 0 )
+	{
+   	 	if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 32, false, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 
-    printf( "sub %s,%s\n", op1.c_str(), op2.c_str() );
+    	printf( "sub %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+	else
+	{
+		if( prefix & PRE_256 )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+		printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 

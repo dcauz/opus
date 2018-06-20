@@ -386,6 +386,28 @@ TODO
 		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		break;
 	}
+	case 0x2b:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( evex.Lprime )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( evex.L )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		break;
+	}
 	case 0x2c:
 	{
 		std::string op1;
