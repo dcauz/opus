@@ -370,6 +370,24 @@ TODO
 		printf( "vpinsr%c $%s,%s,%%xmm%d,%s\n", inst, imm, op2.c_str(), evex.vvvv, op1.c_str() );
 		break;
 	}
+	case 0x28:
+	{
+		std::string op1;
+		std::string	op2;
+
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		printf( "vmovapd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
+	case 0x29:
+	{
+		std::string op1;
+		std::string	op2;
+
+   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		printf( "vmovapd %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
+	}
 	case 0x2a:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;

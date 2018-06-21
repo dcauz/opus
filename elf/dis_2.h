@@ -149,12 +149,18 @@ const char * dis_28(const char * code, unsigned prefix)
 		if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-			printf( "vmovaps %s,%s\n", op2.c_str(), op1.c_str() );
+			if(prefix & PRE_OS )
+				printf( "vmovapd %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vmovaps %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-			printf( "vmovaps %s,%s\n", op2.c_str(), op1.c_str() );
+			if(prefix & PRE_OS )
+				printf( "vmovapd %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vmovaps %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 	}
 
@@ -184,11 +190,14 @@ const char * dis_29(const char * code, unsigned prefix)
 		std::string op2;
 	
 		bool isCmp =  (prefix & PRE_0F );
+		bool isOS  =  (prefix & PRE_OS );
 
 		if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-			if(isCmp)
+			if(isOS)
+				printf( "vmovapd %s,%s\n", op1.c_str(), op2.c_str() );
+			else if(isCmp)
 				printf( "vpcmpeqq %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 			else
 				printf( "vmovaps %s,%s\n", op1.c_str(), op2.c_str() );
@@ -196,7 +205,9 @@ const char * dis_29(const char * code, unsigned prefix)
 		else
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-			if(isCmp)
+			if(isOS)
+				printf( "vmovapd %s,%s\n", op1.c_str(), op2.c_str() );
+			else if(isCmp)
 				printf( "vpcmpeqq %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 			else
 				printf( "vmovaps %s,%s\n", op1.c_str(), op2.c_str() );
