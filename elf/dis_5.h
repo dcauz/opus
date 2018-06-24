@@ -375,7 +375,8 @@ const char * dis_59(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	const char * inst = ( prefix & PRE_REP ) ? "vmulss" : "vmulps";
+	const char * inst = ( prefix & PRE_REP ) ? "vmulss" : 
+			((prefix & PRE_NE)?"vmulsd":"vmulps");
 
 	if( prefix & PRE_256 )
 	{

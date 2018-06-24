@@ -942,6 +942,11 @@ TODO
 			inst = "vmulss";
 			dispN= 4;
 		}
+		else if( evex.pp == 3 )
+		{
+			inst = "vmulsd";
+			dispN= 16;
+		}
 		else if( evex.pp == 1 )
 		{
 			inst = "vmulpd";
