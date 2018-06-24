@@ -988,6 +988,11 @@ TODO
 			inst = "vsubpd";
 			dispN= 16;
 		}
+		else if( evex.pp == 3 )
+		{
+			inst = "vsubsd";
+			dispN= 16;
+		}
 		else
 		{
 			inst = "vsubps";

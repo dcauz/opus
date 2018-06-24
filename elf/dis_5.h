@@ -399,7 +399,7 @@ const char * dis_5c(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	const char * inst = ( prefix & PRE_REP ) ? "vsubss" : "vsubps";
+	const char * inst = ( prefix & PRE_REP ) ? "vsubss" : (( prefix & PRE_NE) ? "vsubsd":"vsubps");
 
 	if( prefix & PRE_256 )
 	{

@@ -1112,7 +1112,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x5c:
 	{
-		const char * inst = ( prefix & PRE_REP ) ? "subss":"subps";
+		const char * inst = ( prefix & PRE_REP ) ? "subss": ((prefix&PRE_NE)?"subsd":"subps");
 
 		if( prefix & PRE_OS )
 		{
