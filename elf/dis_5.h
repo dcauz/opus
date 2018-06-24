@@ -380,12 +380,18 @@ const char * dis_59(const char * code, unsigned prefix)
 	if( prefix & PRE_256 )
 	{
 		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), vvvv, op1.c_str() );
+		if( prefix & PRE_OS )
+			printf( "vmulpd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		else
+			printf( "%s %s,%%ymm%d,%s\n", inst, op2.c_str(), vvvv, op1.c_str() );
 	}
 	else
 	{
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), vvvv, op1.c_str() );
+		if( prefix & PRE_OS )
+			printf( "vmulpd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		else
+			printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;
