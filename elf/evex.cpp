@@ -896,6 +896,11 @@ TODO
 			inst = "vaddpd";
 			dispN= 16;
 		}
+		else if( evex.pp == 3 )
+		{
+			inst = "vaddsd";
+			dispN= 16;
+		}
 		else
 		{
 			inst = "vaddps";

@@ -1083,7 +1083,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x58:
 	{
-		if( prefix & PRE_OS )
+		if( prefix & PRE_NE )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "addsd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( prefix & PRE_OS )
 		{
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "addpd %s,%s\n", op2.c_str(), op1.c_str() );
