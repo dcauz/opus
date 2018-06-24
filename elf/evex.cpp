@@ -199,8 +199,20 @@ TODO
 		else
 		{
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-			printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			if( evex.pp == 1 )
+				printf( "vmovlpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			else
+				printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		}
+		break;
+	}
+	case 0x13:
+	{
+		std::string op1;
+		std::string	op2;
+
+     	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vmovlpd %s,%s\n", op1.c_str(), op2.c_str() );
 		break;
 	}
 	case 0x14:
