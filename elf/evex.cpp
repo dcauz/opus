@@ -125,7 +125,12 @@ TODO
 		if( !evex.Vprime )
 			evex.vvvv += 16;
 
-		if( evex.Lprime )
+		if( evex.W )
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+			printf( "vmovupd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( evex.Lprime )
 		{
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovss %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
@@ -149,7 +154,12 @@ TODO
 		std::string op1;
 		std::string	op2;
 
-		if( evex.Lprime )
+		if( evex.W )
+		{
+       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+			printf( "vmovupd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( evex.Lprime )
 		{
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
 			printf( "vmovss %s,%s\n", op1.c_str(), op2.c_str() );
@@ -279,12 +289,12 @@ TODO
 	}
 	case 0x16:
 	{
+		std::string op1;
+		std::string	op2;
+
 		if(evex.pp == 0)
 		{
 			evex.vvvv = evex.vvvv ^ 0xf;
-
-			std::string op1;
-			std::string	op2;
 
 			if( !evex.Vprime )
 				evex.vvvv += 16;
@@ -305,11 +315,8 @@ TODO
 				printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 			}
 		}
-		else
+		else if( evex.mm == 3 )
 		{
-			std::string op1;
-			std::string op2;
-
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 , -1, 32);	
 
 			char imm[12];
@@ -318,6 +325,25 @@ TODO
 			char inst = evex.W ? 'q':'d';
 			printf( "vpextr%c $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
 		}
+		else
+		{
+			evex.vvvv = evex.vvvv ^ 0xf;
+		
+			if( !evex.Vprime )
+				evex.vvvv += 16;
+
+      		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vmovhpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		break;
+	}
+	case 0x17:
+	{
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+		printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
 		break;
 	}
 	case 0x20:

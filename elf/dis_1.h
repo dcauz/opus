@@ -15,7 +15,20 @@ const char * dis_10(const char * code, unsigned prefix)
 	}
 	else
 	{
-		if( prefix & PRE_256 )
+		if( prefix & PRE_OS )
+		{
+			if( prefix & PRE_256 )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+				printf( "vmovupd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vmovupd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+		}
+		else if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
 			printf( "vmovups %s,%s\n", op2.c_str(), op1.c_str() );
@@ -57,7 +70,20 @@ const char * dis_11(const char * code, unsigned prefix)
 	}
 	else
 	{
-		if( prefix & PRE_256 )
+		if( prefix & PRE_OS )
+		{
+			if( prefix & PRE_256 )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+				printf( "vmovupd %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vmovupd %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+		}
+		else if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
 			printf( "vmovups %s,%s\n", op1.c_str(), op2.c_str() );
@@ -241,14 +267,14 @@ const char * dis_15(const char * code, unsigned prefix)
 
 const char * dis_16(const char * code, unsigned prefix)
 {
+	std::string op1;
+	std::string op2;
+	
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+	
 	if( ( prefix & PRE_3A ) == 0 )
 	{
-		std::string op1;
-		std::string op2;
-
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
 		int mod = (*code & 0xc0 ) >> 6;
 
 		if( prefix & PRE_256 )
@@ -263,7 +289,12 @@ const char * dis_16(const char * code, unsigned prefix)
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 			if( mod != 3 )
-				printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			{
+				if( prefix & PRE_OS )
+					printf( "vmovhpd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+				else
+					printf( "vmovhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 			else
 				printf( "vmovlhps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
@@ -299,7 +330,10 @@ const char * dis_17(const char * code, unsigned prefix)
 	else
 	{
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vmovhps %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_OS )
+			printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
+		else
+			printf( "vmovhps %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
 	return code;

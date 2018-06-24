@@ -169,7 +169,9 @@ const char * dis_0f(const char * code, unsigned prefix)
     std::string op2;
 
 	// 0x0
-	if( code[0] == 0 )
+	switch( *code )
+	{
+	case 0:
 	{
 		++code;
 
@@ -300,8 +302,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		else
 			TODO
+		break;
 	}
-	else if(code[0] == 0x01 )
+	case 0x01:
 	{
 		if( code[1] == 0xffffffc1 )
 		{
@@ -495,59 +498,72 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
+		break;
 	}
-
-	// 0x0X
-	else if( code[0] == 0x02 )
+	case 0x02:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, -1, 16, -1 );
 		printf( "lar %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0] == 0x03 )
+	case 0x03:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, -1, 16, -1 );
 		printf( "lsl %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0] == 0x05 )
+	case 0x05:
 	{
 		++code;
 		printf( "syscall\n" );
+		break;
 	}
-	else if( code[0] == 0x06 )
+	case 0x06:
 	{
 		++code;
 		printf( "clts\n" );
+		break;
 	}
-	else if( code[0] == 0x07 )
+	case 0x07:
 	{
 		++code;
 		printf( "sysret\n" );
+		break;
 	}
-	else if( code[0] == 0x08 )
+	case 0x08:
 	{
 		++code;
 		printf( "invd\n" );
+		break;
 	}
-	else if( code[0] == 0x09 )
+	case 0x09:
 	{
 		++code;
 		printf( "wbinvd\n" );
+		break;
 	}
-	else if( code[0] == 0x0b )
+	case 0x0b:
 	{
 		++code;
 		printf( "ud2\n" );
+		break;
 	}
-	else if( code[0]  == 0x0d )
+	case 0x0d:
 	{
 		code = memStr( ++code, prefix, 0, 0, op1 );
 		printf( "prefetchwt1 %s\n", op1.c_str() );
+		break;
 	}
 
 	// 10
-	else if( code[0]  == 0x10 )
+	case 0x10:
 	{
-		if( ( prefix & PRE_REP ) == 0 )
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movupd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( ( prefix & PRE_REP ) == 0 )
 		{
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "movups %s,%s\n", op2.c_str(), op1.c_str() );
@@ -557,13 +573,23 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "movss %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( code[0]  == 0x11 )
+	case 0x11:
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "movss %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movupd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movss %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		break;
 	}
-	else if( code[0]  == 0x12 )
+	case 0x12:
 	{
 		++code;
 		int mod = (*code & 0xc0) >> 6;
@@ -573,45 +599,67 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "movhlps %s,%s\n", op2.c_str(), op1.c_str() );
 		else
 			printf( "movlps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x13 )
+	case 0x13:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "movlps %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x14 )
+	case 0x14:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 
 		printf( "unpcklps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x15 )
+	case 0x15:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 
 		printf( "unpckhps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x16 )
+	case 0x16:
 	{
 		++code;
-		int mod = (0xc0 & *code ) >> 6;
-		if( mod != 3 )
+		if( prefix & PRE_OS )
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
-			printf( "movhps %s,%s\n", op2.c_str(), op1.c_str() );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movhpd %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "movlhps %s,%s\n", op2.c_str(), op1.c_str() );
+			int mod = (0xc0 & *code ) >> 6;
+			if( mod != 3 )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+				printf( "movhps %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "movlhps %s,%s\n", op2.c_str(), op1.c_str() );
+			}
 		}
+		break;
 	}
-	else if( code[0]  == 0x17 )
+	case 0x17:
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
-		printf( "movhps %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "movhpd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+			printf( "movhps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		break;
 	}
-	else if( code[0]  == 0x18 )
+	case 0x18:
 	{
 		unsigned reg = (*++code & 0x38) >> 3;
 
@@ -620,47 +668,53 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "prefetcht%d %s\n", reg-1, op1.c_str() );
 		else
 			printf( "prefetchnta %s\n", op1.c_str() );
+		break;
 	}
 
-	// 20
-	else if( code[0]  == 0x20 )
+	case 0x20:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::CR0_AL, 0, op1, op2 );
 		printf( "mov %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x21 )
+	case 0x21:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::DR0_AL, 0, op1, op2 );
 		printf( "mov %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x22 )
+	case 0x22:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::CR0_AL, 0, op1, op2 );
 		printf( "mov %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x23 )
+	case 0x23:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::DR0_AL, 0, op1, op2 );
 		printf( "mov %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x28 )
+	case 0x28:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		if( prefix & PRE_OS )
 			printf( "movapd %s,%s\n", op2.c_str(), op1.c_str() );
 		else
 			printf( "movaps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x29 )
+	case 0x29:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "movapd %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x2a )
+	case 0x2a:
 	{
 		if( prefix & PRE_REP )
 		{
@@ -672,13 +726,15 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "cvtpi2ps %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( code[0]  == 0x2b )
+	case 0x2b:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "movntps %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x2c )
+	case 0x2c:
 	{
 		if( prefix & PRE_REP )
 		{
@@ -690,8 +746,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_XMM0, 0, op1, op2 );
 			printf( "cvttps2pi %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( code[0]  == 0x2d )
+	case 0x2d:
 	{
 		if( prefix & PRE_REP )
 		{
@@ -703,50 +760,57 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_XMM0, 0, op1, op2 );
 			printf( "cvtps2pi %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( code[0]  == 0x2e )
+	case 0x2e:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "ucomiss %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0]  == 0x2f )
+	case 0x2f:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "comiss %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-
-	// 30
-	else if( code[0] == 0x30 )
+	case 0x30:
 	{
 		++code;
 		printf( "wrmsr\n" );
+		break;
 	}
-	else if( code[0] == 0x31 )
+	case 0x31:
 	{
 		++code;
 		printf( "rdtsc\n" );
+		break;
 	}
-	else if( code[0] == 0x32 )
+	case 0x32:
 	{
 		++code;
 		printf( "rdmsr\n" );
+		break;
 	}
-	else if( code[0] == 0x33 )
+	case 0x33:
 	{
 		++code;
 		printf( "rdpmc\n" );
+		break;
 	}
-	else if( code[0] == 0x34 )
+	case 0x34:
 	{
 		++code;
 		printf( "sysenter\n" );
+		break;
 	}
-	else if( code[0] == 0x35 )
+	case 0x35:
 	{
 		++code;
 		printf( "sysexit\n" );
+		break;
 	}
-	else if( code[0] == 0x38 )
+	case 0x38:
 	{
 		if( code[1] == 0x38 )
 		{
@@ -856,8 +920,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 		   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
 			}
 		}
+		break;
 	}
-	else if( code[0] == 0x3a )
+	case 0x3a:
 	{
 		++code;
 		const char * inst = "error";
@@ -893,10 +958,24 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "%s $%s,%s,%s\n", inst, imm, op2.c_str(), op1.c_str() );
 		else
 			printf( "%s $%s,%s,%s\n", inst, imm, op1.c_str(), op2.c_str() );
+		break;
 	}
-
-	// 40
-	else if( ( code[0] & 0xf0 ) == 0x40 )
+	case 0x40:
+	case 0x41:
+	case 0x42:
+	case 0x43:
+	case 0x44:
+	case 0x45:
+	case 0x46:
+	case 0x47:
+	case 0x48:
+	case 0x49:
+	case 0x4a:
+	case 0x4b:
+	case 0x4c:
+	case 0x4d:
+	case 0x4e:
+	case 0x4f:
 	{
 		char cc = *code++;
 
@@ -921,229 +1000,253 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x4e: printf( "cmovle %s,%s\n", op1.c_str(), op2.c_str() );	break;
 		case 0x4f: printf( "cmovg %s,%s\n",  op1.c_str(), op2.c_str() );	break;
 		}
+		break;
 	}
-
-	// 0x5X
-	else if( *code == 0x50 )
+	case 0x50:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
 		printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x51 )
+	case 0x51:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "sqrtss":"sqrtps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x52 )
+	case 0x52:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "rsqrtss":"rsqrtps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x53 )
+	case 0x53:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "rcpss":"rcpps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x54 )
+	case 0x54:
 	{
 		const char * inst = "andps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x55 )
+	case 0x55:
 	{
 		const char * inst = "andnps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x56 )
+	case 0x56:
 	{
 		const char * inst = "orps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x57 )
+	case 0x57:
 	{
 		const char * inst = "xorps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x58 )
+	case 0x58:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "addss":"addps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x59 )
+	case 0x59:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "mulss":"mulps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x5c )
+	case 0x5c:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "subss":"subps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x5d )
+	case 0x5d:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "minss":"minps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x5e )
+	case 0x5e:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "divss":"divps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x5e )
-	{
-		const char * inst = ( prefix & PRE_REP ) ? "divss":"divps";
-
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
-		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
-	}
-	else if( *code == 0x5f )
+	case 0x5f:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "maxss":"maxps";
 
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		break;
 	}
-
-	// 0x6X
-	else if( *code == 0x60 )
+	case 0x60:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpcklbw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x61 )
+	case 0x61:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpcklwd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x62 )
+	case 0x62:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpckldq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x63 )
+	case 0x63:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "packsswb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x64 )
+	case 0x64:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpgtb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x65 )
+	case 0x65:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpgtw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x66 )
+	case 0x66:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpgtd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x67 )
+	case 0x67:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "packuswb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x68 )
+	case 0x68:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpckhbw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x69 )
+	case 0x69:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpckhwd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x6a )
+	case 0x6a:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "punpckhdq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x6b )
+	case 0x6b:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "packssdw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x6e )
+	case 0x6e:
 	{
 		if( prefix & PRE_OS )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
 		printf( "movd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x6f )
+	case 0x6f:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
 		printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
 
-	// 7x
-	else if( *code == 0x70 )
+	case 0x70:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		char imm[12];
 		code = uimm8( code, imm );
 		printf( "pshufw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x74 )
+	case 0x74:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpeqb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x75 )
+	case 0x75:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpeqw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x76 )
+	case 0x76:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pcmpeqd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x77 )
+	case 0x77:
 	{
 		printf( "emms\n" );
 		++code;
+		break;
 	}
-	else if( *code == 0x78 )
+	case 0x78:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "vmread %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0x79 )
+	case 0x79:
 	{
 		prefix |= REX_W;
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "vmwrite %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0x7e )
+	case 0x7e:
 	{
 		if( ((prefix & PRE_OS ) == PRE_OS) || (( prefix & PRE_REP ) == PRE_REP) )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
@@ -1154,15 +1257,30 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "movq %s,%s\n", op2.c_str(), op1.c_str() );
 		else
 			printf( "movd %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0x7f )
+	case 0x7f:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_AL, 0, op1, op2 );
 		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-
-	// 80 - 8f
-	else if( ( code[0] & 0xff ) >= 0x80 && ( code[0] & 0xff ) <= 0x8f )
+	case 0xffffff80:
+	case 0xffffff81:
+	case 0xffffff82:
+	case 0xffffff83:
+	case 0xffffff84:
+	case 0xffffff85:
+	case 0xffffff86:
+	case 0xffffff87:
+	case 0xffffff88:
+	case 0xffffff89:
+	case 0xffffff8a:
+	case 0xffffff8b:
+	case 0xffffff8c:
+	case 0xffffff8d:
+	case 0xffffff8e:
+	case 0xffffff8f:
 	{
 		const char * CC;
 		switch((code[0] & 0xff) - 0x80 )
@@ -1189,10 +1307,24 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = imm32( ++code, imm );
 
 		printf( "j%s %s\n", CC, imm );
+		break;
 	}
-
-	// 90 - 9f
-	else if( ( code[0] & 0xff ) >= 0x90 && ( code[0] & 0xff ) <= 0x9f )
+	case 0xffffff90:
+	case 0xffffff91:
+	case 0xffffff92:
+	case 0xffffff93:
+	case 0xffffff94:
+	case 0xffffff95:
+	case 0xffffff96:
+	case 0xffffff97:
+	case 0xffffff98:
+	case 0xffffff99:
+	case 0xffffff9a:
+	case 0xffffff9b:
+	case 0xffffff9c:
+	case 0xffffff9d:
+	case 0xffffff9e:
+	case 0xffffff9f:
 	{
 		const char * CC;
 		switch((code[0] & 0xff) - 0x90 )
@@ -1241,25 +1373,27 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "set%s %s\n", CC, op );
 			++code;
 		}
+		break;
 	}
-
-	// a0
-	else if( ( code[0] & 0xff ) == 0xa0 )
+	case 0xffffffa0:
 	{
 		printf( "pushq %%fs\n");
 		++code;
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa1 )
+	case 0xffffffa1:
 	{
 		printf( "popq %%fs\n");
 		++code;
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa2 )
+	case 0xffffffa2:
 	{
 		++code;
 		printf( "cpuid\n" );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xa3 )
+	case 0xffffffa3:
 	{
 		++code;
 		if( code[1] == 0x25 )
@@ -1275,35 +1409,41 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 			printf( "bt %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa4 )
+	case 0xffffffa4:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		char imm[12];
 		code = imm8(code,imm);
 		printf( "shld $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa5 )
+	case 0xffffffa5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "shld %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa8 )
+	case 0xffffffa8:
 	{
 		printf( "pushq %%gs\n");
 		++code;
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xa9 )
+	case 0xffffffa9:
 	{
 		printf( "popq %%gs\n");
 		++code;
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xaa )
+	case 0xffffffaa:
 	{
 		printf( "rsm\n" );
 		++code;
+		break;
 	}
-	else if((code[0] & 0xff) == 0xab )
+	case 0xffffffab:
 	{
 		++code;
 		if( code[1] == 0x25 )
@@ -1319,20 +1459,23 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 			printf( "bts %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xac )
+	case 0xffffffac:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		char imm[12];
 		code = imm8(code,imm);
 		printf( "shrd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xad )
+	case 0xffffffad:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "shrd %%cl,%s,%s\n",  op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xae )
+	case 0xffffffae:
 	{
 		++code;
 		int mod = (*code & 0xc0 ) >> 6;
@@ -1414,10 +1557,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 					printf( "fxrstor %s\n",  op1.c_str() );
 			}
 		}
+		break;
 	}
-
-	// b0
-	else if( ( code[0] & 0xff ) == 0xb0 )
+	case 0xffffffb0:
 	{
 		if( code[2] == 0x25 )
         	code = imm_reg_ops( ++code, prefix, 0, 32, true, op1, op2 );
@@ -1425,8 +1567,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 
 		printf( "cmpxchg %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xb1 )
+	case 0xffffffb1:
 	{
 		if( code[2] == 0x25 )
         	code = imm_reg_ops( ++code, prefix, 1, 32, true, op1, op2 );
@@ -1434,13 +1577,15 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2 );
 
 		printf( "cmpxchg %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb2 )
+	case 0xffffffb2:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "lss %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb3 )
+	case 0xffffffb3:
 	{
 		++code;
 		if( code[1] == 0x25 )
@@ -1456,34 +1601,39 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 			printf( "btr %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb4 )
+	case 0xffffffb4:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "lfs %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb5 )
+	case 0xffffffb5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "lgs %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb6 )
+	case 0xffffffb6:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 8, -1 );	
 
 		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
 
 		printf( "movzb%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xb7 )
+	case 0xffffffb7:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 16, -1 );	
 
 		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
 
 		printf( "movzw%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xbb )
+	case 0xffffffbb:
 	{
 		++code;
 		if( code[1] == 0x25 )
@@ -1499,54 +1649,59 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 			printf( "btc %s,%s\n",  op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( (code[0] & 0xff) == 0xbc )
+	case 0xffffffbc:
 	{
 		code++;
 		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "bsf %s,%s\n",  op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( (code[0] & 0xff) == 0xbd )
+	case 0xffffffbd:
 	{
 		code++;
 		code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 		printf( "bsr %s,%s\n",  op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xbe )
+	case 0xffffffbe:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 8, -1 );	
 
 		char s = ( prefix & PRE_OS ) ? 'w' : ( ((prefix & REX_W) == REX_W)?'q':'l' );
 
 		printf( "movsb%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+		break;
 	}
-	else if((code[0] & 0xff) == 0xbf )
+	case 0xffffffbf:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2, -1, 16, -1 );	
 
 		char s = (( prefix & REX_W ) == REX_W) ? 'q' : ( 'l' );
 
 		printf( "movsw%c %s,%s\n", s, op2.c_str(),op1.c_str() );
+		break;
 	}
-
-	// c0
-	else if( ( code[0] & 0xff ) == 0xc0 )
+	case 0xffffffc0:
 	{
     	if(code[2] == 0x25)
         	code = imm_reg_ops( ++code, prefix, 0, 32, true, op1, op2 );
     	else
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 0, op1, op2 );
 		printf( "xadd %s,%s\n",  op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( ( code[0] & 0xff ) == 0xc1 )
+	case 0xffffffc1:
 	{
     	if(code[2] == 0x25)
         	code = imm_reg_ops( ++code, prefix, 1, 32, true, op1, op2 );
     	else
        		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2 );
 		printf( "xadd %s,%s\n",  op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( code[0] == 0xffffffc2 )
+	case 0xffffffc2:
 	{
    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 
@@ -1583,8 +1738,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 			}
 			printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( code[0] == 0xffffffc4 )
+	case 0xffffffc4:
 	{
 		std::string op1;
 		std::string op2;
@@ -1595,8 +1751,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = imm8( code, imm );
 
 		printf( "pinsrw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0] == 0xffffffc5 )
+	case 0xffffffc5:
 	{
 		std::string op1;
 		std::string op2;
@@ -1607,15 +1764,17 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = imm8( code, imm );
 
 		printf( "pextrw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0] == 0xffffffc6 )
+	case 0xffffffc6:
 	{
    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 		char imm[12];
 		code = imm8(code, imm );
 		printf( "shufps $%s,%s,%s\n",  imm, op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( (code[0] & 0xff ) == 0xc7 )
+	case 0xffffffc7:
 	{
 		++code;
 
@@ -1651,93 +1810,112 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "cmpxchg %s\n", op );
 			++code;
 		}
+		break;
 	}
-	else if( (( code[0] & 0xff ) > 0xc7) && (( code[0] & 0xff ) <= 0xcf ) )
+	case 0xffffffc8: 
+	case 0xffffffc9: 
+	case 0xffffffca: 
+	case 0xffffffcb: 
+	case 0xffffffcc: 
+	case 0xffffffcd: 
+	case 0xffffffce: 
+	case 0xffffffcf:
 	{
 		unsigned reg = *code & 0x07;
 
 		const char * op = regStr( reg, AL, 1, Reg2, prefix );
 		printf( "bswap %s\n", op );
 		++code;
+		break;
 	}
-
-	// dx
-	else if( *code == 0xffffffd1 )
+	case 0xffffffd1:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psrlw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd2 )
+	case 0xffffffd2:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psrld %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd4 )
+	case 0xffffffd4:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd5 )
+	case 0xffffffd5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pmullw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd6 )
+	case 0xffffffd6:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
 		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd7 )
+	case 0xffffffd7:
 	{
 		if( prefix & PRE_OS )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 0, op1, op2, 32 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_MM0, 0, op1, op2, 32 );
 		printf( "pmovmskb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd8 )
+	case 0xffffffd8:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubusb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffd9 )
+	case 0xffffffd9:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubusw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffda )
+	case 0xffffffda:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "pminub %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffdb )
+	case 0xffffffdb:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pand %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffdc )
+	case 0xffffffdc:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddusb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffdd )
+	case 0xffffffdd:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddusw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffde )
+	case 0xffffffde:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "pmaxub %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffdf )
+	case 0xffffffdf:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pandn %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-
-	// ex
-	else if( *code == 0xffffffe0 )
+	case 0xffffffe0:
 	{
 		if( prefix & PRE_OS )
 		{
@@ -1749,18 +1927,21 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 			printf( "pavgb %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( *code == 0xffffffe1 )
+	case 0xffffffe1:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psraw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe2 )
+	case 0xffffffe2:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psrad %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe3 )
+	case 0xffffffe3:
 	{
 		if( prefix & PRE_OS )
 		{
@@ -1772,129 +1953,150 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 			printf( "pavgw %s,%s\n", op2.c_str(), op1.c_str() );
 		}
+		break;
 	}
-	else if( *code == 0xffffffe4 )
+	case 0xffffffe4:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "pmulhuw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe5 )
+	case 0xffffffe5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pmulhw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe7 )
+	case 0xffffffe7:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "movntq %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe8 )
+	case 0xffffffe8:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubsb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffe9 )
+	case 0xffffffe9:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubsw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0] == 0xffffffea )
+	case  0xffffffea:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		printf( "pminsw %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffeb )
+	case 0xffffffeb:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "por %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffec )
+	case 0xffffffec:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddsb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffed )
+	case 0xffffffed:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddsw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( code[0] == 0xffffffee )
+	case 0xffffffee:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		printf( "pmaxsw %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
 	}
-	else if( *code == 0xffffffef )
+	case 0xffffffef:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pxor %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-
-	// fx
-	else if( *code == 0xfffffff1 )
+	case 0xfffffff1:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psllw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff2 )
+	case 0xfffffff2:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pslld %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff5 )
+	case 0xfffffff5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pmaddwd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff6 )
+	case 0xfffffff6:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		printf( "psadbw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff7 )
+	case 0xfffffff7:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "maskmovq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff8 )
+	case 0xfffffff8:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffff9 )
+	case 0xfffffff9:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffffa )
+	case 0xfffffffa:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffffb )
+	case 0xfffffffb:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "psubq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffffc )
+	case 0xfffffffc:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddb %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffffd )
+	case 0xfffffffd:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddw %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else if( *code == 0xfffffffe )
+	case 0xfffffffe:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "paddd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
 	}
-	else
-	{
+	default:
 		printf( "code %x\n", *code ); fflush(stdout);
 		TODO
 	}
 
-    return code;
+	return code;
 }
