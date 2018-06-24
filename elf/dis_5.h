@@ -55,12 +55,18 @@ const char * dis_50(const char * code, unsigned prefix)
     if( prefix & PRE_256 )
     {
         code = mod_reg_rm_ops( code, prefix, OpRegs::AL_YMM0, 0, op1, op2, 32 );
-        printf( "vmovmskps %s,%s\n", op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+	        printf( "vmovmskpd %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+	        printf( "vmovmskps %s,%s\n", op2.c_str(), op1.c_str() );
     }
     else
     {
         code = mod_reg_rm_ops( code, prefix, OpRegs::AL_XMM0, 0, op1, op2, 32 );
-        printf( "vmovmskps %s,%s\n", op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+	        printf( "vmovmskpd %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+	        printf( "vmovmskps %s,%s\n", op2.c_str(), op1.c_str() );
     }
 
     return code;

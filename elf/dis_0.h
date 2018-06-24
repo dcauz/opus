@@ -1013,8 +1013,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x50:
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
-		printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 0, op1, op2, 32 );
+			printf( "movmskpd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
+			printf( "movmskps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0x51:
