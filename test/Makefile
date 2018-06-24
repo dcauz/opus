@@ -240,7 +240,6 @@ test.movupd \
 test.movhpd \
 test.movlpd \
 test.movmskpd \
-test.movsd \
 test.addpd \
 test.addsd \
 test.subpd \

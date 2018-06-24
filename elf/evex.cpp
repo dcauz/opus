@@ -77,6 +77,11 @@ const char * EVEX( const char * code, Evex & evex, unsigned & prefix )
 
 	evex.W 		= (*code & 0x80) != 0;
 	evex.vvvv	= (*code & 0x78) >> 3;
+
+    // pp=1: prefix |= PRE_OS
+    // pp=2: prefix |= PRE_REP
+    // pp=3: prefix |= PRE_NE
+	//
 	evex.pp		= (*code & 0x3);
 
 	++code;
@@ -885,6 +890,11 @@ TODO
 		{
 			inst = "vaddss";
 			dispN= 4;
+		}
+		else if( evex.pp == 1 )
+		{
+			inst = "vaddpd";
+			dispN= 16;
 		}
 		else
 		{
