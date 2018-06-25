@@ -460,7 +460,8 @@ const char * dis_5e(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	const char * inst = ( prefix & PRE_REP ) ? "vdivss" : "vdivps";
+	const char * inst = ( prefix & PRE_REP ) ? "vdivss" : 
+			((prefix & PRE_NE)?"vdivsd":"vdivps");
 
 	if( prefix & PRE_256 )
 	{

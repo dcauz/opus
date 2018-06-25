@@ -1085,6 +1085,11 @@ TODO
 			inst = "vdivss";
 			dispN= 4;
 		}
+		else if( evex.pp == 3 )
+		{
+			inst = "vdivsd";
+			dispN= 16;
+		}
 		else if( evex.pp == 1 )
 		{
 			inst = "vdivpd";
