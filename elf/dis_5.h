@@ -118,12 +118,18 @@ const char * dis_51(const char * code, unsigned prefix)
    		 	if( prefix & PRE_256 )
 		    {
    		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2, 32 );
-   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+				if( prefix & PRE_OS )
+	   		     	printf( "vsqrtpd %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+   		     		printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
    		 	else
 		    {
    		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
-   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+				if( prefix & PRE_OS )
+	   		     	printf( "vsqrtpd %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+   		     		printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
 		}
 		else
@@ -131,12 +137,18 @@ const char * dis_51(const char * code, unsigned prefix)
    		 	if( prefix & PRE_256 )
 		    {
    		    	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_AL, 0, op1, op2, 32 );
-   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+				if( prefix & PRE_OS )
+	   		     	printf( "vsqrtpd %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+	   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
    		 	else
 		    {
    		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, 32 );
-   		     	printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
+				if( prefix & PRE_OS )
+	   		     	printf( "vsqrtpd %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+   		     		printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
 		}
 	}

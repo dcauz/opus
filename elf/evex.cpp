@@ -717,6 +717,27 @@ TODO
 				printf( "%s %s,%%xmm%d,%s\n", inst, op2.c_str(), evex.vvvv, op1.c_str() );
 			}
 		}
+		else if( evex.pp == 1 )
+		{
+			inst = "vsqrtpd";
+			dispN= 16;
+
+			if( evex.Lprime )
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, dispN );
+				printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, dispN );
+				printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, dispN );
+				printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+			}
+		}
 		else
 		{
 			inst = "vsqrtps";
