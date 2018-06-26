@@ -123,6 +123,14 @@ const char * dis_51(const char * code, unsigned prefix)
 				else
    		     		printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
+			else if( prefix & PRE_NE )
+			{
+				int vvvv = prefix >> 28;
+				vvvv = vvvv ^ 0xf;
+
+		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
+		     	printf( "vsqrtsd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
    		 	else
 		    {
    		     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2, 32 );
@@ -131,6 +139,14 @@ const char * dis_51(const char * code, unsigned prefix)
 				else
    		     		printf( "vsqrtps %s,%s\n", op2.c_str(), op1.c_str() );
    		 	}
+		}
+		else if( prefix & PRE_NE )
+		{
+			int vvvv = prefix >> 28;
+			vvvv = vvvv ^ 0xf;
+
+	     	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, 32 );
+	     	printf( "vsqrtsd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
 		else
 		{
