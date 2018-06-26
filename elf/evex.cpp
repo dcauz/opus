@@ -1183,6 +1183,11 @@ TODO
 			inst = "vmaxss";
 			dispN= 4;
 		}
+		else if( evex.pp == 1 )
+		{
+			inst = "vmaxpd";
+			dispN= 4;
+		}
 		else
 		{
 			inst = "vmaxps";
