@@ -520,7 +520,8 @@ const char * dis_5f(const char * code, unsigned prefix)
 	std::string op2;
 
 	const char * inst = ( prefix & PRE_REP ) ? "vmaxss" : 
-			((prefix & PRE_OS)?"vmaxpd":"vmaxps");
+			((prefix & PRE_OS)?"vmaxpd":
+			((prefix & PRE_NE)?"vmaxsd":"vmaxps"));
 
 	if( prefix & PRE_256 )
 	{
