@@ -1091,6 +1091,11 @@ TODO
 			inst = "vminss";
 			dispN= 4;
 		}
+		else if( evex.pp == 1 )
+		{
+			inst = "vminpd";
+			dispN= 4;
+		}
 		else
 		{
 			inst = "vminps";
