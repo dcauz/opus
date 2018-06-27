@@ -883,8 +883,16 @@ TODO
 		const char * inst;
 		int dispN;
 
-		inst = "vorps";
-		dispN= 16;
+		if( evex.pp == 1 )
+		{
+			inst = "vorpd";
+			dispN= 4;
+		}
+		else
+		{
+			inst = "vorps";
+			dispN= 16;
+		}
 
 		if( evex.Lprime )
 		{

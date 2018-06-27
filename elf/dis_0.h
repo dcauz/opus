@@ -1092,10 +1092,18 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x56:
 	{
-		const char * inst = "orps";
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "orpd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			const char * inst = "orps";
 
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
-		printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+			printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0x57:
