@@ -842,8 +842,16 @@ TODO
 		const char * inst;
 		int dispN;
 
-		inst = "vandnps";
-		dispN= 16;
+		if( evex.pp == 1 )
+		{
+			inst = "vandnpd";
+			dispN= 4;
+		}
+		else
+		{
+			inst = "vandnps";
+			dispN= 16;
+		}
 
 		if( evex.Lprime )
 		{
