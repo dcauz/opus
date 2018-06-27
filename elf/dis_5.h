@@ -465,7 +465,8 @@ const char * dis_5d(const char * code, unsigned prefix)
 	std::string op2;
 
 	const char * inst = ( prefix & PRE_REP ) ? "vminss" : 
-		((prefix & PRE_OS)?"vminpd":"vminps");
+		((prefix & PRE_OS)?"vminpd":
+		((prefix & PRE_NE)?"vminsd":"vminps"));
 
 	if( prefix & PRE_256 )
 	{
