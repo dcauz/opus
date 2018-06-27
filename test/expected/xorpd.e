@@ -100,58 +100,58 @@ alignment:1
 entrySize:0
 
 ----------------------------------------
-66 0f 56 22 66 0f 56 e2  c4 c1 71 56 12 62 d1 d5
-00 56 12 62 c1 f5 08 56  22 62 c1 d5 00 56 22 c4
-c1 75 56 12 62 d1 d5 20  56 12 62 c1 f5 28 56 22
-62 c1 d5 20 56 22 62 d1  f5 48 56 12 62 d1 d5 40
-56 12 62 c1 f5 48 56 22  62 c1 d5 40 56 22 c4 c1
-71 56 d2 62 d1 d5 00 56  d2 62 c1 f5 08 56 e2 62
-c1 d5 00 56 e2 c4 c1 75  56 d2 62 d1 d5 20 56 d2
-62 c1 f5 28 56 e2 62 c1  d5 20 56 e2 62 d1 f5 48
-56 d2 62 d1 d5 40 56 d2  62 c1 f5 48 56 e2 62 c1
-d5 40 56 e2 62 b1 f5 08  56 d4 62 b1 d5 00 56 d4
-62 a1 f5 08 56 e4 62 a1  d5 00 56 e4 62 b1 f5 28
-56 d4 62 b1 d5 20 56 d4  62 a1 f5 28 56 e4 62 a1
-d5 20 56 e4 62 b1 f5 48  56 d4 62 b1 d5 40 56 d4
-62 a1 f5 48 56 e4 62 a1  d5 40 56 e4
-     0:orpd (%rdx),%xmm4
-     4:orpd %xmm2,%xmm4
-     8:vorpd (%r10),%xmm1,%xmm2
-     d:vorpd (%r10),%xmm21,%xmm2
-    13:vorpd (%r10),%xmm1,%xmm20
-    19:vorpd (%r10),%xmm21,%xmm20
-    1f:vorpd (%r10),%ymm1,%ymm2
-    24:vorpd (%r10),%ymm21,%ymm2
-    2a:vorpd (%r10),%ymm1,%ymm20
-    30:vorpd (%r10),%ymm21,%ymm20
-    36:vorpd (%r10),%zmm1,%zmm2
-    3c:vorpd (%r10),%zmm21,%zmm2
-    42:vorpd (%r10),%zmm1,%zmm20
-    48:vorpd (%r10),%zmm21,%zmm20
-    4e:vorpd %xmm10,%xmm1,%xmm2
-    53:vorpd %xmm10,%xmm21,%xmm2
-    59:vorpd %xmm10,%xmm1,%xmm20
-    5f:vorpd %xmm10,%xmm21,%xmm20
-    65:vorpd %ymm10,%ymm1,%ymm2
-    6a:vorpd %ymm10,%ymm21,%ymm2
-    70:vorpd %ymm10,%ymm1,%ymm20
-    76:vorpd %ymm10,%ymm21,%ymm20
-    7c:vorpd %zmm10,%zmm1,%zmm2
-    82:vorpd %zmm10,%zmm21,%zmm2
-    88:vorpd %zmm10,%zmm1,%zmm20
-    8e:vorpd %zmm10,%zmm21,%zmm20
-    94:vorpd %xmm20,%xmm1,%xmm2
-    9a:vorpd %xmm20,%xmm21,%xmm2
-    a0:vorpd %xmm20,%xmm1,%xmm20
-    a6:vorpd %xmm20,%xmm21,%xmm20
-    ac:vorpd %ymm20,%ymm1,%ymm2
-    b2:vorpd %ymm20,%ymm21,%ymm2
-    b8:vorpd %ymm20,%ymm1,%ymm20
-    be:vorpd %ymm20,%ymm21,%ymm20
-    c4:vorpd %zmm20,%zmm1,%zmm2
-    ca:vorpd %zmm20,%zmm21,%zmm2
-    d0:vorpd %zmm20,%zmm1,%zmm20
-    d6:vorpd %zmm20,%zmm21,%zmm20
+66 0f 57 22 66 0f 57 e2  c4 c1 71 57 12 62 d1 d5
+00 57 12 62 c1 f5 08 57  22 62 c1 d5 00 57 22 c4
+c1 75 57 12 62 d1 d5 20  57 12 62 c1 f5 28 57 22
+62 c1 d5 20 57 22 62 d1  f5 48 57 12 62 d1 d5 40
+57 12 62 c1 f5 48 57 22  62 c1 d5 40 57 22 c4 c1
+71 57 d2 62 d1 d5 00 57  d2 62 c1 f5 08 57 e2 62
+c1 d5 00 57 e2 c4 c1 75  57 d2 62 d1 d5 20 57 d2
+62 c1 f5 28 57 e2 62 c1  d5 20 57 e2 62 d1 f5 48
+57 d2 62 d1 d5 40 57 d2  62 c1 f5 48 57 e2 62 c1
+d5 40 57 e2 62 b1 f5 08  57 d4 62 b1 d5 00 57 d4
+62 a1 f5 08 57 e4 62 a1  d5 00 57 e4 62 b1 f5 28
+57 d4 62 b1 d5 20 57 d4  62 a1 f5 28 57 e4 62 a1
+d5 20 57 e4 62 b1 f5 48  57 d4 62 b1 d5 40 57 d4
+62 a1 f5 48 57 e4 62 a1  d5 40 57 e4
+     0:xorpd (%rdx),%xmm4
+     4:xorpd %xmm2,%xmm4
+     8:vxorpd (%r10),%xmm1,%xmm2
+     d:vxorpd (%r10),%xmm21,%xmm2
+    13:vxorpd (%r10),%xmm1,%xmm20
+    19:vxorpd (%r10),%xmm21,%xmm20
+    1f:vxorpd (%r10),%ymm1,%ymm2
+    24:vxorpd (%r10),%ymm21,%ymm2
+    2a:vxorpd (%r10),%ymm1,%ymm20
+    30:vxorpd (%r10),%ymm21,%ymm20
+    36:vxorpd (%r10),%zmm1,%zmm2
+    3c:vxorpd (%r10),%zmm21,%zmm2
+    42:vxorpd (%r10),%zmm1,%zmm20
+    48:vxorpd (%r10),%zmm21,%zmm20
+    4e:vxorpd %xmm10,%xmm1,%xmm2
+    53:vxorpd %xmm10,%xmm21,%xmm2
+    59:vxorpd %xmm10,%xmm1,%xmm20
+    5f:vxorpd %xmm10,%xmm21,%xmm20
+    65:vxorpd %ymm10,%ymm1,%ymm2
+    6a:vxorpd %ymm10,%ymm21,%ymm2
+    70:vxorpd %ymm10,%ymm1,%ymm20
+    76:vxorpd %ymm10,%ymm21,%ymm20
+    7c:vxorpd %zmm10,%zmm1,%zmm2
+    82:vxorpd %zmm10,%zmm21,%zmm2
+    88:vxorpd %zmm10,%zmm1,%zmm20
+    8e:vxorpd %zmm10,%zmm21,%zmm20
+    94:vxorpd %xmm20,%xmm1,%xmm2
+    9a:vxorpd %xmm20,%xmm21,%xmm2
+    a0:vxorpd %xmm20,%xmm1,%xmm20
+    a6:vxorpd %xmm20,%xmm21,%xmm20
+    ac:vxorpd %ymm20,%ymm1,%ymm2
+    b2:vxorpd %ymm20,%ymm21,%ymm2
+    b8:vxorpd %ymm20,%ymm1,%ymm20
+    be:vxorpd %ymm20,%ymm21,%ymm20
+    c4:vxorpd %zmm20,%zmm1,%zmm2
+    ca:vxorpd %zmm20,%zmm21,%zmm2
+    d0:vxorpd %zmm20,%zmm1,%zmm20
+    d6:vxorpd %zmm20,%zmm21,%zmm20
 #################
 TODO: elf/file.cpp:186
 

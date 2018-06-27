@@ -924,8 +924,16 @@ TODO
 		const char * inst;
 		int dispN;
 
-		inst = "vxorps";
-		dispN= 16;
+		if( evex.pp == 1 )
+		{
+			inst = "vxorpd";
+			dispN= 4;
+		}
+		else
+		{
+			inst = "vxorps";
+			dispN= 16;
+		}
 
 		if( evex.Lprime )
 		{
