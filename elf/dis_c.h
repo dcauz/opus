@@ -138,7 +138,22 @@ const char * dis_c2(const char * code, unsigned prefix)
 		std::string op1;
 		std::string op2;
 
-		if( prefix & PRE_256 )
+		if( prefix & PRE_OS )
+		{
+			if( prefix & PRE_256 )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+			char imm[8];
+			code = imm8(code, imm );
+
+			if( prefix & PRE_256 )
+				printf( "vcmppd $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+			else
+				printf( "vcmppd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+		}
+		else if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
 

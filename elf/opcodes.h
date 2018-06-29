@@ -45,6 +45,8 @@ enum Register
 	DR0=500, DR1, DR2,  DR3,  DR4,  DR5,  DR6,  DR7,
 	DR8, DR9, DR10, DR11, DR12, DR13, DR14, DR15,			
 
+	K0=520, K1, K2, K3, K4, K5, K6, K7,
+
 	ERROR
 };
 
@@ -66,6 +68,9 @@ enum class OpRegs
 	AL_MM0, 
 	MM0_AL, 
 	MM0_XMM0, 
+	K0_XMM0,
+	K0_YMM0,
+	K0_ZMM0,
 
 	AL_XMM0, 
 	XMM0_AL, 

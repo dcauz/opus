@@ -133,6 +133,11 @@ regToStr( Register r )
 	case DR10:	return "%db10"; case DR11:	return "%db11";
 	case DR12:	return "%db12"; case DR13:	return "%db13";
 	case DR14:	return "%db14"; case DR15:	return "%db15";
+
+	case K0:	return "%k0";	case K1:	return "%k1";
+	case K2:	return "%k2";	case K3:	return "%k3";
+	case K4:	return "%k4";	case K5:	return "%k5";
+	case K6:	return "%k6";	case K7:	return "%k7";
 	}
 }
 
@@ -506,6 +511,9 @@ opReg( OpRegs ors, bool left )
 	case OpRegs::AL_MM0:	return left?AL:MM0;
 	case OpRegs::MM0_AL:	return left?MM0:AL;
 	case OpRegs::MM0_XMM0:	return left?MM0:XMM0;
+	case OpRegs::K0_XMM0:	return left?K0:XMM0;
+	case OpRegs::K0_YMM0:	return left?K0:YMM0;
+	case OpRegs::K0_ZMM0:	return left?K0:ZMM0;
 
 	case OpRegs::AL_YMM0:	return left?AL:YMM0;
 	case OpRegs::YMM0_AL:	return left?YMM0:AL;

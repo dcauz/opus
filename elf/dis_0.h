@@ -1826,40 +1826,50 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0xffffffc2:
 	{
-   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
-
-		char imm[12];
-		code = imm8(code,imm);
-
-		long i = strtol( imm, nullptr, 16 );
-
-		const char * suffix = (( prefix & PRE_REP )  == 0 )?"ps":"ss";
-
-		if( i >= 8 )
-			printf( "cmp%s $%s,%s,%s\n", suffix, imm, op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+		{
+	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			char imm[12];
+			code = imm8( code, imm );
+			printf( "cmppd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		}
 		else
 		{
-			const char * inst;
-			switch(i)
+	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+	
+			char imm[12];
+			code = imm8(code,imm);
+	
+			long i = strtol( imm, nullptr, 16 );
+	
+			const char * suffix = (( prefix & PRE_REP )  == 0 )?"ps":"ss";
+	
+			if( i >= 8 )
+				printf( "cmp%s $%s,%s,%s\n", suffix, imm, op2.c_str(), op1.c_str() );
+			else
 			{
-			case 0:  inst = "cmpeq"; 	break;
-			case 1:  inst = "cmplt"; 	break;
-			case 2:  inst = "cmple"; 	break;
-			case 3:  inst = "cmpunord";	break;
-			case 4:  inst = "cmpneq"; 	break;
-			case 5:  inst = "cmpnlt"; 	break;
-			case 6:  inst = "cmpnle"; 	break;
-			case 7:  inst = "cmpord"; 	break;
-			case 8:  inst = "cmpeq";	break;
-			case 9:  inst = "cmpeq"; 	break;
-			case 10: inst = "cmpeq"; 	break;
-			case 11: inst = "cmpeq"; 	break;
-			case 12: inst = "cmpeq"; 	break;
-			case 13: inst = "cmpeq"; 	break;
-			case 14: inst = "cmpeq"; 	break;
-			case 15: inst = "cmpeq"; 	break;
+				const char * inst;
+				switch(i)
+				{
+				case 0:  inst = "cmpeq"; 	break;
+				case 1:  inst = "cmplt"; 	break;
+				case 2:  inst = "cmple"; 	break;
+				case 3:  inst = "cmpunord";	break;
+				case 4:  inst = "cmpneq"; 	break;
+				case 5:  inst = "cmpnlt"; 	break;
+				case 6:  inst = "cmpnle"; 	break;
+				case 7:  inst = "cmpord"; 	break;
+				case 8:  inst = "cmpeq";	break;
+				case 9:  inst = "cmpeq"; 	break;
+				case 10: inst = "cmpeq"; 	break;
+				case 11: inst = "cmpeq"; 	break;
+				case 12: inst = "cmpeq"; 	break;
+				case 13: inst = "cmpeq"; 	break;
+				case 14: inst = "cmpeq"; 	break;
+				case 15: inst = "cmpeq"; 	break;
+				}
+				printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 			}
-			printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
 		}
 		break;
 	}

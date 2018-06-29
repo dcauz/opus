@@ -91,7 +91,7 @@ const char * EVEX( const char * code, Evex & evex, unsigned & prefix )
 	evex.Lprime	= (*code & 0x20) != 0;
 	evex.b		= (*code & 0x10) != 0;
 	evex.Vprime	= (*code & 0x08) != 0;
-	evex.aaa    = (*code & 0x03);
+	evex.aaa    = (*code & 0x07);
 
 	prefix |= PRE_EVEX;
 	if( !evex.R )
@@ -1587,6 +1587,57 @@ TODO
 		{
         	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 4 );
 			printf( "vmovd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		break;
+	}
+
+	case 0xffffffc2:
+	{
+		std::string op1;
+		std::string op2;
+
+		evex.vvvv = evex.vvvv ^ 0xf;
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		if( evex.L )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::K0_ZMM0, 0, op1, op2 );	
+
+			char imm[12];
+			code = imm8( code, imm );
+
+			if( evex.aaa == 0 )
+				printf( "vcmppd $%s,%s,%%zmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str());
+			else
+				printf( "vcmppd $%s,%s,%%zmm%d,%s{%%k%d}\n", imm, op2.c_str(), evex.vvvv, 
+					op1.c_str(), evex.aaa );
+		}
+		else if( evex.Lprime )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::K0_YMM0, 0, op1, op2 );	
+
+			char imm[12];
+			code = imm8( code, imm );
+
+			if( evex.aaa == 0 )
+				printf( "vcmppd $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str());
+			else
+				printf( "vcmppd $%s,%s,%%ymm%d,%s{%%k%d}\n", imm, op2.c_str(), evex.vvvv, 
+					op1.c_str(), evex.aaa );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::K0_XMM0, 0, op1, op2 );	
+
+			char imm[12];
+			code = imm8( code, imm );
+
+			if( evex.aaa == 0 )
+				printf( "vcmppd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			else
+				printf( "vcmppd $%s,%s,%%xmm%d,%s{%%k%d}\n", imm, op2.c_str(), evex.vvvv, 
+					op1.c_str(), evex.aaa );
 		}
 		break;
 	}
