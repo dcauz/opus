@@ -511,8 +511,16 @@ TODO
 		std::string op1;
 		std::string	op2;
 
-   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-		printf( "vcomiss %s,%s\n", op2.c_str(), op1.c_str() );
+		if( evex.pp == 1 )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vcomisd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vcomiss %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 

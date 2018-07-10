@@ -259,7 +259,6 @@ test.andnpd \
 test.orpd \
 test.xorpd \
 test.cmppd \
-test.cmpsd \
 test.comisd \
 test.ucomisd \
 test.shufpd \
