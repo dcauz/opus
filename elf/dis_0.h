@@ -1838,37 +1838,57 @@ const char * dis_0f(const char * code, unsigned prefix)
 	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
 	
 			char imm[12];
-			code = imm8(code,imm);
+			code = uimm8(code,imm);
 	
 			long i = strtol( imm, nullptr, 16 );
 	
-			const char * suffix = (( prefix & PRE_REP )  == 0 )?"ps":"ss";
-	
-			if( i >= 8 )
-				printf( "cmp%s $%s,%s,%s\n", suffix, imm, op2.c_str(), op1.c_str() );
-			else
+			if( prefix & PRE_NE )
 			{
 				const char * inst;
 				switch(i)
 				{
-				case 0:  inst = "cmpeq"; 	break;
-				case 1:  inst = "cmplt"; 	break;
-				case 2:  inst = "cmple"; 	break;
-				case 3:  inst = "cmpunord";	break;
-				case 4:  inst = "cmpneq"; 	break;
-				case 5:  inst = "cmpnlt"; 	break;
-				case 6:  inst = "cmpnle"; 	break;
-				case 7:  inst = "cmpord"; 	break;
-				case 8:  inst = "cmpeq";	break;
-				case 9:  inst = "cmpeq"; 	break;
-				case 10: inst = "cmpeq"; 	break;
-				case 11: inst = "cmpeq"; 	break;
-				case 12: inst = "cmpeq"; 	break;
-				case 13: inst = "cmpeq"; 	break;
-				case 14: inst = "cmpeq"; 	break;
-				case 15: inst = "cmpeq"; 	break;
+				case 0:  inst = "cmpeqsd";		break;
+				case 1:  inst = "cmpltsd"; 		break;
+				case 2:  inst = "cmplesd"; 		break;
+				case 3:  inst = "cmpunordsd";	break;
+				case 4:  inst = "cmpneqsd";		break;
+				case 5:  inst = "cmpnltsd";		break;
+				case 6:  inst = "cmpnlesd";		break;
+				case 7:  inst = "cmpordsd";		break;
 				}
-				printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
+
+				if( i >= 8 )
+					printf( "cmpsd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+				else
+				{
+					printf( "%s %s,%s\n", inst, op2.c_str(), op1.c_str() );
+				}
+			}
+			else
+			{
+				const char * suffix = (( prefix & PRE_REP )  == 0 )?"ps":"ss";
+	
+				if( i >= 8 )
+				{
+					printf( "cmp%s $%s,%s,%s\n", suffix, imm, op2.c_str(), op1.c_str() );
+				}
+				else
+				{
+					const char * inst;
+					switch(i)
+					{
+					default: inst = "cmpeq";	break;
+
+					case 1:  inst = "cmplt"; 	break;
+					case 2:  inst = "cmple"; 	break;
+					case 3:  inst = "cmpunord";	break;
+					case 4:  inst = "cmpneq"; 	break;
+					case 5:  inst = "cmpnlt"; 	break;
+					case 6:  inst = "cmpnle"; 	break;
+					case 7:  inst = "cmpord"; 	break;
+					}
+					printf( "%s%s %s,%s\n", inst, suffix, op2.c_str(), op1.c_str() );
+				}
 			}
 		}
 		break;

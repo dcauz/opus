@@ -1600,7 +1600,60 @@ TODO
 		if( !evex.Vprime )
 			evex.vvvv += 16;
 
-		if( evex.L )
+		if( evex.pp == 3 )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::K0_XMM0, 0, op1, op2 );	
+
+			char imm[12];
+			code = uimm8( code, imm );
+
+			long i = strtol( imm, nullptr, 16 );
+	
+			const char * inst;
+			switch(i)
+			{
+			case 0:  inst = "vcmpeqsd";		break;
+			case 1:  inst = "vcmpltsd";		break;
+			case 2:  inst = "vcmplesd";		break;
+			case 3:  inst = "vcmpunordsd";	break;
+			case 4:  inst = "vcmpneqsd";	break;
+			case 5:  inst = "vcmpnltsd";	break;
+			case 6:  inst = "vcmpnlesd";	break;
+			case 7:  inst = "vcmpordsd";	break;
+			case 8:  inst = "vcmpeq_uqsd";	break;
+			case 9:  inst = "vcmpngesd";	break;
+			case 10: inst = "vcmpngtsd";	break;
+			case 11: inst = "vcmpfalsesd";	break;
+			case 12: inst = "vcmpneq_oqsd";	break;
+			case 13: inst = "vcmpgesd";		break;
+			case 14: inst = "vcmpgtsd";		break;
+			case 15: inst = "vcmptruesd";	break;
+			case 16: inst = "vcmpeq_ossd";	break;
+			case 17: inst = "vcmplt_oqsd";	break;
+			case 18: inst = "vcmple_oqsd";	break;
+			case 19: inst = "vcmpunord_ssd";break;
+			case 20: inst = "vcmpneq_ussd";	break;
+			case 21: inst = "vcmpnlt_uqsd";	break;
+			case 22: inst = "vcmpnle_uqsd";	break;
+			case 23: inst = "vcmpord_ssd";	break;
+			case 24: inst = "vcmpeq_ussd";	break;
+			case 25: inst = "vcmpnge_uqsd";	break;
+			case 26: inst = "vcmpngt_uqsd";	break;
+			case 27: inst = "vcmpfalse_ossd";break;
+			case 28: inst = "vcmpneq_ossd";	break;
+			case 29: inst = "vcmpge_oqsd";	break;
+			case 30: inst = "vcmpgt_oqsd";	break;
+			case 31: inst = "vcmptrue_ussd";break;
+			}
+
+			if( i >= 32 )
+				printf( "vcmpsd $%s,%s,%%xmm%d,%s{%%k%d}\n", imm, op2.c_str(), evex.vvvv, 
+					op1.c_str(), evex.aaa );
+			else
+				printf( "%s %s,%%xmm%d,%s{%%k%d}\n", inst, op2.c_str(), evex.vvvv, op1.c_str(), 
+					evex.aaa );
+		}
+		else if( evex.L )
 		{
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::K0_ZMM0, 0, op1, op2 );	
 
