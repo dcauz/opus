@@ -1927,10 +1927,20 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0xffffffc6:
 	{
-   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
-		char imm[12];
-		code = imm8(code, imm );
-		printf( "shufps $%s,%s,%s\n",  imm, op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			char imm[12];
+			code = imm8(code, imm );
+			printf( "shufpd $%s,%s,%s\n",  imm, op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 1, op1, op2 );
+			char imm[12];
+			code = imm8(code, imm );
+			printf( "shufps $%s,%s,%s\n",  imm, op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0xffffffc7:

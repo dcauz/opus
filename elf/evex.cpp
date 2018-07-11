@@ -1753,23 +1753,47 @@ TODO
 
 		char imm[12];
 
-		if( evex.Lprime )
+		if( evex.pp == 1 )
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-			code = imm8( code, imm );
-			printf( "vshufps $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
-		}
-		else if( evex.L )
-		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-			code = imm8( code, imm );
-			printf( "vshufps $%s,%s,%%zmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			if( evex.Lprime )
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufpd $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else if( evex.L )
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufpd $%s,%s,%%zmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufpd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
 		}
 		else
 		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-			code = imm8( code, imm );
-			printf( "vshufps $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			if( evex.Lprime )
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufps $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else if( evex.L )
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufps $%s,%s,%%zmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else
+			{
+	       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+				code = imm8( code, imm );
+				printf( "vshufps $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+			}
 		}
 		break;
 	}
