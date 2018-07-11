@@ -239,14 +239,27 @@ const char * dis_14(const char * code, unsigned prefix)
 
 const char * dis_15(const char * code, unsigned prefix)
 {
-	if( ( prefix & PRE_3A ) == 0 )
+	std::string op1;
+	std::string op2;
+
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	if( prefix & PRE_OS )
 	{
-		std::string op1;
-		std::string op2;
-
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vunpckhpd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vunpckhpd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else if( ( prefix & PRE_3A ) == 0 )
+	{
 		if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
@@ -260,9 +273,6 @@ const char * dis_15(const char * code, unsigned prefix)
 	}
 	else
 	{
-		std::string op1;
-		std::string op2;
-
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2 , -1, 32);	
 
 		char imm[12];
