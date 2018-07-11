@@ -774,21 +774,19 @@ const char * dis_0f(const char * code, unsigned prefix)
 	case 0x2e:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "ucomiss %s,%s\n", op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+			printf( "ucomisd %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+			printf( "ucomiss %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
 	case 0x2f:
 	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		if( prefix & PRE_OS )
-		{
-			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "comisd %s,%s\n", op2.c_str(), op1.c_str() );
-		}
 		else
-		{
-			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 			printf( "comiss %s,%s\n", op2.c_str(), op1.c_str() );
-		}
 		break;
 	}
 	case 0x30:
