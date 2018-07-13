@@ -751,7 +751,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x2c:
 	{
-		if( prefix & PRE_REP )
+		if( prefix & PRE_OS )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0_XMM0, 0, op1, op2 );
+			printf( "cvttpd2pi %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( prefix & PRE_REP )
 		{
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
 			printf( "cvttss2si %s,%s\n", op2.c_str(), op1.c_str() );
