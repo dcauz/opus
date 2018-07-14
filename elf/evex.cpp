@@ -2370,17 +2370,29 @@ TODO
 		if( evex.Lprime )
 		{
 	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );
-			printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+
+			if( evex.pp == 1 )
+				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
 		}
 		else if( evex.L )
 		{
 	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_ZMM0, 0, op1, op2 );
-			printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+
+			if( evex.pp == 1 )
+				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
 	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+
+			if( evex.pp == 1 )
+				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
 		}
 
 		if( evex.aaa )

@@ -213,12 +213,18 @@ const char * dis_e6(const char * code, unsigned prefix)
 		if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );	
-			printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			if( prefix & PRE_OS )
+				printf( "vcvttpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-			printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			if( prefix & PRE_OS )
+				printf( "vcvttpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 	}
 
