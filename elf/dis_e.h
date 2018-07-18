@@ -212,19 +212,53 @@ const char * dis_e6(const char * code, unsigned prefix)
 
 		if( prefix & PRE_256 )
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );	
 			if( prefix & PRE_OS )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );	
 				printf( "vcvttpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
-			else
+			}
+			else if( prefix & PRE_NE )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );	
 				printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );	
+				printf( "vcvtdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+		}
+		else if( prefix & PRE_REP )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			if( prefix & PRE_OS )
+			{
+				printf( "vcvttdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else if( prefix & PRE_NE )
+			{
+				printf( "vcvtdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+				printf( "vcvtdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
 		}
 		else
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 			if( prefix & PRE_OS )
+			{
 				printf( "vcvttpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
-			else
+			}
+			else if( prefix & PRE_NE )
+			{
 				printf( "vcvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+				printf( "vcvtdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
+			}
 		}
 	}
 

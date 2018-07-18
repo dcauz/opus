@@ -208,7 +208,7 @@ const char * dis_14(const char * code, unsigned prefix)
 	int vvvv = prefix >> 28;
 	vvvv = vvvv ^ 0xf;
 
-	if( prefix & PRE_OS )
+	if( ( prefix & PRE_OS ) && (( prefix & PRE_3A) == 0))
 	{
 		if( prefix & PRE_256 )
 		{
@@ -255,7 +255,7 @@ const char * dis_15(const char * code, unsigned prefix)
 	int vvvv = prefix >> 28;
 	vvvv = vvvv ^ 0xf;
 
-	if( prefix & PRE_OS )
+	if( ( prefix & PRE_OS ) && (( prefix & PRE_3A) == 0))
 	{
 		if( prefix & PRE_256 )
 		{

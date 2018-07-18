@@ -518,9 +518,11 @@ opReg( OpRegs ors, bool left )
 	case OpRegs::AL_YMM0:	return left?AL:YMM0;
 	case OpRegs::YMM0_AL:	return left?YMM0:AL;
 	case OpRegs::YMM0_ZMM0:	return left?YMM0:ZMM0;
+	case OpRegs::YMM0_XMM0:	return left?YMM0:XMM0;
 
 	case OpRegs::AL_ZMM0:	return left?AL:ZMM0;
 	case OpRegs::ZMM0_AL:	return left?ZMM0:AL;
+	case OpRegs::ZMM0_YMM0:	return left?ZMM0:YMM0;
 
 	case OpRegs::AL_XMM0:	return left?AL:XMM0;
 	case OpRegs::XMM0_AL:	return left?XMM0:AL;

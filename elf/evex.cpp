@@ -230,40 +230,43 @@ TODO
 		if( !evex.Vprime )
 			evex.vvvv += 16;
 
-		if(evex.pp == 1)
+		if(evex.mm == 1)
 		{
-			if( evex.Lprime )
+			if(evex.pp == 0)
 			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklpd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else if( evex.L )
-			{
-		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklpd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				if( evex.Lprime )
+				{
+   		    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else if( evex.L )
+				{
+			       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else
+				{
+   		    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
 			}
 			else
 			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-		}
-		else if(evex.pp == 0)
-		{
-			if( evex.Lprime )
-			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else if( evex.L )
-			{
-		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else
-			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpcklps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				if( evex.Lprime )
+				{
+   		    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklpd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else if( evex.L )
+				{
+			       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklpd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else
+				{
+   		    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpcklpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
 			}
 		}
 		else
@@ -290,40 +293,43 @@ TODO
 		if( !evex.Vprime )
 			evex.vvvv += 16;
 
-		if(evex.pp == 1)
+		if(evex.mm == 1)
 		{
-			if( evex.Lprime )
+			if(evex.pp == 0)
 			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhpd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else if( evex.L )
-			{
-		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhpd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				if( evex.Lprime )
+				{
+	   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else if( evex.L )
+				{
+			       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else
+				{
+	   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
 			}
 			else
 			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-		}
-		else if(evex.pp == 0)
-		{
-			if( evex.Lprime )
-			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else if( evex.L )
-			{
-		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-			}
-			else
-			{
-   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-				printf( "vunpckhps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				if( evex.Lprime )
+				{
+	   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhpd %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else if( evex.L )
+				{
+			       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhpd %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
+				else
+				{
+	   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+					printf( "vunpckhpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				}
 			}
 		}
 		else
@@ -2369,30 +2375,56 @@ TODO
 
 		if( evex.Lprime )
 		{
-	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );
-
-			if( evex.pp == 1 )
+			if( evex.pp == 2 )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );
+				printf( "vcvtdq2pd %s,%s", op2.c_str(), op1.c_str() );
+			}
+			else if( evex.pp == 1 )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );
 				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 			else
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );
 				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 		}
 		else if( evex.L )
 		{
-	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_ZMM0, 0, op1, op2 );
-
-			if( evex.pp == 1 )
+			if( evex.pp == 2 )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0_YMM0, 0, op1, op2 );
+				printf( "vcvtdq2pd %s,%s", op2.c_str(), op1.c_str() );
+			}
+			else if( evex.pp == 1 )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_ZMM0, 0, op1, op2 );
 				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 			else
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_ZMM0, 0, op1, op2 );
 				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 		}
 		else
 		{
 	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 
-			if( evex.pp == 1 )
+			if( evex.pp == 2 )
+			{
+				printf( "vcvtdq2pd %s,%s", op2.c_str(), op1.c_str() );
+			}
+			else if( evex.pp == 1 )
+			{
 				printf( "vcvttpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 			else
+			{
 				printf( "vcvtpd2dq %s,%s", op2.c_str(), op1.c_str() );
+			}
 		}
 
 		if( evex.aaa )

@@ -2162,6 +2162,8 @@ const char * dis_0f(const char * code, unsigned prefix)
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 		if( prefix & PRE_OS )
 			printf( "cvttpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
+		else if( prefix & PRE_REP )
+			printf( "cvtdq2pd %s,%s\n", op2.c_str(), op1.c_str() );
 		else
 			printf( "cvtpd2dq %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
