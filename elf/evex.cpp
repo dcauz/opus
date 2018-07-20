@@ -1112,17 +1112,39 @@ TODO
 		std::string op1;
 		std::string	op2;
 
-		if( evex.L )
-	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0_YMM0, 0, op1, op2 );
-		else if( evex.Lprime )
-	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );
+		if(evex.pp == 1 )
+		{
+			if( evex.L )
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_ZMM0, 0, op1, op2 );
+			else if( evex.Lprime )
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );
+			else
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		}
 		else
-	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		{
+			if( evex.L )
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0_YMM0, 0, op1, op2 );
+			else if( evex.Lprime )
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );
+			else
+		   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		}
 
 		if( evex.aaa )
-			printf( "vcvtps2pd %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		{
+			if(evex.pp == 1 )
+				printf( "vcvtpd2ps %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vcvtps2pd %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		}
 		else
-			printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
+		{
+			if(evex.pp == 1 )
+				printf( "vcvtpd2ps %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0x5c:

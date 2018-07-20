@@ -484,10 +484,19 @@ const char * dis_5a(const char * code, unsigned prefix)
 	std::string op2;
 
 	if(prefix & PRE_256 )
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );	
+	{
+		if( prefix & PRE_OS )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_YMM0, 0, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );	
+	}
 	else
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-	printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
+
+	if( prefix & PRE_OS )
+		printf( "vcvtpd2ps %s,%s\n", op2.c_str(), op1.c_str() );
+	else
+		printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
 
 	return code;
 }
