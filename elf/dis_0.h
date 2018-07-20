@@ -1191,6 +1191,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		break;
 	}
+	case 0x5a:
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "cvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0x5c:
 	{
 		const char * inst = ( prefix & PRE_REP ) ? "subss": ((prefix&PRE_NE)?"subsd":"subps");
