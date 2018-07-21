@@ -493,7 +493,14 @@ const char * dis_5a(const char * code, unsigned prefix)
 	else
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 
-	if( prefix & PRE_OS )
+	if( prefix & PRE_REP )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		printf( "vcvtss2sd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+	}
+	else if( prefix & PRE_OS )
 		printf( "vcvtpd2ps %s,%s\n", op2.c_str(), op1.c_str() );
 	else
 		printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
