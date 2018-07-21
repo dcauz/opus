@@ -500,6 +500,13 @@ const char * dis_5a(const char * code, unsigned prefix)
 
 		printf( "vcvtss2sd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
+	else if( prefix & PRE_NE )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
+
+		printf( "vcvtsd2ss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+	}
 	else if( prefix & PRE_OS )
 		printf( "vcvtpd2ps %s,%s\n", op2.c_str(), op1.c_str() );
 	else

@@ -1145,6 +1145,16 @@ TODO
 				printf( "vcvtss2sd %s,%%xmm%d,%s{%%k%d}\n", op2.c_str(), evex.vvvv, op1.c_str(),
 					evex.aaa );
 			}
+			else if(evex.pp == 3 )
+			{
+				evex.vvvv = evex.vvvv ^ 0xf;
+
+				if( !evex.Vprime )
+					evex.vvvv += 16;
+
+				printf( "vcvtsd2ss %s,%%xmm%d,%s{%%k%d}\n", op2.c_str(), evex.vvvv, op1.c_str(),
+					evex.aaa );
+			}
 			else
 				printf( "vcvtps2pd %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
 		}
@@ -1160,6 +1170,15 @@ TODO
 					evex.vvvv += 16;
 
 				printf( "vcvtss2sd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else if(evex.pp == 3 )
+			{
+				evex.vvvv = evex.vvvv ^ 0xf;
+
+				if( !evex.Vprime )
+					evex.vvvv += 16;
+
+				printf( "vcvtsd2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 			}
 			else
 				printf( "vcvtps2pd %s,%s\n", op2.c_str(), op1.c_str() );
