@@ -285,7 +285,10 @@ const char * dis_2c(const char * code, unsigned prefix)
 	std::string op2;
 	
 	code = mod_reg_rm_ops( code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );	
-	printf( "vcvttss2si %s,%s\n", op2.c_str(), op1.c_str() );
+	if(prefix & PRE_NE )
+		printf( "vcvttsd2si %s,%s\n", op2.c_str(), op1.c_str() );
+	else
+		printf( "vcvttss2si %s,%s\n", op2.c_str(), op1.c_str() );
 
 	return code;
 }
