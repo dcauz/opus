@@ -536,7 +536,10 @@ TODO
 			prefix |= REX_W;
 
    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL_XMM0, 1, op1, op2 );
-		printf( "vcvtss2si %s,%s\n", op2.c_str(), op1.c_str() );
+		if( evex.pp == 3 )
+			printf( "vcvtsd2si %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+			printf( "vcvtss2si %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
 	case 0x2e:
