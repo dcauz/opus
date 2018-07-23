@@ -246,8 +246,22 @@ const char * dis_2a(const char * code, unsigned prefix)
 	
 		bool isCmp =  (prefix & PRE_0F );
 
+		int m = mod( *code );
 		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );	
-		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		if( prefix & PRE_NE )
+		{
+			if( m == 3 )
+				printf( "vcvtsi2sd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			else
+			{
+				if( prefix & REX_W )
+					printf( "vcvtsi2sdq %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+				else
+					printf( "vcvtsi2sdl %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
+		}
+		else
+			printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
     return code;

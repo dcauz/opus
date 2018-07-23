@@ -486,7 +486,10 @@ TODO
 			prefix |= REX_W;
 
    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2, -1, -1, 16 );
-		printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		if( evex.pp == 3 )
+			printf( "vcvtsi2sd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		else
+			printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
 		break;
 	}
 	case 0x2b:

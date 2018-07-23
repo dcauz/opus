@@ -61,6 +61,11 @@ const char * pop_operand(
 	std::string & op1 );	// OUT
 
 
+inline int mod( char b )
+{
+    return ( b & 0xc0 ) >> 6;
+}
+
 inline void mod_reg_rm( char b, int & mod, int & reg, int & rm )
 {
     mod = ( b & 0xc0 ) >> 6;
