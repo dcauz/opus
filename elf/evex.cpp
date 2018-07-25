@@ -1206,10 +1206,20 @@ TODO
 		else
    			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 
-		if( evex.aaa )
-			printf( "vcvtdq2ps %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		if( evex.pp == 1 )
+		{
+			if( evex.aaa )
+				printf( "vcvtps2dq %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vcvtps2dq %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		else
-			printf( "vcvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
+		{	
+			if( evex.aaa )
+				printf( "vcvtdq2ps %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vcvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0x5c:

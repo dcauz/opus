@@ -1234,7 +1234,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 	case 0x5b:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "cvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
+		if( prefix & PRE_OS )
+			printf( "cvtps2dq %s,%s\n", op2.c_str(), op1.c_str() );
+		else
+			printf( "cvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
 	case 0x5c:
