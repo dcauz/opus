@@ -1194,6 +1194,24 @@ TODO
 		}
 		break;
 	}
+	case 0x5b:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( evex.Lprime )
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		else if( evex.L )
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		else
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		if( evex.aaa )
+			printf( "vcvtdq2ps %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		else
+			printf( "vcvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0x5c:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;

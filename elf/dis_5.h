@@ -478,6 +478,21 @@ const char * dis_59(const char * code, unsigned prefix)
 	return code;
 }
 
+const char * dis_5b(const char * code, unsigned prefix)
+{
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256 )
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+	else
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+	printf( "vcvtdq2ps %s,%s\n", op2.c_str(), op1.c_str() );
+
+	return code;
+}
+
 const char * dis_5a(const char * code, unsigned prefix)
 {
 	std::string op1;
