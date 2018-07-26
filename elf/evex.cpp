@@ -1206,7 +1206,14 @@ TODO
 		else
    			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
 
-		if( evex.pp == 1 )
+		if( evex.pp == 2 )
+		{
+			if( evex.aaa )
+				printf( "vcvttps2dq %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vcvttps2dq %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( evex.pp == 1 )
 		{
 			if( evex.aaa )
 				printf( "vcvtps2dq %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
