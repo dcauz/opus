@@ -2121,8 +2121,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0xffffffd6:
 	{
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
-		printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_REP )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_MM0, 0, op1, op2 );
+			printf( "movq2dq %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2 );
+			printf( "movq %s,%s\n", op1.c_str(), op2.c_str() );
+		}
 		break;
 	}
 	case 0xffffffd7:
