@@ -413,14 +413,32 @@ const char * dis_6e(const char * code, unsigned prefix)
 
 const char * dis_6f(const char * code, unsigned prefix)
 {
+	if( ( prefix & VEX ) == 0 )
+	{
+		if( prefix & PRE_REP )
+			printf( "rep ");
 
-	if( prefix & PRE_REP )
-		printf( "rep ");
-
-	if( prefix & PRE_OS )
-		printf( "outsw %%ds:(%%rsi),(%%dx)\n");
+		if( prefix & PRE_OS )
+			printf( "outsw %%ds:(%%rsi),(%%dx)\n");
+		else
+			printf( "outsl %%ds:(%%rsi),(%%dx)\n");
+	}
 	else
-		printf( "outsl %%ds:(%%rsi),(%%dx)\n");
+	{
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			printf( "vmovdqa %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else
+		{
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vmovdqa %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+	}
 
 	return code;
 }

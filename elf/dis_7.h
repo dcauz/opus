@@ -227,9 +227,28 @@ const char * dis_7e(const char * code, unsigned prefix)
 
 const char * dis_7f(const char * code, unsigned prefix)
 {
-	char disp[16];
-	code = imm8( code, disp );
-	printf( "jg %s\n", disp );
+	if( ( prefix & VEX ) == 0 )
+	{
+		char disp[16];
+		code = imm8( code, disp );
+		printf( "jg %s\n", disp );
+	}
+	else
+	{
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vmovdqa %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vmovdqa %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+	}
 
 	return code;
 }

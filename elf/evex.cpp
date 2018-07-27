@@ -1748,6 +1748,34 @@ TODO
 		}
 		break;
 	}
+	case 0x6f:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( evex.L )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		else if( evex.Lprime )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		else
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		if( evex.W)
+		{
+			if( evex.aaa == 0 )
+				printf( "vmovdqa64 %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vmovdqa64 %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		}
+		else
+		{
+			if( evex.aaa == 0 )
+				printf( "vmovdqa32 %s,%s\n", op2.c_str(), op1.c_str() );
+			else
+				printf( "vmovdqa32 %s,%s{%%k%d}\n", op2.c_str(), op1.c_str(), evex.aaa );
+		}
+		break;
+	}
 	case 0x7e:
 	{
 		std::string op1;
@@ -1762,6 +1790,34 @@ TODO
 		{
         	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, -1, 4 );
 			printf( "vmovd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		break;
+	}
+	case 0x7f:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( evex.L )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		else if( evex.Lprime )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		else
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		if( evex.W )
+		{
+			if( evex.aaa == 0 )
+				printf( "vmovdqa64 %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovdqa64 %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
+		}
+		else
+		{
+			if( evex.aaa == 0 )
+				printf( "vmovdqa32 %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovdqa32 %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
 		}
 		break;
 	}
