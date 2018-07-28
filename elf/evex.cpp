@@ -1796,6 +1796,27 @@ TODO
 		}
 		break;
 	}
+	case 0x70:
+	{
+		std::string op1;
+		std::string	op2;
+
+		if( evex.L )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+		else if( evex.Lprime )
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		else
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		char imm[12];
+		code = uimm8( code, imm );
+
+		if(evex.aaa)
+			printf( "vpshuflw $%s,%s,%s{%%k%d}\n", imm,op2.c_str(), op1.c_str(), evex.aaa );
+		else
+			printf( "vpshuflw $%s,%s,%s\n", imm,op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0x7e:
 	{
 		std::string op1;

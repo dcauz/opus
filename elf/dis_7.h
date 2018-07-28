@@ -1,9 +1,25 @@
 
 const char * dis_70(const char * code, unsigned prefix)
 {
-	char disp[16];
-	code = imm8( code, disp );
-	printf( "jo %s\n", disp );
+	if( prefix & VEX )
+	{
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		char imm[12];
+		code = uimm8( code, imm );
+		printf( "vpshuflw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+	}
+	else
+	{
+		char disp[16];
+		code = imm8( code, disp );
+		printf( "jo %s\n", disp );
+	}
 
 	return code;
 }
