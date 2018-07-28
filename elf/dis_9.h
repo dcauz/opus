@@ -13,6 +13,8 @@ const char * dis_90(const char * code, unsigned prefix)
 {
 	if( prefix == 0 )
 		printf( "nop\n");
+	else if( prefix & PRE_REP )
+		printf( "pause\n");
 	else
 	{
 		printXCHG( 0, prefix );
