@@ -1749,88 +1749,97 @@ const char * dis_0f(const char * code, unsigned prefix)
 	case 0xffffffae:
 	{
 		++code;
-		int mod = (*code & 0xc0 ) >> 6;
-		int reg = (*code & 0x38 ) >> 3;
 
-		if( reg == 2 && ((prefix & PRE_REP) == 0))
+		if(*code == 0xffffffe8 )
 		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			printf( "ldmxcsr %s\n", op1.c_str() );
-		}
-		else if( reg == 3 && ((prefix & PRE_REP) == 0))
-		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			printf( "stmxcsr %s\n", op1.c_str() );
-		}
-		else if( reg == 4 )
-		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			if( prefix & REX_W )
-				printf( "xsave64 %s\n", op1.c_str() );
-			else
-				printf( "xsave %s\n", op1.c_str() );
-		}
-		else if( reg == 5 )
-		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			if( prefix & REX_W )
-				printf( "xrstor64 %s\n", op1.c_str() );
-			else
-				printf( "xrstor %s\n", op1.c_str() );
-		}
-		else if( reg == 6 )
-		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			if( prefix & REX_W )
-				printf( "xsaveopt64 %s\n", op1.c_str() );
-			else
-				printf( "xsaveopt %s\n", op1.c_str() );
-		}
-		else if( reg == 7 )
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
-			printf( "clflush %s\n", op1.c_str() );
-		}
-		else if(mod == 3 )
-		{
-			if( ( *code & 0x38 ) == 0x38 )
-				printf( "sfence\n" );
-			else
-			{
-				unsigned r = *code & 0x07;
-
-				const char * reg = regStr( r, AL, 1, Reg2, prefix );
-
-				if( ( *code & 0x38 ) == 0x10 )
-					printf( "wrfsbase %s\n",  reg );
-				else if( ( *code & 0x38 ) == 0x18 )
-					printf( "wrgsbase %s\n",  reg );
-				else
-				{
-					if( *code & 0x08 )
-						printf( "rdfsbase %s\n",  reg );
-					else
-						printf( "rdgsbase %s\n",  reg );
-				}
-			}
+			printf( "lfence\n" );
 			++code;
 		}
 		else
 		{
-			code = memStr( code, prefix, 0, 0, op1 );
-			if( ( prefix & REX_W ) == REX_W )
+			int mod = (*code & 0xc0 ) >> 6;
+			int reg = (*code & 0x38 ) >> 3;
+	
+			if( reg == 2 && ((prefix & PRE_REP) == 0))
 			{
-				if( reg == 0 )
-					printf( "fxsave64 %s\n",  op1.c_str() );
+				code = memStr( code, prefix, 0, 0, op1 );
+				printf( "ldmxcsr %s\n", op1.c_str() );
+			}
+			else if( reg == 3 && ((prefix & PRE_REP) == 0))
+			{
+				code = memStr( code, prefix, 0, 0, op1 );
+				printf( "stmxcsr %s\n", op1.c_str() );
+			}
+			else if( reg == 4 )
+			{
+				code = memStr( code, prefix, 0, 0, op1 );
+				if( prefix & REX_W )
+					printf( "xsave64 %s\n", op1.c_str() );
 				else
-					printf( "fxrstor64 %s\n",  op1.c_str() );
+					printf( "xsave %s\n", op1.c_str() );
+			}
+			else if( reg == 5 )
+			{
+				code = memStr( code, prefix, 0, 0, op1 );
+				if( prefix & REX_W )
+					printf( "xrstor64 %s\n", op1.c_str() );
+				else
+					printf( "xrstor %s\n", op1.c_str() );
+			}
+			else if( reg == 6 )
+			{
+				code = memStr( code, prefix, 0, 0, op1 );
+				if( prefix & REX_W )
+					printf( "xsaveopt64 %s\n", op1.c_str() );
+				else
+					printf( "xsaveopt %s\n", op1.c_str() );
+			}
+			else if( reg == 7 )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+				printf( "clflush %s\n", op1.c_str() );
+			}
+			else if(mod == 3 )
+			{
+				if( ( *code & 0x38 ) == 0x38 )
+					printf( "sfence\n" );
+				else
+				{
+					unsigned r = *code & 0x07;
+	
+					const char * reg = regStr( r, AL, 1, Reg2, prefix );
+	
+					if( ( *code & 0x38 ) == 0x10 )
+						printf( "wrfsbase %s\n",  reg );
+					else if( ( *code & 0x38 ) == 0x18 )
+						printf( "wrgsbase %s\n",  reg );
+					else
+					{
+						if( *code & 0x08 )
+							printf( "rdfsbase %s\n",  reg );
+						else
+							printf( "rdgsbase %s\n",  reg );
+					}
+				}
+				++code;
 			}
 			else
 			{
-				if( reg == 0 )
-					printf( "fxsave %s\n",  op1.c_str() );
+				code = memStr( code, prefix, 0, 0, op1 );
+				if( ( prefix & REX_W ) == REX_W )
+				{
+					if( reg == 0 )
+						printf( "fxsave64 %s\n",  op1.c_str() );
+					else
+						printf( "fxrstor64 %s\n",  op1.c_str() );
+				}
 				else
-					printf( "fxrstor %s\n",  op1.c_str() );
+				{
+					if( reg == 0 )
+						printf( "fxsave %s\n",  op1.c_str() );
+					else
+						printf( "fxrstor %s\n",  op1.c_str() );
+				}
 			}
 		}
 		break;
