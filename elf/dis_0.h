@@ -1755,6 +1755,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "lfence\n" );
 			++code;
 		}
+		else if(*code == 0xfffffff0 )
+		{
+			printf( "mfence\n" );
+			++code;
+		}
 		else
 		{
 			int mod = (*code & 0xc0 ) >> 6;
