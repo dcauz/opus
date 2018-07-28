@@ -2324,6 +2324,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "pslld %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
+	case 0xfffffff4:
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "pmuludq %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0xfffffff5:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
