@@ -5,6 +5,12 @@
 #include "opcodes.h"
 
 
+int vvvv( unsigned prefix )
+{
+	int ans = ( prefix >> 28 );
+	return ans;
+}
+
 const char * 
 regToStr( Register r )
 {
@@ -1248,7 +1254,7 @@ VEX3( const char * code, unsigned & prefix )
 
 	if( *code & 0x80 )	prefix |= REX_W;
 
-	prefix |= ( *code & 0x78 ) << 25;
+	prefix |= ( *code & 0x78 ) << 25; // vvvv
 
 	if( *code & 0x04 )	prefix |= PRE_256;
 	int pp = ( *code & 0x03 );
@@ -1275,7 +1281,7 @@ VEX2( const char * code, unsigned & prefix )
 
 	if((*code & 0x80) == 0)	prefix |= REX_R;
 
-	prefix |= ( *code & 0x78 ) << 25;
+	prefix |= ( *code & 0x78 ) << 25; // vvvv
 
 	if( *code & 0x04 )	prefix |= PRE_256;
 

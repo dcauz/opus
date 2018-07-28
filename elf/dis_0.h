@@ -1446,6 +1446,19 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		break;
 	}
+	case 0x73:
+	{
+		unsigned reg = *++code & 0x07;
+		if( prefix & REX_B )
+			reg += 8;
+
+		const char * op = regStr( reg, XMM0, 0, Reg, prefix );
+		++code;
+		char imm[16];
+		code = uimm8( code, imm );
+		printf( "pslldq $%s,%s\n", imm, op );
+		break;
+	}
 	case 0x74:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );

@@ -50,10 +50,36 @@ const char * dis_72(const char * code, unsigned prefix)
 
 const char * dis_73(const char * code, unsigned prefix)
 {
-	char disp[16];
-	code = imm8( code, disp );
-	printf( "jnb %s\n", disp );
+	if( prefix & VEX )
+	{
+		std::string op1;
+		std::string op2;
 
+		int v = vvvv(prefix);
+
+		const char * r2;
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			r2 = regToStr(static_cast<Register>(YMM0+(15-v)));
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			r2 = regToStr(static_cast<Register>(XMM0+(15-v)));
+		}
+
+		char imm[12];
+		code = uimm8( code, imm );
+
+		printf( "vpslldq $%s,%s,%s\n", imm, op2.c_str(), r2 );
+	}
+	else
+	{
+		char disp[16];
+		code = imm8( code, disp );
+		printf( "jnb %s\n", disp );
+	}
 	return code;
 }
 

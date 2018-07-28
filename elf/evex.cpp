@@ -1827,6 +1827,39 @@ TODO
 		}
 		break;
 	}
+	case 0x73:
+	{
+		std::string op1;
+		std::string	op2;
+
+		evex.vvvv = evex.vvvv ^ 0xf;
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+		const char * r2;
+
+		if( evex.L )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+			r2 = regToStr(static_cast<Register>(ZMM0+evex.vvvv));
+		}
+		else if( evex.Lprime )
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+			r2 = regToStr(static_cast<Register>(YMM0+evex.vvvv));
+		}
+		else
+		{
+	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			r2 = regToStr(static_cast<Register>(XMM0+evex.vvvv));
+		}
+
+		char imm[12];
+		code = uimm8( code, imm );
+
+
+		printf( "vpslldq $%s,%s,%s\n", imm,op2.c_str(), r2 );
+		break;
+	}
 	case 0x7e:
 	{
 		std::string op1;
