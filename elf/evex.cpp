@@ -1811,10 +1811,20 @@ TODO
 		char imm[12];
 		code = uimm8( code, imm );
 
-		if(evex.aaa)
-			printf( "vpshuflw $%s,%s,%s{%%k%d}\n", imm,op2.c_str(), op1.c_str(), evex.aaa );
+		if( evex.pp == 1 )
+		{
+			if(evex.aaa)
+				printf( "vpshufd $%s,%s,%s{%%k%d}\n", imm,op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vpshufd $%s,%s,%s\n", imm,op2.c_str(), op1.c_str() );
+		}
 		else
-			printf( "vpshuflw $%s,%s,%s\n", imm,op2.c_str(), op1.c_str() );
+		{
+			if(evex.aaa)
+				printf( "vpshuflw $%s,%s,%s{%%k%d}\n", imm,op2.c_str(), op1.c_str(), evex.aaa );
+			else
+				printf( "vpshuflw $%s,%s,%s\n", imm,op2.c_str(), op1.c_str() );
+		}
 		break;
 	}
 	case 0x7e:

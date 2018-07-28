@@ -13,7 +13,9 @@ const char * dis_70(const char * code, unsigned prefix)
 		char imm[12];
 		code = uimm8( code, imm );
 
-		if( prefix & PRE_REP )
+		if( prefix & PRE_OS )
+			printf( "vpshufd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		else if( prefix & PRE_REP )
 			printf( "vpshufhw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
 		else
 			printf( "vpshuflw $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
