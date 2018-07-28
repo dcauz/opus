@@ -1448,15 +1448,22 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x73:
 	{
-		unsigned reg = *++code & 0x07;
-		if( prefix & REX_B )
-			reg += 8;
+		unsigned reg1 = *++code & 0x7;
+		unsigned reg2 = (*code & 0x38) >> 3;
+		bool isR = ( reg2 == 3 );
 
-		const char * op = regStr( reg, XMM0, 0, Reg, prefix );
+		if( prefix & REX_B )
+			reg1 += 8;
+
+		const char * op = regStr( reg1, XMM0, 0, Reg, prefix );
 		++code;
 		char imm[16];
 		code = uimm8( code, imm );
-		printf( "pslldq $%s,%s\n", imm, op );
+
+		if( isR )
+			printf( "psrldq $%s,%s\n", imm, op );
+		else
+			printf( "pslldq $%s,%s\n", imm, op );
 		break;
 	}
 	case 0x74:
@@ -1778,6 +1785,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 				printf( "xsaveopt64 %s\n", op1.c_str() );
 			else
 				printf( "xsaveopt %s\n", op1.c_str() );
+		}
+		else if( reg == 7 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+			printf( "clflush %s\n", op1.c_str() );
 		}
 		else if(mod == 3 )
 		{

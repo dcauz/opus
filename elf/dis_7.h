@@ -57,6 +57,8 @@ const char * dis_73(const char * code, unsigned prefix)
 
 		int v = vvvv(prefix);
 
+		unsigned reg = (*code & 0x38) >> 3;
+
 		const char * r2;
 		if( prefix & PRE_256 )
 		{
@@ -72,7 +74,10 @@ const char * dis_73(const char * code, unsigned prefix)
 		char imm[12];
 		code = uimm8( code, imm );
 
-		printf( "vpslldq $%s,%s,%s\n", imm, op2.c_str(), r2 );
+		if( reg == 3 )
+			printf( "vpsrldq $%s,%s,%s\n", imm, op2.c_str(), r2 );
+		else
+			printf( "vpslldq $%s,%s,%s\n", imm, op2.c_str(), r2 );
 	}
 	else
 	{

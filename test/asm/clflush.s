@@ -1,1 +1,1 @@
-clflush
+clflush (%r10)
