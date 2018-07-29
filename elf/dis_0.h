@@ -2063,6 +2063,15 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		break;
 	}
+	case 0xffffffc3:
+	{
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op1, op2 );
+		printf( "movnti %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
+	}
 	case 0xffffffc4:
 	{
 		std::string op1;
