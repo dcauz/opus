@@ -267,13 +267,28 @@ const char * dis_e6(const char * code, unsigned prefix)
 
 const char * dis_e7(const char * code, unsigned prefix)
 {
-	char buff[12];
-	code = imm8(code, buff);
+	if( prefix & VEX )
+	{
+		std::string op1;
+		std::string op2;
 
-	if( prefix & PRE_OS )
-		printf( "out %%ax,$%s\n", buff );
+		if( prefix & PRE_256 )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+		printf( "vmovntdq %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 	else
-		printf( "out %%eax,$%s\n", buff );
+	{
+		char buff[12];
+		code = imm8(code, buff);
+
+		if( prefix & PRE_OS )
+			printf( "out %%ax,$%s\n", buff );
+		else
+			printf( "out %%eax,$%s\n", buff );
+	}
 
 	return code;
 }
