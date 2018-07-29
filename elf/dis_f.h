@@ -185,42 +185,53 @@ const char * dis_f6(const char * code, unsigned prefix)
 
 const char * dis_f7(const char * code, unsigned prefix)
 {
-	int reg = (*code & 0x38) >> 3;
-	const char * inst;
-	switch(reg)
+	if( prefix & VEX )
 	{
-	case 0: inst = "test";break;
-	case 2: inst = "not"; break;
-	case 3: inst = "neg"; break;
-	case 4:	inst = "mul"; break;
-	case 5: inst = "imul";break;
-	case 6: inst = "div";break;
-	case 7: inst = "idiv";break;
-	} 
+		std::string op1;
+		std::string op2;
 
-	if( (*code & 0xc0) != 0xc0 )
-	{
-		std::string op;
-		code = memStr( code, prefix, 0, 0, op );
-
-		if( prefix & PRE_OS )
-			printf( "%sw %s\n", inst, op.c_str() );
-		else if( (prefix & REX_W ) == REX_W )
-			printf( "%sq %s\n", inst, op.c_str() );
-		else
-			printf( "%sl %s\n", inst, op.c_str() );
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vmaskmovdqu %s,%s\n", op2.c_str(), op1.c_str() );
 	}
 	else
 	{
-		unsigned reg = *code & 0x07;
-
-		if( (prefix & REX_B ) == REX_B )
-			prefix |= REX_R;
-
-		const char * op = regStr( reg, AL, 1, Reg, prefix );
-
-		printf( "%s %s\n", inst, op );
-		++code;
+		int reg = (*code & 0x38) >> 3;
+		const char * inst;
+		switch(reg)
+		{
+		case 0: inst = "test";break;
+		case 2: inst = "not"; break;
+		case 3: inst = "neg"; break;
+		case 4:	inst = "mul"; break;
+		case 5: inst = "imul";break;
+		case 6: inst = "div";break;
+		case 7: inst = "idiv";break;
+		} 
+	
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+	
+			if( prefix & PRE_OS )
+				printf( "%sw %s\n", inst, op.c_str() );
+			else if( (prefix & REX_W ) == REX_W )
+				printf( "%sq %s\n", inst, op.c_str() );
+			else
+				printf( "%sl %s\n", inst, op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
+	
+			if( (prefix & REX_B ) == REX_B )
+				prefix |= REX_R;
+	
+			const char * op = regStr( reg, AL, 1, Reg, prefix );
+	
+			printf( "%s %s\n", inst, op );
+			++code;
+		}
 	}
 
 	return code;
