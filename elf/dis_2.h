@@ -287,7 +287,11 @@ const char * dis_2b(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
 		else
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+
+		if( prefix & PRE_OS )
+			printf( "vmovntpd %s,%s\n", op1.c_str(), op2.c_str() );
+		else
+			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
     return code;

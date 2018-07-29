@@ -768,7 +768,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 	case 0x2b:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "movntps %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_OS )
+			printf( "movntpd %s,%s\n", op1.c_str(), op2.c_str() );
+		else
+			printf( "movntps %s,%s\n", op1.c_str(), op2.c_str() );
 		break;
 	}
 	case 0x2c:

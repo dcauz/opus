@@ -500,17 +500,26 @@ TODO
 		if( evex.Lprime )
 		{
    			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
-			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+			if( evex.pp == 1 )
+				printf( "vmovntpd %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 		else if( evex.L )
 		{
    			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
-			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+			if( evex.pp == 1 )
+				printf( "vmovntpd %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 		else
 		{
    			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
+			if( evex.pp == 1 )
+				printf( "vmovntpd %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovntps %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 		break;
 	}
