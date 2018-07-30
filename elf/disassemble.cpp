@@ -515,12 +515,18 @@ bool disassemble( const char * code, const char *end )
 		case -17:	code = dis_ef(++code, prefix); break;	// 0xef
 	
 		case -16:											// 0xf0
-			prefix |= PRE_LOCK; 
-			++code; 
-			printf( "lock " );
-			printOn=false; 
+		{
+			if( prefix & VEX )
+				code = dis_f0(++code, prefix);
+			else
+			{	
+				prefix |= PRE_LOCK; 
+				++code; 
+				printf( "lock " );
+				printOn=false; 
+			}
 			break;
-
+		}
 		case -15:	code = dis_f1(++code, prefix); break;	// 0xf1
 		case -14:											// 0xf2
 		{

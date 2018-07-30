@@ -948,13 +948,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 			if( code[1] == 0x25 )
 			{
 				unsigned reg = (*code & 0x38) >> 3;
-	
+
 				const char * op = regStr( reg, AL, 1, Reg, prefix );
-	
+
 				code += 2;
 				char imm[16];
 				code = imm32( code, imm );
-	
+
 		   		printf( "movbe %s,%s\n", op, imm );
 			}
 			else
@@ -2359,7 +2359,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "psubsw %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
-	case  0xffffffea:
+	case 0xffffffea:
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		printf( "pminsw %s,%s\n", op1.c_str(), op2.c_str() );
@@ -2393,6 +2393,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op1, op2 );
 		printf( "pxor %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
+	case 0xfffffff0:
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "lddqu %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
 	case 0xfffffff1:
