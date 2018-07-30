@@ -1,26 +1,48 @@
 
 const char * dis_d0(const char * code, unsigned prefix)
 {
-	int inst = (*code & 0x38) >> 3;
-
-	if( (*code & 0xc0) != 0xc0 )
+	if( prefix & VEX )
 	{
-		std::string op;
-		code = memStr( code, prefix, 0, 0, op );
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-		printf( "%sb %s\n", rsOp(inst), op.c_str() );
+		std::string op1;
+		std::string op2;
+
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			printf( "vaddsubps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vaddsubps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 	else
 	{
-		unsigned reg = *code & 0x07;
+		int inst = (*code & 0x38) >> 3;
 
-		if( (prefix & REX_B ) == REX_B )
-			prefix |= REX_R;
+		if( (*code & 0xc0) != 0xc0 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
 
-		const char * op = regStr( reg, AL, 0, Reg, prefix );
+			printf( "%sb %s\n", rsOp(inst), op.c_str() );
+		}
+		else
+		{
+			unsigned reg = *code & 0x07;
 
-		printf( "%s %s\n", rsOp(inst), op );
-		++code;
+			if( (prefix & REX_B ) == REX_B )
+				prefix |= REX_R;
+
+			const char * op = regStr( reg, AL, 0, Reg, prefix );
+
+			printf( "%s %s\n", rsOp(inst), op );
+			++code;
+		}
 	}
 
 	return code;
