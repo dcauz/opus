@@ -599,7 +599,13 @@ const char * dis_db(const char * code, unsigned prefix)
 {
 	if( (prefix & VEX ) == 0 )
 	{
-		if( *code == 0xffffffe2 )
+		if( ( *code & 0xf8 ) == 0x08 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fisttpl %s\n", op.c_str() );
+		}
+		else if( *code == 0xffffffe2 )
 		{
 			printf( "fnclex\n" );
 			++code;
@@ -731,7 +737,14 @@ const char * dis_dd(const char * code, unsigned prefix)
 {
 	if( ( prefix & VEX ) == 0 )
 	{
-		if((*code & 0xf8 ) == 0xd0 )
+		if( ( *code & 0xf8 ) == 0x08 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fisttpll %s\n", op.c_str() );
+			return code;
+		}
+		else if((*code & 0xf8 ) == 0xd0 )
 		{
 			int r = *code & 0x07;
 	
@@ -928,7 +941,13 @@ const char * dis_df(const char * code, unsigned prefix)
 {
 	if( ( prefix & VEX ) == 0 )
 	{
-		if( ( *code & 0xf8 ) == 0xe0 )
+		if( ( *code & 0xf8 ) == 0x08 )
+		{
+			std::string op;
+			code = memStr( code, prefix, 0, 0, op );
+			printf( "fisttp %s\n", op.c_str() );
+		}
+		else if( ( *code & 0xf8 ) == 0xe0 )
 		{
 			printf( "fnstsw %%ax\n" );
 			++code;
