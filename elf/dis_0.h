@@ -1507,6 +1507,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "vmwrite %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
+	case 0x7c:
+	{
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "haddps %s,%s\n", op2.c_str(), op1.c_str() );
+		break;
+	}
 	case 0x7e:
 	{
 		if( ((prefix & PRE_OS ) == PRE_OS) || (( prefix & PRE_REP ) == PRE_REP) )
