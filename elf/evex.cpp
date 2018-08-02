@@ -221,6 +221,36 @@ TODO
 					printf( "\n" );
 			}
 		}
+		else if(evex.pp == 3)
+		{
+			if( evex.Lprime )
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+				printf( "vmovddup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+				printf( "vmovddup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
+			else
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vmovddup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
+		}
 		else
 		{
 			if( evex.Lprime )
