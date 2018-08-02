@@ -326,6 +326,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code +=2;
 			printf( "vmxoff\n" );
 		}
+		else if( code[1] == 0xffffffc8 )
+		{
+			code +=2;
+			printf( "monitor\n" );
+		}
 		else if( code[1] == 0xffffffca )
 		{
 			code +=2;
