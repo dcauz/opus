@@ -137,21 +137,43 @@ const char * dis_12(const char * code, unsigned prefix)
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
 			if( mod == 3 )
-				printf( "vmovhlps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			{
+				if( prefix & PRE_REP )
+					printf( "vmovsldup %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+					printf( "vmovhlps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 			else
-				printf( "vmovlps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			{
+				if( prefix & PRE_REP )
+					printf( "vmovsldup %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+					printf( "vmovlps %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 		}
 		else
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 			if( mod == 3 )
-				printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			{
+				if( prefix & PRE_REP )
+					printf( "vmovsldup %s,%s\n", op2.c_str(), op1.c_str() );
+				else
+					printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 			else
 			{
 				if( prefix & PRE_OS )
+				{
 					printf( "vmovlpd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+				}
 				else
-					printf( "vmovlps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+				{
+					if( prefix & PRE_REP )
+						printf( "vmovsldup %s,%s\n", op2.c_str(), op1.c_str() );
+					else
+						printf( "vmovlps %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+				}
 			}
 		}
 	}

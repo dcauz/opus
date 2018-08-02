@@ -191,23 +191,56 @@ TODO
 		if( !evex.Vprime )
 			evex.vvvv += 16;
 
-		if( evex.Lprime )
+		if(evex.pp == 2)
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
-			printf( "vmovhlps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
-		}
-		else if( evex.L )
-		{
-	       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
-			printf( "vmovhlps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			if( evex.Lprime )
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+				printf( "vmovsldup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+				printf( "vmovsldup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
+			else
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vmovsldup %s,%s", op2.c_str(), op1.c_str() );
+				if( evex.aaa )
+					printf( "{%%k%d}\n", evex.aaa );
+				else
+					printf( "\n" );
+			}
 		}
 		else
 		{
-       		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
-			if( evex.pp == 1 )
-				printf( "vmovlpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			if( evex.Lprime )
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+				printf( "vmovhlps %s,%%ymm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+				printf( "vmovhlps %s,%%zmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			}
 			else
-				printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			{
+   	    		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+				if( evex.pp == 1 )
+					printf( "vmovlpd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+				else
+					printf( "vmovhlps %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			}
 		}
 		break;
 	}
