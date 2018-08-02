@@ -331,6 +331,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code +=2;
 			printf( "monitor\n" );
 		}
+		else if( code[1] == 0xffffffc9 )
+		{
+			code +=2;
+			printf( "mwait\n" );
+		}
 		else if( code[1] == 0xffffffca )
 		{
 			code +=2;
