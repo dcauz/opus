@@ -17,14 +17,34 @@ const char * dis_00(const char * code, unsigned prefix)
 const char * dis_01(const char * code, unsigned prefix)
 {
     std::string op1;
-    std::string op2;
+	std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_256 )
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+    		printf( "vphaddw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+    		printf( "vphaddw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else
+	{
+   	 	if( code[1] == 0x25)
+   	    	code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+
+    	printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 
@@ -33,12 +53,32 @@ const char * dis_02(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_256 )
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+	    	printf( "vphaddd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+	    	printf( "vphaddd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else
+	{
+    	if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+
+	    printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 
@@ -897,7 +937,26 @@ const char * dis_0f(const char * code, unsigned prefix)
 	}
 	case 0x38:
 	{
-		if( code[1] == 0x38 )
+		if( code[1] == 1 )
+		{
+			code += 2;
+			if( prefix & PRE_OS )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
+			printf( "phaddw %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( code[1] == 2 )
+		{
+			code += 2;
+			if( prefix & PRE_OS )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
+			printf( "phaddd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+
+		else if( code[1] == 0x38 )
 		{
 			code += 2;
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
@@ -921,6 +980,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
 			printf( "pmaxuw %s,%s\n", op1.c_str(), op2.c_str() );
 		}
+
 		else if( code[1] == 0xffffff80 )
 		{
 			code += 2;
@@ -942,25 +1002,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 			printf( "invpcid %s,%s\n", op1.c_str(), op2.c_str() );
 		}
-		else if( code[1] == 0xfffffff6 )
-		{
-			if( prefix & PRE_REP )
-			{
-				code += 2;
-				prefix &= ~PRE_OS;
-				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-	
-			   	printf( "adox %s,%s\n", op1.c_str(), op2.c_str() );
-			}
-			else
-			{
-				code += 2;
-				prefix &= ~PRE_OS;
-				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-	
-			   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
-			}
-		}
+
 		else if( code[1] == 0xfffffff0 )
 		{
 			code += 2;
@@ -1003,6 +1045,25 @@ const char * dis_0f(const char * code, unsigned prefix)
 				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
 	
 		   		printf( "movbe %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+		}
+		else if( code[1] == 0xfffffff6 )
+		{
+			if( prefix & PRE_REP )
+			{
+				code += 2;
+				prefix &= ~PRE_OS;
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+			   	printf( "adox %s,%s\n", op1.c_str(), op2.c_str() );
+			}
+			else
+			{
+				code += 2;
+				prefix &= ~PRE_OS;
+				code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
+	
+			   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
 			}
 		}
 		break;
