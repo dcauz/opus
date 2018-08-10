@@ -317,7 +317,6 @@ test.mwait
 SSSE3_INST_TESTS := \
 test.phaddw \
 test.phaddsw \
-test.phaddd \
 test.phsubw \
 test.phsubsw \
 test.phsubd \
