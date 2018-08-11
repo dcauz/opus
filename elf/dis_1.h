@@ -476,19 +476,49 @@ const char * dis_1b(const char * code, unsigned prefix)
 
 const char * dis_1c(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256)
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op2, op1 );
+	else if( prefix & PRE_OS )
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+	else
+		code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op2, op1 );
+	printf( "vpabsb %s,%s\n", op1.c_str(), op2.c_str() );
+
 	return code;
 }
 
 const char * dis_1d(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256)
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op2, op1 );
+	else if( prefix & PRE_OS )
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+	else
+		code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op2, op1 );
+	printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+
 	return code;
 }
 
 const char * dis_1e(const char * code, unsigned prefix)
 {
-TODO
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256)
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op2, op1 );
+	else if( prefix & PRE_OS )
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+	else
+		code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op2, op1 );
+	printf( "vpabsd %s,%s\n", op1.c_str(), op2.c_str() );
+
 	return code;
 }
 

@@ -498,6 +498,60 @@ TODO
 		printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
 		break;
 	}
+	case 0x1c:
+	{
+		std::string op1;
+		std::string op2;
+
+		if( evex.Lprime )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op2, op1 );
+		else if( evex.L )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op2, op1 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+
+		if( evex.aaa )
+			printf( "vpabsb %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
+		else
+			printf( "vpabsb %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
+	}
+	case 0x1d:
+	{
+		std::string op1;
+		std::string op2;
+
+		if( evex.Lprime )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op2, op1 );
+		else if( evex.L )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op2, op1 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+
+		if( evex.aaa )
+			printf( "vpabsw %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
+		else
+			printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
+	}
+	case 0x1e:
+	{
+		std::string op1;
+		std::string op2;
+
+		if( evex.Lprime )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op2, op1 );
+		else if( evex.L )
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op2, op1 );
+		else
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+
+		if( evex.aaa )
+			printf( "vpabsd %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
+		else
+			printf( "vpabsd %s,%s\n", op1.c_str(), op2.c_str() );
+		break;
+	}
 	case 0x20:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;

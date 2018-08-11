@@ -319,10 +319,7 @@ test.phaddw \
 test.phaddsw \
 test.phsubw \
 test.phsubsw \
-test.phsubd \
 test.pabsb \
-test.pabsw \
-test.pabsd \
 test.pmaddubsw \
 test.pmulhrsw \
 test.pshufb \
