@@ -1411,6 +1411,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 			inst = ((prefix & REX_W) == REX_W) ? "pinsrq":"pinsrd"; 
 			isPinsr = true;
 			break;
+		case 0x41:
+			inst = "dppd";
+			break;
 		}
 
 		std::string op1;
@@ -1423,6 +1426,10 @@ const char * dis_0f(const char * code, unsigned prefix)
 				code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 			else
 				code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op2, op1 );
+		}
+		else if( *code == 0x41 )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		}
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
