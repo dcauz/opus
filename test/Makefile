@@ -489,38 +489,38 @@ clean:
 
 #######################################################
 
-alpha.tests:
+alpha:
 	@echo $(ENC_TESTS)
 
-gen.tests: $(GP_INST_TESTS)
+gen: $(GP_INST_TESTS)
 
-fpu.tests: $(FPU_INST_TESTS)
+fpu: $(FPU_INST_TESTS)
 
-fpu.smid.tests: $(FPU_SIMD_INST_TESTS)
+fpu.smid: $(FPU_SIMD_INST_TESTS)
 
-mm.tests: $(MM_INST_TESTS)
+mm: $(MM_INST_TESTS)
 
-sse.tests: $(SSE_INST_TESTS)
+sse: $(SSE_INST_TESTS)
 
-sse2.tests: $(SSE2_INST_TESTS)
+sse2: $(SSE2_INST_TESTS)
 
-sse3.tests: $(SSE3_INST_TESTS)
+sse3: $(SSE3_INST_TESTS)
 
-ssse3.tests: $(SSSE3_INST_TESTS)
+ssse3: $(SSSE3_INST_TESTS)
 
-sse4.tests: $(SSE4_INST_TESTS)
+sse4: $(SSE4_INST_TESTS)
 
-avx.tests: $(AVX_INST_TESTS)
+avx: $(AVX_INST_TESTS)
 
-tsx.tests: $(TSX_INST_TESTS)
+tsx: $(TSX_INST_TESTS)
 
-system.tests: $(SYSTEM_INST_TESTS)
+system: $(SYSTEM_INST_TESTS)
 
-64bit.tests: $(_64BIT_MODE_INST_TESTS)
+64bit: $(_64BIT_MODE_INST_TESTS)
 
-vm.tests: $(VM_INST_TESTS)
+vm: $(VM_INST_TESTS)
 
-safer.tests: $(SAFER_MODE_INST_TESTS)
+safer: $(SAFER_MODE_INST_TESTS)
 
 $(INST_TESTS):test.%: obj/%.o | $(ELF)
 	$(ELF) $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
