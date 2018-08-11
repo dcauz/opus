@@ -224,12 +224,32 @@ const char * dis_08(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-    if(code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_256 )
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+	    	printf( "vpsignb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+	    	printf( "vpsignb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else
+	{
+    	if(code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );
+
+	    printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 
@@ -238,12 +258,32 @@ const char * dis_09(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_256 )
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+	    	printf( "vpsignw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+	    	printf( "vpsignw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else
+	{
+    	if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+
+    	printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 
@@ -252,12 +292,32 @@ const char * dis_0a(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+		if( prefix & PRE_256 )
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+	    	printf( "vpsignd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+		else
+		{
+       		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+	    	printf( "vpsignd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
+	}
+	else
+	{
+    	if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
+    	else
+        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
+
+    	printf( "or %s,%s\n", op1.c_str(), op2.c_str() );
+	}
+
     return code;
 }
 
@@ -1119,7 +1179,34 @@ const char * dis_0f(const char * code, unsigned prefix)
 				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
 			printf( "phsubsw %s,%s\n", op2.c_str(), op1.c_str() );
 		}
-		else if( code[1] == 0x0b )
+		else if( code[1] == 8 )
+		{
+			code += 2;
+			if( prefix & PRE_OS )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
+			printf( "psignb %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( code[1] == 9 )
+		{
+			code += 2;
+			if( prefix & PRE_OS )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
+			printf( "psignw %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( code[1] == 10 )
+		{
+			code += 2;
+			if( prefix & PRE_OS )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op1, op2 );
+			printf( "psignd %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( code[1] == 11 )
 		{
 			code += 2;
 			if( prefix & PRE_OS )

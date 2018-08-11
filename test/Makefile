@@ -324,8 +324,6 @@ test.pmaddubsw \
 test.pmulhrsw \
 test.pshufb \
 test.psignb \
-test.psignw \
-test.psignd \
 test.palignr
 
 SSE4_INST_TESTS := \
