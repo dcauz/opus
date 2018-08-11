@@ -328,7 +328,6 @@ test.palignr
 
 SSE4_INST_TESTS := \
 test.pmulld \
-test.pmuldq \
 test.dppd \
 test.dpps \
 test.movntdqa \

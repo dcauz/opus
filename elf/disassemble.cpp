@@ -8,6 +8,7 @@
 #include "dis_1.h"
 #include "dis_2.h"
 #include "dis_3.h"
+#include "dis_4.h"
 #include "dis_5.h"
 #include "dis_6.h"
 #include "dis_7.h"
@@ -143,7 +144,18 @@ bool disassemble( const char * code, const char *end )
 		}
 		case 0x3f:	code = dis_3f(++code, prefix); break;
 	
-		case 0x40:	prefix |= *code; ++code; printOn=false; break;
+		case 0x40:	
+		{
+			if( prefix & VEX )
+				code = dis_40(++code, prefix);
+			else
+			{
+				prefix |= *code; 
+				++code; 
+				printOn=false; 
+			}
+			break;
+		}
 		case 0x41:	prefix |= *code; ++code; printOn=false; break;
 		case 0x42:	prefix |= *code; ++code; printOn=false; break;
 		case 0x43:	prefix |= *code; ++code; printOn=false; break;

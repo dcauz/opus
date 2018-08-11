@@ -1043,6 +1043,41 @@ TODO
 		break;
 	}
 
+	case 0x40:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		std::string op1;
+		std::string	op2;
+
+		const char inst = evex.W ? 'q':'d';
+
+		if( evex.Lprime )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vpmull%c %s,%%ymm%d,%s", inst, op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else if( evex.L )
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vpmull%c %s,%%zmm%d,%s", inst, op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+		else
+		{
+   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2, -1, -1, 16 );
+			printf( "vpmull%c %s,%%xmm%d,%s", inst, op2.c_str(), evex.vvvv, op1.c_str() );
+		}
+
+		if( evex.aaa )
+			printf( "{%%k%d}\n", evex.aaa );
+		else
+			printf( "\n" );
+		break;
+	}
+
 	case 0x51:
 	{
 		std::string op1;
