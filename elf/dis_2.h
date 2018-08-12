@@ -247,9 +247,18 @@ const char * dis_2a(const char * code, unsigned prefix)
 		bool isCmp =  (prefix & PRE_0F );
 
 		int m = mod( *code );
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );	
-		if( prefix & PRE_NE )
+
+		if( prefix & PRE_38 )
 		{
+			if( prefix & PRE_256 )
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+			else
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vmovntdqa %s,%s\n", op2.c_str(), op1.c_str() );
+		}
+		else if( prefix & PRE_NE )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );	
 			if( m == 3 )
 				printf( "vcvtsi2sd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 			else
@@ -261,7 +270,10 @@ const char * dis_2a(const char * code, unsigned prefix)
 			}
 		}
 		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 1, op1, op2 );	
 			printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+		}
 	}
 
     return code;

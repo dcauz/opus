@@ -774,11 +774,32 @@ TODO
 		if( evex.W )
 			prefix |= REX_W;
 
-   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2, -1, -1, 16 );
-		if( evex.pp == 3 )
-			printf( "vcvtsi2sd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		if( evex.mm == 2 )
+		{
+			if( evex.Lprime )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op1, op2 );
+				printf( "vmovntdqa %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else if( evex.L )
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op1, op2 );
+				printf( "vmovntdqa %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+	   			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vmovntdqa %s,%s\n", op2.c_str(), op1.c_str() );
+			}
+		}
 		else
-			printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		{
+	   		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 1, op1, op2, -1, -1, 16 );
+			if( evex.pp == 3 )
+				printf( "vcvtsi2sd %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+			else
+				printf( "vcvtsi2ss %s,%%xmm%d,%s\n", op2.c_str(), evex.vvvv, op1.c_str() );
+		}
 		break;
 	}
 	case 0x2b:
