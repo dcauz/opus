@@ -1291,6 +1291,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "pmulhrsw %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 
+		else if( code[1] == 0x10 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "pblendvb %%xmm0,%s,%s\n", op2.c_str(), op1.c_str() );
+		}
 		else if( code[1] == 0x14 )
 		{
 			code += 2;
