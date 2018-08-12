@@ -176,7 +176,18 @@ bool disassemble( const char * code, const char *end )
 		case 0x47:	prefix |= *code; ++code; printOn=false; break;
 		case 0x48:	prefix |= *code; ++code; printOn=false; break;
 		case 0x49:	prefix |= *code; ++code; printOn=false; break;
-		case 0x4a:	prefix |= *code; ++code; printOn=false; break;
+		case 0x4a:	
+		{
+			if( prefix & VEX )
+				code = dis_4a(++code, prefix);
+			else
+			{
+				prefix |= *code; 
+				++code; 
+				printOn=false; 
+			}
+			break;
+		}
 		case 0x4b:	
 		{
 			if( prefix & VEX )
