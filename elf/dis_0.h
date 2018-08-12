@@ -417,7 +417,31 @@ const char * dis_0d(const char * code, unsigned prefix)
 
 const char * dis_0e(const char * code, unsigned prefix)
 {
-TODO 
+    std::string op1;
+    std::string op2;
+
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	if( prefix & PRE_256 )
+	{
+   		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+
+		char imm[10];
+		code = uimm8( code, imm );
+
+   		printf( "vpblendw $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+	}
+	else
+	{
+   		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+		char imm[10];
+		code = uimm8( code, imm );
+
+   		printf( "vpblendw $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+	}
+
 	return code;
 }
 
@@ -1472,6 +1496,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		{
 		case 0x0c:	inst = "blendps"; break;
 		case 0x0d:	inst = "blendpd"; break;
+		case 0x0e:	inst = "pblendw"; break;
 		case 0x0f:	inst = "palignr"; break;
 		case 20:	inst = "pextrb"; break;
 		case 21:	inst = "pextrw"; break;
@@ -1505,7 +1530,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 			else
 				code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op2, op1 );
 		}
-		else if( *code == 0x41 || *code == 0x40 || *code == 0x0d || *code == 0x0c )
+		else if( *code == 0x41 || *code == 0x40 || *code == 0x0d || *code == 0x0c || *code == 0x0e )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
