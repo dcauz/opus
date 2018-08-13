@@ -1380,6 +1380,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
 			printf( "pminuw %s,%s\n", op1.c_str(), op2.c_str() );
 		}
+		else if( code[1] == 0x3b )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pminud %s,%s\n", op1.c_str(), op2.c_str() );
+		}
 		else if( code[1] == 0x3c )
 		{
 			code += 2;
