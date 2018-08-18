@@ -397,15 +397,39 @@ const char * dis_0b(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_256 )
+		if( prefix & PRE_OS )
 		{
-      		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
-    		printf( "vpmulhrsw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			if( prefix & PRE_256 )
+			{
+   	    		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+
+				char imm[10];
+				code = uimm8( code, imm );
+
+		    	printf( "vroundsd $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+			}
+			else
+			{
+   	    		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+				char imm[10];
+				code = uimm8( code, imm );
+
+		    	printf( "vroundsd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+			}
 		}
 		else
 		{
-    		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-    		printf( "vpmulhrsw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			if( prefix & PRE_256 )
+			{
+      			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+    			printf( "vpmulhrsw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
+			else
+			{
+    			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+    			printf( "vpmulhrsw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 		}
 	}
 	else
@@ -1575,6 +1599,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x08:  inst = "roundps"; break;
 		case 0x09:  inst = "roundpd"; break;
 		case 0x0a:	inst = "roundss"; break;
+		case 0x0b:	inst = "roundsd"; break;
 		case 0x0c:	inst = "blendps"; break;
 		case 0x0d:	inst = "blendpd"; break;
 		case 0x0e:	inst = "pblendw"; break;
@@ -1613,7 +1638,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		else if(*code == 0x41 || *code == 0x40 || *code == 0x0d || 
 				*code == 0x0c || *code == 0x0e || *code == 0x08 || 
-				*code == 0x09 || *code == 0x0a )
+				*code == 0x09 || *code == 0x0a || *code == 0x0b )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
