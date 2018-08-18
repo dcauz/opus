@@ -284,7 +284,28 @@ const char * dis_09(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_256 )
+		if( prefix & PRE_OS )
+		{
+			if( prefix & PRE_256 )
+			{
+       			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+
+				char imm[10];
+				code = uimm8( code, imm );
+
+		    	printf( "vroundpd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+       			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+				char imm[10];
+				code = uimm8( code, imm );
+
+		    	printf( "vroundpd $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+			}
+		}
+		else if( prefix & PRE_256 )
 		{
        		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
 	    	printf( "vpsignw %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
@@ -1528,6 +1549,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		switch(*code)
 		{
 		case 0x08:  inst = "roundps"; break;
+		case 0x09:  inst = "roundpd"; break;
 		case 0x0c:	inst = "blendps"; break;
 		case 0x0d:	inst = "blendpd"; break;
 		case 0x0e:	inst = "pblendw"; break;
@@ -1565,7 +1587,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 				code = mod_reg_rm_ops( ++code, prefix, OpRegs::MM0, 0, op2, op1 );
 		}
 		else if(*code == 0x41 || *code == 0x40 || *code == 0x0d || 
-				*code == 0x0c || *code == 0x0e || *code == 0x08 )
+				*code == 0x0c || *code == 0x0e || *code == 0x08 || *code == 0x09 )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
