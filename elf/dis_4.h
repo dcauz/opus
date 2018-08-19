@@ -57,6 +57,30 @@ const char * dis_41(const char * code, unsigned prefix)
 	return code;
 }
 
+const char * dis_42(const char * code, unsigned prefix)
+{
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+	
+	if( prefix & PRE_256 )
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+	else
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+	char imm[10];
+	code = uimm8( code, imm );
+
+	if( prefix & PRE_256 )
+		printf( "vmpsadbw $%s,%s,%%ymm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+	else
+		printf( "vmpsadbw $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+
+	return code;
+}
+
 const char * dis_4a(const char * code, unsigned prefix)
 {
 	int vvvv = prefix >> 28;
