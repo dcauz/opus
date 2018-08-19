@@ -85,6 +85,7 @@ enum class OpRegs
 	AL_ZMM0, 
 	ZMM0_AL,
 	ZMM0_YMM0,
+	ZMM0_XMM0,
 
 	AL_CR0,  
 	CR0_AL,
