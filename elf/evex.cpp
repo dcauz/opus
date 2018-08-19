@@ -636,8 +636,20 @@ TODO
 		std::string op1;
 		std::string op2;
 
-		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
+		if( evex.mm == 1 )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 32 );	
+
+			char imm[12];
+			code = imm8( code, imm );
+
+			printf( "vextractps $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
+		}
 		break;
 	}
 	case 0x1c:

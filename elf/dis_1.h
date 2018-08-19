@@ -401,18 +401,30 @@ const char * dis_17(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	if( prefix & PRE_256 )
+	if((prefix & PRE_OS) && (prefix & PRE_3A ))
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-		printf( "vmovhps %s,%s\n", op1.c_str(), op2.c_str() );
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, 32 );	
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vextractps $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
 	}
 	else
 	{
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-		if( prefix & PRE_OS )
-			printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
-		else
+		if( prefix & PRE_256 )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
 			printf( "vmovhps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			if( prefix & PRE_OS )
+				printf( "vmovhpd %s,%s\n", op1.c_str(), op2.c_str() );
+			else
+				printf( "vmovhps %s,%s\n", op1.c_str(), op2.c_str() );
+		}
 	}
 
 	return code;

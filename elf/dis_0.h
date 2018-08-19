@@ -229,7 +229,7 @@ const char * dis_08(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_OS )
+		if( ( prefix & PRE_OS ) && ( prefix & PRE_3A ) )
 		{
 			if( prefix & PRE_256 )
 			{
@@ -284,7 +284,7 @@ const char * dis_09(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_OS )
+		if( ( prefix & PRE_OS ) && ( prefix & PRE_3A ))
 		{
 			if( prefix & PRE_256 )
 			{
@@ -339,7 +339,7 @@ const char * dis_0a(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_OS )
+		if( ( prefix & PRE_OS ) && ( prefix & PRE_3A ))
 		{
 			if( prefix & PRE_256 )
 			{
@@ -397,7 +397,7 @@ const char * dis_0b(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		if( prefix & PRE_OS )
+		if( ( prefix & PRE_OS ) && ( prefix & PRE_3A ))
 		{
 			if( prefix & PRE_256 )
 			{
@@ -1604,6 +1604,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x0d:	inst = "blendpd"; break;
 		case 0x0e:	inst = "pblendw"; break;
 		case 0x0f:	inst = "palignr"; break;
+		case 0x17:	inst = "extractps"; break;
 		case 20:	inst = "pextrb"; break;
 		case 21:	inst = "pextrw"; break;
 		case 22:	
