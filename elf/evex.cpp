@@ -724,6 +724,24 @@ TODO
 		printf( "vpinsrb $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
 		break;
 	}
+	case 0x21:
+	{
+		evex.vvvv = evex.vvvv ^ 0xf;
+
+		if( !evex.Vprime )
+			evex.vvvv += 16;
+
+		std::string op1;
+		std::string op2;
+
+		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vinsertps $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), evex.vvvv, op1.c_str() );
+		break;
+	}
 	case 0x22:
 	{
 		evex.vvvv = evex.vvvv ^ 0xf;

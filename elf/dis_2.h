@@ -36,12 +36,26 @@ const char * dis_21(const char * code, unsigned prefix)
     std::string op1;
     std::string op2;
 
-    if( code[1] == 0x25)
-        code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
-    else
-        code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+	if( prefix & VEX )
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-    printf( "and %s,%s\n", op1.c_str(), op2.c_str() );
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vinsertps $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+	}
+	else
+	{
+    	if( code[1] == 0x25)
+        	code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
+    	else
+   	     	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
+	
+    	printf( "and %s,%s\n", op1.c_str(), op2.c_str() );
+	}
     return code;
 }
 

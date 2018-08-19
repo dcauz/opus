@@ -1614,6 +1614,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 			inst = "pinsrb"; 
 			isPinsr = true;
 			break;
+		case 0x21:	inst = "insertps";	break;
 		case 34:	
 			inst = ((prefix & REX_W) == REX_W) ? "pinsrq":"pinsrd"; 
 			isPinsr = true;
@@ -1639,7 +1640,8 @@ const char * dis_0f(const char * code, unsigned prefix)
 		}
 		else if(*code == 0x41 || *code == 0x40 || *code == 0x0d || 
 				*code == 0x0c || *code == 0x0e || *code == 0x08 || 
-				*code == 0x09 || *code == 0x0a || *code == 0x0b )
+				*code == 0x09 || *code == 0x0a || *code == 0x0b ||
+				*code == 0x21 )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
