@@ -1495,6 +1495,43 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "movntdqa %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 
+		else if( code[1] == 0x30 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxbw %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0x31 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxbd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0x32 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxbq %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0x33 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxwd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0x34 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxwq %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else if( code[1] == 0x35 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "pmovzxdq %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+
 		else if( code[1] == 0x38 )
 		{
 			code += 2;

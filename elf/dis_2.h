@@ -1,11 +1,11 @@
 
 const char * dis_20(const char * code, unsigned prefix)
 {
+	std::string op1;
+	std::string op2;
+
 	if( ( prefix & VEX ) == 0 )
 	{
-		std::string op1;
-		std::string op2;
-
 	    if(code[1] == 0x25)
         	code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
    	 	else
@@ -15,9 +15,6 @@ const char * dis_20(const char * code, unsigned prefix)
 	}
 	else
 	{
-		std::string op1;
-		std::string op2;
-
 		if( prefix & PRE_3A )
 		{
 			int vvvv = prefix >> 28;
@@ -93,11 +90,11 @@ const char * dis_21(const char * code, unsigned prefix)
 
 const char * dis_22(const char * code, unsigned prefix)
 {
+   	std::string op1;
+    std::string op2;
+
 	if( ( prefix & VEX ) == 0 )
 	{
-    	std::string op1;
-	    std::string op2;
-
    	 	if( code[1] == 0x25)
    	     	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
    	 	else
@@ -107,9 +104,6 @@ const char * dis_22(const char * code, unsigned prefix)
 	}
 	else
 	{
-		std::string op1;
-		std::string op2;
-	
 		if( prefix & PRE_3A )
 		{
 			int vvvv = prefix >> 28;
@@ -211,11 +205,11 @@ TODO
 
 const char * dis_28(const char * code, unsigned prefix)
 {
+   	std::string op1;
+    std::string op2;
+
 	if( ( prefix & VEX ) == 0 )
 	{
-    	std::string op1;
-	    std::string op2;
-
    	 	if(code[1] == 0x25)
    	     	code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
     	else
@@ -228,9 +222,6 @@ const char * dis_28(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		std::string op1;
-		std::string op2;
-	
 		if( prefix & PRE_256 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
@@ -254,11 +245,11 @@ const char * dis_28(const char * code, unsigned prefix)
 
 const char * dis_29(const char * code, unsigned prefix)
 {
+    std::string op1;
+    std::string op2;
+
 	if( ( prefix & VEX ) == 0 )
 	{
-    	std::string op1;
-    	std::string op2;
-
     	if( code[1] == 0x25)
         	code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
    	 	else
@@ -271,9 +262,6 @@ const char * dis_29(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		std::string op1;
-		std::string op2;
-	
 		bool isCmp =  (prefix & PRE_0F );
 
 		if( prefix & PRE_256 )
@@ -309,11 +297,11 @@ const char * dis_29(const char * code, unsigned prefix)
 
 const char * dis_2a(const char * code, unsigned prefix)
 {
+    std::string op1;
+	std::string op2;
+
 	if( ( prefix & VEX ) == 0 )
 	{
-    	std::string op1;
-	    std::string op2;
-
 		if( code[1] == 0x25)
         	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
     	else
@@ -326,9 +314,6 @@ const char * dis_2a(const char * code, unsigned prefix)
 		int vvvv = prefix >> 28;
 		vvvv = vvvv ^ 0xf;
 
-		std::string op1;
-		std::string op2;
-	
 		bool isCmp =  (prefix & PRE_0F );
 
 		int m = mod( *code );
@@ -449,4 +434,3 @@ const char * dis_2f(const char * code, unsigned prefix)
 
 	return code;
 }
-
