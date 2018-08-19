@@ -346,12 +346,7 @@ test.roundsd \
 test.extractps \
 test.insertps \
 test.pmovsx \
-test.pmovzxbw \
-test.pmovzxbd \
-test.pmovzxwd \
-test.pmovzxbq \
-test.pmovzxwq \
-test.pmovzxdq \
+test.pmovzx \
 test.mpsadbw \
 test.phminposuw \
 test.ptest \
