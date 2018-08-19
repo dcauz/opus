@@ -1574,6 +1574,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
 			printf( "pmulld %s,%s\n", op1.c_str(), op2.c_str() );
 		}
+		else if( code[1] == 0x41 )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "phminposuw %s,%s\n", op1.c_str(), op2.c_str() );
+		}
 
 		else if( code[1] == 0xffffff80 )
 		{

@@ -41,18 +41,23 @@ const char * dis_40(const char * code, unsigned prefix)
 
 const char * dis_41(const char * code, unsigned prefix)
 {
-	int vvvv = prefix >> 28;
-	vvvv = vvvv ^ 0xf;
-
 	std::string op1;
 	std::string op2;
 	
 	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 
-	char imm[10];
-	code = uimm8( code, imm );
+	if( prefix & PRE_38 )
+		printf( "vphminposuw %s,%s\n", op2.c_str(), op1.c_str() );
+	else
+	{
+		int vvvv = prefix >> 28;
+		vvvv = vvvv ^ 0xf;
 
-	printf( "vdppd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+		char imm[10];
+		code = uimm8( code, imm );
+
+		printf( "vdppd $%s,%s,%%xmm%d,%s\n", imm, op2.c_str(), vvvv, op1.c_str() );
+	}
 
 	return code;
 }
