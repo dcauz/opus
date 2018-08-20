@@ -410,6 +410,14 @@ const char * dis_17(const char * code, unsigned prefix)
 
 		printf( "vextractps $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
 	}
+	else if((prefix & PRE_OS) && (prefix & PRE_38 ))
+	{
+		if( prefix & PRE_256 )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+		printf( "vptest %s,%s\n", op2.c_str(), op1.c_str() );
+	}
 	else
 	{
 		if( prefix & PRE_256 )
