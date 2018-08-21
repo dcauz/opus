@@ -1719,6 +1719,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x42:
 			inst = "mpsadbw";
 			break;
+		case 0x61:
+			inst = "pcmpestri";
+			break;
 		}
 
 		std::string op1;
@@ -1735,7 +1738,7 @@ const char * dis_0f(const char * code, unsigned prefix)
 		else if(*code == 0x41 || *code == 0x40 || *code == 0x0d || 
 				*code == 0x0c || *code == 0x0e || *code == 0x08 || 
 				*code == 0x09 || *code == 0x0a || *code == 0x0b ||
-				*code == 0x21 || *code == 0x42 )
+				*code == 0x21 || *code == 0x42 || *code == 0x61 )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );
