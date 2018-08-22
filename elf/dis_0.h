@@ -1677,6 +1677,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 			   	printf( "adcx %s,%s\n", op1.c_str(), op2.c_str() );
 			}
 		}
+		else if( code[1] == 0xffffffde )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "aesdec %s,%s\n", op1.c_str(), op2.c_str() );
+		}
 		break;
 	}
 	case 0x3a:
