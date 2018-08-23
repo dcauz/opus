@@ -1614,6 +1614,13 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "invpcid %s,%s\n", op1.c_str(), op2.c_str() );
 		}
 
+		else if( code[1] == 0xffffffdf )
+		{
+			code += 2;
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+			printf( "aesdeclast %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+
 		else if( code[1] == 0xfffffff0 )
 		{
 			code += 2;
