@@ -1,4 +1,4 @@
-
+#include <cstdlib>
 
 const char * dis_00(const char * code, unsigned prefix)
 {
@@ -1713,6 +1713,44 @@ const char * dis_0f(const char * code, unsigned prefix)
 	case 0x3a:
 	{
 		++code;
+
+		if( *code == 0x44 )
+		{
+			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		
+			char imm[10];
+			code = uimm8( code, imm );
+
+			int i = strtol(imm, NULL, 16);
+
+			switch(i)
+			{
+			default:
+				printf( "pclmulqdq $%s,%s,%s\n", imm, op1.c_str(), op2.c_str() );
+				break;
+			case 0:
+				printf( "pclmullqlqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			case 1:
+				printf( "pclmulhqlqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			case 2:
+				printf( "pclmullqhqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			case 3:
+				printf( "pclmulhqhqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			case 16:
+				printf( "pclmullqhqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			case 17:
+				printf( "pclmulhqhqdq %s,%s\n", op1.c_str(), op2.c_str() );
+				break;
+			}
+
+			return code;
+		}
+
 		const char * inst = "error";
 		bool isPinsr = false;
 

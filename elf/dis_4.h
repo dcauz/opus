@@ -86,6 +86,49 @@ const char * dis_42(const char * code, unsigned prefix)
 	return code;
 }
 
+const char * dis_44(const char * code, unsigned prefix)
+{
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+	
+	code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		
+	char imm[10];
+	code = uimm8( code, imm );
+
+	int i = strtol(imm, NULL, 16);
+
+	switch(i)
+	{
+	default:
+		printf( "vpclmulqdq $%s,%s,%%xmm%d,%s\n", imm, op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 0:
+		printf( "vpclmullqlqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 1:
+		printf( "vpclmulhqlqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 2:
+		printf( "vpclmullqhqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 3:
+		printf( "vpclmulhqhqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 16:
+		printf( "vpclmullqhqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	case 17:
+		printf( "vpclmulhqhqdq %s,%%xmm%d,%s\n", op1.c_str(), vvvv, op2.c_str() );
+		break;
+	}
+
+	return code;
+}
+
 const char * dis_4a(const char * code, unsigned prefix)
 {
 	int vvvv = prefix >> 28;
