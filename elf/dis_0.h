@@ -1762,6 +1762,9 @@ const char * dis_0f(const char * code, unsigned prefix)
 		case 0x63:
 			inst = "pcmpistri";
 			break;
+		case 0xffffffdf:
+			inst = "aeskeygenassist";
+			break;
 		}
 
 		std::string op1;
@@ -1779,7 +1782,8 @@ const char * dis_0f(const char * code, unsigned prefix)
 				*code == 0x0c || *code == 0x0e || *code == 0x08 || 
 				*code == 0x09 || *code == 0x0a || *code == 0x0b ||
 				*code == 0x21 || *code == 0x42 || *code == 0x61 ||
-				*code == 0x60 || *code == 0x62 || *code == 0x63 )
+				*code == 0x60 || *code == 0x62 || *code == 0x63 ||
+				*code == 0xffffffdf )
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 		else
 			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0_AL, 0, op1, op2, -1, opsize );

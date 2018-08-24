@@ -1051,7 +1051,16 @@ const char * dis_df(const char * code, unsigned prefix)
 		std::string op1;
 		std::string op2;
 	
-		if( prefix & PRE_38 )
+		if( prefix & PRE_3A )
+		{
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+
+			char imm[10];
+			code = uimm8( code, imm );
+
+			printf( "vaeskeygenassist $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+		}
+		else if( prefix & PRE_38 )
 		{
 			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
 			printf( "vaesdeclast %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
