@@ -699,21 +699,29 @@ const char * dis_db(const char * code, unsigned prefix)
 	}
 	else
 	{
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
 		std::string op1;
 		std::string op2;
 	
-		if( prefix & PRE_256 )
+		if( prefix & PRE_38 )
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
-			printf( "vpand %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+			printf( "vaesimc %s,%s\n", op2.c_str(), op1.c_str() );
 		}
 		else
 		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
-			printf( "vpand %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			int vvvv = prefix >> 28;
+			vvvv = vvvv ^ 0xf;
+
+			if( prefix & PRE_256 )
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );	
+				printf( "vpand %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
+			else
+			{
+				code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );	
+				printf( "vpand %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+			}
 		}
 	}
 
