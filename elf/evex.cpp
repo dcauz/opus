@@ -421,8 +421,34 @@ TODO
 		std::string op1;
 		std::string	op2;
 
-     	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
-		printf( "vmovlpd %s,%s\n", op1.c_str(), op2.c_str() );
+		if( evex.mm == 1 )
+		{
+     		code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+			printf( "vmovlpd %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else // mm == 2
+		{
+			if( evex.Lprime )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );
+				printf( "vcvtph2ps %s,%s", op2.c_str(), op1.c_str() );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0_YMM0, 0, op1, op2 );
+				printf( "vcvtph2ps %s,%s", op2.c_str(), op1.c_str() );
+			}
+			else
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+				printf( "vcvtph2ps %s,%s", op2.c_str(), op1.c_str() );
+			}
+
+			if( evex.aaa )
+				printf( "{%%k%d}\n", evex.aaa );
+			else
+				printf( "\n" );
+		}
 		break;
 	}
 	case 0x14:
