@@ -431,14 +431,7 @@ test.vmxon \
 test.vmcall
 
 SAFER_MODE_INST_TESTS := \
-test.getsec_capabilities \
-test.getsec_enteraccs \
-test.getsec_exitac \
-test.getsec_senter \
-test.getsec_sexit \
-test.getsec_parameters \
-test.getsec_smcrtl \
-test.getsec_wakeup
+test.getsec
 
 INST_TESTS := \
 $(GP_INST_TESTS) \

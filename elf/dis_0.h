@@ -1304,6 +1304,12 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "sysexit\n" );
 		break;
 	}
+	case 0x37:
+	{
+		++code;
+		printf( "getsec\n" );
+		break;
+	}
 	case 0x38:
 	{
 		if( code[1] == 0 )
