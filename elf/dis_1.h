@@ -531,13 +531,28 @@ const char * dis_1d(const char * code, unsigned prefix)
 	std::string op1;
 	std::string op2;
 
-	if( prefix & PRE_256)
-		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op2, op1 );
-	else if( prefix & PRE_OS )
-		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+	if( prefix & PRE_3A )
+	{
+		if( prefix & PRE_256)
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0_XMM0, 0, op2, op1 );
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+
+		char imm[12];
+		code = imm8( code, imm );
+
+		printf( "vcvtps2ph $%s,%s,%s\n", imm, op2.c_str(), op1.c_str() );
+	}
 	else
-		code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op2, op1 );
-	printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+	{
+		if( prefix & PRE_256)
+			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op2, op1 );
+		else if( prefix & PRE_OS )
+			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		else
+			code = mod_reg_rm_ops( code, prefix, OpRegs::MM0, 0, op2, op1 );
+		printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+	}
 
 	return code;
 }

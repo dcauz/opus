@@ -701,17 +701,55 @@ TODO
 		std::string op1;
 		std::string op2;
 
-		if( evex.Lprime )
-			code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op2, op1 );
-		else if( evex.L )
-			code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op2, op1 );
-		else
-			code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
+		if( evex.mm == 2 )
+		{
+			if( evex.Lprime )
+				code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0, 0, op2, op1 );
+			else if( evex.L )
+				code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0, 0, op2, op1 );
+			else
+				code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op2, op1 );
 
-		if( evex.aaa )
-			printf( "vpabsw %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
-		else
-			printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+			if( evex.aaa )
+				printf( "vpabsw %s,%s{%%k%d}\n", op1.c_str(), op2.c_str(), evex.aaa );
+			else
+				printf( "vpabsw %s,%s\n", op1.c_str(), op2.c_str() );
+		}
+		else // mm == 3
+		{
+			if( evex.Lprime )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::YMM0_XMM0, 0, op1, op2 );
+
+				char imm[12];
+				code = imm8( code, imm );
+
+				printf( "vcvtps2ph $%s,%s,%s", imm, op1.c_str(), op2.c_str() );
+			}
+			else if( evex.L )
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::ZMM0_YMM0, 0, op1, op2 );
+
+				char imm[12];
+				code = imm8( code, imm );
+
+				printf( "vcvtps2ph $%s,%s,%s", imm, op1.c_str(), op2.c_str() );
+			}
+			else
+			{
+		       	code = mod_reg_rm_ops( ++code, prefix, OpRegs::XMM0, 0, op1, op2 );
+
+				char imm[12];
+				code = imm8( code, imm );
+
+				printf( "vcvtps2ph $%s,%s,%s", imm, op1.c_str(), op2.c_str() );
+			}
+
+			if( evex.aaa )
+				printf( "{%%k%d}\n", evex.aaa );
+			else
+				printf( "\n" );
+		}
 		break;
 	}
 	case 0x1e:
