@@ -760,6 +760,11 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code +=2;
 			printf( "vmfunc\n" );
 		}
+		else if( code[1] == 0xffffffd5 )
+		{
+			code +=2;
+			printf( "xend\n" );
+		}
 		else if( (( code[1] & 0x38) == 0x00 ))
 		{
 			std::string op;

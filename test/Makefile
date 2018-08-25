@@ -372,7 +372,6 @@ test.xabort \
 test.xacquire \
 test.xrelease \
 test.xbegin \
-test.xend \
 test.xtest
 
 SYSTEM_INST_TESTS := \

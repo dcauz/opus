@@ -341,7 +341,13 @@ const char * dis_c6(const char * code, unsigned prefix)
 
 const char * dis_c7(const char * code, unsigned prefix)
 {
-TODO
+	char imm[12];
+	code = imm32( ++code, imm );
+	
+	int rel = strtol( imm, NULL, 16 );
+
+	printf( "xbegin %d\n", rel );
+
 	return code;
 }
 
