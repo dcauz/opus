@@ -51,18 +51,19 @@ struct Evex
 // e2  W  v  v  v  v  1  p  p	P[15:8]
 // e3  z  L' L  b  V' a  a  a	P[23:16]
 //
-// EVEX.mm		Identical to low two bits of VEX.mmmmm
-// EVEX.pp		Identical to VEX.pp
 // EVEX.RXB		Combine with ModR/M.reg, ModR/M.rm (base,index/vidx)
 // EVEX.R'		Combine with EVEX.R and ModR/M.reg
-// EVEX.X		Combine with EVEX.B and ModR/M.rm, when SIB/VSIB absent
+// EVEX.mm		Identical to low two bits of VEX.mmmmm
+//
+// EVEX.W		Osize promotion/Opcode extension
 // EVEX.vvvv	Same as VEX.vvvv
+// EVEX.pp		Identical to VEX.pp
+//
+// EVEX.z		Zeroing/Merging
+// EVEX.L'L		Vector length/RC
+// EVEX.b		Broadcast/RC/SAE Context
 // EVEX.V'		Combine with EVEX.vvvv or when VSIB present
 // EVEX.aaa		Embedded opmask register specifier
-// EVEX.W		Osize promotion/Opcode extension
-// EVEX.z		Zeroing/Merging
-// EVEX.b		Broadcast/RC/SAE Context
-// EVEX.L'L		Vector length/RC
 //
 //
 const char * EVEX( const char * code, Evex & evex, unsigned & prefix )

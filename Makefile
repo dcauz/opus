@@ -2,6 +2,7 @@
 
 TARGETS := \
 bin/opus \
+bin/genInstPro \
 bin/elf
 
 OPUS_SRC := \
@@ -59,11 +60,18 @@ elf/esymtbl.cpp \
 elf/disassemble.cpp \
 elf/evex.cpp \
 elf/file.cpp \
-elf/operands.cpp
+elf/operands.cpp \
+elf/instPro.cpp
+
+GIP_SRC := \
+gip/genInstPro.cpp \
+gip/inst.cpp
 
 OPUS_OBJS := $(patsubst %.cpp,obj/%.o,$(OPUS_SRC))
 
 ELF_OBJS := $(patsubst %.cpp,obj/%.o,$(ELF_SRC))
+
+GIP_OBJS := $(patsubst %.cpp,obj/%.o,$(GIP_SRC))
 
 CPPFLAGS := -std=c++11
 
@@ -75,6 +83,7 @@ clean:
 	rm -fr obj .d $(TARGETS)
 	rm -f  html.output html.cpp html.hpp
 	rm -f  opl.output opl.cpp opl.hpp
+	rm -f elf/instPro.cpp
 
 clobber: clean
 	rm -f bin/opus
@@ -84,6 +93,9 @@ bin/opus: $(OPUS_OBJS) | bin
 
 bin/elf: $(ELF_OBJS) | bin
 	g++ -g -std=c++11 -o $@ $(ELF_OBJS) -pthread
+
+bin/genInstPro: $(GIP_OBJS) | bin
+	g++ -g -std=c++11 -o $@ $(GIP_OBJS) -pthread
 
 ########################################
 
@@ -101,10 +113,18 @@ $(patsubst %.cpp,.d/%.d,$(OPUS_SRC)): html.hpp opl.hpp
 
 ########################################
 
+elf/instPro.cpp: elf/inst.def bin/genInstPro
+	bin/genInstPro elf/inst.def > $@
+
+########################################
+
 obj/%.o: %.cpp .d/%.d | obj .d
 	g++ -g -std=c++11 -c -o $@ $<
 
 obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
+	g++ -g -std=c++11 -c -o $@ $<
+
+obj/gip/%.o: gip/%.cpp .d/gip/%.d | obj/gip .d/gip
 	g++ -g -std=c++11 -c -o $@ $<
 
 .d/%.d: %.cpp | .d obj
@@ -115,7 +135,11 @@ obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
 	g++ -g -std=c++11 -c -MMD -MP -o obj/$(patsubst %.cpp,%.o,$<) -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/elf/$*.Td $<
 	mv -f .d/elf/$*.Td $@
 
-obj obj/elf bin .d .d/elf:
+.d/gip/%.d: gip/%.cpp | .d/gip obj/gip
+	g++ -g -std=c++11 -c -MMD -MP -o obj/$(patsubst %.cpp,%.o,$<) -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/gip/$*.Td $<
+	mv -f .d/gip/$*.Td $@
+
+obj obj/elf obj/gip bin .d .d/elf .d/gip:
 	mkdir -p $@
 
 
@@ -128,5 +152,6 @@ ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
 -include $(patsubst %.cpp,.d/%.d,$(OPUS_SRC))
 -include $(patsubst %.cpp,.d/%.d,$(ELF_SRC))
+-include $(patsubst %.cpp,.d/%.d,$(GIP_SRC))
 endif
 endif
