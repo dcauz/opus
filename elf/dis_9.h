@@ -61,8 +61,6 @@ const char * dis_98(const char * code, unsigned prefix)
 {
 	if( prefix & PRE_OS )
 		printf( "cbtw\n" );
-	else if( prefix & REX_W )
-		printf( "cdqe\n" );
 	else
 		printf( "cwde\n" );
 		
@@ -73,8 +71,6 @@ const char * dis_99(const char * code, unsigned prefix)
 {
 	if( prefix & PRE_OS )
 		printf( "cwtd\n" );
-	else if( prefix & REX_W )
-		printf( "cqo\n" );
 	else
 		printf( "cdq\n" );
 

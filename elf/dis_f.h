@@ -112,26 +112,21 @@ const char * dis_f4(const char * code, unsigned prefix)
 
 const char * dis_f5(const char * code, unsigned prefix)
 {
-	if( ( prefix & VEX ) == 0 )
-    	printf( "cmc\n" );
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256 )
+	{
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vpmaddwd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+	}
 	else
 	{
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
-		std::string op1;
-		std::string op2;
-
-		if( prefix & PRE_256 )
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
-			printf( "vpmaddwd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
-		else
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vpmaddwd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vpmaddwd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;
@@ -258,26 +253,21 @@ const char * dis_f7(const char * code, unsigned prefix)
 
 const char * dis_f8(const char * code, unsigned prefix)
 {
-	if( ( prefix & VEX ) == 0 )
-	    printf( "clc\n" );
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256 )
+	{
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vpsubb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
+	}
 	else
 	{
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
-		std::string op1;
-		std::string op2;
-
-		if( prefix & PRE_256 )
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
-			printf( "vpsubb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
-		else
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vpsubb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vpsubb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;
@@ -307,28 +297,21 @@ const char * dis_f9(const char * code, unsigned prefix)
 
 const char * dis_fa(const char * code, unsigned prefix)
 {
-	if( ( prefix & VEX ) == 0 )
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256 )
 	{
-		printf( "cli\n" );
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vpsubd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 	else
 	{
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
-		std::string op1;
-		std::string op2;
-
-		if( prefix & PRE_256 )
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
-			printf( "vpsubd %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
-		else
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vpsubd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vpsubd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;
@@ -358,28 +341,21 @@ const char * dis_fb(const char * code, unsigned prefix)
 
 const char * dis_fc(const char * code, unsigned prefix)
 {
-	if( ( prefix & VEX ) == 0 )
+	int vvvv = prefix >> 28;
+	vvvv = vvvv ^ 0xf;
+
+	std::string op1;
+	std::string op2;
+
+	if( prefix & PRE_256 )
 	{
-		printf( "cld\n" );
+		code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
+		printf( "vpaddb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 	else
 	{
-		int vvvv = prefix >> 28;
-		vvvv = vvvv ^ 0xf;
-
-		std::string op1;
-		std::string op2;
-
-		if( prefix & PRE_256 )
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::YMM0, 0, op1, op2 );
-			printf( "vpaddb %s,%%ymm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
-		else
-		{
-			code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
-			printf( "vpaddb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
-		}
+		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
+		printf( "vpaddb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 	}
 
 	return code;

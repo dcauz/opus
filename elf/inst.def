@@ -112,7 +112,7 @@ dpps
 emms | 0f 77
 enter
 extractps
-f2xm1 | 09 f0
+f2xm1 | d9 f0
 fabs | d9 e1
 fadd
 faddp

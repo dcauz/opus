@@ -430,39 +430,6 @@ const char * dis_d9(const char * code, unsigned prefix)
 		else if( *code >= 0xffffffc8 && *code <= 0xffffffcf )
 			printf( "fxch %%st(%d)\n", *code - 0xffffffc8 );
 	
-		else if( *code == 0xffffffd0 )
-			printf( "fnop\n" );
-		else if( *code == 0xffffffe0 )
-			printf( "fchs\n" );
-		else if( *code == 0xffffffe1 )
-			printf( "fabs\n" );
-		else if( *code == 0xffffffe4 )
-			printf( "ftst\n" );
-		else if( *code == 0xffffffeb )
-			printf( "fldpi\n" );
-	
-		else if( *code == 0xfffffff0 )
-			printf( "f2xm1\n" );
-		else if( *code == 0xfffffff1 )
-			printf( "fyl2x\n" );
-		else if( *code == 0xfffffff3 )
-			printf( "fpatan\n" );
-		else if( *code == 0xfffffff4 )
-			printf( "fxtract\n" );
-		else if( *code == 0xfffffff5 )
-			printf( "fprem1\n" );
-		else if( *code == 0xfffffff6 )
-			printf( "fdecstp\n" );
-		else if( *code == 0xfffffff7 )
-			printf( "fincstp\n" );
-		else if( *code == 0xfffffff8 )
-			printf( "fprem\n" );
-		else if( *code == 0xfffffff9 )
-			printf( "fyl2xp1\n" );
-		else if( *code == 0xfffffffa )
-			printf( "fsqrt\n" );
-		else if( *code == 0xfffffffc )
-			printf( "frndint\n" );
 		else if((*code & 0x38 ) == 0x00 )
 		{
 			std::string op;
@@ -601,16 +568,6 @@ const char * dis_db(const char * code, unsigned prefix)
 			std::string op;
 			code = memStr( code, prefix, 0, 0, op );
 			printf( "fisttpl %s\n", op.c_str() );
-		}
-		else if( *code == 0xffffffe2 )
-		{
-			printf( "fnclex\n" );
-			++code;
-		}
-		else if( *code == 0xffffffe3 )
-		{
-			printf( "fninit\n" );
-			++code;
 		}
 		else
 		{
@@ -875,11 +832,6 @@ const char * dis_de(const char * code, unsigned prefix)
 			int r = *code & 0x0f;
 	
 			printf( "fdivp %%st,%%st(%d)\n", r );
-			return ++code;
-		}
-		else if( ( *code & 0xff ) == 0xd9 )
-		{
-			printf( "fcompp\n" );
 			return ++code;
 		}
 		else

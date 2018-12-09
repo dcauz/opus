@@ -1,28 +1,4 @@
 
-const char * dis_a0(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_a1(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_a2(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_a3(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
 const char * dis_a4(const char * code, unsigned prefix)
 {
 	if( prefix & PRE_REP )
@@ -71,18 +47,6 @@ const char * dis_a7(const char * code, unsigned prefix)
 	else
 		printf("cmpsw %%es:(%%rdi),%%ds:(%%rsi)\n" );
 
-	return code;
-}
-
-const char * dis_a8(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_a9(const char * code, unsigned prefix)
-{
-TODO
 	return code;
 }
 

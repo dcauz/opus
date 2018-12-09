@@ -725,11 +725,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code +=2;
 			printf( "vmxoff\n" );
 		}
-		else if( code[1] == 0xffffffca )
-		{
-			code +=2;
-			printf( "clac\n" );
-		}
 		else if( code[1] == 0xffffffd4 )
 		{
 			code +=2;
@@ -884,18 +879,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		code = mod_reg_rm_ops( ++code, prefix, OpRegs::AL, 1, op2, op1, -1, 16, -1 );
 		printf( "lsl %s,%s\n", op1.c_str(), op2.c_str() );
-		break;
-	}
-	case 0x06:
-	{
-		++code;
-		printf( "clts\n" );
-		break;
-	}
-	case 0x08:
-	{
-		++code;
-		printf( "invd\n" );
 		break;
 	}
 	case 0x0d:
@@ -2207,12 +2190,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "pcmpeqd %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
-	case 0x77:
-	{
-		printf( "emms\n" );
-		++code;
-		break;
-	}
 	case 0x78:
 	{
 		prefix |= REX_W;
@@ -2397,12 +2374,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		printf( "popq %%fs\n");
 		++code;
-		break;
-	}
-	case 0xffffffa2:
-	{
-		++code;
-		printf( "cpuid\n" );
 		break;
 	}
 	case 0xffffffa3:
