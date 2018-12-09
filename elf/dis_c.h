@@ -250,7 +250,6 @@ const char * dis_c2(const char * code, unsigned prefix)
 
 const char * dis_c3(const char * code, unsigned prefix)
 {
-	printf( "retq\n");
 	return code;
 }
 

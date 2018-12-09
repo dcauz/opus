@@ -11,15 +11,7 @@ void printXCHG( int reg, unsigned prefix )
 
 const char * dis_90(const char * code, unsigned prefix)
 {
-	if( prefix == 0 )
-		printf( "nop\n");
-	else if( prefix & PRE_REP )
-		printf( "pause\n");
-	else
-	{
-		printXCHG( 0, prefix );
-	}
-
+	printXCHG( 0, prefix );
 	return code;
 }
 
@@ -159,36 +151,3 @@ const char * dis_9b(const char * code, unsigned prefix)
 
 	return code;
 }
-
-const char * dis_9c(const char * code, unsigned prefix)
-{
-	if( prefix & PRE_OS )
-		printf( "pushfq\n" );
-	else
-		printf( "pushfw\n" );
-
-	return code;
-}
-
-const char * dis_9d(const char * code, unsigned prefix)
-{
-	if( prefix & PRE_OS )
-		printf( "popfq\n" );
-	else
-		printf( "popfw\n" );
-
-	return code;
-}
-
-const char * dis_9e(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_9f(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-

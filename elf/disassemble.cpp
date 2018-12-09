@@ -495,10 +495,6 @@ bool disassemble( const char * code, const char *end )
 		case -103:	code = dis_99(++code, prefix); break;	// 0x99
 		case -102:	code = dis_9a(++code, prefix); break;	// 0x9a
 		case -101:	code = dis_9b(++code, prefix); break;	// 0x9b
-		case -100:	code = dis_9c(++code, prefix); break;	// 0x9c
-		case -99:	code = dis_9d(++code, prefix); break;	// 0x9d
-		case -98:	code = dis_9e(++code, prefix); break;	// 0x9e
-		case -97:	code = dis_9f(++code, prefix); break;	// 0x9f
 	
 		case -96:	code = dis_a0(++code, prefix); break;	// 0xa0
 		case -95:	code = dis_a1(++code, prefix); break;	// 0xa1

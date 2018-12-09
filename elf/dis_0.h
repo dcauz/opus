@@ -725,50 +725,15 @@ const char * dis_0f(const char * code, unsigned prefix)
 			code +=2;
 			printf( "vmxoff\n" );
 		}
-		else if( code[1] == 0xffffffc8 )
-		{
-			code +=2;
-			printf( "monitor\n" );
-		}
-		else if( code[1] == 0xffffffc9 )
-		{
-			code +=2;
-			printf( "mwait\n" );
-		}
 		else if( code[1] == 0xffffffca )
 		{
 			code +=2;
 			printf( "clac\n" );
 		}
-		else if( code[1] == 0xffffffcb )
-		{
-			code +=2;
-			printf( "stac\n" );
-		}
-		else if( code[1] == 0xffffffd0 )
-		{
-			code +=2;
-			printf( "xgetbv\n" );
-		}
-		else if( code[1] == 0xffffffd1 )
-		{
-			code +=2;
-			printf( "xsetbv\n" );
-		}
 		else if( code[1] == 0xffffffd4 )
 		{
 			code +=2;
 			printf( "vmfunc\n" );
-		}
-		else if( code[1] == 0xffffffd5 )
-		{
-			code +=2;
-			printf( "xend\n" );
-		}
-		else if( code[1] == 0xffffffd6 )
-		{
-			code +=2;
-			printf( "xtest\n" );
 		}
 		else if( (( code[1] & 0x38) == 0x00 ))
 		{
@@ -886,16 +851,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
-		else if( (( code[1] & 0xff ) == 0xf9 ))
-		{
-			code += 2;
-			printf( "rdtscp\n" );
-		}
-		else if( (( code[1] & 0xff ) == 0xf8 ))
-		{
-			code += 2;
-			printf( "swapgs\n" );
-		}
 		else if( ( code[1] & 0x38) == 0x38 )
 		{	
 			++code;
@@ -931,40 +886,16 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "lsl %s,%s\n", op1.c_str(), op2.c_str() );
 		break;
 	}
-	case 0x05:
-	{
-		++code;
-		printf( "syscall\n" );
-		break;
-	}
 	case 0x06:
 	{
 		++code;
 		printf( "clts\n" );
 		break;
 	}
-	case 0x07:
-	{
-		++code;
-		printf( "sysret\n" );
-		break;
-	}
 	case 0x08:
 	{
 		++code;
 		printf( "invd\n" );
-		break;
-	}
-	case 0x09:
-	{
-		++code;
-		printf( "wbinvd\n" );
-		break;
-	}
-	case 0x0b:
-	{
-		++code;
-		printf( "ud2\n" );
 		break;
 	}
 	case 0x0d:
@@ -1266,42 +1197,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 			printf( "comisd %s,%s\n", op2.c_str(), op1.c_str() );
 		else
 			printf( "comiss %s,%s\n", op2.c_str(), op1.c_str() );
-		break;
-	}
-	case 0x30:
-	{
-		++code;
-		printf( "wrmsr\n" );
-		break;
-	}
-	case 0x31:
-	{
-		++code;
-		printf( "rdtsc\n" );
-		break;
-	}
-	case 0x32:
-	{
-		++code;
-		printf( "rdmsr\n" );
-		break;
-	}
-	case 0x33:
-	{
-		++code;
-		printf( "rdpmc\n" );
-		break;
-	}
-	case 0x34:
-	{
-		++code;
-		printf( "sysenter\n" );
-		break;
-	}
-	case 0x35:
-	{
-		++code;
-		printf( "sysexit\n" );
 		break;
 	}
 	case 0x37:
@@ -2554,12 +2449,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		++code;
 		break;
 	}
-	case 0xffffffaa:
-	{
-		printf( "rsm\n" );
-		++code;
-		break;
-	}
 	case 0xffffffab:
 	{
 		++code;
@@ -2599,16 +2488,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		if(*code == 0xffffffe8 )
 		{
 			printf( "lfence\n" );
-			++code;
-		}
-		else if(*code == 0xfffffff0 )
-		{
-			printf( "mfence\n" );
-			++code;
-		}
-		else if(*code == 0xfffffff8 )
-		{
-			printf( "sfence\n" );
 			++code;
 		}
 		else
