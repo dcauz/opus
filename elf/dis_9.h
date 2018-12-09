@@ -92,9 +92,7 @@ const char * dis_9b(const char * code, unsigned prefix)
 	if( *code == 0xffffffdb )
 	{
 		++code;
-		if( *code == 0xffffffe2 )
-			printf( "fclex\n" );
-		else if( *code == 0xffffffe3 )
+		if( *code == 0xffffffe3 )
 			printf( "finit\n" );
 		else
 			TODO
@@ -145,8 +143,6 @@ const char * dis_9b(const char * code, unsigned prefix)
 			else
 				TODO
 		}
-		else
-			printf( "fwait\n" );
 	}
 
 	return code;

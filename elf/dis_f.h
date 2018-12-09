@@ -107,8 +107,6 @@ const char * dis_f4(const char * code, unsigned prefix)
 			printf( "vpmuludq %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
 	}
-	else
-	    printf( "hlt\n" );
 	return code;
 }
 

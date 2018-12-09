@@ -2485,12 +2485,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 	{
 		++code;
 
-		if(*code == 0xffffffe8 )
-		{
-			printf( "lfence\n" );
-			++code;
-		}
-		else
 		{
 			int mod = (*code & 0xc0 ) >> 6;
 			int reg = (*code & 0x38 ) >> 3;

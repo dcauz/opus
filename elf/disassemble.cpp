@@ -559,12 +559,8 @@ bool disassemble( const char * code, const char *end )
 		case -58:	code = dis_c6(++code, prefix); break;	// 0xc6
 		case -57:	code = dis_c7(++code, prefix); break;	// 0xc7
 		case -56:	code = dis_c8(++code, prefix); break;	// 0xc8
-		case -55:	code = dis_c9(++code, prefix); break;	// 0xc9
-		case -54:	code = dis_ca(++code, prefix); break;	// 0xca
-		case -53:	code = dis_cb(++code, prefix); break;	// 0xcb
 		case -52:	code = dis_cc(++code, prefix); break;	// 0xcc
 		case -51:	code = dis_cd(++code, prefix); break;	// 0xcd
-		case -50:	code = dis_ce(++code, prefix); break;	// 0xce
 		case -49:	code = dis_cf(++code, prefix); break;	// 0xcf
 	
 		case -48:	code = dis_d0(++code, prefix); break;	// 0xd0

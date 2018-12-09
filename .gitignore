@@ -14,3 +14,4 @@ opus.VC.db
 opus.vcxproj.filters
 .d
 bin
+elf/instPro.cpp

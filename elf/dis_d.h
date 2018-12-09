@@ -438,29 +438,13 @@ const char * dis_d9(const char * code, unsigned prefix)
 			printf( "fabs\n" );
 		else if( *code == 0xffffffe4 )
 			printf( "ftst\n" );
-		else if( *code == 0xffffffe5 )
-			printf( "fxam\n" );
-		else if( *code == 0xffffffe8 )
-			printf( "fld1\n" );
-		else if( *code == 0xffffffe9 )
-			printf( "fldl2t\n" );
-		else if( *code == 0xffffffea )
-			printf( "fldl2e\n" );
 		else if( *code == 0xffffffeb )
 			printf( "fldpi\n" );
-		else if( *code == 0xffffffec )
-			printf( "fldlg2\n" );
-		else if( *code == 0xffffffed )
-			printf( "fldln2\n" );
-		else if( *code == 0xffffffee )
-			printf( "fldz\n" );
 	
 		else if( *code == 0xfffffff0 )
 			printf( "f2xm1\n" );
 		else if( *code == 0xfffffff1 )
 			printf( "fyl2x\n" );
-		else if( *code == 0xfffffff2 )
-			printf( "fptan\n" );
 		else if( *code == 0xfffffff3 )
 			printf( "fpatan\n" );
 		else if( *code == 0xfffffff4 )
@@ -477,16 +461,8 @@ const char * dis_d9(const char * code, unsigned prefix)
 			printf( "fyl2xp1\n" );
 		else if( *code == 0xfffffffa )
 			printf( "fsqrt\n" );
-		else if( *code == 0xfffffffb )
-			printf( "fsincos\n" );
 		else if( *code == 0xfffffffc )
 			printf( "frndint\n" );
-		else if( *code == 0xfffffffd )
-			printf( "fscale\n" );
-		else if( *code == 0xfffffffe )
-			printf( "fsin\n" );
-		else if( *code == 0xffffffff )
-			printf( "fcos\n" );
 		else if((*code & 0x38 ) == 0x00 )
 		{
 			std::string op;
@@ -590,13 +566,6 @@ const char * dis_da(const char * code, unsigned prefix)
 			else
 				printf( "fcmovu %%st(%d), %%st(0)\n", reg-8 );
 		}
-		else if( *code == 0xffffffe9 )
-		{
-			printf( "fucompp\n" );
-			++code;
-		}
-		else
-			TODO
 	
 		return ++code;
 	}

@@ -363,24 +363,6 @@ const char * dis_c8(const char * code, unsigned prefix)
 	return code;
 }
 
-const char * dis_c9(const char * code, unsigned prefix)
-{
-	printf( "leaveq\n");
-	return code;
-}
-
-const char * dis_ca(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
-const char * dis_cb(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
 const char * dis_cc(const char * code, unsigned prefix)
 {
 	printf( "int3\n" );
@@ -393,12 +375,6 @@ const char * dis_cd(const char * code, unsigned prefix)
 	code = imm8( code, imm );
 	
 	printf( "int $%s\n", imm );
-	return code;
-}
-
-const char * dis_ce(const char * code, unsigned prefix)
-{
-TODO
 	return code;
 }
 
