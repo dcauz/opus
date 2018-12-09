@@ -1,7 +1,9 @@
 #include "inst.h"
 #include <map>
 #include <cstring>
+#include <sstream>
 #include <algorithm>
+#include <iostream>
 
 
 using namespace std;
@@ -9,18 +11,37 @@ using namespace std;
 // reg.len.pos
 // imm.len.pos
 //
-MC_Comp::MC_Comp( const std::string & lexium )
+MC_Comp::MC_Comp( const std::string & lexium, int & offset ):value_(0),position_(0),offset_(offset)
 {
-	if( lexium.substr(0,3) == "reg.")
+	if(( lexium.substr(0,4) == "reg:") || ( lexium.substr(0,4) == "imm:" ))
+	{
 		isConst_ = false;
-	else // exium.substr(0,3) == "imm."
+		const char * cp = lexium.c_str()+4;
+		char * end;
+
+		len_ = strtol( cp, &end, 10 );
+		position_ = strtol( end+1, nullptr, 10 );
+	}
+	else
+	{
 		isConst_ = true;
 
-	const char * cp = lexium.c_str()+4;
-	char * end;
-
-	len_ = strtol( cp, &end, 10 );
-	position_ = strtol( end+1, nullptr, 10 );
+		if( lexium[0] == '0' &&  lexium[1] == 'b' )
+		{
+			char * end;
+			value_ = strtol( lexium.c_str()+2, &end, 2 );
+			len_ = end - lexium.c_str() - 2;
+			position_ = offset_;
+		}
+		else // lexium[0] == '0' &&  lexium[1] == 'x'
+		{
+			char * end;
+			value_ = strtol( lexium.c_str()+2, &end, 16 );
+			len_ = 8;
+			position_ = offset_;
+		}
+	}
+	offset += len_;
 }
 
 void SimplePrefix::setType( const std::string & token )
@@ -218,16 +239,6 @@ void Vex2::setL(char c)
 		L = 1;
 }
 
-void Vex2::setvvvv(char const * cp )
-{
-// TODO
-}
-
-void Vex2::setpp(const char * cp )
-{
-// TODO
-}
-
 bool Vex3::hasNonConstBytes() const
 {
 	return vvvv == 0xff || mmmm == 0xff;
@@ -299,10 +310,44 @@ void Vex3::setmmmm(char const * cp )
 	}
 }
 
+void Vex2::setvvvv(char const * cp )
+{
+	if( strncmp( cp, "vvvv", 4 ) == 0 || strncmp( cp, "****", 4 ) == 0 )
+		vvvv = 0xff;
+	else 
+	{
+		for( int i = 0; i < 4; ++i )
+		{
+			vvvv = 0;
+			if( cp[i] == '0' || cp[i] == '1' )
+				vvvv += (cp[i] - '0') << (3-i);
+			else
+				throw "Invalid vvvv value";
+		}
+	}
+}
+
+void Vex2::setpp(const char * cp )
+{
+	if( strncmp( cp, "pp", 2 ) == 0 || strncmp( cp, "**", 2 ) == 0 )
+		pp = 0xff;
+	else 
+	{
+		for( int i = 0; i < 2; ++i )
+		{
+			pp = 0;
+			if( cp[i] == '0' || cp[i] == '1' )
+				pp += (cp[i] - '0') << (1-i);
+			else
+				throw "Invalid pp value";
+		}
+	}
+}
+
 void Vex3::setvvvv(char const * cp )
 {
 	if( strncmp( cp, "vvvv", 4 ) == 0 || strncmp( cp, "****", 4 ) == 0 )
-		mmmm = 0xff;
+		vvvv = 0xff;
 	else 
 	{
 		for( int i = 0; i < 4; ++i )
@@ -465,11 +510,11 @@ const char * lexium[] =
 	"cmppd",
 	"cmpps",
 	"cmps",
-	"cmpsb",
+	"cmpsb %%es:(%%rdi),%%ds:(%%rsi)",
 	"cmpsd",
 	"cmpsq",
 	"cmpss",
-	"cmpsw",
+	"cmpsw %%es:(%%rdi),%%ds:(%%rsi)",
 	"cmpxchg",
 	"cmpxchg16b",
 	"cmpxchg8b",
@@ -526,10 +571,10 @@ const char * lexium[] =
 	"fchs",
 	"fclex",
 	"fcmovCC",
-	"fcom",
+	"fcom %%st(1)",
 	"fcomi",
 	"fcomip",
-	"fcomp",
+	"fcomp %%st(1)",
 	"fcompp",
 	"fcos",
 	"fdecstp",
@@ -592,12 +637,13 @@ const char * lexium[] =
 	"fsubr",
 	"fsubrp",
 	"ftst",
-	"fucom",
+	"fucom %%st(1)",
 	"fucomi",
-	"fucomp",
+	"fucomp %%st(1)",
+	"fucompp %%st(1)",
 	"fwait",
 	"fxam",
-	"fxch",
+	"fxch %%st(1)",
 	"fxrstor",
 	"fxsave",
 	"fxtract",
@@ -613,11 +659,10 @@ const char * lexium[] =
 	"imul",
 	"in",
 	"inc",
-	"ins",
-	"insb",
-	"insd",
+	"insb (%%dx),%%es:(%%edi)",
 	"insertps",
-	"insw",
+	"insl (%%dx),%%es:(%%edi)",
+	"insw (%%dx),%%es:(%%edi)",
 	"int",
 	"int0",
 	"int3",
@@ -687,7 +732,7 @@ const char * lexium[] =
 	"ldmxcsr",
 	"lds",
 	"lea",
-	"leave",
+	"leaveq",
 	"les",
 	"lfence",
 	"lfs",
@@ -697,11 +742,10 @@ const char * lexium[] =
 	"lldt",
 	"lmsw",
 	"lock",
-	"lods",
-	"lodsb",
-	"lodsd",
-	"lodsq",
-	"lodsw",
+	"lodsb %%ds:(%%rsi),%%al",
+	"lodsd %%ds:(%%rsi),%%eax",
+	"lodsq %%ds:(%%rsi),%%rax",
+	"lodsw %%ds:(%%rsi),%%ax",
 	"loop",
 	"loopCC",
 	"lsl",
@@ -746,13 +790,13 @@ const char * lexium[] =
 	"movq",
 	"movq2dq",
 	"movs",
-	"movsb",
-	"movsd",
+	"movsb %%ds:(%%rsi),%%es:(%%rdi)",
+	"movsd %%ds:(%%rsi),%%es:(%%rdi)",
 	"movshdup",
 	"movsldup",
-	"movsq",
+	"movsq %%ds:(%%rsi),%%es:(%%rdi)",
 	"movss",
-	"movsw",
+	"movsw %%ds:(%%rsi),%%es:(%%rdi)",
 	"movsx",
 	"movsxd",
 	"movupd",
@@ -774,9 +818,9 @@ const char * lexium[] =
 	"orps",
 	"out",
 	"outs",
-	"outsb",
-	"outsd",
-	"outsw",
+	"outsb %%ds:(%%esi),(%%dx)",
+	"outsd %%ds:(%%rsi),(%%dx)",
+	"outsw %%ds:(%%rsi),(%%dx)",
 	"pabsb",
 	"pabsd",
 	"pabsq",
@@ -938,8 +982,8 @@ const char * lexium[] =
 	"pusha",
 	"pushad",
 	"pusheg ",
-	"pushf",
 	"pushfd",
+	"pushfq",
 	"pxor",
 	"pxord",
 	"pxorq",
@@ -958,7 +1002,7 @@ const char * lexium[] =
 	"repne",
 	"repnz",
 	"repz",
-	"ret",
+	"retq",
 	"rol",
 	"ror",
 	"rorx",
@@ -1004,11 +1048,10 @@ const char * lexium[] =
 	"std",
 	"sti",
 	"stmxcsr",
-	"stos",
-	"stosb",
-	"stosd",
-	"stosq",
-	"stosw",
+	"stosb %%al,%%es:(%%rdi)",
+	"stosd %%eax,%%es:(%%rdi)",
+	"stosq %%rax,%%es:(%%rdi)",
+	"stosw %%ax,%%es:(%%rdi)",
 	"str",
 	"sub",
 	"subpd",
@@ -1623,7 +1666,7 @@ vector<uint8_t> Instruction::prefix() const
 
 		// If the prefix has any non-constant bytes, we are done
 		if(p->hasNonConstBytes())
-			return ans;
+			return move(ans);
 	}
 
 	// prepend the opcode_ to the end of ans;
@@ -1635,6 +1678,28 @@ bool operator < ( const Instruction & i1, const Instruction & i2 )
 {
 	if( i1.inst_ < i2.inst_ )
 		return true;
+	else if( i1.inst_ == i2.inst_ )
+	{
+		auto it1 = i1.operands_.begin();
+		auto et1 = i1.operands_.end();
+		auto it2 = i2.operands_.begin();
+		auto et2 = i2.operands_.end();
+
+		while( it1 != et2 && it2 != et2 )
+		{
+			if( *it1 > *it2 )
+				return false;
+			else if( *it1 < *it2 )
+				return true;
+
+			++it1;
+			++it2;
+		}
+
+		// If their prefix are equal then i1 < it2 only if 
+		// it2.operand_ is longer
+		return it2 != et2;
+	}
 	return false;
 }
 
@@ -1654,3 +1719,241 @@ const char  * Instruction::lexium( Nmemonic nm )
 	return ::lexium[static_cast<int>(nm)];
 }
 
+string argToString( Otype operand, const MC_Comp & arg )
+{
+	string ans;
+
+	int byte = arg.offset()/8;
+	int bit  = arg.offset()%8;
+
+	switch(operand)
+	{
+    case Otype::ADDR_R:           
+		ans = "(%%r10)";
+		break;
+    case Otype::ADDR_R_R:          
+		ans = "(%%r10,%%r11,2)";
+		break;
+    case Otype::ADDR_R_X:
+		ans = "(%%ax,%%r10,2)";
+		break;
+    case Otype::ADDR_RD:
+		ans = "(%%r10d)";
+		break;
+    case Otype::ADDR_RD_RD:
+		ans = "(%%r10d,%%r12d,8)";
+		break;
+    case Otype::ADDR_RD_XD:
+		ans = "(%%r10d,%%ax,1)";
+		break;
+    case Otype::ADDR_RW:
+		ans = "(%%r10w)";
+		break;
+    case Otype::ADDR_RW_RW:
+		ans = "(%%r10w,%%r1w)";
+		break;
+    case Otype::ADDR_RW_XW:
+		ans = "(%%r10w,%%eax)";
+		break;
+    case Otype::ADDR_X:
+	{
+		stringstream ss;
+		int b = arg.offset()/8;
+		int o = arg.offset()%8;
+		ss << "indirect(xq_reg(reg(code[" << b << "]," << o << "))).c_str()";
+		ans = ss.str();
+		break;
+	}
+    case Otype::ADDR_X_R:
+		ans = "(%%rax,%%r10)";
+		break;
+    case Otype::ADDR_X_X:
+		ans = "(%%rax,%%rbx)";
+		break;
+    case Otype::ADDR_XD:
+		ans = "(%%eax)";
+		break;
+    case Otype::ADDR_XD_RD:
+		ans = "(%%eax,%%r1d)";
+		break;
+    case Otype::ADDR_XD_XD:
+		ans = "(%%ax,%%dx,4)";
+		break;
+    case Otype::ADDR_XW:
+		ans = "(%%eax)";
+		break;
+    case Otype::ADDR_XW_RW:
+		ans = "(%%eax,%%r10w)";
+		break;
+    case Otype::ADDR_XW_XW:
+		ans = "(%%eax,%%ebx,2)";
+		break;
+    case Otype::CR:
+		ans = "%%cr0";
+		break;
+    case Otype::DR:
+		ans = "%%dr0";
+		break;
+    case Otype::IMM8:
+		ans = "imm8";
+		break;
+    case Otype::IMM32:
+		ans = "imm32";
+		break;
+    case Otype::K:
+		ans = "%%k1";
+		break;
+    case Otype::MM:
+		ans = "%%mm0";
+		break;
+    case Otype::R:
+		ans = "%%r10";
+		break;
+    case Otype::RB:
+		ans = "%%r10b";
+		break;
+    case Otype::RD:
+		ans = "%%r10d";
+		break;
+    case Otype::RW:
+		ans = "%%r10w";
+		break;
+    case Otype::SR:
+		ans = "%%sr1";
+		break;
+    case Otype::ST:
+		ans = "%%st1";
+		break;
+    case Otype::X:
+		ans = "%%cx";
+		break;
+    case Otype::XB:
+		ans = "%%ah";
+		break;
+    case Otype::XD:
+		ans = "%%ax";
+		break;
+    case Otype::XMM:
+	{
+		stringstream ss;
+		int b = arg.offset()/8;
+		int o = arg.offset()%8;
+		ss << "xmm_reg(reg(code[" << b << "]," << o << "))";
+		ans = ss.str();
+		break;
+	}
+    case Otype::XW:
+		ans = "%%eax";
+		break;
+    case Otype::YMM:
+		ans = "%%ymm1";
+		break;
+    case Otype::ZMM:
+		ans = "%%zmm1";
+		break;
+	}
+
+	return ans;	
+}
+
+#include <cstdio>
+
+string Instruction::lenString() const
+{
+	char buff[8];
+
+	int len = 0;
+
+	for( auto & p: prefix_ )
+		len += p->length()*8;
+
+	len += opcode_.size()*8;
+
+	for( auto & a: args_ )
+		len += a.length();
+
+	sprintf( buff, "%d", len/8 );
+	return buff;
+}
+
+string Instruction::decoder( const std::string & margin ) const
+{
+	string ans = margin + "printf(\"";
+	ans += lexium(inst_);
+
+	if( operands_.size() == 0 )
+	{
+		ans += "\\n\");\n";
+		ans += margin + "code +=";
+		ans += lenString();
+		ans += ";";
+	}
+	else if( operands_.size() == 1 )
+	{
+		throw "instruction with 1 operands";
+	}
+	else if( operands_.size() == 2 )
+	{
+		auto it =args_.begin(); 
+		ans += " %s,%s\\n\", ";
+		ans += argToString(operands_[0], *it);
+		ans += ",";
+		++it;
+		ans += argToString(operands_[1], *it);
+		ans += ");\n";
+		ans += margin + "code +=";
+		ans += lenString();
+		ans += ";";
+	}
+	else if( operands_.size() == 3 )
+	{
+		throw "instruction with 3 operands";
+	}
+	else if( operands_.size() == 4 )
+	{
+		throw "instruction with 4 operands";
+	}
+	else
+	{
+		throw "instruction with 5 operands";
+	}
+
+	return ans;
+}
+
+string mask( int o, int l )
+{
+	uint8_t m = 0;
+	for( int i = o; i < (o+l); ++i)
+		m += 1 << (7-i);
+
+	char ans[8];
+	sprintf( ans, "0x%x", m );
+	return ans;
+}
+
+string Instruction::discriminators() const
+{
+	stringstream ans;
+
+	bool first = true;
+	for( auto & arg: args_ )
+	{
+		if( arg.isConst())
+		{
+			int b = arg.offset()/8;
+			int o = arg.offset()%8;
+			int l = arg.length();
+			int v = arg.value();
+
+			if( !first )
+				ans << " && ";
+			else
+				first = false;
+
+			ans << "(( code[" << b << "] & " << mask( o, l ) << ") == " << v << ")";
+		}
+	}
+
+	return ans.str();
+}

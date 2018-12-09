@@ -101,8 +101,8 @@ entrySize:0
 
 ----------------------------------------
 6e 6f 66 6f
-     0:outsb %ds:(%rsi),(%dx)
-     1:outsl %ds:(%rsi),(%dx)
+     0:outsb %ds:(%esi),(%dx)
+     1:outsd %ds:(%rsi),(%dx)
      2:outsw %ds:(%rsi),(%dx)
 #################
 TODO: elf/file.cpp:186

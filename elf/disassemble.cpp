@@ -21,6 +21,10 @@
 #include "dis_e.h"
 #include "dis_f.h"
 
+
+const char * disCode( const char * code );
+
+
 // http://ref.x86asm.net/coder64.html
 // http://www.mathemainzel.info/files/x86asmref.html
 
@@ -39,6 +43,12 @@ bool disassemble( const char * code, const char *end )
 		}
 		else
 			printOn = true;
+
+		auto inCode = code;
+		if(!prefix)
+			code = disCode( code );
+		if( inCode != code )
+			continue;
 
 		switch(*code)
 		{

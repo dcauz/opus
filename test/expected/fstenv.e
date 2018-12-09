@@ -103,11 +103,16 @@ entrySize:0
 9b d9 32 9b 41 d9 32 9b  67 d9 32 9b 67 41 d9 32
 9b d9 34 25 89 67 45 23  d9 32 41 d9 32 67 d9 32
 67 41 d9 32 d9 34 25 89  67 45 23
-     0:fstenv (%rdx)
-     3:fstenv (%r10)
-     7:fstenv (%edx)
-     b:fstenv (%r10d)
-    10:fstenv 0x23456789
+     0:fwait
+     1:fnstenv (%rdx)
+     3:fwait
+     4:fnstenv (%r10)
+     7:fwait
+     8:fnstenv (%edx)
+     b:fwait
+     c:fnstenv (%r10d)
+    10:fwait
+    11:fnstenv 0x23456789
     18:fnstenv (%rdx)
     1a:fnstenv (%r10)
     1d:fnstenv (%edx)

@@ -101,8 +101,8 @@ entrySize:0
 
 ----------------------------------------
 66 9d 9d
-     0:popfq
-     2:popfw
+     0:popfd
+     2:popfq
 #################
 TODO: elf/file.cpp:186
 

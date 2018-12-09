@@ -101,7 +101,8 @@ entrySize:0
 
 ----------------------------------------
 9b db e3 db e3
-     0:finit
+     0:fwait
+     1:fninit
      3:fninit
 #################
 TODO: elf/file.cpp:186

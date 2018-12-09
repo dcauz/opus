@@ -101,8 +101,8 @@ entrySize:0
 
 ----------------------------------------
 9c 66 9c
-     0:pushfw
-     1:pushfq
+     0:pushfq
+     1:pushfd
 #################
 TODO: elf/file.cpp:186
 

@@ -101,9 +101,9 @@ entrySize:0
 
 ----------------------------------------
 6c 6d 66 6d
-     0:insb (%dx),%es:(%rdi)
-     1:insl (%dx),%es:(%rdi)
-     2:insw (%dx),%es:(%rdi)
+     0:insb (%dx),%es:(%edi)
+     1:insw (%dx),%es:(%edi)
+     2:insl (%dx),%es:(%edi)
 #################
 TODO: elf/file.cpp:186
 

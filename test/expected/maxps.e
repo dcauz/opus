@@ -106,7 +106,7 @@ entrySize:0
 81 54 5f 5c 22 10 62 11  54 40 5f 94 a2 67 35 00
 00 62 91 54 48 5f 14 22  62 d1 54 48 5f 0a 62 71
 34 00 5f d7 62 41 7c 28  5f e5 62 01 5c 40 5f ec
-1b
+00
      0:maxps %xmm2,%xmm7
      3:maxps (%r10),%xmm0
      7:vmaxps 0x10(%r10,%r12,1),%xmm31,%xmm10

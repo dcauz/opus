@@ -103,11 +103,16 @@ entrySize:0
 9b d9 3a 9b 41 d9 3a 9b  67 d9 3a 9b 67 41 d9 3a
 9b d9 3c 25 89 67 45 23  d9 3a 41 d9 3a 67 d9 3a
 67 41 d9 3a d9 3c 25 89  67 45 23
-     0:fstcw (%rdx)
-     3:fstcw (%r10)
-     7:fstcw (%edx)
-     b:fstcw (%r10d)
-    10:fstcw 0x23456789
+     0:fwait
+     1:fnstcw (%rdx)
+     3:fwait
+     4:fnstcw (%r10)
+     7:fwait
+     8:fnstcw (%edx)
+     b:fwait
+     c:fnstcw (%r10d)
+    10:fwait
+    11:fnstcw 0x23456789
     18:fnstcw (%rdx)
     1a:fnstcw (%r10)
     1d:fnstcw (%edx)

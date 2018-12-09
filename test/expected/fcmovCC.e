@@ -102,7 +102,7 @@ entrySize:0
 ----------------------------------------
 da c1 da c9 da d1 da d9  db c1 db c9 db d1 db d9
 da c7 da cf da d7 da df  db c7 db cf db d7 db df
-20
+00
      0:fcmovb %st(1), %st(0)
      2:fcmove %st(1), %st(0)
      4:fcmovbe %st(1), %st(0)

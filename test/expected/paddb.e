@@ -124,7 +124,7 @@ entrySize:0
 81 55 d4 5c 22 10 62 11  d5 40 d4 94 a2 67 35 00
 00 62 91 d5 48 d4 14 22  62 d1 d5 48 d4 0a 62 71
 b5 00 d4 d7 62 41 fd 28  d4 e5 62 01 dd 40 d4 ec
-09
+00
      0:paddb %mm2,%mm7
      3:paddb (%r10),%mm0
      7:vpaddb 0x10(%r10,%r12,1),%xmm31,%xmm10

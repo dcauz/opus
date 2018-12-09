@@ -103,11 +103,16 @@ entrySize:0
 9b dd 32 9b 41 dd 32 9b  67 dd 32 9b 67 41 dd 32
 9b dd 34 25 89 67 45 23  dd 32 41 dd 32 67 dd 32
 67 41 dd 32 dd 34 25 89  67 45 23
-     0:fsave (%rdx)
-     3:fsave (%r10)
-     7:fsave (%edx)
-     b:fsave (%r10d)
-    10:fsave 0x23456789
+     0:fwait
+     1:fnsave (%rdx)
+     3:fwait
+     4:fnsave (%r10)
+     7:fwait
+     8:fnsave (%edx)
+     b:fwait
+     c:fnsave (%r10d)
+    10:fwait
+    11:fnsave 0x23456789
     18:fnsave (%rdx)
     1a:fnsave (%r10)
     1d:fnsave (%edx)

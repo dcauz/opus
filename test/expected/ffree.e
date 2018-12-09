@@ -101,7 +101,7 @@ entrySize:0
 
 ----------------------------------------
 dd c0 dd c1 dd c2 dd c3  dd c4 dd c5 dd c6 dd c7
-90
+00
      0:ffree %st(0)
      2:ffree %st(1)
      4:ffree %st(2)

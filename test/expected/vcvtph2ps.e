@@ -113,7 +113,7 @@ c4 c2 79 13 0a c4 42 79  13 1a 62 c2 7d 08 13 2a
 62 52 7d 0d 13 1a 62 c2  7d 0d 13 2a 62 f2 7d 4d
 13 ca 62 52 7d 4d 13 dc  62 a2 7d 4d 13 ed 62 d2
 7d 4d 13 0a 62 52 7d 4d  13 1a 62 c2 7d 4d 13 2a
-01
+00
      0:vcvtph2ps %xmm2,%ymm1
      5:vcvtph2ps %xmm12,%ymm11
      a:vcvtph2ps %xmm21,%ymm21

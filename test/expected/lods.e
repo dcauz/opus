@@ -101,10 +101,10 @@ entrySize:0
 
 ----------------------------------------
 ac 66 ad ad 48 ad
-     0:lods %ds:(%rsi),%al
-     1:lods %ds:(%rsi),%ax
-     3:lods %ds:(%rsi),%eax
-     4:lods %ds:(%rsi),%rax
+     0:lodsb %ds:(%rsi),%al
+     1:lodsd %ds:(%rsi),%eax
+     3:lodsw %ds:(%rsi),%ax
+     4:lodsq %ds:(%rsi),%rax
 #################
 TODO: elf/file.cpp:186
 

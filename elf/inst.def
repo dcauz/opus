@@ -9,7 +9,8 @@ adcx
 add
 addpd
 addps
-addsd
+addsd addr.x xmm | f2 0f 58 0b00 reg:3:1 reg:3:0
+addsd xmm xmm | f2 0f 58 0b11 reg:3:1 reg:3:0
 addss
 addsubpd
 addsubps
@@ -45,9 +46,10 @@ btr
 bts
 bzhi
 call
-cbw | 98
 cdq | 99
-cdqe
+cqo | 48 99
+cdqe | 48 98
+cwde | 98
 clac | 0f 01 ca
 clc | f8
 cld | fc
@@ -63,7 +65,6 @@ cmppd
 cmpps
 cmps
 cmpsb | a6
-cmpsd | a7
 cmpsq
 cmpss
 cmpsw | a7
@@ -97,7 +98,6 @@ cvttps2dq
 cvttps2pi
 cvttsd2si
 cvttss2si
-cwd | 99
 cwde
 daa
 das
@@ -118,7 +118,7 @@ fadd
 faddp
 fbld
 fbstp
-fchs | d9 d0
+fchs | d9 e0
 fclex | 98 db e2
 fcmovcc
 fcom |  d8 d1
@@ -141,7 +141,6 @@ fidivr
 fild
 fimul
 fincstp | d9 f7
-finit | 9b db e3
 fist
 fistp
 fisttp
@@ -177,7 +176,7 @@ fscale | d9 fd
 fsin |  d9 fe
 fsincos | d9 fb
 fsqrt | d9 fa
-fst | d9 e4
+ftst | d9 e4
 fstcw
 fstenv
 fstp
@@ -192,6 +191,7 @@ fucomi
 fucomip
 fucomp | dd e9
 fucompp | da e9
+fwait | 9b
 fxam | d9 e5
 fxch | d9 c9
 fxrstor
@@ -210,15 +210,14 @@ in
 inc
 ins | 6c
 insb
-insd | 6d
 insertps
+insl | 66 6d
 insw | 6d
 int
 invd | 0f 08
 invlpg
 invpcid
 iret | cf
-iretd | cf
 ixucomisd
 jcc
 jmp
@@ -289,10 +288,9 @@ lidt
 lldt
 lmsw
 lock
-lods
 lodsb | ac
-lodsd
-lodsq
+lodsd | 66 ad
+lodsq | 48 ad
 lodsw | ad
 loop
 loopcc
@@ -342,9 +340,9 @@ movsb | a4
 movsd | a5
 movshdup
 movsldup
-movsq
+movsq | 48 a5
 movss
-movsw | a5
+movsw | 66 a5
 movsx
 movsxd
 movupd
@@ -363,7 +361,7 @@ orpd
 orps
 outsb | 6e
 outsd | 6f
-outsw | 6f
+outsw | 66 6f
 pabsb
 pabsd
 pabsq
@@ -431,6 +429,7 @@ pmulld
 pmullq
 pmullw
 pmuludq
+popfd | 66 9d
 popfq | 9d
 por
 prefetchwt1
@@ -474,6 +473,7 @@ punpcklbw
 punpckldq
 punpcklqdq
 punpcklwd
+pushfd | 66 9c
 pushfq | 9c
 pxor
 pxord
@@ -507,6 +507,8 @@ stc | f9
 std | fd
 sti | fb
 stosb | aa
+stosd | 66 ab
+stosq | 48 ab
 stosw | ab
 subpd
 subps

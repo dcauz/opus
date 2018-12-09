@@ -178,9 +178,9 @@ b1 df 03 c2 d5 06 62 b1  df 03 c2 d5 07 62 b1 df
 62 d1 ef 0b c2 12 02
      0:cmpsb %es:(%rdi),%ds:(%rsi)
      1:cmpsw %es:(%rdi),%ds:(%rsi)
-     3:cmpsl %es:(%rdi),%ds:(%rsi)
+     3:cmpsw %es:(%rdi),%ds:(%rsi)
      4:cmpsq %es:(%rdi),%ds:(%rsi)
-     6:cmpsl %es:(%rdi),%ds:(%rsi)
+     6:cmpsw %es:(%rdi),%ds:(%rsi)
      7:cmpeqsd (%r10),%xmm10
      d:cmpltsd (%r10),%xmm10
     13:cmplesd (%r10),%xmm10

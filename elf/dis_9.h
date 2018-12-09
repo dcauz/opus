@@ -70,21 +70,21 @@ const char * dis_98(const char * code, unsigned prefix)
 	if( prefix & PRE_OS )
 		printf( "cbtw\n" );
 	else if( prefix & REX_W )
-		printf( "cltq\n" );
+		printf( "cdqe\n" );
 	else
-		printf( "cltd\n" );
+		printf( "cwde\n" );
 		
 	return code;
 }
 
 const char * dis_99(const char * code, unsigned prefix)
 {
-	if( prefix & REX_W )
-		printf( "cqto\n" );
-	else if( prefix & PRE_OS )
+	if( prefix & PRE_OS )
 		printf( "cwtd\n" );
+	else if( prefix & REX_W )
+		printf( "cqo\n" );
 	else
-		printf( "cltd\n" );
+		printf( "cdq\n" );
 
 	return code;
 }

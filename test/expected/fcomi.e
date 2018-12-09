@@ -102,7 +102,7 @@ entrySize:0
 ----------------------------------------
 db f1 db f2 db f4 db f6  df f1 df f2 df f4 df f6
 db e9 db ea db ec db ee  df e9 df ea df ec df ee
-20
+00
      0:fcomi %st(1), %st(0)
      2:fcomi %st(2), %st(0)
      4:fcomi %st(4), %st(0)

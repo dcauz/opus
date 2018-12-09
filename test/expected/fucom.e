@@ -121,7 +121,7 @@ dd ee dd ef da e9
     1e:fucomp %st(5)
     20:fucomp %st(6)
     22:fucomp %st(7)
-    24:fucompp
+    24:fucompp %st(1)
 #################
 TODO: elf/file.cpp:186
 

@@ -101,12 +101,12 @@ entrySize:0
 
 ----------------------------------------
 48 98 66 98 99 66 98 98  48 98
-     0:cltq
+     0:cdqe
      2:cbtw
-     4:cltd
+     4:cdq
      5:cbtw
-     7:cltd
-     8:cltq
+     7:cwde
+     8:cdqe
 #################
 TODO: elf/file.cpp:186
 

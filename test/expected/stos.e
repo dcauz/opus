@@ -101,10 +101,10 @@ entrySize:0
 
 ----------------------------------------
 aa 66 ab ab 48 ab
-     0:stos %al,%es:(%rdi)
-     1:stos %ax,%es:(%rdi)
-     3:stos %eax,%es:(%rdi)
-     4:stos %rax,%es:(%rdi)
+     0:stosb %al,%es:(%rdi)
+     1:stosd %eax,%es:(%rdi)
+     3:stosw %ax,%es:(%rdi)
+     4:stosq %rax,%es:(%rdi)
 #################
 TODO: elf/file.cpp:186
 

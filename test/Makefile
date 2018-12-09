@@ -512,9 +512,6 @@ $(INST_TESTS):test.%: obj/%.o | $(ELF)
 obj/%.o: asm/%.s | obj
 	as $< -o $@
 
-test.elfo: ../obj/elf/elf.o | $(ELF)
-	$(ELF) ../obj/elf/elf.o > out;diff out expected/elf.e
-	
 #######################################################
 
 asm/add.s: asm/adc.s

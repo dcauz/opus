@@ -102,12 +102,14 @@ entrySize:0
 ----------------------------------------
 9b df e0 df e0 9b 67 dd  3a 67 dd 3a 9b dd 3a dd
 3a
-     0:fstsw %ax
+     0:fwait
      1:fnstsw %ax
      3:fnstsw %ax
-     5:fstsw (%edx)
+     5:fwait
+     6:fnstsw (%edx)
      9:fnstsw (%edx)
-     c:fstsw (%rdx)
+     c:fwait
+     d:fnstsw (%rdx)
      f:fnstsw (%rdx)
 #################
 TODO: elf/file.cpp:186

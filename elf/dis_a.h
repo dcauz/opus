@@ -41,7 +41,7 @@ const char * dis_a5(const char * code, unsigned prefix)
 	else if( prefix & PRE_OS )
 		printf( "movsq %%ds:(%%rsi),%%es:(%%rdi)\n" );
 	else
-		printf( "movsl %%ds:(%%rsi),%%es:(%%rdi)\n" );
+		printf( "movsw %%ds:(%%rsi),%%es:(%%rdi)\n" );
 
 	return code;
 }
@@ -69,7 +69,7 @@ const char * dis_a7(const char * code, unsigned prefix)
 	else if( prefix & REX_W )
 		printf("cmpsq %%es:(%%rdi),%%ds:(%%rsi)\n" );
 	else
-		printf("cmpsl %%es:(%%rdi),%%ds:(%%rsi)\n" );
+		printf("cmpsw %%es:(%%rdi),%%ds:(%%rsi)\n" );
 
 	return code;
 }

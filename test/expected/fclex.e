@@ -101,7 +101,8 @@ entrySize:0
 
 ----------------------------------------
 9b db e2 db e2
-     0:fclex
+     0:fwait
+     1:fnclex
      3:fnclex
 #################
 TODO: elf/file.cpp:186

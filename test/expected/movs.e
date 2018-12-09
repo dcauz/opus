@@ -103,8 +103,8 @@ entrySize:0
 a4 66 a5 a5 48 a5
      0:movsb %ds:(%rsi),%es:(%rdi)
      1:movsw %ds:(%rsi),%es:(%rdi)
-     3:movsl %ds:(%rsi),%es:(%rdi)
-     4:movsl %ds:(%rsi),%es:(%rdi)
+     3:movsd %ds:(%rsi),%es:(%rdi)
+     4:movsq %ds:(%rsi),%es:(%rdi)
 #################
 TODO: elf/file.cpp:186
 

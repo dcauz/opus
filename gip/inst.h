@@ -4,12 +4,14 @@
 #include <cstring>
 #include <vector>
 #include <memory>
+#include <set>
+
 
 // Machine code component
 class MC_Comp
 {
 public:
-	MC_Comp( const std::string & );
+	MC_Comp( const std::string &, int & offset );
 
 	MC_Comp(const MC_Comp & ) = default;
 	MC_Comp & operator = (const MC_Comp & ) = default;
@@ -17,27 +19,57 @@ public:
 	MC_Comp & operator = ( MC_Comp && ) = default;
 	~MC_Comp() = default;
 
+	int length() const 	{ return len_; }
+	int offset() const 	{ return offset_; }
+	int position() const{ return position_; }
+	int value() const	{ return value_; }
+
+	friend bool operator < ( const MC_Comp & a, const MC_Comp& b )
+	{
+		return a.position_ < b.position_;
+	}
+
+	bool 	isConst() const	{ return isConst_; }
+
 private:
 	bool 	isConst_;
+	uint8_t value_;
 	uint8_t position_;	// Position of parameter in instruction encoded by component
 	uint8_t len_;
-	uint32_t value_;
+	uint8_t offset_;
 };
 
 enum class Otype
 {
+	ADDR_R,				// example: 10(%r10)
+	ADDR_R_R,			// example: 30(%r10,%r11,2)
+	ADDR_R_X,			// example: 40(%r10,%rdx,2)
+	ADDR_RD,			// example: 70(%r10d)
+	ADDR_RD_RD,			// example: 90(%r10d,%r11d,2)
+	ADDR_RD_XD,			// example: 10(%r10d,%dx,2)
+	ADDR_RW,			// example: 13(%r10w)
+	ADDR_RW_RW,			// example: 15(%r10w,%r11w,1)
+	ADDR_RW_XW,			// example: 16(%r10w,%edx,2)
+	ADDR_X,				// example: 20(%rdx)
+	ADDR_X_R,			// example: 50(%rdx,%r11,2)
+	ADDR_X_X,			// example: 60(%rdx,%rax,2)
+	ADDR_XD,			// example: 80(%dx)
+	ADDR_XD_RD,			// example: 11(%dx,%r11d,2)
+	ADDR_XD_XD,			// example: 12(%dx,%ax,2)
+	ADDR_XW,			// example: 14(%edx)
+	ADDR_XW_RW,			// example: 17(%edx,%r11w,4)
+	ADDR_XW_XW,			// example: 18(%edx,%eax,8)
 	CR,
-	DISP,
 	DR,
-	IMM,
+	IMM8,
+	IMM32,
 	K,
 	MM,
-	OFF,
-	SR,
 	R,
 	RB,
 	RD,
 	RW,
+	SR,
 	ST,
 	X,
 	XB,
@@ -242,6 +274,7 @@ enum class Nmemonic
 	fucom,
 	fucomi,
 	fucomp,
+	fucompp,
 	fwait,
 	fxam,
 	fxch,
@@ -260,10 +293,9 @@ enum class Nmemonic
 	imul,
 	in,
 	inc,
-	ins,
 	insb,
-	insd,
 	insertps,
+	insl,
 	insw,
 	_int,
 	int0,
@@ -334,7 +366,7 @@ enum class Nmemonic
 	ldmxcsr,
 	lds,
 	lea,
-	leave,
+	leaveq,
 	les,
 	lfence,
 	lfs,
@@ -344,14 +376,12 @@ enum class Nmemonic
 	lldt,
 	lmsw,
 	lock,
-	lods,
 	lodsb,
 	lodsd,
 	lodsq,
 	lodsw,
 	loop,
 	loopCC,
-	// l_s,
 	lsl,
 	lss,
 	ltr,
@@ -372,13 +402,11 @@ enum class Nmemonic
 	movapd,
 	movaps,
 	movbe,
-	// mov_cr,
 	movd,
 	movddup,
 	movdq2q,
 	movdqa,
 	movdqu,
-	// mov_dr,
 	movhlps,
 	movhpd,
 	movhps,
@@ -395,7 +423,6 @@ enum class Nmemonic
 	movntq,
 	movq,
 	movq2dq,
-	// movr_s,
 	movs,
 	movsb,
 	movsd,
@@ -589,8 +616,8 @@ enum class Nmemonic
 	pusha,
 	pushad,
 	pusheg ,
-	pushf,
 	pushfd,
+	pushfq,
 	pxor,
 	pxord,
 	pxorq,
@@ -655,7 +682,6 @@ enum class Nmemonic
 	std,
 	sti,
 	stmxcsr,
-	stos,
 	stosb,
 	stosd,
 	stosq,
@@ -1295,7 +1321,7 @@ public:
 
 	virtual bool hasNonConstBytes() const = 0;
 	virtual void prepend( std::vector<uint8_t> & ) const = 0;
-
+	virtual int length() const = 0;
 };
 
 class SimplePrefix:public Prefix
@@ -1307,6 +1333,7 @@ public:
 
 	bool hasNonConstBytes() const final	{ return false; }
 	void prepend( std::vector<uint8_t> & ) const final;
+	int length() const final { return 1; }
 
 private:
 	uint8_t type_;
@@ -1325,6 +1352,8 @@ public:
 
 	bool hasNonConstBytes() const final { return false; }
 	void prepend( std::vector<uint8_t> & ) const final;
+
+	int length() const final { return 1; }
 
 private:
 	bool	R;
@@ -1345,6 +1374,8 @@ public:
 
 	bool hasNonConstBytes() const final;
 	void prepend( std::vector<uint8_t> & ) const final;
+
+	int length() const final { return 2; }
 
 private:
 	bool	R;
@@ -1369,6 +1400,8 @@ public:
 
 	bool hasNonConstBytes() const final;
 	void prepend( std::vector<uint8_t> & ) const final;
+
+	int length() const final { return 3; }
 
 private:
 	bool	R;
@@ -1404,6 +1437,8 @@ public:
 	bool hasNonConstBytes() const final;
 	void prepend( std::vector<uint8_t> & ) const final;
 
+	int length() const final { return 4; }
+
 private:
 	bool	R;
 	bool	X;
@@ -1430,7 +1465,7 @@ public:
 				std::vector<Otype>   && operands,
 				std::vector<std::unique_ptr<Prefix>>  && prefix,
 				std::vector<uint8_t> && opcode,
-				std::vector<MC_Comp> && args ):	
+				std::set<MC_Comp>&& args ):	
 					inst_(std::move(nm)),
 					operands_(std::move(operands)),
 					prefix_(std::move(prefix)),
@@ -1445,6 +1480,8 @@ public:
 	Instruction & operator = ( Instruction && ) = default;
 	~Instruction() = default;
 
+	const char	* lexium() const	{ return lexium(inst_); }
+
 	friend bool operator < ( const Instruction &, const Instruction & );
 
 	static Nmemonic			nmemonic(const std::string & );
@@ -1452,11 +1489,16 @@ public:
 
 	std::vector<uint8_t>	prefix() const;
 
+	std::string decoder( const std::string & margin ) const;
+
+	std::string lenString() const;
+	std::string discriminators() const;
+
 private:
 	Nmemonic				inst_;
 	std::vector<Otype>		operands_;
 
 	std::vector<std::unique_ptr<Prefix>> prefix_;
 	std::vector<uint8_t>	opcode_;
-	std::vector<MC_Comp>	args_;
+	std::set<MC_Comp>		args_;
 };
