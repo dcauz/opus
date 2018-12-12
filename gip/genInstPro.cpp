@@ -297,28 +297,45 @@ void genInstTree( const Instructions & insts, InstTree & tree )
 //      cr          %crN
 //      dr          %drN
 //      k           %kN
-//      addr.r,     10(%r10)
-//      addr.x,     20(%rdx)
-//      addr.r.r,   30(%r10,%r11,2)
-//      addr.r.x,   40(%r10,%rdx,2)
-//      addr.x.r,   50(%rdx,%r11,2)
-//      addr.x.x,   60(%rdx,%rax,2)
-//      addr.rd,    70(%r10d)
-//      addr.xd,    80(%dx)
-//      addr.rd.rd, 90(%r10d,%r11d,2)
-//      addr.rd.xd, 10(%r10d,%dx,2)
-//      addr.xd.rd, 11(%dx,%r11d,2)
-//      addr.xd.xd, 12(%dx,%ax,2)
-//      addr.rw,    13(%r10w)
-//      addr.xw,    14(%edx)
-//      addr.rw.rw, 15(%r10w,%r11w,1)
-//      addr.rw.xw, 16(%r10w,%edx,2)
-//      addr.xw.rw, 17(%edx,%r11w,4)
-//      addr.xw.xw, 18(%edx,%eax,8)
+//      addr.imm.r,     10(%r10)
+//      addr.imm.x,     20(%rdx)
+//      addr.imm.r.r,   30(%r10,%r11,2)
+//      addr.imm.r.x,   40(%r10,%rdx,2)
+//      addr.imm.x.r,   50(%rdx,%r11,2)
+//      addr.imm.x.x,   60(%rdx,%rax,2)
+//      addr.imm.rd,    70(%r10d)
+//      addr.imm.xd,    80(%dx)
+//      addr.imm.rd.rd, 90(%r10d,%r11d,2)
+//      addr.imm.rd.xd, 10(%r10d,%dx,2)
+//      addr.imm.xd.rd, 11(%dx,%r11d,2)
+//      addr.imm.xd.xd, 12(%dx,%ax,2)
+//      addr.imm.rw,    13(%r10w)
+//      addr.imm.xw,    14(%edx)
+//      addr.imm.rw.rw, 15(%r10w,%r11w,1)
+//      addr.imm.rw.xw, 16(%r10w,%edx,2)
+//      addr.imm.xw.rw, 17(%edx,%r11w,4)
+//      addr.imm.xw.xw, 18(%edx,%eax,8)
+//      addr.r,     (%r10)
+//      addr.x,     (%rdx)
+//      addr.r.r,   (%r10,%r11,2)
+//      addr.r.x,   (%r10,%rdx,2)
+//      addr.x.r,   (%rdx,%r11,2)
+//      addr.x.x,   (%rdx,%rax,2)
+//      addr.rd,    (%r10d)
+//      addr.xd,    (%dx)
+//      addr.rd.rd, (%r10d,%r11d,2)
+//      addr.rd.xd, (%r10d,%dx,2)
+//      addr.xd.rd, (%dx,%r11d,2)
+//      addr.xd.xd, (%dx,%ax,2)
+//      addr.rw,    (%r10w)
+//      addr.xw,    (%edx)
+//      addr.rw.rw, (%r10w,%r11w,1)
+//      addr.rw.xw, (%r10w,%edx,2)
+//      addr.xw.rw, (%edx,%r11w,4)
+//      addr.xw.xw, (%edx,%eax,8)
 //
-//      imm8    Immediate value
-//      imm32   Immediate value
-//      disp    Memory addressing displayment as the exponent of power of 2
+//      imm    Immediate value
+//      disp   Memory addressing displayment as the exponent of power of 2
 //
 // prefix = rex:BRWX
 //          vex2:R:vvvv:L:pp
@@ -357,6 +374,25 @@ bool loadDef( FILE * fh, Instructions & insts )
 
 	static const char * opTypes[] =
 	{
+		"addr.imm.r",
+		"addr.imm.r.r",
+		"addr.imm.r.x",
+		"addr.imm.rd",
+		"addr.imm.rd.rd",
+		"addr.imm.rd.xd",
+		"addr.imm.rw",
+		"addr.imm.rw.rw",
+		"addr.imm.rw.xw",
+		"addr.imm.x",
+		"addr.imm.x.r",
+		"addr.imm.x.x",
+		"addr.imm.xd",
+		"addr.imm.xd.rd",
+		"addr.imm.xd.xd",
+		"addr.imm.xw",
+		"addr.imm.xw.rw",
+		"addr.imm.xw.xw",
+
 		"addr.r",
 		"addr.r.r",
 		"addr.r.x",
@@ -375,10 +411,10 @@ bool loadDef( FILE * fh, Instructions & insts )
 		"addr.xw",
 		"addr.xw.rw",
 		"addr.xw.xw",
+
 		"cr",
 		"dr",
-		"imm8",
-		"imm32",
+		"imm",
 		"k",
 		"mm",
 		"r",
@@ -390,6 +426,7 @@ bool loadDef( FILE * fh, Instructions & insts )
 		"x",
 		"xb",
 		"xd",
+		"xl",
 		"xmm",
 		"xw",
 		"ymm",
@@ -428,8 +465,8 @@ bool loadDef( FILE * fh, Instructions & insts )
 							static auto end = opTypes + sizeof(opTypes)/sizeof(char *);
 							auto p = equal_range( opTypes, end, token.c_str(), 
 								[]( const char * a, const char * b){ return strcmp(a,b) < 0; } );
-	
-							if(p.first < end )
+
+							if(p.first < end && token == opTypes[p.first-opTypes])
 								operands.push_back(static_cast<Otype>(p.first-opTypes));
 							else if( token == "|" )
 								state = sepSeen;
@@ -485,7 +522,7 @@ bool loadDef( FILE * fh, Instructions & insts )
 				}
 				catch( ... )
 				{
-					fprintf( stderr, "Failed to parse instruction\n" );
+					fprintf( stderr, "Failed to parse instruction on %s\n", buff );
 				}
 			}
 		}
@@ -575,19 +612,36 @@ bool genInst( const Instructions & insts )
 	cout << "	ans += \")\";\n";
 	cout << "	return ans;\n";
 	cout << "}\n";
+	cout << "std::string immediate( const char * code, int pos, int len )\n";
+	cout << "{\n";
+	cout << "	if( len == 4 )\n";
+	cout << "	{\n";
+	cout << "		uint32_t value = *reinterpret_cast<const uint32_t *>(code+pos);\n";
+	cout << "		char buff[12];\n";
+	cout << "		sprintf( buff, \"0x%x\", value );\n";
+	cout << "		return buff;\n";
+	cout << "	}\n";
+	cout << "	else // len == 1\n";
+	cout << "	{\n";
+	cout << "		uint32_t value = *reinterpret_cast<const uint8_t *>(code+pos);\n";
+	cout << "		char buff[12];\n";
+	cout << "		sprintf( buff, \"0x%x\", value );\n";
+	cout << "		return buff;\n";
+	cout << "	}\n";
+	cout << "}\n";
 	cout << "\n";
 	cout << "const char * xd_reg( int r )\n";
 	cout << "{\n";
 	cout << "	switch(r)\n";
 	cout << "	{\n";
-	cout << "	case 0: return \"%ax\";\n";
-	cout << "	case 1: return \"%cx\";\n";
-	cout << "	case 2: return \"%dx\";\n";
-	cout << "	case 3: return \"%bx\";\n";
-	cout << "	case 4: return \"%sp\";\n";
-	cout << "	case 5: return \"%bp\";\n";
-	cout << "	case 6: return \"%si\";\n";
-	cout << "	case 7: return \"%di\";\n";
+	cout << "	case 0: return \"%eax\";\n";
+	cout << "	case 1: return \"%ecx\";\n";
+	cout << "	case 2: return \"%edx\";\n";
+	cout << "	case 3: return \"%ebx\";\n";
+	cout << "	case 4: return \"%esp\";\n";
+	cout << "	case 5: return \"%ebp\";\n";
+	cout << "	case 6: return \"%esi\";\n";
+	cout << "	case 7: return \"%edi\";\n";
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";
@@ -623,10 +677,10 @@ bool genInst( const Instructions & insts )
 	cout << "{\n";
 	cout << "	switch(r)\n";
 	cout << "	{\n";
-	cout << "	case 0: return \"%spl\";\n";
-	cout << "	case 1: return \"%bpl\";\n";
-	cout << "	case 2: return \"%sil\";\n";
-	cout << "	case 3: return \"%dil\";\n";
+	cout << "	case 4: return \"%spl\";\n";
+	cout << "	case 5: return \"%bpl\";\n";
+	cout << "	case 6: return \"%sil\";\n";
+	cout << "	case 7: return \"%dil\";\n";
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";
@@ -664,14 +718,14 @@ bool genInst( const Instructions & insts )
 	cout << "{\n";
 	cout << "	switch(r)\n";
 	cout << "	{\n";
-	cout << "	case 0: return \"%eax\";\n";
-	cout << "	case 1: return \"%ecx\";\n";
-	cout << "	case 2: return \"%edx\";\n";
-	cout << "	case 3: return \"%ebx\";\n";
-	cout << "	case 4: return \"%esp\"; \n";
-	cout << "	case 5: return \"%ebp\";\n";
-	cout << "	case 6: return \"%esi\"; \n";
-	cout << "	case 7: return \"%edi\";\n";
+	cout << "	case 0: return \"%ax\";\n";
+	cout << "	case 1: return \"%cx\";\n";
+	cout << "	case 2: return \"%dx\";\n";
+	cout << "	case 3: return \"%bx\";\n";
+	cout << "	case 4: return \"%sp\"; \n";
+	cout << "	case 5: return \"%bp\";\n";
+	cout << "	case 6: return \"%si\"; \n";
+	cout << "	case 7: return \"%di\";\n";
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";
@@ -709,14 +763,14 @@ bool genInst( const Instructions & insts )
 	cout << "{\n";
 	cout << "	switch(r)\n";
 	cout << "	{\n";
-	cout << "	case 8:  return \"%r8\";\n";
-	cout << "	case 9:  return \"%r9\";\n";
-	cout << "	case 10: return \"%r10\";\n";
-	cout << "	case 11: return \"%r11\";\n";
-	cout << "	case 12: return \"%r12\";\n";
-	cout << "	case 13: return \"%r13\";\n";
-	cout << "	case 14: return \"%r14\";\n";
-	cout << "	case 15: return \"%r15\";\n";
+	cout << "	case 0:  return \"%r8\";\n";
+	cout << "	case 1:  return \"%r9\";\n";
+	cout << "	case 2: return \"%r10\";\n";
+	cout << "	case 3: return \"%r11\";\n";
+	cout << "	case 4: return \"%r12\";\n";
+	cout << "	case 5: return \"%r13\";\n";
+	cout << "	case 6: return \"%r14\";\n";
+	cout << "	case 7: return \"%r15\";\n";
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";

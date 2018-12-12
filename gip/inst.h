@@ -41,28 +41,46 @@ private:
 
 enum class Otype
 {
-	ADDR_R,				// example: 10(%r10)
-	ADDR_R_R,			// example: 30(%r10,%r11,2)
-	ADDR_R_X,			// example: 40(%r10,%rdx,2)
-	ADDR_RD,			// example: 70(%r10d)
-	ADDR_RD_RD,			// example: 90(%r10d,%r11d,2)
-	ADDR_RD_XD,			// example: 10(%r10d,%dx,2)
-	ADDR_RW,			// example: 13(%r10w)
-	ADDR_RW_RW,			// example: 15(%r10w,%r11w,1)
-	ADDR_RW_XW,			// example: 16(%r10w,%edx,2)
-	ADDR_X,				// example: 20(%rdx)
-	ADDR_X_R,			// example: 50(%rdx,%r11,2)
-	ADDR_X_X,			// example: 60(%rdx,%rax,2)
-	ADDR_XD,			// example: 80(%dx)
-	ADDR_XD_RD,			// example: 11(%dx,%r11d,2)
-	ADDR_XD_XD,			// example: 12(%dx,%ax,2)
-	ADDR_XW,			// example: 14(%edx)
-	ADDR_XW_RW,			// example: 17(%edx,%r11w,4)
-	ADDR_XW_XW,			// example: 18(%edx,%eax,8)
+	ADDR_IMM_R,			// example: 10(%r10)
+	ADDR_IMM_R_R,		// example: 30(%r10,%r11,2)
+	ADDR_IMM_R_X,		// example: 40(%r10,%rdx,2)
+	ADDR_IMM_RD,		// example: 70(%r10d)
+	ADDR_IMM_RD_RD,		// example: 90(%r10d,%r11d,2) 
+	ADDR_IMM_RD_XD,		// example: 10(%r10d,%dx,2)
+	ADDR_IMM_RW,		// example: 13(%r10w)
+	ADDR_IMM_RW_RW,		// example: 15(%r10w,%r11w,1)
+	ADDR_IMM_RW_XW,		// example: 16(%r10w,%edx,2)
+	ADDR_IMM_X,			// example: 20(%rdx)
+	ADDR_IMM_X_R,		// example: 50(%rdx,%r11,2)
+	ADDR_IMM_X_X,		// example: 60(%rdx,%rax,2)
+	ADDR_IMM_XD,		// example: 80(%dx)
+	ADDR_IMM_XD_RD,		// example: 11(%dx,%r11d,2)
+	ADDR_IMM_XD_XD,		// example: 12(%dx,%ax,2)
+	ADDR_IMM_XW,		// example: 14(%edx)
+	ADDR_IMM_XW_RW,		// example: 17(%edx,%r11w,4)
+	ADDR_IMM_XW_XW,		// example: 18(%edx,%eax,8)
+
+	ADDR_R,				// example: (%r10)
+	ADDR_R_R,			// example: (%r10,%r11,2)
+	ADDR_R_X,			// example: (%r10,%rdx,2)
+	ADDR_RD,			// example: (%r10d)
+	ADDR_RD_RD,			// example: (%r10d,%r11d,2)
+	ADDR_RD_XD,			// example: (%r10d,%dx,2)
+	ADDR_RW,			// example: (%r10w)
+	ADDR_RW_RW,			// example: (%r10w,%r11w,1)
+	ADDR_RW_XW,			// example: (%r10w,%edx,2)
+	ADDR_X,				// example: (%rdx)
+	ADDR_X_R,			// example: (%rdx,%r11,2)
+	ADDR_X_X,			// example: (%rdx,%rax,2)
+	ADDR_XD,			// example: (%dx)
+	ADDR_XD_RD,			// example: (%dx,%r11d,2)
+	ADDR_XD_XD,			// example: (%dx,%ax,2)
+	ADDR_XW,			// example: (%edx)
+	ADDR_XW_RW,			// example: (%edx,%r11w,4)
+	ADDR_XW_XW,			// example: (%edx,%eax,8)
 	CR,
 	DR,
-	IMM8,
-	IMM32,
+	IMM,
 	K,
 	MM,
 	R,
@@ -71,9 +89,10 @@ enum class Otype
 	RW,
 	SR,
 	ST,
-	X,
+	X, 
 	XB,
 	XD,
+	XL, 
 	XMM,
 	XW,
 	YMM,

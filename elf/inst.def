@@ -6,7 +6,19 @@ aam | d4 imm8
 aas | 3f
 adc
 adcx
-add
+add x imm          |    48 01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add r imm          |    4c 01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add xd imm         |       01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add rd imm         |    44 01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add rb imm         |    44 00 0b00 reg:3:0 0b100 0x25 imm:32:1
+add xw imm         | 66    01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add rw imm         | 66 44 01 0b00 reg:3:0 0b100 0x25 imm:32:1
+add xb imm         |       00 0b00 reg:3:0 0b100 0x25 imm:32:1
+add xl imm         |    40 00 0b00 reg:3:0 0b100 0x25 imm:32:1
+add xb addr.xd     | 67    00 0b00 reg:3:0 reg:3:1
+add xb addr.imm.xd | 67    00 0b01 reg:3:0 reg:3:2 imm:8:1
+add xl addr.imm.xd | 67 40 00 0b10 reg:3:0 reg:3:2 imm:32:1
+add rb addr.imm.xd | 67 44 00 0b10 reg:3:0 reg:3:2 imm:32:1
 addpd
 addps
 addsd addr.x xmm | f2 0f 58 0b00 reg:3:1 reg:3:0
