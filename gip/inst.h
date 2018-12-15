@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <set>
+#include <iostream>
 
 
 // Machine code component
@@ -41,59 +42,90 @@ private:
 
 enum class Otype
 {
-	ADDR_IMM_R,			// example: 10(%r10)
-	ADDR_IMM_R_R,		// example: 30(%r10,%r11,2)
-	ADDR_IMM_R_X,		// example: 40(%r10,%rdx,2)
-	ADDR_IMM_RD,		// example: 70(%r10d)
-	ADDR_IMM_RD_RD,		// example: 90(%r10d,%r11d,2) 
-	ADDR_IMM_RD_XD,		// example: 10(%r10d,%dx,2)
-	ADDR_IMM_RW,		// example: 13(%r10w)
-	ADDR_IMM_RW_RW,		// example: 15(%r10w,%r11w,1)
-	ADDR_IMM_RW_XW,		// example: 16(%r10w,%edx,2)
-	ADDR_IMM_X,			// example: 20(%rdx)
-	ADDR_IMM_X_R,		// example: 50(%rdx,%r11,2)
-	ADDR_IMM_X_X,		// example: 60(%rdx,%rax,2)
-	ADDR_IMM_XD,		// example: 80(%dx)
-	ADDR_IMM_XD_RD,		// example: 11(%dx,%r11d,2)
-	ADDR_IMM_XD_XD,		// example: 12(%dx,%ax,2)
-	ADDR_IMM_XW,		// example: 14(%edx)
-	ADDR_IMM_XW_RW,		// example: 17(%edx,%r11w,4)
-	ADDR_IMM_XW_XW,		// example: 18(%edx,%eax,8)
+	ADDR_DISP32_RD,			// example: 70(%r10d)
+	ADDR_DISP32_RD_RD,		// example: 90(%r10d,%r11d) 
+	ADDR_DISP32_RD_RD_SCALE,// example: 90(%r10d,%r11d,2) 
+	ADDR_DISP32_RD_XD,		// example: 10(%r10d,%dx)
+	ADDR_DISP32_RD_XD_SCALE,// example: 10(%r10d,%dx,2)
 
-	ADDR_R,				// example: (%r10)
-	ADDR_R_R,			// example: (%r10,%r11,2)
-	ADDR_R_X,			// example: (%r10,%rdx,2)
+	ADDR_DISP32_RQ,			// example: 10(%r10)
+	ADDR_DISP32_RQ_RQ,		// example: 30(%r10,%r11)
+	ADDR_DISP32_RQ_RQ_SCALE,// example: 30(%r10,%r11,2)
+	ADDR_DISP32_RQ_XQ,		// example: 40(%r10,%rdx)
+	ADDR_DISP32_RQ_XQ_SCALE,// example: 40(%r10,%rdx,2)
+
+	ADDR_DISP32_XD,			// example: 80(%dx)
+	ADDR_DISP32_XD_RD,		// example: 11(%dx,%r11d)
+	ADDR_DISP32_XD_RD_SCALE,// example: 11(%dx,%r11d,2)
+	ADDR_DISP32_XD_XD,		// example: 12(%dx,%ax)
+	ADDR_DISP32_XD_XD_SCALE,// example: 12(%dx,%ax,2)
+
+	ADDR_DISP32_XQ,			// example: 20(%rdx)
+	ADDR_DISP32_XQ_RQ,		// example: 50(%rdx,%r11)
+	ADDR_DISP32_XQ_RQ_SCALE,// example: 50(%rdx,%r11,2)
+	ADDR_DISP32_XQ_XQ,		// example: 60(%rdx,%rax)
+	ADDR_DISP32_XQ_XQ_SCALE,// example: 60(%rdx,%rax,2)
+
+	ADDR_DISP8_RD,			// example: 70(%r10d)
+	ADDR_DISP8_RD_RD,		// example: 90(%r10d,%r11d) 
+	ADDR_DISP8_RD_RD_SCALE,	// example: 90(%r10d,%r11d,2) 
+	ADDR_DISP8_RD_XD,		// example: 10(%r10d,%dx)
+	ADDR_DISP8_RD_XD_SCALE,	// example: 10(%r10d,%dx,2)
+	ADDR_DISP8_RQ,			// example: 10(%r10)
+	ADDR_DISP8_RQ_RQ,		// example: 30(%r10,%r11)
+	ADDR_DISP8_RQ_RQ_SCALE,	// example: 30(%r10,%r11,2)
+	ADDR_DISP8_RQ_XQ,		// example: 40(%r10,%rdx)
+	ADDR_DISP8_RQ_XQ_SCALE,	// example: 40(%r10,%rdx,2)
+	ADDR_DISP8_XD,			// example: 80(%dx)
+	ADDR_DISP8_XD_RD,		// example: 11(%dx,%r11d)
+	ADDR_DISP8_XD_RD_SCALE,	// example: 11(%dx,%r11d,2)
+	ADDR_DISP8_XD_XD,		// example: 12(%dx,%ax)
+	ADDR_DISP8_XD_XD_SCALE,	// example: 12(%dx,%ax,2)
+	ADDR_DISP8_XQ,			// example: 20(%rdx)
+	ADDR_DISP8_XQ_RQ,		// example: 50(%rdx,%r11)
+	ADDR_DISP8_XQ_RQ_SCALE,	// example: 50(%rdx,%r11,2)
+	ADDR_DISP8_XQ_XQ,		// example: 60(%rdx,%rax)
+	ADDR_DISP8_XQ_XQ_SCALE,	// example: 60(%rdx,%rax,2)
+
 	ADDR_RD,			// example: (%r10d)
-	ADDR_RD_RD,			// example: (%r10d,%r11d,2)
-	ADDR_RD_XD,			// example: (%r10d,%dx,2)
-	ADDR_RW,			// example: (%r10w)
-	ADDR_RW_RW,			// example: (%r10w,%r11w,1)
-	ADDR_RW_XW,			// example: (%r10w,%edx,2)
-	ADDR_X,				// example: (%rdx)
-	ADDR_X_R,			// example: (%rdx,%r11,2)
-	ADDR_X_X,			// example: (%rdx,%rax,2)
+	ADDR_RD_RD,			// example: (%r10d,%r11d)
+	ADDR_RD_RD_SCALE,	// example: (%r10d,%r11d,2)
+	ADDR_RD_XD,			// example: (%r10d,%dx)
+	ADDR_RD_XD_SCALE,	// example: (%r10d,%dx,2)
+	ADDR_RQ,			// example: (%r10)
+	ADDR_RQ_RQ,			// example: (%r10,%r11)
+	ADDR_RQ_RQ_SCALE,	// example: (%r10,%r11,2)
+	ADDR_RQ_XQ,			// example: (%r10,%rdx)
+	ADDR_RQ_XQ_SCALE,	// example: (%r10,%rdx,2)
 	ADDR_XD,			// example: (%dx)
-	ADDR_XD_RD,			// example: (%dx,%r11d,2)
-	ADDR_XD_XD,			// example: (%dx,%ax,2)
-	ADDR_XW,			// example: (%edx)
-	ADDR_XW_RW,			// example: (%edx,%r11w,4)
-	ADDR_XW_XW,			// example: (%edx,%eax,8)
+	ADDR_XD_RD,			// example: (%dx,%r11d)
+	ADDR_XD_RD_SCALE,	// example: (%dx,%r11d,2)
+	ADDR_XD_XD,			// example: (%dx,%ax)
+	ADDR_XD_XD_SCALE,	// example: (%dx,%ax,2)
+	ADDR_XQ,			// example: (%rdx)
+	ADDR_XQ_RQ,			// example: (%rdx,%r11)
+	ADDR_XQ_RQ_SCALE,	// example: (%rdx,%r11,2)
+	ADDR_XQ_XQ,			// example: (%rdx,%rax)
+	ADDR_XQ_XQ_SCALE,	// example: (%rdx,%rax,2)
+
 	CR,
 	DR,
-	IMM,
+	IMM32,
+	IMM8,
 	K,
 	MM,
-	R,
 	RB,
 	RD,
+	RQ,
 	RW,
 	SR,
 	ST,
-	X, 
 	XB,
+	XB64,
 	XD,
 	XL, 
 	XMM,
+	XQ, 
 	XW,
 	YMM,
 	ZMM,
@@ -1480,11 +1512,62 @@ private:
 class Instruction
 {
 public:
+	struct Comp
+	{
+		bool operator() ( const MC_Comp & a1, const MC_Comp & a2 )
+		{
+			return a1.position() < a2.position();
+		}
+	};
+	struct Cmp
+	{
+		bool operator() ( const Instruction & i1, const Instruction & i2 )
+		{
+			auto io1 = i1.opcode_.begin();
+			auto eo1 = i1.opcode_.end();
+			auto io2 = i2.opcode_.begin();
+			auto eo2 = i2.opcode_.end();
+
+			while( ( io1 != eo1 ) && ( io2 != eo2 ) )
+			{
+				if( *io1 < *io2 )
+					return true;
+				else if( *io1 > *io2 )
+					return false;
+
+				++io1;
+				++io2;
+			}
+			if( io1 != eo1 )
+				return false;
+			else if( io2 != eo2 )
+				return true;
+
+			auto ia1 = i1.args_.begin();
+			auto ea1 = i1.args_.end();
+			auto ia2 = i2.args_.begin();
+			auto ea2 = i2.args_.end();
+
+            while( ( ia1 != ea1 ) && ( ia2 != ea2 ) )
+            {
+				if( ia1->value() < ia2->value() )
+					return true;
+				else if( ia1->value() > ia2->value() )
+					return false;
+                ++ia1;
+				++ia2;
+            }
+            if( io1 != eo1 )
+                return true;
+            return true;
+		}
+	};
+
 	Instruction(Nmemonic nm,
 				std::vector<Otype>   && operands,
 				std::vector<std::unique_ptr<Prefix>>  && prefix,
 				std::vector<uint8_t> && opcode,
-				std::set<MC_Comp>&& args ):	
+				std::set<MC_Comp,Comp>&& args ):	
 					inst_(std::move(nm)),
 					operands_(std::move(operands)),
 					prefix_(std::move(prefix)),
@@ -1513,11 +1596,15 @@ public:
 	std::string lenString() const;
 	std::string discriminators() const;
 
+	const std::vector<uint8_t>	& opcode() const { return opcode_; }
+	const std::set<MC_Comp,Comp> & args() const  { return args_; }
+
 private:
 	Nmemonic				inst_;
 	std::vector<Otype>		operands_;
 
 	std::vector<std::unique_ptr<Prefix>> prefix_;
 	std::vector<uint8_t>	opcode_;
-	std::set<MC_Comp>		args_;
+
+	std::set<MC_Comp,Comp>	args_;
 };

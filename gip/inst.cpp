@@ -1,4 +1,5 @@
 #include "inst.h"
+#include <cassert>
 #include <map>
 #include <cstdio>
 #include <cstring>
@@ -18,6 +19,15 @@ MC_Comp::MC_Comp( const std::string & lexium, int & offset ):value_(0),position_
 	{
 		isConst_ = false;
 		const char * cp = lexium.c_str()+4;
+		char * end;
+
+		len_ = strtol( cp, &end, 10 );
+		position_ = strtol( end+1, nullptr, 10 );
+	}
+	else if( lexium.substr(0,6) == "scale:" )
+	{
+		isConst_ = false;
+		const char * cp = lexium.c_str()+6;
 		char * end;
 
 		len_ = strtol( cp, &end, 10 );
@@ -1686,7 +1696,7 @@ bool operator < ( const Instruction & i1, const Instruction & i2 )
 		auto it2 = i2.operands_.begin();
 		auto et2 = i2.operands_.end();
 
-		while( it1 != et2 && it2 != et2 )
+		while( it1 != et1 && it2 != et2 )
 		{
 			if( *it1 > *it2 )
 				return false;
@@ -1723,229 +1733,50 @@ const char  * Instruction::lexium( Nmemonic nm )
 string argsToString( Otype operand, const MC_Comp & arg )
 {
 	string ans;
+	const char * reg;
 
 	switch(operand)
 	{
-    case Otype::ADDR_R:           
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(rq_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ADDR_RD:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(rd_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ADDR_RW:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(rw_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ADDR_X:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(xq_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ADDR_XD:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(xd_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ADDR_XW:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "indirect(xw_reg(reg(code[" << b << "]," << o << "))).c_str()";
-		ans = ss.str();
-		break;
-	}
-    case Otype::IMM:
+    case Otype::IMM8:
+    case Otype::IMM32:
 	{
 		stringstream ss;
 		int b = arg.offset()/8;
 		int l = arg.length()/8;
 		ss << "immediate(code," <<  b << "," << l << ").c_str()";
 		ans = ss.str();
-		break;
+		return ans;
 	}
-    case Otype::R:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "rq_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
+    case Otype::ADDR_RQ:    reg = "rq";	break;
+    case Otype::ADDR_RD: 	reg = "rd"; break;
+    case Otype::ADDR_XQ:	reg = "xq"; break;
+    case Otype::ADDR_XD:	reg = "xd"; break;
+    case Otype::RQ: 		reg = "rq"; break;
+    case Otype::RB: 		reg = "rb"; break;
+    case Otype::RD: 		reg = "rd"; break;
+    case Otype::RW: 		reg = "rw"; break;
+    case Otype::XQ: 		reg = "xq"; break;
+    case Otype::XB: 		reg = "xb"; break;
+    case Otype::XB64: 		reg = "xb64";break;
+    case Otype::XD: 		reg = "xd"; break;
+    case Otype::XL: 		reg = "xl"; break;
+    case Otype::XMM: 		reg = "xmm";break;
+    case Otype::XW: 		reg = "xw"; break;
+    case Otype::YMM: 		reg = "ymm";break;
+    case Otype::ZMM: 		reg = "zmm";break;
+    case Otype::CR: 		reg = "cr"; break;
+    case Otype::DR: 		reg = "dr"; break;
+    case Otype::K: 			reg = "k"; 	break;
+    case Otype::MM: 		reg = "mm"; break;
+    case Otype::SR: 		reg = "sr"; break;
+    case Otype::ST: 		reg = "st"; break;
 	}
-    case Otype::RB:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "rb_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::RD:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "rd_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::RW:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "rw_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::X:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xq_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::XB:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xb_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::XD:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xd_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::XL:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xl_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::XMM:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xmm_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::XW:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "xw_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::YMM:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "ymm_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ZMM:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "zmm_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::CR:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "cr_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::DR:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "dr_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::K:
-		ans = "%%k1";
-		break;
-    case Otype::MM:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "mm_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::SR:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "sr_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-    case Otype::ST:
-	{
-		stringstream ss;
-		int b = arg.offset()/8;
-		int o = arg.offset()%8;
-		ss << "st_reg(reg(code[" << b << "]," << o << "))";
-		ans = ss.str();
-		break;
-	}
-	}
+
+	stringstream ss;
+	int b = arg.offset()/8;
+	int o = arg.offset()%8;
+	ss << reg << "_reg(reg(code[" << b << "]," << o << "))";
+	ans = ss.str();
 
 	return ans;	
 }
@@ -1953,22 +1784,21 @@ string argsToString( Otype operand, const MC_Comp & arg )
 string argsToString( Otype operand, const MC_Comp & arg1, const MC_Comp & arg2 )
 {
 	string ans;
+	const char * reg = nullptr;
 
 	switch(operand)
 	{
-	case Otype::ADDR_IMM_R:
-		ans = "10(%%r10)";
-		break;
-	case Otype::ADDR_IMM_RD:
-		ans = "10(%%r10d)";
-		break;
-	case Otype::ADDR_IMM_RW:
-		ans = "10(%%r10w)";
-		break;
-	case Otype::ADDR_IMM_X:
-		ans = "10(%%rbx)";
-		break;
-	case Otype::ADDR_IMM_XD:
+	case Otype::ADDR_DISP32_RQ:
+	case Otype::ADDR_DISP8_RQ: reg = "rq"; break;
+	case Otype::ADDR_DISP32_RD:
+	case Otype::ADDR_DISP8_RD: reg = "rd"; break;
+	case Otype::ADDR_DISP32_XQ:
+	case Otype::ADDR_DISP8_XQ: reg = "xq"; break;
+	case Otype::ADDR_DISP32_XD:
+	case Otype::ADDR_DISP8_XD: reg = "xd"; break;
+	}
+
+	if( reg )
 	{
 		stringstream ss;
 		int b = arg1.offset()/8;
@@ -1979,51 +1809,65 @@ string argsToString( Otype operand, const MC_Comp & arg1, const MC_Comp & arg2 )
 		b = arg2.offset()/8;
 		int o = arg2.offset()%8;
 
-		ss << "indirect(xd_reg(reg(code[" << b << "]," << o << "))).c_str()";
+		ss << "xd_reg(reg(code[" << b << "]," << o << "))";
 
 		ans = ss.str();
-		break;
+		return ans;	
 	}
-	case Otype::ADDR_IMM_XW:
-		ans = "10(%%dx)";
+
+	const char * reg1 = nullptr;
+	const char * reg2 = nullptr;
+
+	switch(operand)
+	{
+    case Otype::ADDR_RQ_RQ:          
+		reg1 = "rq";
+		reg2 = "rq";
 		break;
-    case Otype::ADDR_R_R:          
-		ans = "(%%r10,%%r11)";
-		break;
-    case Otype::ADDR_R_X:
-		ans = "(%%ax,%%r10)";
+    case Otype::ADDR_RQ_XQ:
+		reg1 = "rq";
+		reg2 = "xq";
 		break;
     case Otype::ADDR_RD_RD:
-		ans = "(%%r10d,%%r12d)";
+		reg1 = "rd";
+		reg2 = "rd";
 		break;
     case Otype::ADDR_RD_XD:
-		ans = "(%%r10d,%%eax)";
+		reg1 = "rd";
+		reg2 = "xd";
 		break;
-    case Otype::ADDR_RW_RW:
-		ans = "(%%r11w,%%r10w)";
+    case Otype::ADDR_XQ_RQ:
+		reg1 = "xq";
+		reg2 = "rq";
 		break;
-    case Otype::ADDR_RW_XW:
-		ans = "(%%r10w,%%ax)";
-		break;
-    case Otype::ADDR_X_R:
-		ans = "(%%rax,%%r10)";
-		break;
-    case Otype::ADDR_X_X:
-		ans = "(%%rax,%%rbx)";
+    case Otype::ADDR_XQ_XQ:
+		reg1 = "xq";
+		reg2 = "xq";
 		break;
     case Otype::ADDR_XD_RD:
-		ans = "(%%eax,%%r10d)";
+		reg1 = "xd";
+		reg2 = "rd";
 		break;
     case Otype::ADDR_XD_XD:
-		ans = "(%%eax,%%edx)";
-		break;
-    case Otype::ADDR_XW_RW:
-		ans = "(%%ax,%%r10w)";
-		break;
-    case Otype::ADDR_XW_XW:
-		ans = "(%%ax,%%bx)";
+		reg1 = "xd";
+		reg2 = "xd";
 		break;
 	}
+
+	assert(reg1);
+
+	stringstream ss;
+	int b = arg1.offset()/8;
+	int o = arg1.offset()%8;
+
+	ss << reg1 << "_reg(reg(code[" <<  b << "]," << o << ").c_str(),";
+
+	b = arg2.offset()/8;
+	o = arg2.offset()%8;
+
+	ss << reg2 << "_reg(reg(code[" << b << "]," << o << "))";
+
+	ans = ss.str();
 
 	return ans;	
 }
@@ -2036,104 +1880,310 @@ string argsToString(
 {
 	string ans;
 
+	const char * reg1 = nullptr;
+	const char * reg2 = nullptr;
+
 	switch(operand)
 	{
-	case Otype::ADDR_IMM_R_R:
-		ans = "10(%%r10,%%r11)";
+	case Otype::ADDR_DISP32_RQ_RQ:
+	case Otype::ADDR_DISP8_RQ_RQ:
+		reg1 ="rq";
+		reg2 ="rq";
 		break;
-	case Otype::ADDR_IMM_R_X:
-		ans = "10(%%r10,%%rbx)";
+	case Otype::ADDR_DISP32_RQ_XQ:
+	case Otype::ADDR_DISP8_RQ_XQ:
+		reg1 ="rq";
+		reg2 ="xq";
 		break;
-	case Otype::ADDR_IMM_RD_RD:
-		ans = "10(%%r10d,%%r11d)";
+	case Otype::ADDR_DISP32_RD_RD:
+	case Otype::ADDR_DISP8_RD_RD:
+		reg1 ="rd";
+		reg2 ="rd";
 		break;
-	case Otype::ADDR_IMM_RD_XD:
-		ans = "10(%%r10d,%%ebx)";
+	case Otype::ADDR_DISP32_RD_XD:
+	case Otype::ADDR_DISP8_RD_XD:
+		reg1 ="rd";
+		reg2 ="xd";
 		break;
-	case Otype::ADDR_IMM_RW_RW:
-		ans = "10(%%r10w,%%r11w)";
+	case Otype::ADDR_DISP32_XQ_RQ:
+	case Otype::ADDR_DISP8_XQ_RQ:
+		reg1 ="xq";
+		reg2 ="rq";
 		break;
-	case Otype::ADDR_IMM_RW_XW:
-		ans = "10(%%r10w,%%ax)";
+	case Otype::ADDR_DISP32_XQ_XQ:
+	case Otype::ADDR_DISP8_XQ_XQ:
+		reg1 ="xq";
+		reg2 ="xq";
 		break;
-	case Otype::ADDR_IMM_X_R:
-		ans = "10(%%rbx,%%r10)";
+	case Otype::ADDR_DISP32_XD_RD:
+	case Otype::ADDR_DISP8_XD_RD:
+		reg1 ="xd";
+		reg2 ="rd";
 		break;
-	case Otype::ADDR_IMM_X_X:
-		ans = "10(%%rbx,%%rdx)";
-		break;
-	case Otype::ADDR_IMM_XD_RD:
-		ans = "10(%%ebx,%%r10d)";
-		break;
-	case Otype::ADDR_IMM_XD_XD:
-		ans = "10(%%ecx,%%ebx)";
+	case Otype::ADDR_DISP32_XD_XD:
+	case Otype::ADDR_DISP8_XD_XD:
+		reg1 ="xd";
+		reg2 ="xd";
 		break;
 	}
+
+	if(reg1)
+	{
+		stringstream ss;
+		int b = arg1.offset()/8;
+		int l = arg1.length()/8;
+
+		ss << "immediate(code," <<  b << "," << l << ").c_str(),";
+
+		b = arg2.offset()/8;
+		int o = arg2.offset()%8;
+
+		ss << reg1 << "_reg(reg(code[" << b << "]," << o << ")),";
+
+		b = arg3.offset()/8;
+		o = arg3.offset()%8;
+
+		ss << reg1 << "_reg(reg(code[" << b << "]," << o << "))";
+
+		ans = ss.str();
+		return ans;
+	}
+
+	switch(operand)
+	{
+	case Otype::ADDR_RD_RD_SCALE:
+		reg1 ="rd";
+		reg2 ="rd";
+		break;
+	case Otype::ADDR_RD_XD_SCALE:
+		reg1= "rd";
+		reg2= "xd";
+		break;
+	case Otype::ADDR_RQ_RQ_SCALE:
+		reg1= "rq";
+		reg2= "rq";
+		break;
+	case Otype::ADDR_RQ_XQ_SCALE:
+		reg1= "rq";
+		reg2= "xq";
+		break;
+	case Otype::ADDR_XD_RD_SCALE:
+		reg1= "xd";
+		reg2= "rd";
+		break;
+	case Otype::ADDR_XD_XD_SCALE:
+		reg1= "xd";
+		reg2= "xd";
+		break;
+	case Otype::ADDR_XQ_RQ_SCALE:
+		reg1= "xq";
+		reg2= "rq";
+		break;
+	case Otype::ADDR_XQ_XQ_SCALE:
+		reg1= "xq";
+		reg2= "xq";
+		break;
+	}
+
+	assert(reg1);
+
+	stringstream ss;
+
+	int b = arg1.offset()/8;
+	int o = arg1.offset()%8;
+
+	ss << reg1 << "_reg(reg(code[" << b << "]," << o << ")),";
+
+	b = arg2.offset()/8;
+	o = arg2.offset()%8;
+
+	ss << reg2 << "_reg(reg(code[" << b << "]," << o << ")),";
+
+	b = arg3.offset()/8;
+	int l = arg3.length()/8;
+	o = arg3.offset()%8;
+
+	ss << "scale(code," <<  b << "," << o << "," << l << ").c_str()";
+
+	ans = ss.str();
 
 	return ans;	
 }
 
-int numOfArgs( Otype op )
+
+string argsToString( 
+	Otype operand, 
+	const MC_Comp & arg1, 
+	const MC_Comp & arg2,
+	const MC_Comp & arg3,
+	const MC_Comp & arg4 )
+{
+	string ans;
+
+	const char * reg1 = nullptr;
+	const char * reg2 = nullptr;
+
+	switch(operand)
+	{
+	case Otype::ADDR_DISP32_RQ_RQ_SCALE:
+	case Otype::ADDR_DISP8_RQ_RQ_SCALE:
+		reg1= "rq";
+		reg2= "rq";
+		break;
+	case Otype::ADDR_DISP32_RQ_XQ_SCALE:
+	case Otype::ADDR_DISP8_RQ_XQ_SCALE:
+		reg1= "rq";
+		reg2= "xq";
+		break;
+	case Otype::ADDR_DISP32_RD_RD_SCALE:
+	case Otype::ADDR_DISP8_RD_RD_SCALE:
+		reg1= "rd";
+		reg2= "rd";
+		break;
+	case Otype::ADDR_DISP32_RD_XD_SCALE:
+	case Otype::ADDR_DISP8_RD_XD_SCALE:
+		reg1= "rd";
+		reg2= "xd";
+		break;
+	case Otype::ADDR_DISP32_XQ_RQ_SCALE:
+	case Otype::ADDR_DISP8_XQ_RQ_SCALE:
+		reg1= "xq";
+		reg2= "rq";
+		break;
+	case Otype::ADDR_DISP32_XQ_XQ_SCALE:
+	case Otype::ADDR_DISP8_XQ_XQ_SCALE:
+		reg1= "xq";
+		reg2= "xq";
+		break;
+	case Otype::ADDR_DISP32_XD_RD_SCALE:
+	case Otype::ADDR_DISP8_XD_RD_SCALE:
+		reg1= "xd";
+		reg2= "rd";
+		break;
+	case Otype::ADDR_DISP32_XD_XD_SCALE:
+	case Otype::ADDR_DISP8_XD_XD_SCALE:
+		reg1= "xd";
+		reg2= "xd";
+		break;
+	}
+
+	stringstream ss;
+
+	int b = arg1.offset()/8;
+	int l = arg1.length()/8;
+
+	ss << "immediate(code," <<  b << "," << l << ").c_str(),";
+
+	b = arg2.offset()/8;
+	int o = arg2.offset()%8;
+
+	ss << reg1 << "_reg(reg(code[" << b << "]," << o << ")),";
+
+	b = arg3.offset()/8;
+	o = arg3.offset()%8;
+
+	ss << reg2 << "_reg(reg(code[" << b << "]," << o << ")),";
+
+	b = arg4.offset()/8;
+	o = arg4.offset()%8;
+	l = arg4.length();
+
+	ss << "scale(code," <<  b << "," << o << "," << l << ").c_str()";
+
+	ans = ss.str();
+
+	return ans;	
+}
+
+const char * argFormat( Otype op, int & n )
 {
 	switch(op)
 	{
-	case Otype::ADDR_IMM_R:		return 2;
-	case Otype::ADDR_IMM_R_R:	return 3;
-	case Otype::ADDR_IMM_R_X:	return 3;
-	case Otype::ADDR_IMM_RD:	return 2;
-	case Otype::ADDR_IMM_RD_RD:	return 3;
-	case Otype::ADDR_IMM_RD_XD:	return 3;
-	case Otype::ADDR_IMM_RW:	return 2;
-	case Otype::ADDR_IMM_RW_RW:	return 3;
-	case Otype::ADDR_IMM_RW_XW:	return 3;
-	case Otype::ADDR_IMM_X:		return 2;
-	case Otype::ADDR_IMM_X_R:	return 3;
-	case Otype::ADDR_IMM_X_X:	return 3;
-	case Otype::ADDR_IMM_XD:	return 2;
-	case Otype::ADDR_IMM_XD_RD:	return 3;
-	case Otype::ADDR_IMM_XD_XD:	return 3;
-	case Otype::ADDR_IMM_XW:	return 2;
-	case Otype::ADDR_IMM_XW_RW:	return 3;
-	case Otype::ADDR_IMM_XW_XW:	return 3;
+	case Otype::ADDR_DISP32_RD:			
+	case Otype::ADDR_DISP32_RQ:		
+	case Otype::ADDR_DISP32_XD:	
+	case Otype::ADDR_DISP32_XQ:
+	case Otype::ADDR_DISP8_RD:			
+	case Otype::ADDR_DISP8_RQ:		
+	case Otype::ADDR_DISP8_XD:	
+	case Otype::ADDR_DISP8_XQ:	n = 2; return "%s(%s)";
 
-	case Otype::ADDR_R:		return 1;
-	case Otype::ADDR_R_R:	return 2;
-	case Otype::ADDR_R_X:	return 2;
-	case Otype::ADDR_RD:	return 1;
-	case Otype::ADDR_RD_RD:	return 2;
-	case Otype::ADDR_RD_XD:	return 2;
-	case Otype::ADDR_RW:	return 1;
-	case Otype::ADDR_RW_RW:	return 2;
-	case Otype::ADDR_RW_XW:	return 2;
-	case Otype::ADDR_X:		return 1;
-	case Otype::ADDR_X_R:	return 2;
-	case Otype::ADDR_X_X:	return 2;
-	case Otype::ADDR_XD:	return 1;
-	case Otype::ADDR_XD_RD:	return 2;
-	case Otype::ADDR_XD_XD:	return 2;
-	case Otype::ADDR_XW:	return 1;
-	case Otype::ADDR_XW_RW:	return 2;
-	case Otype::ADDR_XW_XW:	return 2;
+	case Otype::ADDR_DISP32_RD_RD:	
+	case Otype::ADDR_DISP32_RD_XD:
+	case Otype::ADDR_DISP32_RQ_RQ:		
+	case Otype::ADDR_DISP32_XD_RD:	
+	case Otype::ADDR_DISP32_XD_XD:
+	case Otype::ADDR_DISP32_XQ_RQ:		
+	case Otype::ADDR_DISP32_XQ_XQ:	
+	case Otype::ADDR_DISP8_RD_RD:
+	case Otype::ADDR_DISP8_RD_XD:		
+	case Otype::ADDR_DISP8_RQ_RQ:	
+	case Otype::ADDR_DISP8_RQ_XQ:
+	case Otype::ADDR_DISP8_XD_RD:		
+	case Otype::ADDR_DISP8_XD_XD:	
+	case Otype::ADDR_DISP8_XQ_RQ:
+	case Otype::ADDR_DISP8_XQ_XQ:	n = 3; return "%s(%s,%s)";
 
-	case Otype::CR:			return 1;
-	case Otype::DR:			return 1;
-	case Otype::IMM:		return 1;
-	case Otype::K:			return 1;
-	case Otype::MM:			return 1;
-	case Otype::R:			return 1;
-	case Otype::RB:			return 1;
-	case Otype::RD:			return 1;
-	case Otype::RW:			return 1;
-	case Otype::SR:			return 1;
-	case Otype::ST:			return 1;
-	case Otype::X:			return 1;
-	case Otype::XB:			return 1;
-	case Otype::XD:			return 1;
-	case Otype::XL:			return 1;
-	case Otype::XMM:		return 1;
-	case Otype::XW:			return 1;
-	case Otype::YMM:		return 1;
-	case Otype::ZMM:		return 1;
+	case Otype::ADDR_DISP32_RD_RD_SCALE:
+	case Otype::ADDR_DISP32_RD_XD_SCALE:
+	case Otype::ADDR_DISP32_RQ_RQ_SCALE:
+	case Otype::ADDR_DISP32_XD_RD_SCALE:
+	case Otype::ADDR_DISP32_XD_XD_SCALE:
+	case Otype::ADDR_DISP32_XQ_RQ_SCALE:
+	case Otype::ADDR_DISP32_XQ_XQ_SCALE:
+	case Otype::ADDR_DISP8_RD_RD_SCALE:	
+	case Otype::ADDR_DISP8_RD_XD_SCALE:	
+	case Otype::ADDR_DISP8_RQ_RQ_SCALE:	
+	case Otype::ADDR_DISP8_RQ_XQ_SCALE:	
+	case Otype::ADDR_DISP8_XD_RD_SCALE:	
+	case Otype::ADDR_DISP8_XD_XD_SCALE:	
+	case Otype::ADDR_DISP8_XQ_RQ_SCALE:	
+	case Otype::ADDR_DISP8_XQ_XQ_SCALE:	n = 4; return "%s(%s,%s,%s)";
+
+	case Otype::ADDR_RD_RD_SCALE:	
+	case Otype::ADDR_RD_XD_SCALE:	
+	case Otype::ADDR_RQ_RQ_SCALE:	
+	case Otype::ADDR_RQ_XQ_SCALE:	
+	case Otype::ADDR_XD_RD_SCALE:	
+	case Otype::ADDR_XD_XD_SCALE:	
+	case Otype::ADDR_XQ_RQ_SCALE:	
+	case Otype::ADDR_XQ_XQ_SCALE:	n = 3; return "(%s,%s,%s)";
+
+	case Otype::ADDR_RQ:	
+	case Otype::ADDR_RD:
+	case Otype::ADDR_XQ:
+	case Otype::ADDR_XD:	n = 1; return "(%s)";
+
+	case Otype::ADDR_RQ_RQ:	
+	case Otype::ADDR_RQ_XQ:	
+	case Otype::ADDR_RD_RD:	
+	case Otype::ADDR_RD_XD:	
+	case Otype::ADDR_XQ_RQ:	
+	case Otype::ADDR_XQ_XQ:	
+	case Otype::ADDR_XD_RD:	
+	case Otype::ADDR_XD_XD:	n = 2; return "(%s,%s)";
+
+	case Otype::CR:		
+	case Otype::DR:	
+	case Otype::IMM8:		
+	case Otype::IMM32:	
+	case Otype::K:	
+	case Otype::MM:
+	case Otype::RQ:			
+	case Otype::RB:		
+	case Otype::RD:	
+	case Otype::RW:
+	case Otype::SR:			
+	case Otype::ST:		
+	case Otype::XQ:	
+	case Otype::XB:
+	case Otype::XB64:		
+	case Otype::XD:		
+	case Otype::XL:	
+	case Otype::XMM:
+	case Otype::XW:	
+	case Otype::YMM:
+	case Otype::ZMM:	n = 1; return "%s";
 	}
 }
 
@@ -2160,6 +2210,7 @@ string Instruction::decoder( const std::string & margin ) const
 {
 	string ans = margin + "printf(\"";
 	ans += lexium(inst_);
+	ans += " ";
 
 	if( operands_.size() == 0 )
 	{
@@ -2175,22 +2226,15 @@ string Instruction::decoder( const std::string & margin ) const
 	else if( operands_.size() == 2 )
 	{
 		auto it =args_.begin(); 
-		int n1 = numOfArgs(operands_[0]);
-		int n2 = numOfArgs(operands_[1]);
+		int n1;
+		int n2;
+		auto af1 = argFormat(operands_[0], n1 );
+		auto af2 = argFormat(operands_[1], n2 );
 
-		if( n1 == 1 )
-			ans += " %s,";
-		else if( n1 == 2 )
-			ans += "%s%s,";
-		else 
-			ans += "%s%s%s,";
-
-		if( n2 == 1 )
-			ans += "%s\\n\", ";
-		else if( n2 == 2 )
-			ans += "%s%s\\n\", ";
-		else 
-			ans += "%s%s%s\\n\", ";
+		ans += af1;
+		ans += ",";
+		ans +=  af2;
+		ans += "\\n\", ";
 
 		if( n1 == 1 )
 			ans += argsToString(operands_[0], *it);
@@ -2200,13 +2244,22 @@ string Instruction::decoder( const std::string & margin ) const
 			auto a2 = *++it;
 			ans += argsToString(operands_[0], a1, a2 );
 		}
-		else // n1 == 3
+		else if( n1 == 3 )
 		{
 			auto a1 = *it;
 			auto a2 = *++it;
 			auto a3 = *++it;
 
 			ans += argsToString(operands_[0], a1, a2, a3 );
+		}
+		else 
+		{
+			auto a1 = *it;
+			auto a2 = *++it;
+			auto a3 = *++it;
+			auto a4 = *++it;
+
+			ans += argsToString(operands_[0], a1, a2, a3, a4 );
 		}
 
 		ans += ",";
@@ -2219,7 +2272,7 @@ string Instruction::decoder( const std::string & margin ) const
 			auto a2 = *++it;
 			ans += argsToString(operands_[1], a1, a2 );
 		}
-		else // n2 == 3
+		else if( n2 == 3 )
 		{
 			auto a1 = *it;
 			auto a2 = *++it;
@@ -2227,6 +2280,16 @@ string Instruction::decoder( const std::string & margin ) const
 
 			ans += argsToString(operands_[1], a1, a2, a3 );
 		}
+		else
+		{
+			auto a1 = *it;
+			auto a2 = *++it;
+			auto a3 = *++it;
+			auto a4 = *++it;
+
+			ans += argsToString(operands_[1], a1, a2, a3, a4 );
+		}
+
 		ans += ");\n";
 		ans += margin + "code +=";
 		ans += lenString();
@@ -2278,7 +2341,7 @@ string Instruction::discriminators() const
 			else
 				first = false;
 
-			ans << "(( code[" << b << "] & " << mask( o, l ) << ") == " << ( v << (8-l) ) << ")";
+			ans << "(( code[" << b << "] & " << mask( o, l ) << ") == " << ( v << (8-l-o) ) << ")";
 		}
 	}
 

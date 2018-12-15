@@ -9,7 +9,7 @@
 
 using namespace std;
 
-using Instructions = set<Instruction>;
+using Instructions = set<Instruction,Instruction::Cmp>;
 
 bool genInst( const Instructions & );
 bool loadDef( FILE *, Instructions & );
@@ -205,6 +205,8 @@ bool isArgOrConst(const std::string & token )
 		return true;
 	else if(strncmp(token.c_str(), "imm:", 4 ) == 0 )
 		return true;
+	else if(strncmp(token.c_str(), "scale:", 6 ) == 0 )
+		return true;
 	else if(isdigit(token[0]) && ( token[1] == 'b' || token[1] == 'x' ) && (token.size() > 2 ))
 		return true;
 
@@ -218,7 +220,51 @@ bool isOpcodeByte(const std::string & token)
 
 struct InstTree
 {
-	set<const Instruction *> instructions;
+   struct Icmp
+   {
+        bool operator() ( const Instruction * const & i1, const Instruction * const & i2 )
+        {
+            auto io1 = i1->opcode().begin();
+            auto eo1 = i1->opcode().end();
+            auto io2 = i2->opcode().begin();
+            auto eo2 = i2->opcode().end();
+
+            while( ( io1 != eo1 ) && ( io2 != eo2 ) )
+            {
+                if( *io1 < *io2 )
+                    return true;
+                else if( *io1 > *io2 )
+                    return false;
+
+                ++io1;
+                ++io2;
+            }
+            if( io1 != eo1 )
+                return false;
+            else if( io2 != eo2 )
+                return true;
+
+            auto ia1 = i1->args().begin();
+            auto ea1 = i1->args().end();
+            auto ia2 = i2->args().begin();
+            auto ea2 = i2->args().end();
+
+            while( ( ia1 != ea1 ) && ( ia2 != ea2 ) )
+            {
+				if( ia1->value() < ia2->value() )
+					return true;
+				else if( ia1->value() > ia2->value() )
+					return false;
+                ++ia1;
+				++ia2;
+            }
+            if( io1 != eo1 )
+                return true;
+            return true;
+        }
+    };
+
+	set<const Instruction *, Icmp> instructions;
 	map<uint8_t, unique_ptr<InstTree>> children;
 	void dump( const std::string & m ) const;
 };
@@ -297,30 +343,30 @@ void genInstTree( const Instructions & insts, InstTree & tree )
 //      cr          %crN
 //      dr          %drN
 //      k           %kN
-//      addr.imm.r,     10(%r10)
-//      addr.imm.x,     20(%rdx)
-//      addr.imm.r.r,   30(%r10,%r11,2)
-//      addr.imm.r.x,   40(%r10,%rdx,2)
-//      addr.imm.x.r,   50(%rdx,%r11,2)
-//      addr.imm.x.x,   60(%rdx,%rax,2)
-//      addr.imm.rd,    70(%r10d)
-//      addr.imm.xd,    80(%dx)
-//      addr.imm.rd.rd, 90(%r10d,%r11d,2)
-//      addr.imm.rd.xd, 10(%r10d,%dx,2)
-//      addr.imm.xd.rd, 11(%dx,%r11d,2)
-//      addr.imm.xd.xd, 12(%dx,%ax,2)
-//      addr.imm.rw,    13(%r10w)
-//      addr.imm.xw,    14(%edx)
-//      addr.imm.rw.rw, 15(%r10w,%r11w,1)
-//      addr.imm.rw.xw, 16(%r10w,%edx,2)
-//      addr.imm.xw.rw, 17(%edx,%r11w,4)
-//      addr.imm.xw.xw, 18(%edx,%eax,8)
-//      addr.r,     (%r10)
-//      addr.x,     (%rdx)
-//      addr.r.r,   (%r10,%r11,2)
-//      addr.r.x,   (%r10,%rdx,2)
-//      addr.x.r,   (%rdx,%r11,2)
-//      addr.x.x,   (%rdx,%rax,2)
+//      addr.disp.rq,     10(%r10)
+//      addr.disp.xq,     20(%rdx)
+//      addr.disp.rq.rq,  30(%r10,%r11,2)
+//      addr.disp.rq.xq,  40(%r10,%rdx,2)
+//      addr.disp.xq.rq,  50(%rdx,%r11,2)
+//      addr.disp.xq.xq,  60(%rdx,%rax,2)
+//      addr.disp.rd,    70(%r10d)
+//      addr.disp.xd,    80(%dx)
+//      addr.disp.rd.rd, 90(%r10d,%r11d,2)
+//      addr.disp.rd.xd, 10(%r10d,%dx,2)
+//      addr.disp.xd.rd, 11(%dx,%r11d,2)
+//      addr.disp.xd.xd, 12(%dx,%ax,2)
+//      addr.disp.rw,    13(%r10w)
+//      addr.disp.xw,    14(%edx)
+//      addr.disp.rw.rw, 15(%r10w,%r11w,1)
+//      addr.disp.rw.xw, 16(%r10w,%edx,2)
+//      addr.disp.xw.rw, 17(%edx,%r11w,4)
+//      addr.disp.xw.xw, 18(%edx,%eax,8)
+//      addr.rq,    (%r10)
+//      addr.xq,    (%rdx)
+//      addr.rq.rq, (%r10,%r11,2)
+//      addr.rq.xq, (%r10,%rdx,2)
+//      addr.xq.rq, (%rdx,%r11,2)
+//      addr.xq.xq, (%rdx,%rax,2)
 //      addr.rd,    (%r10d)
 //      addr.xd,    (%dx)
 //      addr.rd.rd, (%r10d,%r11d,2)
@@ -334,7 +380,8 @@ void genInstTree( const Instructions & insts, InstTree & tree )
 //      addr.xw.rw, (%edx,%r11w,4)
 //      addr.xw.xw, (%edx,%eax,8)
 //
-//      imm    Immediate value
+//      imm8   Immediate value
+//      imm32  Immediate value
 //      disp   Memory addressing displayment as the exponent of power of 2
 //
 // prefix = rex:BRWX
@@ -354,7 +401,7 @@ void genInstTree( const Instructions & insts, InstTree & tree )
 //			bnht 
 //
 // opcode = one or more bytes 
-// args = reg:<len>:<n> | imm:<len>:<n>
+// args = reg:<len>:<n> | imm:<len>:<n> | scale:<len>:<n>
 //
 bool loadDef( FILE * fh, Instructions & insts )
 {
@@ -374,60 +421,87 @@ bool loadDef( FILE * fh, Instructions & insts )
 
 	static const char * opTypes[] =
 	{
-		"addr.imm.r",
-		"addr.imm.r.r",
-		"addr.imm.r.x",
-		"addr.imm.rd",
-		"addr.imm.rd.rd",
-		"addr.imm.rd.xd",
-		"addr.imm.rw",
-		"addr.imm.rw.rw",
-		"addr.imm.rw.xw",
-		"addr.imm.x",
-		"addr.imm.x.r",
-		"addr.imm.x.x",
-		"addr.imm.xd",
-		"addr.imm.xd.rd",
-		"addr.imm.xd.xd",
-		"addr.imm.xw",
-		"addr.imm.xw.rw",
-		"addr.imm.xw.xw",
+		"addr.disp32.rd",
+		"addr.disp32.rd.rd",
+		"addr.disp32.rd.rd.scale",
+		"addr.disp32.rd.xd",
+		"addr.disp32.rd.xd.scale",
+		"addr.disp32.rq",
+		"addr.disp32.rq.rq",
+		"addr.disp32.rq.rq.scale",
+		"addr.disp32.rq.xq",
+		"addr.disp32.rq.xq.scale",
+		"addr.disp32.xd",
+		"addr.disp32.xd.rd",
+		"addr.disp32.xd.rd.scale",
+		"addr.disp32.xd.xd",
+		"addr.disp32.xd.xd.scale",
+		"addr.disp32.xq",
+		"addr.disp32.xq.rq",
+		"addr.disp32.xq.rq.scale",
+		"addr.disp32.xq.xq",
+		"addr.disp32.xq.xq.scale",
 
-		"addr.r",
-		"addr.r.r",
-		"addr.r.x",
+		"addr.disp8.rd",
+		"addr.disp8.rd.rd",
+		"addr.disp8.rd.rd.scale",
+		"addr.disp8.rd.xd",
+		"addr.disp8.rd.xd.scale",
+		"addr.disp8.rq",
+		"addr.disp8.rq.rq",
+		"addr.disp8.rq.rq.scale",
+		"addr.disp8.rq.xq",
+		"addr.disp8.rq.xq.scale",
+		"addr.disp8.xd",
+		"addr.disp8.xd.rd",
+		"addr.disp8.xd.rd.scale",
+		"addr.disp8.xd.xd",
+		"addr.disp8.xd.xd.scale",
+		"addr.disp8.xq",
+		"addr.disp8.xq.rq",
+		"addr.disp8.xq.rq.scale",
+		"addr.disp8.xq.xq",
+		"addr.disp8.xq.xq.scale",
+
 		"addr.rd",
 		"addr.rd.rd",
+		"addr.rd.rd.scale",
 		"addr.rd.xd",
-		"addr.rw",
-		"addr.rw.rw",
-		"addr.rw.xw",
-		"addr.x",
-		"addr.x.r",
-		"addr.x.x",
+		"addr.rd.xd.scale",
+		"addr.rq",
+		"addr.rq.rq",
+		"addr.rq.rq.scale",
+		"addr.rq.xq",
+		"addr.rq.xq.scale",
 		"addr.xd",
 		"addr.xd.rd",
+		"addr.xd.rd.scale",
 		"addr.xd.xd",
-		"addr.xw",
-		"addr.xw.rw",
-		"addr.xw.xw",
+		"addr.xd.xd.scale",
+		"addr.xq",
+		"addr.xq.rq",
+		"addr.xq.rq.scale",
+		"addr.xq.xq",
+		"addr.xq.xq.scale",
 
 		"cr",
 		"dr",
-		"imm",
+		"imm32",
+		"imm8",
 		"k",
 		"mm",
-		"r",
 		"rb",
 		"rd",
+		"rq",
 		"rw",
 		"sr",
 		"st",
-		"x",
 		"xb",
+		"xb64",
 		"xd",
 		"xl",
 		"xmm",
+		"xq",
 		"xw",
 		"ymm",
 		"zmm",
@@ -449,7 +523,7 @@ bool loadDef( FILE * fh, Instructions & insts )
 	                vector<Otype> 	operands;
 	                vector<unique_ptr<Prefix>> 	prefixes;
 	                vector<uint8_t> opcode;
-	                set<MC_Comp>args;
+	                set<MC_Comp,Instruction::Comp>args;
 					int offset = 0;
 	
 					for( auto & token:tokens)
@@ -465,7 +539,6 @@ bool loadDef( FILE * fh, Instructions & insts )
 							static auto end = opTypes + sizeof(opTypes)/sizeof(char *);
 							auto p = equal_range( opTypes, end, token.c_str(), 
 								[]( const char * a, const char * b){ return strcmp(a,b) < 0; } );
-
 							if(p.first < end && token == opTypes[p.first-opTypes])
 								operands.push_back(static_cast<Otype>(p.first-opTypes));
 							else if( token == "|" )
@@ -531,7 +604,7 @@ bool loadDef( FILE * fh, Instructions & insts )
 
 bool genInstSwitch( 
 	const map<uint8_t, unique_ptr<InstTree>> & children, 
-	const set<const Instruction *> * instructions,
+	const set<const Instruction *, InstTree::Icmp> * instructions,
 	int	level,
 	const string & margin )
 {
@@ -630,6 +703,18 @@ bool genInst( const Instructions & insts )
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";
+	cout << "std::string scale( const char * code, int pos, int offset, int len )\n";
+	cout << "{\n";
+	cout << "	if( len == 2 )\n";
+	cout << "	{\n";
+	cout << "		uint8_t value = *reinterpret_cast<const uint8_t *>(code+pos);\n";
+	cout << "       value = ( value & 0xc0 ) >> 6;\n";
+	cout << "		char buff[12];\n";
+	cout << "		sprintf( buff, \"%x\", 1 << value );\n";
+	cout << "		return buff;\n";
+	cout << "	}\n";
+	cout << "}\n";
+	cout << "\n";
 	cout << "const char * xd_reg( int r )\n";
 	cout << "{\n";
 	cout << "	switch(r)\n";
@@ -670,6 +755,21 @@ bool genInst( const Instructions & insts )
 	cout << "	case 5: return \"%ch\";\n";
 	cout << "	case 6: return \"%dh\";\n";
 	cout << "	case 7: return \"%bh\";\n";
+	cout << "	}\n";
+	cout << "}\n";
+	cout << "\n";
+	cout << "const char * xb64_reg( int r )\n";
+	cout << "{\n";
+	cout << "	switch(r)\n";
+	cout << "	{\n";
+	cout << "	case 0: return \"%al\";\n";
+	cout << "	case 1: return \"%cl\";\n";
+	cout << "	case 2: return \"%dl\";\n";
+	cout << "	case 3: return \"%bl\";\n";
+	cout << "	case 4: return \"%spl\";\n";
+	cout << "	case 5: return \"%bpl\";\n";
+	cout << "	case 6: return \"%sil\";\n";
+	cout << "	case 7: return \"%dil\";\n";
 	cout << "	}\n";
 	cout << "}\n";
 	cout << "\n";
