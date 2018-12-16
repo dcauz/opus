@@ -97,10 +97,10 @@ bool Evex::hasNonConstBytes() const
 	return vvvv == 0xff || aaa == 0xff;
 }
 
-// 0  1  2  3  4      5      6     7                   8/11
+// 0  1  2  3  4	  5	  6	 7				   8/11
 // 62 e1 e2 e3 opcode ModR/M [SIB] [disp32 or disp8*N] [immed]
 //
-//     7  6  5  4  3  2  1  0
+//	 7  6  5  4  3  2  1  0
 // e1  R  X  B  R' 0  0  m  m   P[7:0]
 // e2  W  v  v  v  v  1  p  p   P[15:8]
 // e3  z  L' L  b  V' a  a  a   P[23:16]
@@ -226,7 +226,7 @@ bool Vex2::hasNonConstBytes() const
 }
 
 // c5: R vvvv L pp
-//     7 6-3  2 10
+//	 7 6-3  2 10
 //
 void Vex2::prepend( vector<uint8_t> & vec ) const
 {
@@ -256,7 +256,7 @@ bool Vex3::hasNonConstBytes() const
 }
 
 // c4: RXB:0mmmm W vvvv L pp
-//     765 4-0   7 6-3  2 10
+//	 765 4-0   7 6-3  2 10
 //
 void Vex3::prepend( vector<uint8_t> & vec ) const
 {
@@ -1730,6 +1730,76 @@ const char  * Instruction::lexium( Nmemonic nm )
 	return ::lexium[static_cast<int>(nm)];
 }
 
+void Instruction::dump() const
+{
+	std::cerr << lexium() << " ";
+	for( auto o:opcode_)
+		std::cerr << hex << (int)o << " ";
+	
+	std::cerr << "args=";
+	for( auto a:args_)
+		if(a.isConst())
+			std::cerr << hex << a.value() << " ";
+}
+
+bool Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction * const & i2 )
+{
+	auto io1 = i1->opcode().begin();
+	auto eo1 = i1->opcode().end();
+	auto io2 = i2->opcode().begin();
+	auto eo2 = i2->opcode().end();
+
+	while( ( io1 != eo1 ) && ( io2 != eo2 ) )
+	{
+		if( *io1 < *io2 )
+			return true;
+		else if( *io1 > *io2 )
+			return false;
+
+		++io1;
+		++io2;
+	}
+	if( io1 != eo1 )
+		return false;
+	else if( io2 != eo2 )
+		return true;
+
+	auto ia1 = i1->args().begin();
+	auto ea1 = i1->args().end();
+	auto ia2 = i2->args().begin();
+	auto ea2 = i2->args().end();
+
+	while( ( ia1 != ea1 ) && ( ia2 != ea2 ) )
+	{
+		if( !ia1->isConst() )
+		{
+			++ia1;
+			continue;
+		}
+		if( !ia2->isConst() )
+		{
+			++ia2;
+			continue;
+		}
+
+		if( ia1->value() < ia2->value() )
+			return true;
+		else if( ia1->value() > ia2->value() )
+			return false;
+
+		++ia1;
+		++ia2;
+	}
+	while( ia1 != ea1 )
+	{
+		if( ia1->isConst() )
+			return true;
+		++ia1;
+	}
+
+	return false;
+}
+
 string argsToString( Otype operand, const MC_Comp & arg )
 {
 	string ans;
@@ -1737,8 +1807,8 @@ string argsToString( Otype operand, const MC_Comp & arg )
 
 	switch(operand)
 	{
-    case Otype::IMM8:
-    case Otype::IMM32:
+	case Otype::IMM8:
+	case Otype::IMM32:
 	{
 		stringstream ss;
 		int b = arg.offset()/8;
@@ -1747,29 +1817,28 @@ string argsToString( Otype operand, const MC_Comp & arg )
 		ans = ss.str();
 		return ans;
 	}
-    case Otype::ADDR_RQ:    reg = "rq";	break;
-    case Otype::ADDR_RD: 	reg = "rd"; break;
-    case Otype::ADDR_XQ:	reg = "xq"; break;
-    case Otype::ADDR_XD:	reg = "xd"; break;
-    case Otype::RQ: 		reg = "rq"; break;
-    case Otype::RB: 		reg = "rb"; break;
-    case Otype::RD: 		reg = "rd"; break;
-    case Otype::RW: 		reg = "rw"; break;
-    case Otype::XQ: 		reg = "xq"; break;
-    case Otype::XB: 		reg = "xb"; break;
-    case Otype::XB64: 		reg = "xb64";break;
-    case Otype::XD: 		reg = "xd"; break;
-    case Otype::XL: 		reg = "xl"; break;
-    case Otype::XMM: 		reg = "xmm";break;
-    case Otype::XW: 		reg = "xw"; break;
-    case Otype::YMM: 		reg = "ymm";break;
-    case Otype::ZMM: 		reg = "zmm";break;
-    case Otype::CR: 		reg = "cr"; break;
-    case Otype::DR: 		reg = "dr"; break;
-    case Otype::K: 			reg = "k"; 	break;
-    case Otype::MM: 		reg = "mm"; break;
-    case Otype::SR: 		reg = "sr"; break;
-    case Otype::ST: 		reg = "st"; break;
+	case Otype::ADDR_RQ:	reg = "rq";	break;
+	case Otype::ADDR_RD: 	reg = "rd"; break;
+	case Otype::ADDR_XQ:	reg = "xq"; break;
+	case Otype::ADDR_XD:	reg = "xd"; break;
+	case Otype::RQ: 		reg = "rq"; break;
+	case Otype::RB: 		reg = "rb"; break;
+	case Otype::RD: 		reg = "rd"; break;
+	case Otype::RW: 		reg = "rw"; break;
+	case Otype::XQ: 		reg = "xq"; break;
+	case Otype::XB: 		reg = "xb"; break;
+	case Otype::XB64: 		reg = "xb64";break;
+	case Otype::XD: 		reg = "xd"; break;
+	case Otype::XMM: 		reg = "xmm";break;
+	case Otype::XW: 		reg = "xw"; break;
+	case Otype::YMM: 		reg = "ymm";break;
+	case Otype::ZMM: 		reg = "zmm";break;
+	case Otype::CR: 		reg = "cr"; break;
+	case Otype::DR: 		reg = "dr"; break;
+	case Otype::K: 			reg = "k"; 	break;
+	case Otype::MM: 		reg = "mm"; break;
+	case Otype::SR: 		reg = "sr"; break;
+	case Otype::ST: 		reg = "st"; break;
 	}
 
 	stringstream ss;
@@ -1790,10 +1859,13 @@ string argsToString( Otype operand, const MC_Comp & arg1, const MC_Comp & arg2 )
 	{
 	case Otype::ADDR_DISP32_RQ:
 	case Otype::ADDR_DISP8_RQ: reg = "rq"; break;
+
 	case Otype::ADDR_DISP32_RD:
 	case Otype::ADDR_DISP8_RD: reg = "rd"; break;
+
 	case Otype::ADDR_DISP32_XQ:
 	case Otype::ADDR_DISP8_XQ: reg = "xq"; break;
+
 	case Otype::ADDR_DISP32_XD:
 	case Otype::ADDR_DISP8_XD: reg = "xd"; break;
 	}
@@ -1809,7 +1881,7 @@ string argsToString( Otype operand, const MC_Comp & arg1, const MC_Comp & arg2 )
 		b = arg2.offset()/8;
 		int o = arg2.offset()%8;
 
-		ss << "xd_reg(reg(code[" << b << "]," << o << "))";
+		ss << reg << "_reg(reg(code[" << b << "]," << o << "))";
 
 		ans = ss.str();
 		return ans;	
@@ -1820,35 +1892,35 @@ string argsToString( Otype operand, const MC_Comp & arg1, const MC_Comp & arg2 )
 
 	switch(operand)
 	{
-    case Otype::ADDR_RQ_RQ:          
+	case Otype::ADDR_RQ_RQ:		  
 		reg1 = "rq";
 		reg2 = "rq";
 		break;
-    case Otype::ADDR_RQ_XQ:
+	case Otype::ADDR_RQ_XQ:
 		reg1 = "rq";
 		reg2 = "xq";
 		break;
-    case Otype::ADDR_RD_RD:
+	case Otype::ADDR_RD_RD:
 		reg1 = "rd";
 		reg2 = "rd";
 		break;
-    case Otype::ADDR_RD_XD:
+	case Otype::ADDR_RD_XD:
 		reg1 = "rd";
 		reg2 = "xd";
 		break;
-    case Otype::ADDR_XQ_RQ:
+	case Otype::ADDR_XQ_RQ:
 		reg1 = "xq";
 		reg2 = "rq";
 		break;
-    case Otype::ADDR_XQ_XQ:
+	case Otype::ADDR_XQ_XQ:
 		reg1 = "xq";
 		reg2 = "xq";
 		break;
-    case Otype::ADDR_XD_RD:
+	case Otype::ADDR_XD_RD:
 		reg1 = "xd";
 		reg2 = "rd";
 		break;
-    case Otype::ADDR_XD_XD:
+	case Otype::ADDR_XD_XD:
 		reg1 = "xd";
 		reg2 = "xd";
 		break;
@@ -2000,7 +2072,7 @@ string argsToString(
 	ss << reg2 << "_reg(reg(code[" << b << "]," << o << ")),";
 
 	b = arg3.offset()/8;
-	int l = arg3.length()/8;
+	int l = arg3.length();
 	o = arg3.offset()%8;
 
 	ss << "scale(code," <<  b << "," << o << "," << l << ").c_str()";
@@ -2179,7 +2251,6 @@ const char * argFormat( Otype op, int & n )
 	case Otype::XB:
 	case Otype::XB64:		
 	case Otype::XD:		
-	case Otype::XL:	
 	case Otype::XMM:
 	case Otype::XW:	
 	case Otype::YMM:

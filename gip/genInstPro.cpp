@@ -9,7 +9,7 @@
 
 using namespace std;
 
-using Instructions = set<Instruction,Instruction::Cmp>;
+using Instructions = set<Instruction,Instruction::Icmp>;
 
 bool genInst( const Instructions & );
 bool loadDef( FILE *, Instructions & );
@@ -220,51 +220,7 @@ bool isOpcodeByte(const std::string & token)
 
 struct InstTree
 {
-   struct Icmp
-   {
-        bool operator() ( const Instruction * const & i1, const Instruction * const & i2 )
-        {
-            auto io1 = i1->opcode().begin();
-            auto eo1 = i1->opcode().end();
-            auto io2 = i2->opcode().begin();
-            auto eo2 = i2->opcode().end();
-
-            while( ( io1 != eo1 ) && ( io2 != eo2 ) )
-            {
-                if( *io1 < *io2 )
-                    return true;
-                else if( *io1 > *io2 )
-                    return false;
-
-                ++io1;
-                ++io2;
-            }
-            if( io1 != eo1 )
-                return false;
-            else if( io2 != eo2 )
-                return true;
-
-            auto ia1 = i1->args().begin();
-            auto ea1 = i1->args().end();
-            auto ia2 = i2->args().begin();
-            auto ea2 = i2->args().end();
-
-            while( ( ia1 != ea1 ) && ( ia2 != ea2 ) )
-            {
-				if( ia1->value() < ia2->value() )
-					return true;
-				else if( ia1->value() > ia2->value() )
-					return false;
-                ++ia1;
-				++ia2;
-            }
-            if( io1 != eo1 )
-                return true;
-            return true;
-        }
-    };
-
-	set<const Instruction *, Icmp> instructions;
+	set<const Instruction *, Instruction::Icmp> instructions;
 	map<uint8_t, unique_ptr<InstTree>> children;
 	void dump( const std::string & m ) const;
 };
@@ -499,7 +455,6 @@ bool loadDef( FILE * fh, Instructions & insts )
 		"xb",
 		"xb64",
 		"xd",
-		"xl",
 		"xmm",
 		"xq",
 		"xw",
@@ -596,15 +551,18 @@ bool loadDef( FILE * fh, Instructions & insts )
 				catch( ... )
 				{
 					fprintf( stderr, "Failed to parse instruction on %s\n", buff );
+					return false;
 				}
 			}
 		}
 	}
+
+	return true;
 }
 
 bool genInstSwitch( 
 	const map<uint8_t, unique_ptr<InstTree>> & children, 
-	const set<const Instruction *, InstTree::Icmp> * instructions,
+	const set<const Instruction *, Instruction::Icmp> * instructions,
 	int	level,
 	const string & margin )
 {
@@ -766,17 +724,6 @@ bool genInst( const Instructions & insts )
 	cout << "	case 1: return \"%cl\";\n";
 	cout << "	case 2: return \"%dl\";\n";
 	cout << "	case 3: return \"%bl\";\n";
-	cout << "	case 4: return \"%spl\";\n";
-	cout << "	case 5: return \"%bpl\";\n";
-	cout << "	case 6: return \"%sil\";\n";
-	cout << "	case 7: return \"%dil\";\n";
-	cout << "	}\n";
-	cout << "}\n";
-	cout << "\n";
-	cout << "const char * xl_reg( int r )\n";
-	cout << "{\n";
-	cout << "	switch(r)\n";
-	cout << "	{\n";
 	cout << "	case 4: return \"%spl\";\n";
 	cout << "	case 5: return \"%bpl\";\n";
 	cout << "	case 6: return \"%sil\";\n";

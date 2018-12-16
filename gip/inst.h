@@ -71,16 +71,19 @@ enum class Otype
 	ADDR_DISP8_RD_RD_SCALE,	// example: 90(%r10d,%r11d,2) 
 	ADDR_DISP8_RD_XD,		// example: 10(%r10d,%dx)
 	ADDR_DISP8_RD_XD_SCALE,	// example: 10(%r10d,%dx,2)
+
 	ADDR_DISP8_RQ,			// example: 10(%r10)
 	ADDR_DISP8_RQ_RQ,		// example: 30(%r10,%r11)
 	ADDR_DISP8_RQ_RQ_SCALE,	// example: 30(%r10,%r11,2)
 	ADDR_DISP8_RQ_XQ,		// example: 40(%r10,%rdx)
 	ADDR_DISP8_RQ_XQ_SCALE,	// example: 40(%r10,%rdx,2)
+
 	ADDR_DISP8_XD,			// example: 80(%dx)
 	ADDR_DISP8_XD_RD,		// example: 11(%dx,%r11d)
 	ADDR_DISP8_XD_RD_SCALE,	// example: 11(%dx,%r11d,2)
 	ADDR_DISP8_XD_XD,		// example: 12(%dx,%ax)
 	ADDR_DISP8_XD_XD_SCALE,	// example: 12(%dx,%ax,2)
+
 	ADDR_DISP8_XQ,			// example: 20(%rdx)
 	ADDR_DISP8_XQ_RQ,		// example: 50(%rdx,%r11)
 	ADDR_DISP8_XQ_RQ_SCALE,	// example: 50(%rdx,%r11,2)
@@ -92,16 +95,19 @@ enum class Otype
 	ADDR_RD_RD_SCALE,	// example: (%r10d,%r11d,2)
 	ADDR_RD_XD,			// example: (%r10d,%dx)
 	ADDR_RD_XD_SCALE,	// example: (%r10d,%dx,2)
+
 	ADDR_RQ,			// example: (%r10)
 	ADDR_RQ_RQ,			// example: (%r10,%r11)
 	ADDR_RQ_RQ_SCALE,	// example: (%r10,%r11,2)
 	ADDR_RQ_XQ,			// example: (%r10,%rdx)
 	ADDR_RQ_XQ_SCALE,	// example: (%r10,%rdx,2)
+
 	ADDR_XD,			// example: (%dx)
 	ADDR_XD_RD,			// example: (%dx,%r11d)
 	ADDR_XD_RD_SCALE,	// example: (%dx,%r11d,2)
 	ADDR_XD_XD,			// example: (%dx,%ax)
 	ADDR_XD_XD_SCALE,	// example: (%dx,%ax,2)
+
 	ADDR_XQ,			// example: (%rdx)
 	ADDR_XQ_RQ,			// example: (%rdx,%r11)
 	ADDR_XQ_RQ_SCALE,	// example: (%rdx,%r11,2)
@@ -123,7 +129,6 @@ enum class Otype
 	XB,
 	XB64,
 	XD,
-	XL, 
 	XMM,
 	XQ, 
 	XW,
@@ -1519,49 +1524,22 @@ public:
 			return a1.position() < a2.position();
 		}
 	};
-	struct Cmp
+	struct Icmp
 	{
 		bool operator() ( const Instruction & i1, const Instruction & i2 )
 		{
-			auto io1 = i1.opcode_.begin();
-			auto eo1 = i1.opcode_.end();
-			auto io2 = i2.opcode_.begin();
-			auto eo2 = i2.opcode_.end();
-
-			while( ( io1 != eo1 ) && ( io2 != eo2 ) )
-			{
-				if( *io1 < *io2 )
-					return true;
-				else if( *io1 > *io2 )
-					return false;
-
-				++io1;
-				++io2;
-			}
-			if( io1 != eo1 )
-				return false;
-			else if( io2 != eo2 )
-				return true;
-
-			auto ia1 = i1.args_.begin();
-			auto ea1 = i1.args_.end();
-			auto ia2 = i2.args_.begin();
-			auto ea2 = i2.args_.end();
-
-            while( ( ia1 != ea1 ) && ( ia2 != ea2 ) )
-            {
-				if( ia1->value() < ia2->value() )
-					return true;
-				else if( ia1->value() > ia2->value() )
-					return false;
-                ++ia1;
-				++ia2;
-            }
-            if( io1 != eo1 )
-                return true;
-            return true;
+			return cmp( &i1, &i2 );
 		}
-	};
+
+		bool operator() ( const Instruction * const & i1, const Instruction * const & i2 )
+        {
+			return cmp( i1, i2 );
+		}
+
+	private:
+		bool cmp( const Instruction * const & i1, const Instruction * const & i2 );
+    };
+
 
 	Instruction(Nmemonic nm,
 				std::vector<Otype>   && operands,
@@ -1599,6 +1577,7 @@ public:
 	const std::vector<uint8_t>	& opcode() const { return opcode_; }
 	const std::set<MC_Comp,Comp> & args() const  { return args_; }
 
+	void dump() const;
 private:
 	Nmemonic				inst_;
 	std::vector<Otype>		operands_;
