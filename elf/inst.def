@@ -9,19 +9,24 @@ adcx
 add xb imm32                     |          00 0b00 reg:3:0 0b100 0x25 imm:32:1
 add xb addr.disp8.xq.xq.scale    |          00 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xb addr.disp8.xq             |          00 0b01 reg:3:0 reg:3:2 imm:8:1
-add xb addr.disp32.xq.xq.scale   |          00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xb addr.disp8.xq.xq.scale    |          00 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
+add xb addr.disp32.xq.xq.scale   |          00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xd imm32                     |          01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add xd addr.disp8.xq.xq.scale    |          01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xd addr.disp8.xq             |          01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xd addr.disp32.xq.xq.scale   |          01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xq xb             |          02 0b00 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.xq xd             |          03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xb64 imm32                   |       40 00 0b00 reg:3:0 0b100 0x25 imm:32:1
 add xb64 addr.disp8.xq           |       40 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add xb64 addr.disp32.xq.xq.scale |       40 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xq xb64           |       40 02 0b01 reg:3:2 reg:3:1 imm:8:0
 add xb64 addr.disp8.rq           |       41 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add xb64 rb                      |       41 00 0b11 reg:3:0 reg:3:1
 add xd addr.disp8.rq             |       41 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xd rd                        |       41 01 0b11 reg:3:0 reg:3:1
+add addr.disp8.rq xb64           |       41 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.rq xd             |       41 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xb64 addr.disp8.rq.rq.scale  |       42 00 0b00 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xb64 addr.disp8.xq.rq.scale  |       42 00 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xb64 addr.disp32.xq.rq.scale |       42 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
@@ -36,10 +41,14 @@ add rd imm32                     |       44 01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add rd addr.xq.xq.scale          |       44 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rd addr.disp8.xq             |       44 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rd addr.disp32.xq.xq.scale   |       44 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
-add rd addr.disp8.rq             |       45 01 0b01 reg:3:0 reg:3:2 imm:8:1
-add rd rd                        |       45 01 0b11 reg:3:0 reg:3:1
+add addr.disp8.xq rb             |       44 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.xq rd             |       44 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rb addr.disp8.rq             |       45 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add rb rb                        |       45 00 0b11 reg:3:0 reg:3:1
+add rd addr.disp8.rq             |       45 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add rd rd                        |       45 01 0b11 reg:3:0 reg:3:1
+add addr.disp8.rq rb             |       45 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.rq rd             |       45 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rb addr.xq.rq.scale          |       46 00 0b00 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2
 add rb addr.disp32.xq.rq.scale   |       46 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rd addr.xq.rq.scale          |       46 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
@@ -48,8 +57,10 @@ add xq imm32                     |       48 01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add xq addr.disp8.xq             |       48 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xq addr.disp8.xq.xq.scale    |       48 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xq addr.disp32.xq.xq.scale   |       48 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xq xq             |       48 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xq addr.disp8.rq             |       49 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xq rq                        |       49 01 0b11 reg:3:0 reg:3:1
+add addr.disp8.rq xq             |       49 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xq addr.disp8.xq.rq.scale    |       4a 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xq addr.disp32.xq.rq.scale   |       4a 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xq addr.disp8.rq.rq.scale    |       4b 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
@@ -58,8 +69,10 @@ add rq imm32                     |       4c 01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add rq addr.xq.xq.scale          |       4c 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rq addr.disp8.xq             |       4c 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rq addr.disp32.xq.xq.scale   |       4c 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
-add rq addr.disp8.rq             |       4d 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.xq rq             |       4c 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rq addr.rq.xq.scale          |       4d 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
+add rq addr.disp8.rq             |       4d 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rq rq             |       4d 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rq addr.xq.rq.scale          |       4e 01 0b00 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2
 add rq addr.disp32.xq.rq.scale   |       4e 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rq addr.rq.rq.scale          |       4f 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
@@ -68,50 +81,61 @@ add xw imm32                     |    66    01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add xw addr.disp8.xq             |    66    01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xw addr.disp8.xq.xq.scale    |    66    01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xw addr.disp32.xq.xq.scale   |    66    01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xq xw             |    66    03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xw addr.disp8.rq             |    66 41 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xw rw                        |    66 41 01 0b11 reg:3:0 reg:3:1
+add addr.disp8.rq xw             |    66 41 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xw addr.disp8.xq.rq.scale    |    66 42 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xw addr.disp32.xq.rq.scale   |    66 42 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rw imm32                     |    66 44 01 0b00 reg:3:0 0b100 0x25 imm:32:1
 add rw addr.xq.xq.scale          |    66 44 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rw addr.disp8.xq             |    66 44 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rw addr.disp32.xq.xq.scale   |    66 44 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xq rw             |    66 44 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rw addr.disp8.rq             |    66 45 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rw rw                        |    66 45 01 0b11 reg:3:0 reg:3:1
-add rw addr.disp32.xq.rq.scale   |    66 46 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.rq rw             |    66 45 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rw addr.xq.rq.scale          |    66 46 01 0b00 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2
+add rw addr.disp32.xq.rq.scale   |    66 46 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xb addr.xd                   | 67       00 0b00 reg:3:0 reg:3:1
 add xb addr.disp8.xd.xd.scale    | 67       00 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xb addr.disp8.xd             | 67       00 0b01 reg:3:0 reg:3:2 imm:8:1
 add xb addr.disp32.xd.xd.scale   | 67       00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xd addr.disp8.xd             | 67       01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xd addr.disp8.xd.xd.scale    | 67       01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
+add xd addr.disp32.xd.xd.scale   | 67       01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add addr.xd xb                   | 67       02 0b00 reg:3:0 reg:3:1
 add addr.disp8.xd xb             | 67       02 0b01 reg:3:2 reg:3:1 imm:8:0
 add addr.disp32.xd xb            | 67       02 0b10 reg:3:2 reg:3:1 imm:32:0
-add xd addr.disp32.xd.xd.scale   | 67       01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add addr.disp8.xd xd             | 67       03 0b01 reg:3:2 reg:3:1 imm:8:0
-add addr.disp32.xd xb64          | 67    40 02 0b10 reg:3:2 reg:3:1 imm:32:0
-add addr.disp32.xd rb            | 67    44 02 0b10 reg:3:2 reg:3:1 imm:32:0
 add xb64 addr.disp8.xd           | 67    40 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add xb64 addr.disp32.xd          | 67    40 00 0b10 reg:3:0 reg:3:2 imm:32:1
 add xb64 addr.disp32.xd.xd.scale | 67    40 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xd xb64           | 67    40 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp32.xd xb64          | 67    40 02 0b10 reg:3:2 reg:3:1 imm:32:0
 add xb64 addr.disp8.rd           | 67    41 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add xd addr.disp8.rd             | 67    41 01 0b01 reg:3:0 reg:3:2 imm:8:1
-add xd addr.disp8.xd.rd.scale    | 67    42 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
-add xd addr.disp32.xd.rd.scale   | 67    42 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.rd xb64           | 67    41 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.rd xd             | 67    41 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xb64 addr.disp32.xd.rd.scale | 67    42 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xb64 addr.disp8.xd.rd.scale  | 67    42 00 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
+add xd addr.disp8.xd.rd.scale    | 67    42 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
+add xd addr.disp32.xd.rd.scale   | 67    42 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rb addr.xd.xd.scale          | 67    44 00 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
+add rb addr.xd.xd.scale          | 67    44 00 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
+add rb addr.disp8.xd             | 67    44 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add rb addr.disp32.xd            | 67    44 00 0b10 reg:3:0 reg:3:2 imm:32:1
-add rd addr.disp32.xd.xd.scale   | 67    44 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add rb addr.disp32.xd.xd.scale   | 67    44 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rd addr.xd.xd.scale          | 67    44 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rd addr.disp8.xd             | 67    44 01 0b01 reg:3:0 reg:3:2 imm:8:1
-add rb addr.disp8.xd             | 67    44 00 0b01 reg:3:0 reg:3:2 imm:8:1
-add rb addr.xd.xd.scale          | 67    44 00 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
-add rb addr.disp32.xd.xd.scale   | 67    44 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add rd addr.disp32.xd.xd.scale   | 67    44 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xd rb             | 67    44 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp32.xd rb            | 67    44 02 0b10 reg:3:2 reg:3:1 imm:32:0
+add addr.disp8.xd rd             | 67    44 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rb addr.disp8.rd             | 67    45 00 0b01 reg:3:0 reg:3:2 imm:8:1
 add rd addr.disp8.rd             | 67    45 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rd rb             | 67    45 02 0b01 reg:3:2 reg:3:1 imm:8:0
+add addr.disp8.rd rd             | 67    45 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rb addr.xd.rd.scale          | 67    46 00 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rb addr.disp32.xd.rd.scale   | 67    46 00 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rd addr.disp32.xd.rd.scale   | 67    46 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
@@ -119,7 +143,9 @@ add rd addr.xd.rd.scale          | 67    46 01 0b00 reg:3:0 0b100 scale:2:3 reg:
 add xq addr.disp8.xd             | 67    48 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xq addr.disp8.xd.xd.scale    | 67    48 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xq addr.disp32.xd.xd.scale   | 67    48 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xd xq             | 67    48 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xq addr.disp8.rd             | 67    49 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rd xq             | 67    49 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xq addr.disp8.xd.rd.scale    | 67    4a 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xq addr.disp32.xd.rd.scale   | 67    4a 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add xq addr.disp8.rd.rd.scale    | 67    4b 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
@@ -127,7 +153,9 @@ add xq addr.disp32.rd.rd.scale   | 67    4b 01 0b10 reg:3:0 0b100 scale:2:4 reg:
 add rq addr.xd.xd.scale          | 67    4c 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rq addr.disp8.xd             | 67    4c 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rq addr.disp32.xd.xd.scale   | 67    4c 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
+add addr.disp8.xd rq             | 67    4c 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rq addr.disp8.rd             | 67    4d 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rd rq             | 67    4d 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add rq addr.xd.rd.scale          | 67    4e 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rq addr.disp32.xd.rd.scale   | 67    4e 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rq addr.rd.rd.scale          | 67    4f 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
@@ -135,19 +163,18 @@ add rq addr.disp32.rd.rd.scale   | 67    4f 01 0b10 reg:3:0 0b100 scale:2:4 reg:
 add xw addr.disp8.xd             | 67 66    01 0b01 reg:3:0 reg:3:2 imm:8:1
 add xw addr.disp8.xd.xd.scale    | 67 66    01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xw addr.disp32.xd.xd.scale   | 67 66    01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
-add addr.disp8.xd rq             | 67    4c 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add addr.disp8.xd xw             | 67 66    03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xw addr.disp8.rd             | 67 66 41 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rd xw             | 67 66 41 03 0b01 reg:3:2 reg:3:1 imm:8:0
 add xw addr.disp8.xd.rd.scale    | 67 66 42 01 0b01 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:8:1
 add xw addr.disp32.xd.rd.scale   | 67 66 42 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add rw addr.xd.xd.scale          | 67 66 44 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rw addr.disp8.xd             | 67 66 44 01 0b01 reg:3:0 reg:3:2 imm:8:1
 add rw addr.disp32.xd.xd.scale   | 67 66 44 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 add addr.disp8.xd rw             | 67 66 44 03 0b01 reg:3:2 reg:3:1 imm:8:0
-add addr.disp8.xd rd             | 67    44 03 0b01 reg:3:2 reg:3:1 imm:8:0
-add addr.disp8.xd xq             | 67    48 03 0b01 reg:3:2 reg:3:1 imm:8:0
-add rw addr.xd.rd.scale          | 67 66 46 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rw addr.disp8.rd             | 67 66 45 01 0b01 reg:3:0 reg:3:2 imm:8:1
+add addr.disp8.rd rw             | 67 66 45 03 0b01 reg:3:2 reg:3:1 imm:8:0
+add rw addr.xd.rd.scale          | 67 66 46 01 0b00 reg:3:0 0b100 scale:2:3 reg:3:2 reg:3:1
 add rw addr.disp32.xd.rd.scale   | 67 66 46 01 0b10 reg:3:0 0b100 scale:2:4 reg:3:3 reg:3:2 imm:32:1
 addpd
 addps
