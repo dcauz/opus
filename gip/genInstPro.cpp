@@ -543,10 +543,8 @@ bool loadDef( FILE * fh, Instructions & insts )
 					if( opcode.size() == 0 )
 						fprintf( stderr, "%s missing opcode. Ignored\n", Instruction::lexium(nm) );
 					else
-					{
 						insts.insert(
-							Instruction( nm,move(operands),move(prefixes),move(opcode),move(args)));
-					}
+							Instruction(nm,move(operands),move(prefixes),move(opcode), move(args)));
 				}
 				catch( ... )
 				{

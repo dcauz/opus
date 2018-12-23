@@ -1742,7 +1742,7 @@ void Instruction::dump() const
 			std::cerr << hex << a.value() << " ";
 }
 
-bool Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction * const & i2 )
+int Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction * const & i2 )
 {
 	auto io1 = i1->opcode().begin();
 	auto eo1 = i1->opcode().end();
@@ -1752,17 +1752,17 @@ bool Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction *
 	while( ( io1 != eo1 ) && ( io2 != eo2 ) )
 	{
 		if( *io1 < *io2 )
-			return true;
+			return -1;
 		else if( *io1 > *io2 )
-			return false;
+			return 1;
 
 		++io1;
 		++io2;
 	}
 	if( io1 != eo1 )
-		return false;
+		return 1;
 	else if( io2 != eo2 )
-		return true;
+		return -1;
 
 	auto ia1 = i1->args().begin();
 	auto ea1 = i1->args().end();
@@ -1783,9 +1783,9 @@ bool Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction *
 		}
 
 		if( ia1->value() < ia2->value() )
-			return true;
+			return -1;
 		else if( ia1->value() > ia2->value() )
-			return false;
+			return 1;
 
 		++ia1;
 		++ia2;
@@ -1793,11 +1793,11 @@ bool Instruction::Icmp::cmp( const Instruction * const & i1, const Instruction *
 	while( ia1 != ea1 )
 	{
 		if( ia1->isConst() )
-			return true;
+			return -1;
 		++ia1;
 	}
 
-	return false;
+	return 0;
 }
 
 string argsToString( Otype operand, const MC_Comp & arg )
@@ -2182,27 +2182,30 @@ const char * argFormat( Otype op, int & n )
 
 	case Otype::ADDR_DISP32_RD_RD:	
 	case Otype::ADDR_DISP32_RD_XD:
-	case Otype::ADDR_DISP32_RQ_RQ:		
 	case Otype::ADDR_DISP32_XD_RD:	
 	case Otype::ADDR_DISP32_XD_XD:
+	case Otype::ADDR_DISP32_RQ_RQ:		
+	case Otype::ADDR_DISP32_RQ_XQ:		
 	case Otype::ADDR_DISP32_XQ_RQ:		
 	case Otype::ADDR_DISP32_XQ_XQ:	
 	case Otype::ADDR_DISP8_RD_RD:
 	case Otype::ADDR_DISP8_RD_XD:		
+	case Otype::ADDR_DISP8_XD_XD:	
+	case Otype::ADDR_DISP8_XD_RD:		
 	case Otype::ADDR_DISP8_RQ_RQ:	
 	case Otype::ADDR_DISP8_RQ_XQ:
-	case Otype::ADDR_DISP8_XD_RD:		
-	case Otype::ADDR_DISP8_XD_XD:	
 	case Otype::ADDR_DISP8_XQ_RQ:
 	case Otype::ADDR_DISP8_XQ_XQ:	n = 3; return "%s(%s,%s)";
 
 	case Otype::ADDR_DISP32_RD_RD_SCALE:
 	case Otype::ADDR_DISP32_RD_XD_SCALE:
-	case Otype::ADDR_DISP32_RQ_RQ_SCALE:
 	case Otype::ADDR_DISP32_XD_RD_SCALE:
 	case Otype::ADDR_DISP32_XD_XD_SCALE:
+	case Otype::ADDR_DISP32_RQ_RQ_SCALE:
+	case Otype::ADDR_DISP32_RQ_XQ_SCALE:
 	case Otype::ADDR_DISP32_XQ_RQ_SCALE:
 	case Otype::ADDR_DISP32_XQ_XQ_SCALE:
+
 	case Otype::ADDR_DISP8_RD_RD_SCALE:	
 	case Otype::ADDR_DISP8_RD_XD_SCALE:	
 	case Otype::ADDR_DISP8_RQ_RQ_SCALE:	

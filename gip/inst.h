@@ -1528,16 +1528,21 @@ public:
 	{
 		bool operator() ( const Instruction & i1, const Instruction & i2 )
 		{
-			return cmp( &i1, &i2 );
+			return cmp( &i1, &i2 ) < 0;
 		}
 
 		bool operator() ( const Instruction * const & i1, const Instruction * const & i2 )
         {
-			return cmp( i1, i2 );
+			return cmp( i1, i2 ) < 0;
+		}
+
+		bool equal( const Instruction & i1, const Instruction & i2 )
+		{
+			return cmp( &i1, &i2 ) == 0;
 		}
 
 	private:
-		bool cmp( const Instruction * const & i1, const Instruction * const & i2 );
+		int cmp( const Instruction * const & i1, const Instruction * const & i2 );
     };
 
 
