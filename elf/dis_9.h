@@ -77,12 +77,6 @@ const char * dis_99(const char * code, unsigned prefix)
 	return code;
 }
 
-const char * dis_9a(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
 const char * dis_9b(const char * code, unsigned prefix)
 {
 	if( *code == 0xffffffdb )
@@ -90,8 +84,6 @@ const char * dis_9b(const char * code, unsigned prefix)
 		++code;
 		if( *code == 0xffffffe3 )
 			printf( "finit\n" );
-		else
-			TODO
 		++code;
 	}
 	else if( *code == 0xffffffdf && code[1] == 0xffffffe0 )
@@ -136,8 +128,6 @@ const char * dis_9b(const char * code, unsigned prefix)
 				code = memStr( code, prefix, 0, 1, op );
 				printf( "fstenv %s\n", op.c_str() );
 			}
-			else
-				TODO
 		}
 	}
 

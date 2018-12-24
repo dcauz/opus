@@ -113,8 +113,13 @@ $(patsubst %.cpp,.d/%.d,$(OPUS_SRC)): html.hpp opl.hpp
 
 ########################################
 
-elf/instPro.cpp: elf/inst.def bin/genInstPro
-	bin/genInstPro elf/inst.def > $@
+INST_DEF_FILES := \
+gip/inst.def \
+gip/add.i \
+gip/no_operands.i
+
+elf/instPro.cpp: $(INST_DEF_FILES) bin/genInstPro
+	bin/genInstPro $(INST_DEF_FILES) > $@
 
 ########################################
 

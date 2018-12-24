@@ -21,15 +21,6 @@ const char * dis_00(const char * code, unsigned prefix)
     		printf( "vpshufb %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
 	}
-	else
-	{
-    	if(code[1] == 0x25)
-        	code = imm_reg_ops( code, prefix, 0, 32, true, op1, op2 );
-    	else
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op1, op2 );
-
-    	printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
-	}
     return code;
 }
 
@@ -53,15 +44,6 @@ const char * dis_01(const char * code, unsigned prefix)
        		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
     		printf( "vphaddw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
-	}
-	else
-	{
-   	 	if( code[1] == 0x25)
-   	    	code = imm_reg_ops( code, prefix, 1, 32, true, op1, op2 );
-    	else
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );
-
-    	printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
     return code;
@@ -88,15 +70,6 @@ const char * dis_02(const char * code, unsigned prefix)
 	    	printf( "vphaddd %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
 	}
-	else
-	{
-    	if( code[1] == 0x25)
-        	code = imm_reg_ops( code, prefix, 1, 8, false, op1, op2 );
-    	else
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 0, op2, op1 );
-
-	    printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
-	}
 
     return code;
 }
@@ -121,15 +94,6 @@ const char * dis_03(const char * code, unsigned prefix)
        		code = mod_reg_rm_ops( code, prefix, OpRegs::XMM0, 0, op1, op2 );
 	    	printf( "vphaddsw %s,%%xmm%d,%s\n", op2.c_str(), vvvv, op1.c_str() );
 		}
-	}
-	else
-	{
-    	if( code[1] == 0x25)
-        	code = imm_reg_ops( code, prefix, 1, 32, false, op1, op2 );
-    	else
-        	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op2, op1 );
-
-    	printf( "add %s,%s\n", op1.c_str(), op2.c_str() );
 	}
 
     return code;
@@ -699,8 +663,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 				++code;
 			}
 		}
-		else
-			TODO
 		break;
 	}
 	case 0x01:
@@ -3183,9 +3145,6 @@ const char * dis_0f(const char * code, unsigned prefix)
 		printf( "paddd %s,%s\n", op2.c_str(), op1.c_str() );
 		break;
 	}
-	default:
-		printf( "code %x\n", *code ); fflush(stdout);
-		TODO
 	}
 
 	return code;

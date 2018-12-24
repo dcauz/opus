@@ -19,33 +19,38 @@ int main( int argc, char * argv[] )
 {
 	if( argc < 2 )
 	{
-		fprintf( stderr, "usage: %s def-file\n", argv[0] );
+		fprintf( stderr, "usage: %s instruction-def-files\n", argv[0] );
 		return 1;
 	}
 
-	FILE *  fh = fopen( argv[1], "r" );
+	Instructions instructions;
 
-	if( nullptr == fh )
+	for( int arg = 1; arg < argc; ++arg )
 	{
-		fprintf( stderr, "Unable to open def file %s\n", argv[1] );
-		return 2;
-	}
+		FILE *  fh = fopen( argv[arg], "r" );
 
-	try
-	{
-		Instructions instructions;
-		bool rc = loadDef( fh, instructions );
-		fclose(fh);
+		if( nullptr == fh )
+		{
+			fprintf( stderr, "Unable to open def file %s\n", argv[1] );
+			return 2;
+		}
 
-		genInst(instructions);
-		return rc?0:3;
-	}
-	catch( const char * s )
-	{
-		fprintf( stderr, "Terminated due to exception: %s\n", s );
-	}
+		try
+		{
+			bool rc = loadDef( fh, instructions );
+			fclose(fh);
 
-	return -1;
+			if( !rc )
+				return 3;
+		}
+		catch( const char * s )
+		{
+			fprintf( stderr, "Terminated due to exception: %s\n", s );
+		}
+	}
+	
+	genInst(instructions);
+	return 0;
 }
 
 vector<string>	split( const char * line )

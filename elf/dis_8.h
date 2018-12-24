@@ -14,14 +14,6 @@ const char * dis_80(const char * code, unsigned prefix)
 
 		printf( "sub %s,%s\n", op1.c_str(), op2.c_str() ); 
 	}
-	else if( (*code & 0x38) == 0)
-	{
-		std::string op1;
-		std::string op2;
-		code = imm_reg_ops( code, prefix, 0, 32, false, op1, op2 );	
-
-		printf( "add %s,%s\n", op1.c_str(), op2.c_str() ); 
-	}
 	else if( (*code & 0x38) == 0x38)
 	{
 		// if imm with reg
@@ -43,8 +35,6 @@ const char * dis_80(const char * code, unsigned prefix)
 			printf( "cmpb %s,%s\n", op1.c_str(), op2.c_str() ); 
 		}
 	}
-	else
-		TODO
 
 	return code;
 }
@@ -77,12 +67,8 @@ const char * dis_83(const char * code, unsigned prefix)
 
 	if( (code[-2] & 0x38) == 0x28)
 		printf( "sub %s,%s\n", op2.c_str(), op1.c_str() ); 
-	else if( (code[-2] & 0x38) == 0)
-		printf( "add %s,%s\n", op2.c_str(), op1.c_str() ); 
 	else if( (code[-2] & 0x38) == 0x38)
 		printf( "cmpb %s,%s\n", op1.c_str(), op2.c_str() ); 
-	else
-		TODO
 
 	return code;
 }
@@ -221,12 +207,6 @@ const char * dis_8b(const char * code, unsigned prefix)
 	return code;
 }
 
-const char * dis_8c(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-
 const char * dis_8d(const char * code, unsigned prefix)
 {
 	std::string op1;
@@ -234,12 +214,6 @@ const char * dis_8d(const char * code, unsigned prefix)
 	code = mod_reg_rm_ops( code, prefix, OpRegs::AL, 1, op1, op2 );	
 
 	printf( "lea %s,%s\n", op2.c_str(), op1.c_str() ); 
-	return code;
-}
-
-const char * dis_8e(const char * code, unsigned prefix)
-{
-TODO
 	return code;
 }
 
@@ -253,8 +227,6 @@ const char * dis_8f(const char * code, unsigned prefix)
 
 		printf( "popq %s\n", op.c_str() );
 	}
-	else
-		TODO
 
 	return code;
 }

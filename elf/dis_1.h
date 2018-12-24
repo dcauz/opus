@@ -572,10 +572,3 @@ const char * dis_1e(const char * code, unsigned prefix)
 
 	return code;
 }
-
-const char * dis_1f(const char * code, unsigned prefix)
-{
-TODO
-	return code;
-}
-

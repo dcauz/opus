@@ -486,8 +486,6 @@ const char * dis_d9(const char * code, unsigned prefix)
 	
 			return code;
 		}
-		else
-			TODO
 
 		return ++code;
 	}
@@ -619,8 +617,6 @@ const char * dis_db(const char * code, unsigned prefix)
 					printf( "fildl %s\n", op.c_str() );
 				}	
 			}
-			else
-				TODO
 		}
 	}
 	else

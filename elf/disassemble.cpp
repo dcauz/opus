@@ -90,7 +90,6 @@ bool disassemble( const char * code, const char *end )
 		case 0x1c:	code = dis_1c(++code, prefix); break;
 		case 0x1d:	code = dis_1d(++code, prefix); break;
 		case 0x1e:	code = dis_1e(++code, prefix); break;
-		case 0x1f:	code = dis_1f(++code, prefix); break;
 	
 		case 0x20:	code = dis_20(++code, prefix); break;
 		case 0x21:	code = dis_21(++code, prefix); break;
@@ -100,7 +99,6 @@ bool disassemble( const char * code, const char *end )
 		case 0x24:	code = dis_24(++code, prefix); break;
 		case 0x25:	code = dis_25(++code, prefix); break;
 		case 0x26:	prefix |= PRE_26; ++code; printOn=false; break;
-		case 0x27:	code = dis_27(++code, prefix); break;
 
 		case 0x28:	code = dis_28(++code, prefix); break;
 		case 0x29:	code = dis_29(++code, prefix); break;
@@ -478,9 +476,7 @@ bool disassemble( const char * code, const char *end )
 		case -119:	code = dis_89(++code, prefix); break;	// 0x89
 		case -118:	code = dis_8a(++code, prefix); break;	// 0x8a
 		case -117:	code = dis_8b(++code, prefix); break;	// 0x8b
-		case -116:	code = dis_8c(++code, prefix); break;	// 0x8c
 		case -115:	code = dis_8d(++code, prefix); break;	// 0x8d
-		case -114:	code = dis_8e(++code, prefix); break;	// 0x8e
 		case -113:	code = dis_8f(++code, prefix); break;	// 0x8f
 	
 		case -112:	code = dis_90(++code, prefix); break;	// 0x90
@@ -493,7 +489,6 @@ bool disassemble( const char * code, const char *end )
 		case -105:	code = dis_97(++code, prefix); break;	// 0x97
 		case -104:	code = dis_98(++code, prefix); break;	// 0x98
 		case -103:	code = dis_99(++code, prefix); break;	// 0x99
-		case -102:	code = dis_9a(++code, prefix); break;	// 0x9a
 		case -101:	code = dis_9b(++code, prefix); break;	// 0x9b
 	
 		case -92:	code = dis_a4(++code, prefix); break;	// 0xa4
@@ -507,22 +502,7 @@ bool disassemble( const char * code, const char *end )
 		case -82:	code = dis_ae(++code, prefix); break;	// 0xae
 		case -81:	code = dis_af(++code, prefix); break;	// 0xaf
 	
-		case -80:	code = dis_b0(++code, prefix); break;	// 0xb0
-		case -79:	code = dis_b1(++code, prefix); break;	// 0xb1
-		case -78:	code = dis_b2(++code, prefix); break;	// 0xb2
-		case -77:	code = dis_b3(++code, prefix); break;	// 0xb3
-		case -76:	code = dis_b4(++code, prefix); break;	// 0xb4
-		case -75:	code = dis_b5(++code, prefix); break;	// 0xb5
-		case -74:	code = dis_b6(++code, prefix); break;	// 0xb6
-		case -73:	code = dis_b7(++code, prefix); break;	// 0xb7
 		case -72:	code = dis_b8(++code, prefix); break;	// 0xb8
-		case -71:	code = dis_b9(++code, prefix); break;	// 0xb9
-		case -70:	code = dis_ba(++code, prefix); break;	// 0xba
-		case -69:	code = dis_bb(++code, prefix); break;	// 0xbb
-		case -68:	code = dis_bc(++code, prefix); break;	// 0xbc
-		case -67:	code = dis_bd(++code, prefix); break;	// 0xbd
-		case -66:	code = dis_be(++code, prefix); break;	// 0xbe
-		case -65:	code = dis_bf(++code, prefix); break;	// 0xbf
 	
 		case -64:	code = dis_c0(++code, prefix); break;	// 0xc0
 		case -63:	code = dis_c1(++code, prefix); break;	// 0xc1

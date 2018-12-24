@@ -519,10 +519,6 @@ const char * dis_ff(const char * code, unsigned prefix)
 			++code;
 		}
 	}
-    else
-	{
-        TODO
-	}
 
 	return code;
 }

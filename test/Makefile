@@ -504,7 +504,7 @@ vm: $(VM_INST_TESTS)
 safer: $(SAFER_MODE_INST_TESTS)
 
 $(INST_TESTS):test.%: obj/%.o | $(ELF)
-	$(ELF) $< > out; diff out $(patsubst obj/%.o,expected/%.e,$<)
+	@$(ELF) $< > out; diff -ws out $(patsubst obj/%.o,expected/%.e,$<)
 
 %.e: obj/%.o
 	objdump -d $< > $@
