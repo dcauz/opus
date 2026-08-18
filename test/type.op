@@ -1,0 +1,52 @@
+
+
+interface BI < T, U >
+{
+}
+
+interface I < T, U > : BI<T,U>
+{
+}
+
+union U 
+{
+	int32 i32;
+	float32 f32;
+}
+
+type BT
+{
+	inline virtual void foo() 
+	{
+	}
+
+	inline virtual void bar( const int32 i32, inline float32 f32 ) 
+	{
+	}
+
+};
+
+};
+
+type T<x>: BT
+{
+	type-name ( args )
+	{
+	}
+
+	~type-name ( ) 
+	{
+	}
+
+	inline override void foo() 
+	{
+	}
+
+	final void noexcept bar()
+	{
+	}
+
+	private	atomic x x_;
+	thread_local int32 i32;
+	type_var int32	shared;
+}

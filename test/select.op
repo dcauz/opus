@@ -1,0 +1,24 @@
+int32 main( int32 argc, const string [] argv )
+{
+	select(argc)
+	{
+	case 0..10:
+		puts(argc);
+		break;
+	default:
+		puts("default");
+		break;
+
+	};
+
+	select(argv[0])
+	{
+	default:
+		puts( "unknown" );
+		break;
+	case "opus":
+		puts( argv[0] );
+		break;
+	};
+	return 0;
+}

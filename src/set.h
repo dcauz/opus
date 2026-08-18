@@ -1,0 +1,28 @@
+#pragma once
+
+#include "collection.h"
+#include "value.h"
+
+
+class SetType: public CollectionType
+{
+public:
+	SetType( Type * ele ):CollectionType(ele) {}
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+};
+
+class Set: public Value
+{
+public:
+	Set( std::vector<up<Value>> * );
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+
+private:
+	up<std::vector<up<Value>>> values_;
+	sp<SetType> type_;
+};

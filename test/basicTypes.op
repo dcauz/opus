@@ -1,0 +1,38 @@
+
+bool	b = true;
+float32	f = 1.1;
+float64	d = 123.456e-11;
+int8	t = 10;
+int8c	tc = 10;
+int16	s = 1111;
+int16c	sc = 1111;
+int32	i = 111111;
+uint64c	ic = 111111;
+regex	r = 'a*';
+string	s = "aaaa";
+date	d = '2022-10-11';
+datetime	dt = '2022-12-11 10:10:10.111;
+time	tm = '10:11:12';
+void	v;
+N		n = 111111111111111111111111111111;
+Z		z = -1111111111111111111111111111111111;
+Q		q = 22222222222222222222222222222222/333333333333333333333333;
+R		r = e**11 + pi**(1/2);
+
+int32 main( int32 argc, const string [] argv )
+{
+	int32c	i32c;
+	int64	i64;
+	int64c	i64c;
+	uint8	ui8 = 11;
+	uint8c	ui8c;
+	uint16	ui16;
+	uint16c	ui16;
+	uint32	ui32;
+	uint32c	ui32c;
+	uint64	ui64;
+	uint64c	ui64c;
+
+	return 0;
+}
+

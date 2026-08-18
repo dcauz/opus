@@ -1,0 +1,33 @@
+int32 main( int32 argc, const string [] argv )
+{
+	try 
+	{
+		throw 1;
+	}
+	catch( int32 ex )
+	{
+		puts( "caught int32" );
+	}
+
+	try 
+	{
+		if( argc == 1 )
+			throw "s";
+		else
+			throw 1.1;
+	}
+ 	catch( int32 ex )
+	{
+		puts( "caught int32" );
+	}
+	catch( string ex )
+	{
+		puts( "caught string" );
+	}
+	catch( ... )
+	{
+		puts( "caught unknown type" );
+	}
+
+	return 0;
+}

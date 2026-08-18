@@ -1,0 +1,22 @@
+int32 main( int32 argc, const string [] argv )
+{
+	enum Enum1
+	{
+		A = 1,
+		B = 2,
+		C = 3,
+		D
+	};
+
+	enum Enum1;
+
+	enum Enum2
+	{
+		X = 1.1,
+		Y = 1.3
+	};
+
+	puts( Enum1.A );
+
+	return 0;
+}

@@ -1,0 +1,30 @@
+int32 main( int32 argc, const string [] argv )
+{
+	switch ( argc )
+	{
+	case 0:
+		puts("0");
+		break;
+	case 1:
+		puts("1");
+		break;
+	default:
+		puts("2");
+		break;
+	}
+
+	switch ( int32 i = argc*2+8 )
+	{
+	case 8:
+		puts("0");
+		break;
+	case 10:
+		puts("1");
+		break;
+	default:
+		puts("2");
+		break;
+	}
+
+	return 0;
+}

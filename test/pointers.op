@@ -1,0 +1,13 @@
+int32 main( int32 argc, const string [] argv )
+{
+	int32 * ip = 10;
+	int32 & sp = 10;
+	int32 & sp2 = sp;
+	int32 # wp  = sp;
+	int32 ? np;
+
+	int32 * []		aip;	// array of unique pointers to int32
+	int32 [10] &	spa;	// shared pointer to array of int32
+
+	return 0;
+}

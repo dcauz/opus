@@ -1,0 +1,12 @@
+
+
+fun int32 f( int32 x ) = x*2 + 1;
+
+int32 main( int32 argc, char [] argv )
+{
+	int32 x = f(argc);
+
+	puts(x);
+
+	return f(10);
+}

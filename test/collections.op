@@ -1,0 +1,39 @@
+
+bool cmp( int32 a, int32 b )
+{
+	return b < a;
+}
+
+int32 main( int32 argc, const string [] argv )
+{
+	int32 [3,3]		matrix;
+	int32 [3][3]	vecOfVec;
+	set<int32>		setI;
+	mset<int32>		msetI;
+	list<int32>		listI;
+	stack<int32>	stackI;
+	queue<int32>	queueI;
+	pqueue<int32> *	pqueueI = pqueue<int32>(cmp);
+	dqueue<int32> &	dqueueI = dqueue<int32>();
+
+	setI.insert(1);
+	setI.insert(1);
+
+	msetI.insert(1);
+	msetI.insert(1);
+
+	listI.append(1);
+	listI.prepend(1);
+
+	stackI.push(1);
+	auto s = stackI.top();
+	stackI.pop();
+
+	queueI.push(1);
+	
+	pqueueI.push(1);
+
+	dqueueI.push(1);
+
+	return 0;
+}

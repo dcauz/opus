@@ -1,0 +1,26 @@
+#pragma once
+
+#include "type.h"
+#include "value.h"
+
+
+
+class ObjectType: public Type
+{
+public:
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+};
+
+
+class Object: public Value
+{
+public:
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+};
+
+extern ObjectType	objectType;

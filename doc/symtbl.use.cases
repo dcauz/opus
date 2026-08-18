@@ -1,0 +1,96 @@
+///////////////////////////////////////////////////////
+//
+//  Symbol Table usage
+//
+//  Construct           Named   Parent Constructs
+//  ---------------------------------------------------
+//  Global namespace    No      None
+//
+//  atomic              No      ALL - Global
+//	block				No		ALL - Global
+//  ctor                No      Class
+//  do                  No      ALL - Global
+//  dtor                No      Class
+//  enum                Yes     ALL
+//  for                 No      ALL - Global
+//  function            No      ALL
+//  if - else           No      ALL - Global
+//  interface           Yes     ALL (base types then enclosing scope)
+//  namespace           Yes     Global namespace
+//                              Namespace
+//  operator            No      ALL
+//  pure function       No      ALL
+//  select              No      ALL
+//  switch              No      ALL - Global
+//  try - catch         No      ALL - Global
+//  type                Yes     ALL (base types then enclosing scope)
+//  union               Yes     ALL (base types then enclosing scope)
+//  where               No      ALL
+//  while               No      ALL - Global
+
+
+[x] Set current st to global
+[x] Whenever new st is created, it becomes current with parent old current
+[x] Whenever leaving st, parent becomes current
+
+Construct handling
+
+[x]	atomic              create symtbl
+[x]	block				
+[x]	try					
+[x]	do					
+[x]	dtor                
+
+[x]	namespace           create symtbl with namespace name
+[x]	interface           
+[x]	enum                
+[x]	type                
+[x]	union               
+
+[x]	ctor                create symtbl with parameters added
+[x]	function            
+[x]	operator            
+[x]	catch         		
+[x]	pure function
+
+[x]	for                 create symtbl with variable def
+[x]	if - else           
+[x]	switch              
+[x]	while               
+
+Add definition to current symtbl
+
+[x] function
+[x] pure function
+[x] operator
+[x] ctor
+[x] dtor
+
+[x] alias
+
+[x] namespace
+
+[x] if
+[x] while
+[x] for
+[x] switch
+[x] catch parameter
+[x] variable
+[x] function parameter
+[x] ctor parameter
+[x] dtor scope
+[x] pure function parameter
+[x] operator parameter
+
+[x] type
+[x] interface
+[x] union
+[x] enum
+
+[x] enum member
+
+Expression lookup handling
+
+[ ]	select              use symtbl of from collection
+[ ]	where				use symtbl of LHS expr
+

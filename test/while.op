@@ -1,0 +1,24 @@
+int32 main( int32 argc, const string [] argv )
+{
+	while ( argc > 0 ) 
+	{
+		--argc;
+		puts(argc);
+	}
+
+	while ( argc > 0 ) 
+		puts(--argc);
+
+	while ( bool b = (argc>0) )
+	{
+		puts( b );
+		if( b )
+			continue;
+		puts( argv[0] );
+	}
+
+	while ( bool b = (argc>0) )
+		puts( --argc );
+
+	return 0;
+}

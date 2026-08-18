@@ -1,0 +1,32 @@
+namespace A
+{
+
+namespace B
+{
+	int32 x = 1;
+	int64 y = 2;
+
+namespace C
+{
+	float64 z;
+}
+
+}
+
+}
+
+int32 main( int32 argc, const string [] argv )
+{
+	puts( A::B::x );
+	puts( A::B::C:z );
+
+	using A::B::y;
+
+	puts( y );
+
+	using namespace A::B::C;
+
+	puts( z );
+
+	return 0;
+}

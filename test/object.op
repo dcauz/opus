@@ -1,0 +1,11 @@
+
+int32 main( int32 argc, const string [] argv )
+{
+	object o = 1;
+	o = "aa";
+	o = 123s;
+
+	object * op = 1;
+
+	return 0;
+}

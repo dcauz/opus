@@ -1,0 +1,212 @@
+
+int32 operator + ( int32 x, int32 y ) 
+{
+	puts( x + "+" + y );
+	return x + y;
+}
+int32 operator + ( int32 x, int32 y );
+
+int32 operator - ( int32 x, int32 y ) 
+{
+	puts( x + "-" + y );
+	return x - y;
+}
+int32 operator - ( int32 x, int32 y );
+
+int32 operator / ( int32 x, int32 y ) 
+{
+	puts( x + "/" + y );
+	return x / y;
+}
+int32 operator / ( int32 x, int32 y );
+
+int32 operator * ( int32 x, int32 y ) 
+{
+	puts( x + "*" + y );
+	return x * y;
+}
+int32 operator * ( int32 x, int32 y );
+
+void operator /= ( int32 x, int32 y )
+{
+	puts( x + "/=" + y );
+	x /= y;
+}
+void operator /= ( int32 x, int32 y );
+
+void operator *= ( int32 x, int32 y )
+{
+	puts( x + "*=" + y );
+	x *= y;
+}
+void operator *= ( int32 x, int32 y );
+
+void operator += ( int32 x, int32 y )
+{
+	puts( x + "+=" + y );
+	x += y;
+}
+void operator += ( int32 x, int32 y );
+
+void operator -= ( int32 x, int32 y )
+{
+	puts( x + "-=" + y );
+	x -= y;
+}
+void operator -= ( int32 x, int32 y );
+
+void operator = ( int32 x, int32 y )
+{
+	puts( x + "=" + y );
+	x = y;
+}
+void operator = ( int32 x, int32 y );
+
+// prefix
+int32 operator ++ ( int32 x, void )
+{
+	return ++x;
+}
+int32 operator ++ ( int32 x, void );
+
+// postfix
+int32 operator ++ ( void, int32 x )
+{
+	return x++;
+}
+int32 operator ++ ( void, int32 x );
+
+// prefix
+int32 operator -- ( int32 x, void )
+{
+	return --x;
+}
+int32 operator -- ( int32 x, void );
+
+// postfix
+int32 operator -- ( void, int32 x )
+{
+	return x--;
+}
+int32 operator ++ ( void, int32 x );
+
+int32 operator & ( int32 x, int32 y ) 
+{
+	puts( x + "&" + y );
+	return x & y;
+}
+int32 operator & ( int32 x, int32 y );
+
+int32 operator ^ ( int32 x, int32 y ) 
+{
+	puts( x + "^" + y );
+	return x ^ y;
+}
+int32 operator ^ ( int32 x, int32 y );
+
+int32 operator | ( int32 x, int32 y ) 
+{
+	puts( x + "|" + y );
+	return x | y;
+}
+int32 operator | ( int32 x, int32 y );
+
+int32 operator % ( int32 x, int32 y ) 
+{
+	puts( x + "%" + y );
+	return x % y;
+}
+int32 operator % ( int32 x, int32 y );
+
+void operator &= ( int32 x, int32 y )
+{
+	puts( x + "&=" + y );
+	x &= y;
+}
+void operator &= ( int32 x, int32 y );
+
+void operator |= ( int32 x, int32 y )
+{
+	puts( x + "|=" + y );
+	x |= y;
+}
+void operator |= ( int32 x, int32 y );
+
+void operator %= ( int32 x, int32 y )
+{
+	puts( x + "%=" + y );
+	x %= y;
+}
+void operator %= ( int32 x, int32 y );
+
+void operator ^= ( int32 x, int32 y )
+{
+	puts( x + "^=" + y );
+	x ^= y;
+}
+void operator ^= ( int32 x, int32 y );
+
+bool operator && ( bool x, bool y ) 
+{
+	puts( x + "&&" + y );
+	return x && y;
+}
+int32 operator && ( int32 x, int32 y );
+
+bool operator || ( bool x, bool y ) 
+{
+	puts( x + "||" + y );
+	return x || y;
+}
+int32 operator || ( int32 x, int32 y );
+
+bool operator < ( float32 x, float32 y ) 
+{
+	puts( x + "<" + y );
+	return x < y;
+}
+bool operator < ( float32 x, float32 y );
+
+bool operator > ( float32 x, float32 y ) 
+{
+	puts( x + ">" + y );
+	return x > y;
+}
+bool operator > ( float32 x, float32 y );
+
+bool operator == ( float32 x, float32 y ) 
+{
+	puts( x + "==" + y );
+	return x == y;
+}
+bool operator == ( float32 x, float32 y );
+
+bool operator != ( float32 x, float32 y ) 
+{
+	puts( x + "!=" + y );
+	return x != y;
+}
+bool operator != ( float32 x, float32 y );
+
+bool operator >= ( float32 x, float32 y ) 
+{
+	puts( x + ">=" + y );
+	return x >= y;
+}
+bool operator >= ( float32 x, float32 y );
+
+bool operator <= ( float32 x, float32 y ) 
+{
+	puts( x + "<=" + y );
+	return x <= y;
+}
+bool operator <= ( float32 x, float32 y );
+
+
+int32 main( int32 argc, const string [] argv )
+{
+	puts( 10 + 5 );
+
+	return 0;
+}
+

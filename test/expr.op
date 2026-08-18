@@ -1,0 +1,124 @@
+
+
+auto temp<f,s>( bool b, f a, s b )
+{
+	f aa = a*a;
+	s bb = b*b;
+
+	return b ? aa : bb;
+}
+
+int64 g = 1;
+
+int64 foo()
+{
+	return g;
+}
+
+type T
+{
+	T(string k, int32 v)
+	{
+		key = k;
+		value = v;
+	}
+
+	string key;
+	int32 value;
+};
+
+int32 main( int32 argc, const string [] argv )
+{
+	int32 i = argc;
+
+	i = argc + i;
+	i = argc - i;
+	i = argc * i;
+	i = argc % i;
+
+	if( i != 0 )
+		i /= argc / i;
+
+	if( i == 0 )
+		i += 1;
+
+	if( i <= 10 )
+		i -= 11;
+
+	if( i >= 100 )
+		i &= 101;
+
+	if( i < 10 )
+		i |= 11;
+
+	if( i > 100 )
+		i ^= -101;
+
+	i %= -101;
+
+	++i;
+	--i;
+	i--;
+	i++;
+
+    i = i ^ 1111;
+    i = i & 2321;
+
+	C<float64> c = (1.0,1.0);
+
+	float64 r = re c;
+	float64 i = im c;
+
+	Q<float32>	q = (1.0, 2.0, 3.0, 4.0);
+
+	q *= q;
+	q *= 23.0;
+
+	int8 ? x;
+	bool v = isvoid x;
+	vool nv =  !v;
+	
+	v = v && nv;
+	v = v || nv;
+
+	i = i ** (6+i);
+
+	int [10] a;
+
+	a[0] = 11;
+	i = +a[0];
+
+	auto r = temp( r, c );
+
+	int64 l = foo();
+
+	set<int32>	s;
+	s += 1;
+	s += 2;
+
+	if( 3 in s )
+		put("surprise");
+
+	s = s where element % 2 == 0;
+
+	set<T>	ts1;
+	ts.insert(T("a", 1));
+	ts.insert(T("b", 2));
+	ts.insert(T("c", 3));
+
+	T t;
+	t.key = "abc";
+
+	set<T>	ts2;
+	ts.insert(t);
+
+	set<T>	tsj = ts1 join ts2;
+
+	tsj = ts1 left join ts2;
+	tsj = ts1 right join ts2;
+	tsj = ts1 outer join ts2;
+
+	set<T>	ts = select * from t1 where key == "a";
+
+	return 0;
+}

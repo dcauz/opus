@@ -1,162 +1,130 @@
 
+TARGETS = \
+bin/opus.exe
 
-TARGETS := \
-bin/opus \
-bin/genInstPro \
-bin/elf
+SRC =  \
+src/auto.cc \
+src/bool.cc \
+src/char.cc \
+src/class.cc \
+src/complex.cc \
+src/date.cc \
+src/datetime.cc \
+src/dqueue.cc \
+src/duration.cc \
+src/enum.cc \
+src/expr.cc \
+src/float.cc \
+src/functions.cc \
+src/gencodecontext.cc \
+src/heap.cc \
+src/il.cc \
+src/integer.cc \
+src/interface.cc \
+src/lex.cc \
+src/list.cc \
+src/log.cc \
+src/log_msgs.cc \
+src/main.cc \
+src/map.cc \
+src/mmap.cc \
+src/matrix.cc \
+src/multiset.cc \
+src/mutex.cc \
+src/nodes.cc \
+src/object.cc \
+src/parser.cc \
+src/parseAlias.cc \
+src/parseArgs.cc \
+src/parseBlock.cc \
+src/parseBreak.cc \
+src/parseCase.cc \
+src/parseClass.cc \
+src/parseCatch.cc \
+src/parseContinue.cc \
+src/parseDefault.cc \
+src/parseDo.cc \
+src/parseEnum.cc \
+src/parseExpr.cc \
+src/parserError.cc \
+src/parseExprStatement.cc \
+src/parseExprTypes.cc \
+src/parseFor.cc \
+src/parseIf.cc \
+src/parseInterface.cc \
+src/parseNamespace.cc \
+src/parsePureFunction.cc \
+src/parseReturn.cc \
+src/parseSelect.cc \
+src/parseStatement.cc \
+src/parseSwitch.cc \
+src/parseTypeParams.cc \
+src/parseTry.cc \
+src/parseType.cc \
+src/parseTypeDef.cc \
+src/parseUnion.cc \
+src/parseUsing.cc \
+src/parseVarDefOrExpr.cc \
+src/parseVarFuncDef.cc \
+src/parseVariableDef.cc \
+src/parseWhile.cc \
+src/program.cc \
+src/queue.cc \
+src/rational.cc \
+src/real.cc \
+src/regex.cc \
+src/semaphore.cc \
+src/semchkcontext.cc \
+src/set.cc \
+src/stack.cc \
+src/statement.cc \
+src/string.cc \
+src/symtbl.cc \
+src/time.cc \
+src/token.cc \
+src/tuple.cc \
+src/type.cc \
+src/union.cc \
+src/value.cc \
+src/void.cc 
 
-OPUS_SRC := \
-bool.cpp \
-complex.cpp \
-constraints.cpp \
-datetime.cpp \
-dequeue.cpp \
-dynamic.cpp \
-enum.cpp \
-expr.cpp \
-float.cpp \
-gencodecontext.cpp \
-grammar.cpp \
-html.cpp \
-html_lex_context.cpp \
-htmlerror.cpp \
-htmllex.cpp \
-il.cpp \
-integer.cpp \
-log.cpp \
-main.cpp \
-matrix.cpp \
-multiset.cpp \
-nodes.cpp \
-object.cpp \
-opl.cpp \
-pqueue.cpp \
-program.cpp \
-queue.cpp \
-rational.cpp \
-real.cpp \
-regex.cpp \
-semchkcontext.cpp \
-set.cpp \
-statement.cpp \
-symtbl.cpp \
-type.cpp \
-stack.cpp \
-string.cpp \
-tensor.cpp \
-tuple.cpp \
-vector.cpp \
-void.cpp \
-yyerror.cpp \
-yylex.cpp
-
-ELF_SRC := \
-elf/elf.cpp \
-elf/tostring.cpp \
-elf/program.cpp \
-elf/section.cpp \
-elf/stringtbl.cpp \
-elf/esymtbl.cpp \
-elf/disassemble.cpp \
-elf/evex.cpp \
-elf/file.cpp \
-elf/operands.cpp \
-elf/instPro.cpp
-
-GIP_SRC := \
-gip/genInstPro.cpp \
-gip/inst.cpp
-
-OPUS_OBJS := $(patsubst %.cpp,obj/%.o,$(OPUS_SRC))
-
-ELF_OBJS := $(patsubst %.cpp,obj/%.o,$(ELF_SRC))
-
-GIP_OBJS := $(patsubst %.cpp,obj/%.o,$(GIP_SRC))
-
-CPPFLAGS := -std=c++11
+OBJS = $(patsubst src/%.cc,obj/%.o,$(SRC))
 
 ########################################
+
+.PHONY: all clean clobber test
 
 all: $(TARGETS)
 
 clean:
-	rm -fr obj .d $(TARGETS)
-	rm -f  html.output html.cpp html.hpp
-	rm -f  opl.output opl.cpp opl.hpp
-	rm -f elf/instPro.cpp
+	rm -fr obj
+	rm -fr .d
 
 clobber: clean
-	rm -f bin/opus
+	rm -rf bin
 
-bin/opus: $(OPUS_OBJS) | bin
-	g++ -g -std=c++11 -o $@ $(OPUS_OBJS) -pthread
-
-bin/elf: $(ELF_OBJS) | bin
-	g++ -g -std=c++11 -o $@ $(ELF_OBJS) -pthread
-
-bin/genInstPro: $(GIP_OBJS) | bin
-	g++ -g -std=c++11 -o $@ $(GIP_OBJS) -pthread
+test test1: bin/opus.exe
+	cd test; make $@
 
 ########################################
 
-opl.cpp opl.hpp: opl.b
-	bison --name-prefix=opus -d -v -o opl.cpp opl.b
+bin/opus.exe: $(OBJS) | bin
+	rm -f $@
+	g++ -save-temps -std=c++17 -g -Wall -Wextra -o $@ $(OBJS)
 
-html.cpp html.hpp: html.b
-	bison --name-prefix=html -d -v -o html.cpp html.b
+obj/%.o: src/%.cc .d/%.d | obj
+	g++ -save-temps -std=c++17 -g -Wall -Wextra -c -o $@ $<
 
-opl.h: opl.hpp
+.d/%.d: src/%.cc | .d 
+	g++ -save-temps -std=c++17 -MF"$@" -MG -MM -MP -MT"$@" "$<"
 
-html.h: html.hpp
-
-$(patsubst %.cpp,.d/%.d,$(OPUS_SRC)): html.hpp opl.hpp
-
-########################################
-
-INST_DEF_FILES := \
-gip/inst.def \
-gip/add.i \
-gip/no_operands.i
-
-elf/instPro.cpp: $(INST_DEF_FILES) bin/genInstPro
-	bin/genInstPro $(INST_DEF_FILES) > $@
+obj bin .d:
+	mkdir $@
 
 ########################################
-
-obj/%.o: %.cpp .d/%.d | obj .d
-	g++ -g -std=c++11 -c -o $@ $<
-
-obj/elf/%.o: elf/%.cpp .d/elf/%.d | obj/elf .d/elf
-	g++ -g -std=c++11 -c -o $@ $<
-
-obj/gip/%.o: gip/%.cpp .d/gip/%.d | obj/gip .d/gip
-	g++ -g -std=c++11 -c -o $@ $<
-
-.d/%.d: %.cpp | .d obj
-	g++ -g -std=c++11 -c -MMD -MP -MT obj/$(patsubst %.cpp,%.o,$<) -o obj/$(patsubst %.cpp,%.o,$<) -MF .d/$*.Td $<
-	mv -f .d/$*.Td $@
-
-.d/elf/%.d: elf/%.cpp | .d/elf obj/elf
-	g++ -g -std=c++11 -c -MMD -MP -o obj/$(patsubst %.cpp,%.o,$<) -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/elf/$*.Td $<
-	mv -f .d/elf/$*.Td $@
-
-.d/gip/%.d: gip/%.cpp | .d/gip obj/gip
-	g++ -g -std=c++11 -c -MMD -MP -o obj/$(patsubst %.cpp,%.o,$<) -MT obj/$(patsubst %.cpp,%.o,$<) -MF .d/gip/$*.Td $<
-	mv -f .d/gip/$*.Td $@
-
-obj obj/elf obj/gip bin .d .d/elf .d/gip:
-	mkdir -p $@
-
-
-.PHONY: test
-
-test: bin/opus
-	cd test; make
 
 ifneq ($(MAKECMDGOALS), clobber)
 ifneq ($(MAKECMDGOALS), clean)
--include $(patsubst %.cpp,.d/%.d,$(OPUS_SRC))
--include $(patsubst %.cpp,.d/%.d,$(ELF_SRC))
--include $(patsubst %.cpp,.d/%.d,$(GIP_SRC))
+-include $(patsubst src/%.cc,.d/%.d,$(SRC))
 endif
 endif

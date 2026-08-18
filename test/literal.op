@@ -1,0 +1,215 @@
+i32 main( i32 argc, final string [] argv )
+{
+	i0 	in0 = 0;
+	i1 	in1 = -1;
+	i2 	in2 = 1;
+	i3 	in3 = 3;
+	i4 	in4 = 7;
+	i5 	in5 = 12;
+	i6 	in6 = 23;
+	i7 	in7 = 53;
+	i8 	in8 = 123;
+	i9 	in9 = 223;
+	i10 in10 = 123;
+	i11 in11 = 123;
+	i12 in12 = 123;
+	i13 in13 = 123;
+	i14 in14 = 123;
+	i15 in15 = 123;
+	i16	in16 = 1234;
+	i17	in17 = 1234;
+	i18	in18 = 1234;
+	i19	in19 = 1234;
+	i20	in20 = 1234;
+	i21	in21 = 1234;
+	i22	in22 = 1234;
+	i23	in23 = 1234;
+	i24	in24 = 1234;
+	i25	in25 = 1234;
+	i26	in26 = 1234;
+	i27	in27 = 1234;
+	i28	in28 = 1234;
+	i29	in29 = 1234;
+	i30	in30 = 12345678;
+	i31	in31 = 12345678;
+	i32	in32 = 12345678;
+	i64	in64 = 123456789012345678;
+
+	z0 	zi0 = 0;
+	z1 	zi1 = -1;
+	z2 	zi2 = 1;
+	z3 	zi3 = 3;
+	z4 	zi4 = 7;
+	z5 	zi5 = 12;
+	z6 	zi6 = 23;
+	z7 	zi7 = 53;
+	z8 	zi8 = 123;
+	z9 	zi9 = 223;
+	z10 zi10 = 123;
+	z11 zi11 = 123;
+	z12 zi12 = 123;
+	z13 zi13 = 123;
+	z14 zi14 = 123;
+	z15 zi15 = 123;
+	z16	zi16 = 1234;
+	z17	zi17 = 1234;
+	z18	zi18 = 1234;
+	z19	zi19 = 1234;
+	z20	zi20 = 1234;
+	z21	zi21 = 1234;
+	z22	zi22 = 1234;
+	z23	zi23 = 1234;
+	z24	zi24 = 1234;
+	z25	zi25 = 1234;
+	z26	zi26 = 1234;
+	z27	zi27 = 1234;
+	z28	zi28 = 1234;
+	z29	zi29 = 1234;
+	z30	zi30 = 12345678;
+	z31	zi31 = 12345678;
+	z32	zi32 = 12345678;
+	z64	zi64 = 123456789012345678;
+
+	u0 	ui0  = 0u;
+	u1 	ui1  = 1u;
+	u2 	ui2  = 2u;
+	u3 	ui3  = 3u;
+	u4 	ui4  = 12u;
+	u5 	ui5  = 23u;
+	u6 	ui6  = 53u;
+	u7 	ui7  = 123u;
+	u8 	ui8  = 123u;
+	u9 	ui9  = 123u;
+	u10	ui10 = 1234u;
+	u11	ui11 = 1234u;
+	u12	ui12 = 1234u;
+	u13	ui13 = 1234u;
+	u14	ui14 = 1234u;
+	u15	ui15 = 1234u;
+	u16	ui16 = 1234u;
+	u17	ui17 = 1234u;
+	u18	ui18 = 1234u;
+	u19	ui19 = 1234u;
+	u20	ui20 = 1234u;
+	u21	ui21 = 1234u;
+	u22	ui22 = 1234u;
+	u23	ui23 = 1234u;
+	u24	ui24 = 1234u;
+	u25	ui25 = 1234u;
+	u26	ui26 = 1234u;
+	u27	ui27 = 1234u;
+	u28	ui28 = 1234u;
+	u29	ui29 = 1234u;
+	u30	ui30 = 12345678u;
+	u31	ui31 = 12345678u;
+	u32	ui32 = 12345678u;
+	u64	ui64 = 123456789012345678u;
+
+	n0 	na0 = 0u;
+	n1 	na1 = 1;
+	n2 	na2 = 2u;
+	n3 	na3 = 3;
+	n4 	na4 = 7;
+	n5 	na5 = 12;
+	n6 	na6 = 23;
+	n7 	na7 = 53;
+	n8 	na8 = 123;
+	n9 	na9 = 223;
+	n10 na10 = 123;
+	n11 na11 = 123;
+	n12 na12 = 123;
+	n13 na13 = 123;
+	n14 na14 = 123;
+	n15 na15 = 123;
+	n16	na16 = 1234;
+	n17	na17 = 1234;
+	n18	na18 = 1234;
+	n19	na19 = 1234;
+	n20	na20 = 1234;
+	n21	na21 = 1234;
+	n22	na22 = 1234;
+	n23	na23 = 1234;
+	n24	na24 = 1234;
+	n25	na25 = 1234;
+	n26	na26 = 1234;
+	n27	na27 = 1234;
+	n28	na28 = 1234;
+	n29	na29 = 1234;
+	n30	na30 = 12345678;
+	n31	na31 = 12345678;
+	n32	na32 = 12345678;
+	n64	na64 = 123456789012345678;
+
+	float32	f = 1.1e10f;
+	float64	d = 1.1E10;
+	float80	ld= 1.1E10;
+	
+	R nan = .nan;
+	R inf = .inf;
+
+	N	n = 123456789012345678901234567890;
+	Z	z = -123456789012345678901234567890;
+	R	r = .phi + .gamma + .pi + .e + 111r;
+	Q   q = 1 / 2;
+	C   c = 1 + .i;
+
+    auto a = 1q / 2;
+
+	string	 s =  "abc\n";
+	lstring	 ls = l"abc\n";
+	ltstring ts = lt"abc\n";
+	char     c  = 'a';
+
+	bool b = true & false;
+
+	object obj = "aas";
+
+	int32 [] vec = [ 1,2,3,4,5,6,7,8,9 ];
+
+    enum E : string
+	{
+		A = "a",
+		B = "b"
+	}
+	E e = E.A;
+
+	date     d  = d"2026-08-05";
+	datetime dt = d"2026-08-05:10:10:10:211234";
+	time     t  = t"10:10:10";
+	duration year  = 2y;
+	duration month = 1m;
+	duration day   = 1d;
+	duration hour  = 1H;
+	duration min   = 1M;
+	duration sec   = 1S;
+
+	regexp   re    = re"ab.*";
+
+	set<Z>	ints = { 1,2,3 };
+	mset<Z>	mints = { 1,1,2,3 };
+
+	map<string,i32>   pairs = { "a":1, "b":2 };
+	mmap<string,i32> mpairs = { "a":1, "a":2, "b":3, "b":3 };
+
+	relation R
+	{
+		i32 k primary key;
+		string v;
+	}
+	R rel = { { 1:"s" } };
+	
+	class Cl
+	{
+		public i32 x;
+		public string y;
+	}
+	Cl cl = { 1, "s" };
+
+	graph<string> g = 
+	{ 
+		[ "a", "b" ], 
+		[ "c", "d" ] 
+	};
+
+	return 0;
+}

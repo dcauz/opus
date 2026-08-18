@@ -1,0 +1,9 @@
+int32 main( int32 argc, const string [] argv )
+{
+	do
+	{
+		put(argv[0]);
+	} while( false );
+
+	return 0;
+}

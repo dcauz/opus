@@ -1,0 +1,46 @@
+
+int32 foo( const int32 x )
+{
+	puts( x! );
+}
+
+alias fooType = int32 ( const int32 );
+
+type T<B, int32 n >
+{
+	T( B b )
+	{
+	}
+	void	setB( B b, int32 i )	{ b_[i] = b; }
+	void	maxB( B b, int32 i )	
+	{
+		if( b > b_[i] )
+			b_[i] = b;
+	}
+
+	B getB( int32 i)	{ return b_[i]; }
+
+	private B [n] b_;
+}
+
+int32 main( int32 argc, const string [] argv )
+{
+	fooType ft = foo;
+
+	ft(1);
+
+	alias IT = T<int32,1>;
+
+	IT	it;
+
+	it.setB(11,0);
+	puts(it.getB(0));
+
+	it.maxB(10,0);
+	puts(it.getB(0));
+
+	it.maxB(14,0);
+	puts(it.getB(0));
+
+	return 0;
+}
