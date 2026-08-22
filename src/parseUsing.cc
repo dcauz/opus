@@ -22,7 +22,7 @@ PENTER
 
 	lex( lval, this );
 
-	if( lval.id == NAMESPACE )
+	if( lval.id == id2ui(NAMESPACE) )
 	{
 		vector<string>	name;
 
@@ -30,12 +30,12 @@ PENTER
 		{
 			lex( lval, this );
 
-			if( lval.id == ID )
+			if( lval.id == id2ui(ID) )
 			{
-				name.push_back(lval.lexium);
+				name.push_back(lval.lexium());
 				lex( lval, this );
 
-				if( lval.id == QUAL )
+				if( lval.id == id2ui(QUAL) )
 				{
 					; // no-op
 				}
@@ -57,22 +57,22 @@ PENTER
 			}
 		}
 	}
-	else if( lval.id == ID )
+	else if( lval.id == id2ui(ID) )
 	{
 		vector<string>	name;
 
 		while(true)
 		{
-			name.push_back(lval.lexium);
+			name.push_back(lval.lexium());
 
 			lex( lval, this );
 
-			if( lval.id == QUAL )
+			if( lval.id == id2ui(QUAL) )
 			{
 				lex( lval, this );
-				if( lval.id == ID )
+				if( lval.id == id2ui(ID) )
 				{
-					name.push_back(lval.lexium);
+					name.push_back(lval.lexium());
 					lex( lval, this );
 				}
 				else if( lval.id == ';' )

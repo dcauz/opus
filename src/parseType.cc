@@ -118,50 +118,50 @@ PENTER
 		lookahead = lval;
 		return false;
 
-	case AUTO:
-	case BOOL:
+	case id2ui(AUTO):
+	case id2ui(BOOL):
 
-	case DATE:
-	case DATETIME:
+	case id2ui(DATE):
+	case id2ui(DATETIME):
 
-	case FLOAT32:
-	case FLOAT64:
-	case FLOAT80:
+	case id2ui(FLOAT32):
+	case id2ui(FLOAT64):
+	case id2ui(FLOAT80):
 
-	case I0: case I1: case I2: case I3: case I4: case I5: case I6: case I7: case I8: case I9:
-	case I10:case I11:case I12:case I13:case I14:case I15:case I16:case I17:case I18:case I19:
-	case I20:case I21:case I22:case I23:case I24:case I25:case I26:case I27:case I28:case I29:
-	case I30:case I31:case I32:case I64:
+	case id2ui(I0): case id2ui(I1): case id2ui(I2): case id2ui(I3): case id2ui(I4): case id2ui(I5): case id2ui(I6): case id2ui(I7): case id2ui(I8): case id2ui(I9):
+	case id2ui(I10):case id2ui(I11):case id2ui(I12):case id2ui(I13):case id2ui(I14):case id2ui(I15):case id2ui(I16):case id2ui(I17):case id2ui(I18):case id2ui(I19):
+	case id2ui(I20):case id2ui(I21):case id2ui(I22):case id2ui(I23):case id2ui(I24):case id2ui(I25):case id2ui(I26):case id2ui(I27):case id2ui(I28):case id2ui(I29):
+	case id2ui(I30):case id2ui(I31):case id2ui(I32):case id2ui(I64):
 
-	case Z0: case Z1: case Z2: case Z3: case Z4: case Z5: case Z6: case Z7: case Z8: case Z9:
-	case Z10:case Z11:case Z12:case Z13:case Z14:case Z15:case Z16:case Z17:case Z18:case Z19:
-	case Z20:case Z21:case Z22:case Z23:case Z24:case Z25:case Z26:case Z27:case Z28:case Z29:
-	case Z30:case Z31:case Z32:case Z64:
+	case id2ui(Z0): case id2ui(Z1): case id2ui(Z2): case id2ui(Z3): case id2ui(Z4): case id2ui(Z5): case id2ui(Z6): case id2ui(Z7): case id2ui(Z8): case id2ui(Z9):
+	case id2ui(Z10):case id2ui(Z11):case id2ui(Z12):case id2ui(Z13):case id2ui(Z14):case id2ui(Z15):case id2ui(Z16):case id2ui(Z17):case id2ui(Z18):case id2ui(Z19):
+	case id2ui(Z20):case id2ui(Z21):case id2ui(Z22):case id2ui(Z23):case id2ui(Z24):case id2ui(Z25):case id2ui(Z26):case id2ui(Z27):case id2ui(Z28):case id2ui(Z29):
+	case id2ui(Z30):case id2ui(Z31):case id2ui(Z32):case id2ui(Z64):
 
-	case U0: case U1: case U2: case U3: case U4: case U5: case U6: case U7: case U8: case U9:
-	case U10:case U11:case U12:case U13:case U14:case U15:case U16:case U17:case U18:case U19:
-	case U20:case U21:case U22:case U23:case U24:case U25:case U26:case U27:case U28:case U29:
-	case U30:case U31:case U32:case U64:
+	case id2ui(U0): case id2ui(U1): case id2ui(U2): case id2ui(U3): case id2ui(U4): case id2ui(U5): case id2ui(U6): case id2ui(U7): case id2ui(U8): case id2ui(U9):
+	case id2ui(U10):case id2ui(U11):case id2ui(U12):case id2ui(U13):case id2ui(U14):case id2ui(U15):case id2ui(U16):case id2ui(U17):case id2ui(U18):case id2ui(U19):
+	case id2ui(U20):case id2ui(U21):case id2ui(U22):case id2ui(U23):case id2ui(U24):case id2ui(U25):case id2ui(U26):case id2ui(U27):case id2ui(U28):case id2ui(U29):
+	case id2ui(U30):case id2ui(U31):case id2ui(U32):case id2ui(U64):
 
-	case N0: case N1: case N2: case N3: case N4: case N5: case N6: case N7: case N8: case N9:
-	case N10:case N11:case N12:case N13:case N14:case N15:case N16:case N17:case N18:case N19:
-	case N20:case N21:case N22:case N23:case N24:case N25:case N26:case N27:case N28:case N29:
-	case N30:case N31:case N32:case N64:
+	case id2ui(N0): case id2ui(N1): case id2ui(N2): case id2ui(N3): case id2ui(N4): case id2ui(N5): case id2ui(N6): case id2ui(N7): case id2ui(N8): case id2ui(N9):
+	case id2ui(N10):case id2ui(N11):case id2ui(N12):case id2ui(N13):case id2ui(N14):case id2ui(N15):case id2ui(N16):case id2ui(N17):case id2ui(N18):case id2ui(N19):
+	case id2ui(N20):case id2ui(N21):case id2ui(N22):case id2ui(N23):case id2ui(N24):case id2ui(N25):case id2ui(N26):case id2ui(N27):case id2ui(N28):case id2ui(N29):
+	case id2ui(N30):case id2ui(N31):case id2ui(N32):case id2ui(N64):
 
-	case N:
-	case OBJECT:
-	case R:
-	case REGEXP:
-	case STRING:
-	case TIME:
-	case VOID:
-	case Z:
+	case id2ui(N):
+	case id2ui(OBJECT):
+	case id2ui(R):
+	case id2ui(REGEXP):
+	case id2ui(STRING):
+	case id2ui(TIME):
+	case id2ui(VOID):
+	case id2ui(Z):
 		// no-op
 		break;
 
 	// Optional type parameters
-	case Q:
-	case TYPE_NAME:
+	case id2ui(Q):
+	case id2ui(TYPE_NAME):
 		lex( lval, this );
 
 		if( lval.id == '<' )
@@ -171,15 +171,15 @@ PENTER
 		break;
 
 	// Requires type parameters
-	case C:
-	case DLIST:
-	case DQUEUE:
-	case DURATION:
-	case LIST:
-	case MSET:
-	case QUEUE:
-	case SET:
-	case STACK:
+	case id2ui(C):
+	case id2ui(DLIST):
+	case id2ui(DQUEUE):
+	case id2ui(DURATION):
+	case id2ui(LIST):
+	case id2ui(MSET):
+	case id2ui(QUEUE):
+	case id2ui(SET):
+	case id2ui(STACK):
 		lex( lval, this );
 
 		if( lval.id == '<' )

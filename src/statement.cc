@@ -820,30 +820,30 @@ const char * OperatorDef::opName( int op )
 	case '/':	return "/";
 	case '*':	return "*";
 	case '|':	return "|";
-	case AND:	return "&&";
-	case OR :	return "||";
+	case id2ui(AND):	return "&&";
+	case id2ui(OR):	return "||";
 	case '^':	return "^";
 	case '%':	return "%";
 	case '=':	return "=";
 	case '>':	return ">";
 	case '<':	return "<";
 
-	case EQ:	return "==";
-	case GE:	return ">=";
-	case LE:	return "<=";
-	case NE:	return "!=";
+	case id2ui(EQ):	return "==";
+	case id2ui(GE):	return ">=";
+	case id2ui(LE):	return "<=";
+	case id2ui(NE):	return "!=";
 
-	case AND_ASS:	return "&=";
-	case DIV_ASS:	return "/=";
-	case MUL_ASS:	return "*=";
+	case id2ui(AND_ASS):	return "&=";
+	case id2ui(DIV_ASS):	return "/=";
+	case id2ui(MUL_ASS):	return "*=";
 
-	case OR_ASS:	return "|=";
-	case ADD_ASS:	return "+=";
-	case SUB_ASS:	return "-=";
-	case XOR_ASS:	return "^=";
-	case MOD_ASS:	return "%=";
+	case id2ui(OR_ASS):	return "|=";
+	case id2ui(ADD_ASS):	return "+=";
+	case id2ui(SUB_ASS):	return "-=";
+	case id2ui(XOR_ASS):	return "^=";
+	case id2ui(MOD_ASS):	return "%=";
 
-	case DEC:	return "++";
-	case INC:	return "--";
+	case id2ui(DEC):	return "++";
+	case id2ui(INC):	return "--";
 	}
 }

@@ -6,14 +6,24 @@
 class Date
 {
 public:
+	Date() {}
 	Date( int y, int m, int d );
+	Date( uint32_t u32 )
+	{
+		y_ = u32 >> 16;
+		m_ = (u32 & 0x00ff) >> 8;
+		d_ = u32 & 0x000f;
+	}
 
-	uint32_t	toUint32() const;
+	uint32_t	toUint32() const
+	{
+		return (y_ << 16) + (m_ << 8) + d_;
+	}
 
 private:
 	unsigned short y_;
-	unsigned short m_;
-	unsigned short d_;
+	unsigned char m_;
+	unsigned char d_;
 };
 
 class Year

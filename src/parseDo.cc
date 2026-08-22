@@ -22,7 +22,7 @@ PENTER
 	{
 		// get WHILE
 		lex( lval, this );
-		if( lval.id != WHILE )
+		if( lval.id != id2ui(WHILE) )
 		{
 			parserError( "do block is not followed by while" );
 			return false;

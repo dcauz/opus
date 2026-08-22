@@ -123,8 +123,8 @@ public:
 
 private:
 
+	bool	 isNeg_;
 	std::vector<uint64_t> values_;
-	bool	isNeg_;
 };
 
 class Int8Type : public Type

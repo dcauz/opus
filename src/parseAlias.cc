@@ -21,7 +21,7 @@ PENTER
 
 	lex( lval1, this );
 
-	if( lval1.id != ID )
+	if( lval1.id != id2ui(ID) )
 	{
 		parserError( "ALIAS NAME expected" );
 		return false;
@@ -47,7 +47,7 @@ PENTER
 		return false;
 	}
 	if(rc)
-		*alias = new Alias( 0, 0, lval1.lexium, ty );
+		*alias = new Alias( 0, 0, lval1.lexium(), ty );
 	else
 		return false;
 

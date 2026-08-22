@@ -25,7 +25,7 @@ PENTER
 	lex( lval, this );
 
 	VarDef	* varDef = nullptr;
-	if( lval.id != DOT_DOT_DOT )
+	if( lval.id != id2ui(DOT_DOT_DOT) )
 	{
 		lookahead = lval;
 

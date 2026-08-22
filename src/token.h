@@ -1,12 +1,16 @@
 #pragma once
 
+#include "date.h"
+#include "datetime.h"
+#include "time.h"
 #include "integer.h"
 #include "real.h"
 
 #include <string>
 
+#define id2ui(N)	static_cast<unsigned int>(IDs::N)
 
-enum IDs
+enum class IDs : unsigned int
 {
 	///////////////////////////////////////
 	// Operators and punctuators
@@ -394,46 +398,100 @@ enum IDs
 
 struct	Token
 {
-	Token(): id(0)	{}
+	~Token();
 
+	Token( ):line(0), column(0), id(0) {}
 	Token( const Token & );
 
-	int id;
-	std::string lexium;
-	Integer	    integer;
-	Real	    real;
+	unsigned short line;
+	unsigned short column;
 
+	unsigned int id;
+
+	static const size_t	valueSize = sizeof(__uint128_t);
+
+	char * lexium_;
 	union Value
 	{
-	signed char i8;
-	short       i16;
-	int         i32;
-	int64_t     i64;
+		char	shortLex[sizeof(__uint128_t)];
 
-	int64_t dateTime;
+		signed char		i8;
+		unsigned char	u8;
 
-	unsigned char   u8;
-	unsigned short  u16;
-	unsigned int    u32;
-	uint64_t    	u64;
+		short			i16;
+		unsigned short	u16;
 
-	unsigned int    date;
-	unsigned int    time;
-	uint64_t	duration;
+		int		 i32;
+		unsigned u32;
 
+		int64_t	 i64;
+		uint64_t u64;
 
-	float        f32;
-	double       f64;
-	long double  f80;
+		__uint128_t u128;
+
+		float  float32;
+		double float64;
+		long double float80;
+
+		Integer		* integer;
 	} value;
 
-	int line;
-	int column;
+	void add( char c );
 
-	bool isBasicType() const	{ return id > BUILT_IN_TYPES_FIRST && id < BUILT_IN_TYPES_LAST; }
-	bool isDefinedType() const	{ return id > FIRST_DEFINED_TYPE_NAME && id < LAST_DEFINED_TYPE_NAME; }
+	const char * lexium() const 	{ return lexium_+sizeof(unsigned short); }
+	const char * string() const 	{ return lexium_+sizeof(unsigned short); }
+
+	signed char   i8() const		{ return value.i8; }
+	unsigned char u8() const		{ return value.u8; }
+
+	signed short   i16() const		{ return value.i16; }
+	unsigned short u16() const		{ return value.u16; }
+
+	int      i32() const			{ return value.i32; }
+	unsigned u32() const			{ return value.u32; }
+
+	int64_t	 i64() const			{ return value.i64; }
+	uint64_t u64() const			{  return value.i64; }
+
+	float  float32() const		{ return value.float32; }
+	double float64() const		{ return value.float64; }
+	long double float80() const	{ return value.float80; } 
+
+	Date date() const			{ return value.u32; } 
+	Datetime datetime() const	{ return value.u128; } 
+	Time time() const			{ return value.u32; } 
+
+	void lexium( char );
+	void lexium( const char * i );
+	void string( const char * i );
+
+	void i8( signed char i ) 	{ value.i8 = i; }
+	void u8( unsigned char ui )	{ value.u8 = ui; }
+
+	void i16( short i ) 		{ value.i16 = i; }
+	void u16( unsigned short ui ){ value.u16 = ui; }
+
+	void i32( int i ) 			{ value.i32 = i; }
+	void u32( unsigned ui )		{ value.u32 = ui; }
+
+	void i64( int64_t i ) 		{ value.i64 = i; }
+	void u64( uint64_t ui ) 	{ value.i64 = ui; }
+
+	void float32( float f ) 		{ value.float32 = f; }
+	void float64( double d ) 		{ value.float64 = d; }
+	void float80( long double ld ) 	{ value.float80 = ld; } 
+
+	void date( const Date & d )			 	{ value.u32  = d.toUint32(); } 
+	void datetime( const Datetime & dt )	{ value.u128 = dt.toUint128(); } 
+	void time( const Time & d ) 			{ value.u64  = d.toUint64(); } 
+
+	const Integer & integer() const			{ return *value.integer; }
+	void integer( Integer * i ) 			{ id = id2ui(INTEGER_LIT); value.integer = i; }
+
+	bool isBasicType() const	{ return id > id2ui(BUILT_IN_TYPES_FIRST) && id < id2ui(BUILT_IN_TYPES_LAST); }
+	bool isDefinedType() const	{ return id > id2ui(FIRST_DEFINED_TYPE_NAME) && id < id2ui(LAST_DEFINED_TYPE_NAME); }
 	bool isType() const         { return isBasicType() || isDefinedType(); }
-	bool isModifier() const		{ return id > FIRST_TYPE_MODIFIER && id < LAST_TYPE_MODIFIER; }
+	bool isModifier() const		{ return id > id2ui(FIRST_TYPE_MODIFIER) && id < id2ui(LAST_TYPE_MODIFIER); }
 	bool isPointer() const		{ return id == '*' || id == '^' || id == '#'; }
 };
 

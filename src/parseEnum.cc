@@ -52,10 +52,10 @@ PENTER
 	Token	lval;
 	lex( lval, this );
 
-	if( lval.id != ID )
+	if( lval.id != id2ui(ID) )
 		throw std::runtime_error( "Expected name after enum keyword" );
 
-	std::string name = lval.lexium;
+	std::string name = lval.lexium();
 
 	lex( lval, this );
 
@@ -125,9 +125,9 @@ parseBody:
 		{
 			lex( lval, this );
 			// name
-			if( lval.id != ID )
+			if( lval.id != id2ui(ID) )
 				throw std::runtime_error( "Expected name after enum keyword" );
-			string name = lval.lexium;
+			string name = lval.lexium();
 
 			int termToken;
 			Expr	* expr = nullptr;

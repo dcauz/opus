@@ -109,7 +109,7 @@ PENTER
 			break;
 
 		case typeSeen:
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 			{
 				name = token;
 				state = idSeen;
@@ -146,7 +146,7 @@ PENTER
 			break;
 
 		case arrayCloseSeen:
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 				state = idSeen;
 			else if( token.id == '&' )
 			{
@@ -163,7 +163,7 @@ PENTER
 			break;
 
 		case arrayPtrSeen:
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 				state = idSeen;
 			else if( token.id == '&' )
 			{
@@ -175,7 +175,7 @@ PENTER
 			break;
 
 		case refSeen:
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 				state = idSeen;
 			else
 				TODO
@@ -240,7 +240,7 @@ PENTER
 
 		case pTypeSeen:
  			// ptr lbracket id ref
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 			{
 				pName = token;
 				state = pIdSeen;
@@ -276,7 +276,7 @@ PENTER
 			break;
 
 		case pArrayCloseSeen:
-			if( token.id == ID )
+			if( token.id == id2ui(ID) )
 				state = pIdSeen;
 			else if( token.id == '&' )
 			{
@@ -308,7 +308,7 @@ PENTER
 				state = lParenSeen;
 			else if( token.id == ')' )
 				state = rParenSeen;
-			else if( token.id == DOT_DOT_DOT )
+			else if( token.id == id2ui(DOT_DOT_DOT) )
 				state = dotDotDotSeen;
 			else
 				TODO

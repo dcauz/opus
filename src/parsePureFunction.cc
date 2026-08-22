@@ -19,7 +19,7 @@ PENTER
 	if(!rc)
 		return rc;
 
-	if( termToken != ID )
+	if( termToken != id2ui(ID) )
 	{
 		parserError( "Pure function name is missing" );
 		return false;

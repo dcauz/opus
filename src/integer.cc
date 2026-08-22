@@ -20,23 +20,24 @@ sp<NaturalType>	naturalType( new NaturalType);
 //
 // The int64_t value is unconstrained.
 //
-Integer::Integer()
+Integer::Integer():isNeg_(false)
 {
 }
 
-Integer::Integer(int i): isNeg_(false)
+Integer::Integer(int i):isNeg_(false)
 {
 	values_.resize(1);
 	values_[0] = i;
 }
 
-Integer::Integer(int64_t l): isNeg_(false)
+Integer::Integer(int64_t l):isNeg_(false)
 {
+	isNeg_ = false;
 	values_.resize(1);
 	values_[0] = l;
 }
 
-Integer::Integer(const char * s, const char * e): isNeg_(false)
+Integer::Integer(const char * s, const char * e) :isNeg_(false)
 {
 	// Pull off chunks of 19 digits, from right to left
 	// The number of chunks is approximately (e-s)/19.

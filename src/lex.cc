@@ -180,10 +180,11 @@ bool isDate( Token	& tok, Parser	* context )
 		if( is1stTokenChar(cp[10]))
 			throw std::runtime_error( "Invalid token" );
 
-			tok.value.date = Date(
-			D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
-			D(cp[5])*10 + D(cp[6]),
-			D(cp[8])*10 + D(cp[9])).toUint32();
+			tok.date ( 
+				Date(D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
+					 D(cp[5])*10 + D(cp[6]),
+					 D(cp[8])*10 + D(cp[9]))
+			);
 			
 		return true;
 	}
@@ -268,8 +269,7 @@ bool isDatetime( Token	& tok, Parser * context )
 		if( is1stTokenChar(cp[next]))
 			throw std::runtime_error( "Invalid token" );
 
-end:	
-		tok.value.dateTime = Datetime( y, m, d, hour, min, sec, ms ).toUint64();
+		tok.datetime(Datetime( y, m, d, hour, min, sec, ms ));
 		return true;
 	}
 	return false;
@@ -306,13 +306,13 @@ bool isTime( Token	& tok, Parser * context )
 				++n;
 			}
 
-			tok.value.date = Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), ms ).toUint32();
+			tok.time(Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), ms ));
 		}
 		else
 		{
-			tok.value.date = Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), 0 ).toUint32();
+			tok.time(Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), 0 ));
 		}	
 		return true;
 	}
@@ -358,11 +358,11 @@ bool isInt( Parser * context, Token & tok )
 		if( v > ( std::numeric_limits<uint64_t>::max() - d )/10)
 		{
 			// Too big. It is an integer
-			tok.id = INTEGER_LIT;
+			tok.id = id2ui(INTEGER_LIT);
 			while(isdigit(*cp))
 				++cp;
 			if( !isTokenChar(*cp))
-				tok.integer = Integer( start, cp );
+				tok.integer( new Integer( start, cp ));
 			else
 				return false;
 
@@ -388,21 +388,21 @@ bool isInt( Parser * context, Token & tok )
 			{
 				if( v <= std::numeric_limits<int8_t>::max())
 				{
-					tok.id = INT8_LIT;
+					tok.id = id2ui(INT8_LIT);
 					tok.value.i8 = static_cast<int8_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint8_t>::max())
 				{
-					tok.id = UINT8_LIT;
+					tok.id = id2ui(UINT8_LIT);
 					tok.value.u8 = static_cast<uint8_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 		}
 		else if( *cp == '1' && cp[1] == '6' && !isTokenChar(cp[2]))
@@ -412,21 +412,21 @@ bool isInt( Parser * context, Token & tok )
 			{
 				if( v <= std::numeric_limits<int16_t>::max())
 				{
-					tok.id = INT16_LIT;
+					tok.id = id2ui(INT16_LIT);
 					tok.value.i16 = static_cast<int16_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint16_t>::max())
 				{
-					tok.id = UINT16_LIT;
+					tok.id = id2ui(UINT16_LIT);
 					tok.value.u16 = static_cast<uint16_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 		}
 		else if( *cp == '3' && cp[1] == '2' && !isTokenChar(cp[2]))
@@ -436,21 +436,21 @@ bool isInt( Parser * context, Token & tok )
 			{
 				if( v <= std::numeric_limits<int32_t>::max())
 				{
-					tok.id = INT32_LIT;
+					tok.id = id2ui(INT32_LIT);
 					tok.value.i32 = static_cast<int32_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint32_t>::max())
 				{
-					tok.id = UINT32_LIT;
+					tok.id = id2ui(UINT32_LIT);
 					tok.value.u32 = static_cast<uint32_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 		}
 		else if( *cp == '6' && cp[1] == '4' && !isTokenChar(cp[2]))
@@ -460,21 +460,21 @@ bool isInt( Parser * context, Token & tok )
 			{
 				if( v <= std::numeric_limits<int64_t>::max())
 				{
-					tok.id = INT64_LIT;
+					tok.id = id2ui(INT64_LIT);
 					tok.value.i64 = static_cast<int64_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint64_t>::max())
 				{
-					tok.id = UINT64_LIT;
+					tok.id = id2ui(UINT64_LIT);
 					tok.value.u64 = static_cast<uint64_t>(v);
 				}
 				else
-					tok.id = INVALID_NUMBER;
+					tok.id = id2ui(INVALID_NUMBER);
 			}
 		}
 	}
@@ -482,27 +482,27 @@ bool isInt( Parser * context, Token & tok )
 	{
 		if( v <= std::numeric_limits<int8_t>::max())
 		{
-			tok.id = INT8_LIT;
+			tok.id = id2ui(INT8_LIT);
 			tok.value.i8 = static_cast<int8_t>(v);
 		}
 		else if( v <= std::numeric_limits<int16_t>::max())
 		{
-			tok.id = INT16_LIT;
+			tok.id = id2ui(INT16_LIT);
 			tok.value.i16 = static_cast<int16_t>(v);
 		}
 		else if( v <= std::numeric_limits<int32_t>::max())
 		{
-			tok.id = INT32_LIT;
+			tok.id = id2ui(INT32_LIT);
 			tok.value.i32 = static_cast<int32_t>(v);
 		}
 		else if( v <= std::numeric_limits<int64_t>::max())
 		{
-			tok.id = INT64_LIT;
+			tok.id = id2ui(INT64_LIT);
 			tok.value.i64 = static_cast<int64_t>(v);
 		}
 		else
 		{
-			tok.id = UINT64_LIT;
+			tok.id = id2ui(UINT64_LIT);
 			tok.value.u64 = static_cast<uint64_t>(v);
 		}
 	}
@@ -603,6 +603,7 @@ bool escapeChar( char c, char & out )
 
 	case '\\':
 		out = 0x5c;	// backslash
+		break;
 	case '\'':
 		out = 0x27;	// single quote
 		break;
@@ -646,7 +647,7 @@ bool isRegexp( Parser * context, Token & tok )
 
 	if( c == 'r' )
 	{
-		tok.id = REGEXP_LIT;
+		tok.id = id2ui(REGEXP_LIT);
 		return true;
 	}
 	else
@@ -698,7 +699,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = NE;
+				tok.id = id2ui(NE);
 				return;
 			}
 			else
@@ -716,7 +717,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id=MOD_ASS;
+				tok.id = id2ui(MOD_ASS);
 				return;
 			}
 			else
@@ -735,12 +736,12 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = AND_ASS;
+				tok.id = id2ui(AND_ASS);
 				return;
 			}
 			else if( n == '&')
 			{
-				tok.id = AND;
+				tok.id = id2ui(AND);
 				return;
 			}
 			else
@@ -783,12 +784,12 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = MUL_ASS;
+				tok.id = id2ui(MUL_ASS);
 				return;
 			}
 			else if( n == '*')
 			{
-				tok.id = EXP;
+				tok.id = id2ui(EXP);
 				return;
 			}
 			else
@@ -808,12 +809,12 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = ADD_ASS;
+				tok.id = id2ui(ADD_ASS);
 				return;
 			}
 			else if( n == '+' )
 			{
-				tok.id = INC;
+				tok.id = id2ui(INC);
 				return;
 			}
 			else
@@ -834,12 +835,12 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = SUB_ASS;
+				tok.id = id2ui(SUB_ASS);
 				return;
 			}
 			else if( n == '-' )
 			{
-				tok.id = DEC;
+				tok.id = id2ui(DEC);
 				return;
 			}
 			else
@@ -857,7 +858,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = DIV_ASS;
+				tok.id = id2ui(DIV_ASS);
 				return;
 			}
 			else
@@ -879,11 +880,11 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 				
 				if(n2 == '.')
-					tok.id = DOT_DOT_DOT;
+					tok.id = id2ui(DOT_DOT_DOT);
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = DOT_DOT;
+					tok.id = id2ui(DOT_DOT);
 				}
 				return;
 			}
@@ -902,7 +903,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = EQ;
+				tok.id = id2ui(EQ);
 				return;
 			}
 			else
@@ -922,7 +923,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = LE;
+				tok.id = id2ui(LE);
 				return;
 			}
 			else if( n == '<')
@@ -930,11 +931,11 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 
 				if( n2 == '=' )
-					tok.id = SLFT_ASS;
+					tok.id = id2ui(SLFT_ASS);
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = SLFT;
+					tok.id = id2ui(SLFT);
 				}
 				return;
 			}
@@ -955,7 +956,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = GE;
+				tok.id = id2ui(GE);
 				return;
 			}
 			else if( n == '>')
@@ -963,11 +964,11 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 
 				if( n2 == '=' )
-					tok.id = SRGHT_ASS;
+					tok.id = id2ui(SRGHT_ASS);
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = SRGHT;
+					tok.id = id2ui(SRGHT);
 				}
 				return;
 			}
@@ -986,7 +987,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = XOR_ASS;
+				tok.id = id2ui(XOR_ASS);
 				return;
 			}
 			else
@@ -1005,12 +1006,12 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = OR_ASS;
+				tok.id = id2ui(OR_ASS);
 				return;
 			}
 			else if( n == '|')
 			{
-				tok.id = OR;
+				tok.id = id2ui(OR);
 				return;
 			}
 			else
@@ -1036,30 +1037,30 @@ void nextToken( Token & tok, Parser * context )
 			int loc = 0;
 			do
 			{
-				tok.lexium += c;
+				tok.add( c );
 				++loc;
 				c = nextChar( context );
 			} while( c && !isspace(c) );
 
-			tok.id = INVALID_NUMBER;
+			tok.id = id2ui(INVALID_NUMBER);
 			return;
 		}
 		else if( c == '_' )
 		{
 			int loc = 0;
-			tok.lexium += c;
+			tok.add( c );
 			++loc;
 	
 			c = nextChar( context );
 			while( c == '_' || isalnum(c))
 			{
-				tok.lexium += c;
+				tok.add( c );
 				++loc;
 				c = nextChar( context );
 			}
 			context->charLookahead[0] = c;
 	
-			tok.id = ID;
+			tok.id = id2ui(ID);
 			return;
 		}
 		else if(isalpha(c))
@@ -1067,7 +1068,7 @@ void nextToken( Token & tok, Parser * context )
 //printf( "%s:%d c [%c]\n", __FILE__, __LINE__, c );
 			int loc = 0;
 
-			tok.lexium = c;
+			tok.lexium( c );
 			++loc;
 	
 			c = nextChar( context );
@@ -1075,18 +1076,18 @@ void nextToken( Token & tok, Parser * context )
 	
 			while( c == '_' || isalnum(c))
 			{
-				tok.lexium += c;
+				tok.add( c );
 				++loc;
 				c = nextChar( context );
 			}
 			context->charLookahead[0] = c;
 	
-			for (int i = 0; i < noOfKeyWords; ++i )
+			for (unsigned int i = 0; i < noOfKeyWords; ++i )
 			{
-				if( tok.lexium == keyWords[i].lexium )
+				if( tok.lexium() == keyWords[i].lexium )
 				{
 					tok.id=keyWords[i].id;
-					if( tok.id == SELECT )
+					if( tok.id == id2ui(SELECT) )
 						context->inSelect = true;
 					return;
 				}
@@ -1096,32 +1097,32 @@ void nextToken( Token & tok, Parser * context )
 			{
 				static const std::map<std::string, int > sqlReservedWords =
 				{
-					{ "as",		AS },
-					{ "asc",	ASC },
-					{ "by",		BY },
-					{ "closure",CLOSURE },
-					{ "distinct",DISTINCT },
-					{ "dsc",	DSC },
-					{ "foreign",FOREIGN },
-					{ "from", 	FROM },
-					{ "group", 	GROUP },
-					{ "having", HAVING },
-					{ "into", 	INTO },
-					{ "join", 	JOIN },
-					{ "left", 	LEFT },
-					{ "order", 	ORDER },
-					{ "outer", 	OUTER },
-					{ "percent",PERCENT },
-					{ "right", 	RIGHT },
-					{ "ties", 	TIES },
-					{ "top", 	TOP },
-					{ "unique", UNIQUE },
-					{ "values", VALUES },
-					{ "where", 	WHERE },
-					{ "with", 	WITH },
+					{ "as",		id2ui(AS) },
+					{ "asc",	id2ui(ASC) },
+					{ "by",		id2ui(BY) },
+					{ "closure",id2ui(CLOSURE) },
+					{ "distinct",id2ui(DISTINCT) },
+					{ "dsc",	id2ui(DSC) },
+					{ "foreign",id2ui(FOREIGN) },
+					{ "from", 	id2ui(FROM) },
+					{ "group", 	id2ui(GROUP) },
+					{ "having", id2ui(HAVING) },
+					{ "into", 	id2ui(INTO) },
+					{ "join", 	id2ui(JOIN) },
+					{ "left", 	id2ui(LEFT) },
+					{ "order", 	id2ui(ORDER) },
+					{ "outer", 	id2ui(OUTER) },
+					{ "percent",id2ui(PERCENT) },
+					{ "right", 	id2ui(RIGHT) },
+					{ "ties", 	id2ui(TIES) },
+					{ "top", 	id2ui(TOP) },
+					{ "unique", id2ui(UNIQUE) },
+					{ "values", id2ui(VALUES) },
+					{ "where", 	id2ui(WHERE) },
+					{ "with", 	id2ui(WITH) },
 				};
 
-				auto it = sqlReservedWords.find( tok.lexium );
+				auto it = sqlReservedWords.find( tok.lexium() );
 				if( it != sqlReservedWords.end() )
 				{
 					tok.id = it->second;
@@ -1129,7 +1130,7 @@ void nextToken( Token & tok, Parser * context )
 				}
 			}
 	
-			tok.id = ID;
+			tok.id = id2ui(ID);
 			return;
 		}
 		//  Raw string literal
@@ -1149,34 +1150,35 @@ void nextToken( Token & tok, Parser * context )
 						escaped = true;
 					else
 					{
-						tok.lexium += c;
+						tok.add( c );
 						++loc;
 					}
 				}
 				else if( escaped )
 				{
 					escaped = false;
-					if( escapeChar( c, tok.lexium[loc] ) )
-						tok.lexium += c;
+					char es;
+					if( escapeChar( c, es ))
+						tok.add( es );
 					++loc;
 				}
 				else if( c == '\'' )
 				{
 					if( isRegexp( context, tok ) )
 						return;
-					tok.id = STRING_LIT;
+					tok.id = id2ui(STRING_LIT);
 					return;
 				}
 				else
 				{
-					tok.lexium += c;
+					tok.add( c );
 					++loc;
 				}
 
 				c = nextChar( context );
 			}
 			
-			tok.id = INVALID_STRING;
+			tok.id = id2ui(INVALID_STRING);
 			return;
 		}
 		//  STRING_LIT
@@ -1195,32 +1197,33 @@ void nextToken( Token & tok, Parser * context )
 					if( !escaped )
 						escaped = true;
 					else
-						tok.lexium += c;
+						tok.add( c );
 				}
 				else if( escaped )
 				{
 					escaped = false;
-					if( escapeChar( c, tok.lexium[loc] ) )
-						 tok.lexium += c;
+					char es;
+					if( escapeChar( c, es ) )
+						 tok.add( es );
 					++loc;
 				}
 				else if( c == '"' )
 				{
 					if( isRegexp( context, tok ) )
 						return;
-					tok.id = STRING_LIT;
+					tok.id = id2ui(STRING_LIT);
 					return;
 				}
 				else
 				{
-					tok.lexium += c;
+					tok.add( c );
 					++loc;
 				}
 
 				c = nextChar( context );
 			}
 			
-			tok.id = INVALID_STRING;
+			tok.id = id2ui(INVALID_STRING);
 			return;
 		}
 	}
@@ -1237,7 +1240,6 @@ void lex( Token & tok, Parser * context )
 {
 	if( context->lookahead.id != 0 )
 	{
-std::cerr <<  __FILE__ << ":" << __LINE__  << " use lookahead" << std::endl;
 		tok = context->lookahead;
 		context->lookahead.id = 0;
 #define DEBUG_YYLEX
@@ -1249,114 +1251,43 @@ std::cerr <<  __FILE__ << ":" << __LINE__  << " use lookahead" << std::endl;
 
 	nextToken( tok, context );
 
-	if( tok.id == TYPE || tok.id == ENUM || tok.id == INTERFACE || tok.id == UNION )
+	if( tok.id == id2ui(TYPE) || tok.id == id2ui(ENUM) || tok.id == id2ui(INTERFACE) || tok.id == id2ui(UNION) )
 		context->typeSeen = true;
 
-	if( context->typeSeen && tok.id == ID )
+	if( context->typeSeen && tok.id == id2ui(ID) )
 	{
 		context->typeSeen = false;
-		context->classes.push(tok.lexium);
-		context->pushSymTbl(tok.lexium);
+		context->classes.push(tok.lexium());
+		context->pushSymTbl(tok.lexium());
 	}
 
-	if( tok.id == ID )
+	if( tok.id == id2ui(ID) )
 	{
-		Symbol * sym = context->currSymTbl->find(tok.lexium);
+		Symbol * sym = context->currSymTbl->find(tok.lexium());
 
 		if( sym != nullptr )
 		{
 			if( FunctionType * ft = dynamic_cast<FunctionType *>(sym))
-				tok.id = FUNCTION_NAME;
+				tok.id = id2ui(FUNCTION_NAME);
 			else if( Type * t = dynamic_cast<Type *>(sym))
-				tok.id = TYPE_NAME;
+				tok.id = id2ui(TYPE_NAME);
 			else if( Alias * a = dynamic_cast<Alias *>(sym))
-				tok.id = TYPE_NAME;
+				tok.id = id2ui(TYPE_NAME);
 			else if( TemplateParam * tp = dynamic_cast<TemplateParam *>(sym))
 			{
 				Type	* typ = tp->type();
 
 				if( typ != nullptr )
-					tok.id = VARIABLE_NAME;
+					tok.id = id2ui(VARIABLE_NAME);
 				else
-					tok.id = TYPE_NAME;
+					tok.id = id2ui(TYPE_NAME);
 			}
 			else if( Variable * v = dynamic_cast<Variable *>(sym))
-				tok.id = VARIABLE_NAME;
+				tok.id = id2ui(VARIABLE_NAME);
 		}
 	}
 
-printf("%s:%d load new\n", __FILE__, __LINE__ );
 #ifdef DEBUG_YYLEX
 	dumpToken( tok );
 #endif
-}
-
-Token::Token( const Token & src )
-{
-	switch(src.id)
-	{
-	default:	// no copying required
-		break;
-
-	case INT8_LIT:
-		value.i8 = src.value.i8;
-		break;
-	case INT16_LIT:
-		value.i16 = src.value.i16;
-		break;
-	case INT32_LIT:
-		value.i32 = src.value.i32;
-		break;
-	case INT64_LIT:
-		value.i64 = src.value.i64;
-		break;
-
-	case UINT8_LIT:
-		value.u8 = src.value.u8;
-		break;
-	case UINT16_LIT:
-		value.u16 = src.value.u16;
-		break;
-	case UINT32_LIT:
-		value.u32 = src.value.u32;
-		break;
-	case UINT64_LIT:
-		value.u64 = src.value.u64;
-		break;
-
-	case FLOAT32_LIT:
-		value.f32 = src.value.f32;
-		break;
-	case FLOAT64_LIT:
-		value.f64 = src.value.f64;
-		break;
-
-	case FUNCTION_NAME:
-	case ID:
-	case NAMESPACE_NAME:
-	case TYPE_NAME:
-	case VARIABLE_NAME:
-	case INVALID_NUMBER:
-	case INVALID_STRING:
-	case STRING_LIT:
-	case REGEXP_LIT:
-		lexium =  src.lexium;
-		break;
-
-	case DATE_LIT:
-		value.date = src.value.date;
-		break;
-	case DATETIME_LIT:
-		value.dateTime = src.value.dateTime;
-		break;
-	case INTEGER_LIT:
-		integer = src.integer;
-		break;
-	case REAL_LIT:
-		real = src.real;
-		break;
-	case TIME_LIT:
-		value.time = src.value.time;
-		break;
-	}
 }

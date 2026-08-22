@@ -27,21 +27,21 @@ PENTER
 		Token lval;
 		lex( lval, this );
 
-		if( lval.id == ID )
+		if( lval.id == id2ui(ID) )
 		{
-			std::string name = lval.lexium;
+			std::string name = lval.lexium();
 
 			// TODO: Check to see if it is a type-name
 			
-			name = lval.lexium;
+			name = lval.lexium();
 
 			lex( lval, this );
 
 			// If two names, assume the first one is a type name with a forward
 			// declaration
-			if( lval.id == ID )
+			if( lval.id == id2ui(ID) )
 			{
-				std::string name2 = lval.lexium;
+				std::string name2 = lval.lexium();
 
 				// TODO: set type
 
@@ -91,9 +91,9 @@ PENTER
 			if(!rc)
 				return false;
 
-			if( termToken == ID )
+			if( termToken == id2ui(ID) )
 			{
-				std::string name = lval.lexium;
+				std::string name = lval.lexium();
 
 				(*typeParams)->push_back(std::make_unique<TemplateParam>( 0, 0, type, name ));	
 

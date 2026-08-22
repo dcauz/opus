@@ -1,5 +1,8 @@
 #pragma once
 
+#include "date.h"
+#include "time.h"
+
 #include <cstdint>
 
 
@@ -7,14 +10,14 @@ class Datetime
 {
 public:
 	Datetime( int y, int m, int d, int h, int mn, int s, int ms );
-	uint64_t toUint64() const;
+
+	__uint128_t toUint128() const { return (((__uint128_t)date_.toUint32()) << 64 ) + time_.toUint64(); }
+
+	Datetime( __uint128_t value ):date_(value >> 64 ), time_(value & 0xffffffff)
+	{ }
 
 private:
-	unsigned short y_;
-	unsigned char  m_;
-	unsigned char  d_;
-	unsigned char  h_;
-	unsigned char  mn_;
-	unsigned char  s_;
-	unsigned int   ms_;
+
+	Date	date_;	
+	Time	time_;
 };

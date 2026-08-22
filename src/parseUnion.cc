@@ -28,7 +28,7 @@ PENTER
 	// read name
 	Token   lval;
 	lex( lval, this );
-	if( lval.id != ID )
+	if( lval.id != id2ui(ID) )
 	{
 		parserError( "UNION NAME expected" );
 		return false;
@@ -96,7 +96,7 @@ TODO
 	else if( lval.id == ';' )
 	{
 parseDeclaration:
-		*ut = new UnionType( 0, 0, lval.lexium.c_str(), typeParams, bases);
+		*ut = new UnionType( 0, 0, lval.lexium(), typeParams, bases);
 		return true;
 	}
 

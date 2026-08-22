@@ -46,7 +46,7 @@ PENTER
 		Token lval;
 		lex( lval, this );
 
-		if( lval.id == VA_ARGS )
+		if( lval.id == id2ui(VA_ARGS) )
 		{
 			// Use nullptr to denote VA_ARGS
 			(*args)->push_back(nullptr);
@@ -89,9 +89,9 @@ PENTER
 			declarators = 0;
 			break;
 		}
-		else if( termToken == ID )
+		else if( termToken == id2ui(ID) )
 		{
-			argName = lval.lexium;
+			argName = lval.lexium();
 
 			// if new token is =, get initializer
 			lex( lval, this );

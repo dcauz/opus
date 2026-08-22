@@ -50,7 +50,7 @@ PENTER
 		return false;
 	
     lex( lval, this );
-	if( lval.id != ELSE )
+	if( lval.id != id2ui(ELSE) )
 	{
 		lookahead = lval;
 

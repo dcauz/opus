@@ -41,7 +41,7 @@ usage:	std::cerr << "usage: " << argv[0] << " [-d|-p] program-files" << std::end
 		for( int i = arg; i < argc; ++i )
 		{
 			if(debug)
-				printf( "Compile %d\n", argv[i] );
+				printf( "Compile %s\n", argv[i] );
 
 			Parser	parser(argv[i]);
 			parser.populateGlobalSymTbl();
