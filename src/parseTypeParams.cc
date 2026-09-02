@@ -27,21 +27,21 @@ PENTER
 		Token lval;
 		lex( lval, this );
 
-		if( lval.id == id2ui(ID) )
+		if( lval.isId() )
 		{
-			std::string name = lval.lexium();
+			std::string name = lval.idLexium();
 
 			// TODO: Check to see if it is a type-name
 			
-			name = lval.lexium();
+			name = lval.idLexium();
 
 			lex( lval, this );
 
 			// If two names, assume the first one is a type name with a forward
 			// declaration
-			if( lval.id == id2ui(ID) )
+			if( lval.isId() )
 			{
-				std::string name2 = lval.lexium();
+				std::string name2 = lval.idLexium();
 
 				// TODO: set type
 
@@ -49,11 +49,11 @@ PENTER
 
 				(*typeParams)->push_back(std::make_unique<TemplateParam>( 0, 0, type, name2 ));
 
-				if( lval.id == ',' )
+				if( lval.id() == ID::COMMA )
 				{
 					; // keep going
 				}
-				else if( lval.id == '>' )
+				else if( lval.id() == ID::GT )
 				{
 					return true;
 				}
@@ -63,11 +63,11 @@ PENTER
 					return false;
 				}
 			}
-			else if( lval.id == ',' )
+			else if( lval.id() == ID::COMMA )
 			{
 				(*typeParams)->push_back(std::make_unique<TemplateParam>( 0, 0, name ));
 			}
-			else if( lval.id == '>' )
+			else if( lval.id() == ID::GT )
 			{
 				(*typeParams)->push_back(std::make_unique<TemplateParam>( 0, 0, name ));
 				return true;
@@ -81,9 +81,9 @@ PENTER
 		else
 		{
             // push it back
-            lookahead = lval;
+            lookahead = std::move(lval);
 
-			int termToken;
+			ID termToken;
 
 			unsigned declarators;
 			bool rc = parseType( declarators, &type );
@@ -91,19 +91,19 @@ PENTER
 			if(!rc)
 				return false;
 
-			if( termToken == id2ui(ID) )
+			if( termToken == ID::ID )
 			{
-				std::string name = lval.lexium();
+				std::string name = lval.idLexium();
 
 				(*typeParams)->push_back(std::make_unique<TemplateParam>( 0, 0, type, name ));	
 
 				lex( lval, this );
 
-				if( lval.id == ',' )
+				if( lval.id() == ID::COMMA )
 				{
 					; // keep going
 				}
-				else if( lval.id == '>' )
+				else if( lval.id() == ID::GT )
 				{
 					return true;
 				}

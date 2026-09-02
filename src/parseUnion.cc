@@ -28,7 +28,7 @@ PENTER
 	// read name
 	Token   lval;
 	lex( lval, this );
-	if( lval.id != id2ui(ID) )
+	if( !lval.isId() )
 	{
 		parserError( "UNION NAME expected" );
 		return false;
@@ -38,7 +38,7 @@ PENTER
 
 	// read type params
 	vector<up<TemplateParam>> * typeParams = nullptr;
-	if( lval.id == '<' )
+	if( lval.id() == ID::LT )
 	{
 		// > is eaten
 		if( !parseTypeParams( &typeParams ))
@@ -52,12 +52,12 @@ PENTER
 	vector<up<Type>> * bases = nullptr;
 //	vector<up<Statement>> * sts = nullptr;
 
-	if( lval.id == ':' )
+	if( lval.id() == ID::COLON )
 	{
 		// read base types
 		while(true)
 		{
-			int termToken;
+			ID termToken;
 			unsigned declarators;
 			Type	* type;
 
@@ -75,11 +75,11 @@ PENTER
 
 					bases->push_back(up<Type>(type));
 
-					if( termToken == ',' )
+					if( termToken == ID::COMMA )
 						continue;
-					else if( termToken == '{' )
+					else if( termToken == ID::LBRACE )
 						goto parseBody;
-					else if( termToken == ';' )
+					else if( termToken == ID::SCOLON )
 						goto parseDeclaration;
 					else
 						throw std::runtime_error( "Unexpected token found in union definition");
@@ -87,16 +87,16 @@ PENTER
 			}
 		}
 	}
-	else if( lval.id == '{' )
+	else if( lval.id() == ID::LBRACE )
 	{
 parseBody:
 		// read block
 TODO
 	}
-	else if( lval.id == ';' )
+	else if( lval.id() == ID::SCOLON )
 	{
 parseDeclaration:
-		*ut = new UnionType( 0, 0, lval.lexium(), typeParams, bases);
+		*ut = new UnionType( 0, 0, lval.idLexium(), typeParams, bases);
 		return true;
 	}
 

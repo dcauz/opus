@@ -38,7 +38,7 @@ PENTER
 	Type * type;
 	Expr * expr;
 	string argName;
-	int    termToken;
+	ID    termToken;
 
 	while(true)
 	{
@@ -46,16 +46,16 @@ PENTER
 		Token lval;
 		lex( lval, this );
 
-		if( lval.id == id2ui(VA_ARGS) )
+		if( lval.id() == ID::VA_ARGS )
 		{
 			// Use nullptr to denote VA_ARGS
 			(*args)->push_back(nullptr);
 
 			// It must be immediately followed by )
 			lex( lval, this );
-			if( lval.id == ')' )
+			if( lval.id() == ID::RPAREN )
 			{
-				termToken = lval.id;
+				termToken = lval.id();
 				return true;
 			}
 			else
@@ -64,7 +64,7 @@ PENTER
 				return false;
 			}
 		}
-		else if ( lval.id == ')' )
+		else if ( lval.id() == ID::RPAREN )
 		{
 			// no args ...
 			return true;
@@ -72,30 +72,30 @@ PENTER
 		else
 		{
 			// push it back
-			lookahead = lval;
+			lookahead = std::move(lval);
 		}
 
 		unsigned declarators;
 		bool rc = parseType( declarators, &type );
 
-		if( termToken == ',' )
+		if( termToken == ID::COMMA )
 		{
 			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 		}
-		else if( termToken == ')' )
+		else if( termToken == ID::RPAREN )
 		{
 			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 			break;
 		}
-		else if( termToken == id2ui(ID) )
+		else if( termToken == ID::ID )
 		{
-			argName = lval.lexium();
+			argName = lval.idLexium();
 
 			// if new token is =, get initializer
 			lex( lval, this );
-			if( lval.id == '=' )
+			if( lval.id() == ID::ASSIGN )
 			{
 				Token tt;
 				rc = parseExpr( &expr, tt );
@@ -103,14 +103,14 @@ PENTER
 				if(!rc)
 					return false;
 
-				if( termToken == ')' )
+				if( termToken == ID::RPAREN )
 				{
 					(*args)->push_back( std::make_unique<Arg>( 0, 0,
 						declarators, type, argName, expr ) );
 					declarators = 0;
 					break;
 				}
-				else if( termToken == ',' )
+				else if( termToken == ID::COMMA )
 				{
 					(*args)->push_back( std::make_unique<Arg>( 0, 0,
 						declarators, type, argName, expr ) );
@@ -122,14 +122,14 @@ PENTER
 					return false;
 				}
 			}
-			else if( termToken == ')' )
+			else if( termToken == ID::RPAREN )
 			{
 				(*args)->push_back( std::make_unique<Arg>( 0, 0,
 					declarators, type, argName ) );
 				declarators = 0;
 				break;
 			}
-			else if( termToken == ',' )
+			else if( termToken == ID::COMMA )
 			{
 				(*args)->push_back( std::make_unique<Arg>( 0, 0,
 					declarators, type, argName ) );

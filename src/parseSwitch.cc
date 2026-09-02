@@ -14,7 +14,7 @@ PENTER
 	Token val;
 	lex( val, this );
 
-	if( val.id != '(' )
+	if( val.id() != ID::LPAREN )
 	{
 		parserError( "switch must be immediately followed by (" );
 		return false;

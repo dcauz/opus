@@ -52,15 +52,15 @@ PENTER
 	Token	lval;
 	lex( lval, this );
 
-	if( lval.id != id2ui(ID) )
+	if( !lval.isId() )
 		throw std::runtime_error( "Expected name after enum keyword" );
 
-	std::string name = lval.lexium();
+	std::string name = lval.idLexium();
 
 	lex( lval, this );
 
 	vector<up<TemplateParam>> * typeParams = nullptr;
-	if( lval.id == '<' )
+	if( lval.id() == ID::LT )
 	{
 		// > is eaten
 		if( !parseTypeParams( &typeParams ))
@@ -74,11 +74,11 @@ PENTER
 	vector<up<Type>> * bases = nullptr;
 	std::vector<up<Statement>> * sts = nullptr;
 
-	if( lval.id == ':' )
+	if( lval.id() == ID::COLON )
 	{
 		while(true)
 		{
-			int termToken;
+			ID termToken;
 			unsigned declarators;
 			Type	* type;
 
@@ -96,11 +96,11 @@ PENTER
 
 					bases->push_back(up<Type>(type));
 
-					if( termToken == ',' )
+					if( termToken == ID::COMMA )
 						continue;
-					else if( termToken == '{' )
+					else if( termToken == ID::LBRACE )
 						goto parseBody;
-					else if( termToken == ';' )
+					else if( termToken == ID::SCOLON )
 						goto parseDeclaration;
 					else
 						throw std::runtime_error( "Unexpected token found in enum definition");
@@ -108,7 +108,7 @@ PENTER
 			}
 		}
 	}
-	else if( lval.id == '{' )
+	else if( lval.id() == ID::LBRACE )
 	{
 parseBody:
 		/****************************
@@ -125,31 +125,31 @@ parseBody:
 		{
 			lex( lval, this );
 			// name
-			if( lval.id != id2ui(ID) )
+			if( !lval.isId() )
 				throw std::runtime_error( "Expected name after enum keyword" );
-			string name = lval.lexium();
+			string name = lval.idLexium();
 
-			int termToken;
+			ID termToken;
 			Expr	* expr = nullptr;
 
 			lex( lval, this );
-			if( lval.id == '=' )
+			if( lval.id() == ID::ASSIGN )
 			{
 				Token tt;
 				if( !parseExpr( &expr, tt ) )
 					return false;	
 			}
 			else
-				termToken = lval.id;
+				termToken = lval.id();
 
 			
-			if( termToken == ',' )
+			if( termToken == ID::COMMA )
 			{
 				if( !sts )
 					sts = new std::vector<up<Statement>>();
 				sts->push_back(make_unique<EnumMember>(0,0, name, expr ));
 			}
-			else if( termToken == '}' )
+			else if( termToken == ID::RBRACE )
 			{
 				if( !sts )
 					sts = new std::vector<up<Statement>>();
@@ -162,7 +162,7 @@ parseBody:
 				throw std::runtime_error( "Expected token in enum definition" );
 		}
 	}
-	else if( lval.id == ';' )
+	else if( lval.id() == ID::SCOLON )
 	{
 parseDeclaration:
 		*et = new EnumType( 0, 0, name, typeParams, bases);

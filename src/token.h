@@ -7,11 +7,13 @@
 #include "real.h"
 
 #include <string>
+#include <cstring>
 
-#define id2ui(N)	static_cast<unsigned int>(IDs::N)
 
-enum class IDs : unsigned int
+enum class ID : unsigned int
 {
+	NIL  = 0,
+
 	///////////////////////////////////////
 	// Operators and punctuators
 	///////////////////////////////////////
@@ -137,7 +139,7 @@ enum class IDs : unsigned int
 	I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, 
 	I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, 
 	I30, I31, I32, 
-	I64, 
+	I64, I128,
 
 	LIST,
 	LSTRING,
@@ -153,7 +155,7 @@ enum class IDs : unsigned int
 	N10, N11, N12, N13, N14, N15, N16, N17, N18, N19, 
 	N20, N21, N22, N23, N24, N25, N26, N27, N28, N29, 
 	N30, N31, N32, 
-	N64, 
+	N64, N128,
 
 	OBJECT,
 
@@ -171,7 +173,7 @@ enum class IDs : unsigned int
 	U10, U11, U12, U13, U14, U15, U16, U17, U18, U19, 
 	U20, U21, U22, U23, U24, U25, U26, U27, U28, U29, 
 	U30, U31, U32, 
-	U64, 
+	U64, U128,
 
 	SET,
 
@@ -182,7 +184,7 @@ enum class IDs : unsigned int
 	Z10, Z11, Z12, Z13, Z14, Z15, Z16, Z17, Z18, Z19, 
 	Z20, Z21, Z22, Z23, Z24, Z25, Z26, Z27, Z28, Z29, 
 	Z30, Z31, Z32, 
-	Z64, 
+	Z64, Z128,
 
 	BUILT_IN_TYPES_LAST,
 
@@ -276,6 +278,11 @@ enum class IDs : unsigned int
 	NAMESPACE_NAME,
 	VARIABLE_NAME,
 	ID,
+	SFUN_NAME,
+	SFUNCTION_NAME,
+	SNAMESPACE_NAME,
+	SVARIABLE_NAME,
+	SID,
 
 	UNKOWN_NAME,
 
@@ -304,9 +311,12 @@ enum class IDs : unsigned int
 	INT16_LIT,      // 1111
 	INT32_LIT,      // 1111
 	INT64_LIT,      // 1111
+	INT128_LIT,     // 1111
 	INTEGER_LIT,    // 765 432 109 876 543 210
 	LSTRING_LIT,    // l"sss"
-	LTSTRING_LIT,   // t"aaa"
+	LSSTRING_LIT,   // short lengthed string literal
+	LTSTRING_LIT,  // t"aaa"
+	LTSSTRING_LIT,   // short lengthed and terminated string literal
 	MINS_LIT,       // 111m
 	NAT_LIT,        // 1212u
 	Q_LIT,          // 111q
@@ -314,11 +324,13 @@ enum class IDs : unsigned int
 	REGEXP_LIT,     // re"s*"
 	SECS_LIT,       // 111.123s
 	STRING_LIT,     // "ssss"
+	SSTRING_LIT,	// short string literal
 	TIME_LIT,       // t"HH:MM:SS:sssssssss"
 	UINT8_LIT,      // 111u
 	UINT16_LIT,     // 111u
 	UINT32_LIT,     // 111u
 	UINT64_LIT,     // 111u
+	UINT128_LIT,    // 1111
     YEARS_LIT,      // 111y
 
 	///////////////////////////////////////
@@ -396,108 +408,222 @@ enum class IDs : unsigned int
 	INVALID_STRING,
 };
 
-struct	Token
+struct Token
 {
+	Token() :id_(ID::NIL) {}
+
+	Token(const Token & );
+
+	Token( Token && );
+	Token & operator = ( Token && );
+
 	~Token();
 
-	Token( ):line(0), column(0), id(0) {}
-	Token( const Token & );
+	void set( unsigned short l, unsigned short c, ID i )
+	{
+		line    = l;
+		column  = c;
+		id_     = i;
+	}
+	void set( unsigned short l, unsigned short c, int8_t i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INT8_LIT;
+		i8_		= i;
+	}
+	void set( unsigned short l, unsigned short c, uint8_t u )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::UINT8_LIT;
+		u8_		= u;
+	}
+	void set( unsigned short l, unsigned short c, int16_t i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INT16_LIT;
+		i16_	= i;
+	}
+	void set( unsigned short l, unsigned short c, uint16_t u )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::UINT16_LIT;
+		u16_	= u;
+	}
+	void set( unsigned short l, unsigned short c, int32_t i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INT32_LIT;
+		i32_	= i;
+	}
+	void set( unsigned short l, unsigned short c, uint32_t u )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::UINT32_LIT;
+		u32_	= u;
+	}
+	void set( unsigned short l, unsigned short c, int64_t i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INT64_LIT;
+		i64_	= i;
+	}
+	void set( unsigned short l, unsigned short c, uint64_t u )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::UINT64_LIT;
+		u64_	= u;
+	}
+	void set( unsigned short l, unsigned short c, __int128_t i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INT128_LIT;
+		i128_	= i;
+	}
+	void set( unsigned short l, unsigned short c, __uint128_t u )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::UINT128_LIT;
+		u128_	= u;
+	}
+	void set( unsigned short l, unsigned short c, float f )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::FLOAT32_LIT;
+		f32_	= f;
+	}
+	void set( unsigned short l, unsigned short c, double d )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::FLOAT64_LIT;
+		f64_	= d;
+	}
+	void set( unsigned short l, unsigned short c, long double ld )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::FLOAT80_LIT;
+		f80_	= ld;
+	}
+	void set( unsigned short l, unsigned short c, ID id, const std::string & lex)
+	{
+		line    = l;
+		column  = c;
+		id_     = id;
+		if( lex.size() < 16 )
+			strcpy( shortLex_, lex.c_str());
+		else
+			lexium_= new std::string(lex);
+	}
+	void set( unsigned short l, unsigned short c, const Date & d )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::DATE_LIT;
+		u32_    = d.toUint32();
+	}
+	void set( unsigned short l, unsigned short c, const Datetime & dt )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::DATETIME_LIT;
+		u128_   = dt.toUint128();
+	}
+	void set( unsigned short l, unsigned short c, const Time & t )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::TIME_LIT;
+		u64_	= t.toUint64();
+	}
+	void set( unsigned short l, unsigned short c, Integer * i )
+	{
+		line    = l;
+		column  = c;
+		id_     = ID::INTEGER_LIT;
+		integer_= i;
+	}
 
+	void lexium( char );
+	void add( char, int pos );
+
+	bool isBasicType() const	{ return id_ > ID::BUILT_IN_TYPES_FIRST && id_ < ID::BUILT_IN_TYPES_LAST; }
+	bool isDefinedType() const	{ return id_ > ID::FIRST_DEFINED_TYPE_NAME && id_ < ID::LAST_DEFINED_TYPE_NAME; }
+	bool isType() const         { return isBasicType() || isDefinedType(); }
+	bool isModifier() const		{ return id_ > ID::FIRST_TYPE_MODIFIER && id_ < ID::LAST_TYPE_MODIFIER; }
+	bool isPointer() const		{ return id_ == ID::MUL || id_ == ID::XOR || id_ == ID::WEAK; }
+
+	ID	id() const				{ return id_; }
+	bool isId() const			{ return id_ == ID::ID || id_ == ID::SID; }
+
+	const char * idLexium() const	{ return id_ == ID::ID ? lexium_->c_str() : shortLex_; }
+	const char * str() const	{ return id_ == ID::STRING_LIT ? lexium_->c_str() : shortLex_; }
+
+	int8_t   	i8() const	{ return i8_; }
+	uint8_t  	u8() const	{ return u8_; }
+
+	int16_t  	i16() const	{ return i16_; }
+	uint16_t 	u16() const	{ return u16_; }
+
+	int32_t 	i32() const	{ return i32_; }
+	uint32_t	u32() const	{ return u32_;	}
+
+	int64_t 	i64() const	{ return i64_; }
+	uint64_t 	u64() const	{ return u64_;	}
+
+	__int128_t  i128() const{ return i128_; }
+	__uint128_t u128() const{ return u128_; }
+
+	float		f32() const	{ return f32_; }
+	double		f64() const	{ return f64_; }
+	long double	f80() const	{ return f80_; }
+
+	void	setNameType( ID n )	{ id_ = n; }
+
+	void	clear() { id_ = ID::NIL; }
+
+private:
 	unsigned short line;
 	unsigned short column;
 
-	unsigned int id;
+	ID id_;
 
-	static const size_t	valueSize = sizeof(__uint128_t);
-
-	char * lexium_;
-	union Value
+	union
 	{
-		char	shortLex[sizeof(__uint128_t)];
+		int8_t   	i8_;
+		uint8_t  	u8_;
+		int16_t  	i16_;
+		uint16_t 	u16_;
+		int32_t 	i32_;
+		uint32_t	u32_;		// or date
+		int64_t 	i64_;
+		uint64_t 	u64_;		// or time
+		__int128_t  i128_;
+		__uint128_t u128_; 	// or datetime
+		float		f32_;
+		double		f64_;
+		long double	f80_;
 
-		signed char		i8;
-		unsigned char	u8;
-
-		short			i16;
-		unsigned short	u16;
-
-		int		 i32;
-		unsigned u32;
-
-		int64_t	 i64;
-		uint64_t u64;
-
-		__uint128_t u128;
-
-		float  float32;
-		double float64;
-		long double float80;
-
-		Integer		* integer;
-	} value;
-
-	void add( char c );
-
-	const char * lexium() const 	{ return lexium_+sizeof(unsigned short); }
-	const char * string() const 	{ return lexium_+sizeof(unsigned short); }
-
-	signed char   i8() const		{ return value.i8; }
-	unsigned char u8() const		{ return value.u8; }
-
-	signed short   i16() const		{ return value.i16; }
-	unsigned short u16() const		{ return value.u16; }
-
-	int      i32() const			{ return value.i32; }
-	unsigned u32() const			{ return value.u32; }
-
-	int64_t	 i64() const			{ return value.i64; }
-	uint64_t u64() const			{  return value.i64; }
-
-	float  float32() const		{ return value.float32; }
-	double float64() const		{ return value.float64; }
-	long double float80() const	{ return value.float80; } 
-
-	Date date() const			{ return value.u32; } 
-	Datetime datetime() const	{ return value.u128; } 
-	Time time() const			{ return value.u32; } 
-
-	void lexium( char );
-	void lexium( const char * i );
-	void string( const char * i );
-
-	void i8( signed char i ) 	{ value.i8 = i; }
-	void u8( unsigned char ui )	{ value.u8 = ui; }
-
-	void i16( short i ) 		{ value.i16 = i; }
-	void u16( unsigned short ui ){ value.u16 = ui; }
-
-	void i32( int i ) 			{ value.i32 = i; }
-	void u32( unsigned ui )		{ value.u32 = ui; }
-
-	void i64( int64_t i ) 		{ value.i64 = i; }
-	void u64( uint64_t ui ) 	{ value.i64 = ui; }
-
-	void float32( float f ) 		{ value.float32 = f; }
-	void float64( double d ) 		{ value.float64 = d; }
-	void float80( long double ld ) 	{ value.float80 = ld; } 
-
-	void date( const Date & d )			 	{ value.u32  = d.toUint32(); } 
-	void datetime( const Datetime & dt )	{ value.u128 = dt.toUint128(); } 
-	void time( const Time & d ) 			{ value.u64  = d.toUint64(); } 
-
-	const Integer & integer() const			{ return *value.integer; }
-	void integer( Integer * i ) 			{ id = id2ui(INTEGER_LIT); value.integer = i; }
-
-	bool isBasicType() const	{ return id > id2ui(BUILT_IN_TYPES_FIRST) && id < id2ui(BUILT_IN_TYPES_LAST); }
-	bool isDefinedType() const	{ return id > id2ui(FIRST_DEFINED_TYPE_NAME) && id < id2ui(LAST_DEFINED_TYPE_NAME); }
-	bool isType() const         { return isBasicType() || isDefinedType(); }
-	bool isModifier() const		{ return id > id2ui(FIRST_TYPE_MODIFIER) && id < id2ui(LAST_TYPE_MODIFIER); }
-	bool isPointer() const		{ return id == '*' || id == '^' || id == '#'; }
+		char		shortLex_[sizeof(__int128_t)];
+		std::string*lexium_;
+		Integer	   *integer_;
+	};
 };
 
 struct Keyword
 {
-	int id;
+	ID id;
 	const char * lexium;
 };
 
@@ -510,6 +636,6 @@ extern unsigned noOfKeyWords;
 
 struct Token;
 
-void dumpToken( Token & tok );
+void dumpToken( const Token & tok );
 
 #endif

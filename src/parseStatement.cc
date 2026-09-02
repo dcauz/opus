@@ -19,8 +19,8 @@ PENTER
 		Token	val;
 		lex( val, this );
 
-printf( "%s:%d id %d\n", __FILE__, __LINE__, val.id );
-		switch(val.id)
+printf( "%s:%d id %d\n", __FILE__, __LINE__, val.id() );
+		switch(val.id())
 		{
 		default:
 		{
@@ -30,101 +30,101 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 			*statement = exprS;
 			break;
 		}
-		case ';':		// empty
+		case ID::SCOLON:		// empty
 		{
 printf( "%s:%d\n", __FILE__, __LINE__ );
 			auto empty = new Empty( 0 );
 			*statement = empty;
 			break;
 		}
-		case '{':		// block
+		case ID::LBRACE:		// block
 		{
 			Block * block;
 			rc = parseBlock( &block );
 			*statement = block;
 			break;
 		}
-		case '}':
+		case ID::RBRACE:
 		{
 			rc = true;
 			break;
 		}
 		///////////////////////////////////////////
 	
-		case id2ui(ATOMIC):	// atomic
-			declarators_ += id2ui(ATOMIC);
+		case ID::ATOMIC:	// atomic
+			declarators_ += static_cast<unsigned>(ID::ATOMIC);
 			break;
-		case id2ui(FINAL):		// final
-			declarators_ += id2ui(FINAL);
+		case ID::FINAL:		// final
+			declarators_ += static_cast<unsigned>(ID::FINAL);
 			break;
-		case id2ui(INLINE):	// inline
-			declarators_ += id2ui(INLINE);
+		case ID::INLINE:	// inline
+			declarators_ += static_cast<unsigned>(ID::INLINE);
 			break;
-		case id2ui(NOEXCEPT):	// noexcept
-			declarators_ += id2ui(NOEXCEPT);
+		case ID::NOEXCEPT:	// noexcept
+			declarators_ += static_cast<unsigned>(ID::NOEXCEPT);
 			break;
-		case id2ui(OVERRIDE):	// override
-			declarators_ += id2ui(OVERRIDE);
+		case ID::OVERRIDE:	// override
+			declarators_ += static_cast<unsigned>(ID::OVERRIDE);
 			break;
-		case id2ui(PRIVATE):	// private
-			declarators_ += id2ui(PRIVATE);
+		case ID::PRIVATE:	// private
+			declarators_ += static_cast<unsigned>(ID::PRIVATE);
 			break;
-		case id2ui(THREAD_LOCAL):// thread_local
-			declarators_ += id2ui(THREAD_LOCAL);
+		case ID::THREAD_LOCAL:// thread_local
+			declarators_ += static_cast<unsigned>(ID::THREAD_LOCAL);
 			break;
 	
 		///////////////////////////////
 		// variable/function definitions
 		//
-		case id2ui(AUTO):		// auto
-		case id2ui(BOOL):		// bool
-		case id2ui(C):			// C
-		case id2ui(DATE):		// date
-		case id2ui(DATETIME):	// datetime
-		case id2ui(DLIST):		// dlist
-		case id2ui(DQUEUE):	// dqueue
-		case id2ui(DURATION):	// duration
-		case id2ui(FLOAT32):	// float32
-		case id2ui(FLOAT64):	// float64
+		case ID::AUTO:		// auto
+		case ID::BOOL:		// bool
+		case ID::C:			// C
+		case ID::DATE:		// date
+		case ID::DATETIME:	// datetime
+		case ID::DLIST:		// dlist
+		case ID::DQUEUE:	// dqueue
+		case ID::DURATION:	// duration
+		case ID::FLOAT32:	// float32
+		case ID::FLOAT64:	// float64
 						//
-		case id2ui(I0): case id2ui(I1): case id2ui(I2): case id2ui(I3): case id2ui(I4): case id2ui(I5): case id2ui(I6): case id2ui(I7): case id2ui(I8): case id2ui(I9):		
-		case id2ui(I10):case id2ui(I11):case id2ui(I12):case id2ui(I13):case id2ui(I14):case id2ui(I15):case id2ui(I16):case id2ui(I17):case id2ui(I18):case id2ui(I19):
-		case id2ui(I20):case id2ui(I21):case id2ui(I22):case id2ui(I23):case id2ui(I24):case id2ui(I25):case id2ui(I26):case id2ui(I27):case id2ui(I28):case id2ui(I29):
-		case id2ui(I30):case id2ui(I31):case id2ui(I32):case id2ui(I64):
+		case ID::I0: case ID::I1: case ID::I2: case ID::I3: case ID::I4: case ID::I5: case ID::I6: case ID::I7: case ID::I8: case ID::I9:		
+		case ID::I10:case ID::I11:case ID::I12:case ID::I13:case ID::I14:case ID::I15:case ID::I16:case ID::I17:case ID::I18:case ID::I19:
+		case ID::I20:case ID::I21:case ID::I22:case ID::I23:case ID::I24:case ID::I25:case ID::I26:case ID::I27:case ID::I28:case ID::I29:
+		case ID::I30:case ID::I31:case ID::I32:case ID::I64:
 
-		case id2ui(Z0): case id2ui(Z1): case id2ui(Z2): case id2ui(Z3): case id2ui(Z4): case id2ui(Z5): case id2ui(Z6): case id2ui(Z7): case id2ui(Z8): case id2ui(Z9):		
-		case id2ui(Z10):case id2ui(Z11):case id2ui(Z12):case id2ui(Z13):case id2ui(Z14):case id2ui(Z15):case id2ui(Z16):case id2ui(Z17):case id2ui(Z18):case id2ui(Z19):
-		case id2ui(Z20):case id2ui(Z21):case id2ui(Z22):case id2ui(Z23):case id2ui(Z24):case id2ui(Z25):case id2ui(Z26):case id2ui(Z27):case id2ui(Z28):case id2ui(Z29):
-		case id2ui(Z30):case id2ui(Z31):case id2ui(Z32):case id2ui(Z64):
+		case ID::Z0: case ID::Z1: case ID::Z2: case ID::Z3: case ID::Z4: case ID::Z5: case ID::Z6: case ID::Z7: case ID::Z8: case ID::Z9:		
+		case ID::Z10:case ID::Z11:case ID::Z12:case ID::Z13:case ID::Z14:case ID::Z15:case ID::Z16:case ID::Z17:case ID::Z18:case ID::Z19:
+		case ID::Z20:case ID::Z21:case ID::Z22:case ID::Z23:case ID::Z24:case ID::Z25:case ID::Z26:case ID::Z27:case ID::Z28:case ID::Z29:
+		case ID::Z30:case ID::Z31:case ID::Z32:case ID::Z64:
 
-		case id2ui(U0): case id2ui(U1): case id2ui(U2): case id2ui(U3): case id2ui(U4): case id2ui(U5): case id2ui(U6): case id2ui(U7): case id2ui(U8): case id2ui(U9):		
-		case id2ui(U10):case id2ui(U11):case id2ui(U12):case id2ui(U13):case id2ui(U14):case id2ui(U15):case id2ui(U16):case id2ui(U17):case id2ui(U18):case id2ui(U19):
-		case id2ui(U20):case id2ui(U21):case id2ui(U22):case id2ui(U23):case id2ui(U24):case id2ui(U25):case id2ui(U26):case id2ui(U27):case id2ui(U28):case id2ui(U29):
-		case id2ui(U30):case id2ui(U31):case id2ui(U32):case id2ui(U64):
+		case ID::U0: case ID::U1: case ID::U2: case ID::U3: case ID::U4: case ID::U5: case ID::U6: case ID::U7: case ID::U8: case ID::U9:		
+		case ID::U10:case ID::U11:case ID::U12:case ID::U13:case ID::U14:case ID::U15:case ID::U16:case ID::U17:case ID::U18:case ID::U19:
+		case ID::U20:case ID::U21:case ID::U22:case ID::U23:case ID::U24:case ID::U25:case ID::U26:case ID::U27:case ID::U28:case ID::U29:
+		case ID::U30:case ID::U31:case ID::U32:case ID::U64:
 
-		case id2ui(N0): case id2ui(N1): case id2ui(N2): case id2ui(N3): case id2ui(N4): case id2ui(N5): case id2ui(N6): case id2ui(N7): case id2ui(N8): case id2ui(N9):		
-		case id2ui(N10):case id2ui(N11):case id2ui(N12):case id2ui(N13):case id2ui(N14):case id2ui(N15):case id2ui(N16):case id2ui(N17):case id2ui(N18):case id2ui(N19):
-		case id2ui(N20):case id2ui(N21):case id2ui(N22):case id2ui(N23):case id2ui(N24):case id2ui(N25):case id2ui(N26):case id2ui(N27):case id2ui(N28):case id2ui(N29):
-		case id2ui(N30):case id2ui(N31):case id2ui(N32):case id2ui(N64):
+		case ID::N0: case ID::N1: case ID::N2: case ID::N3: case ID::N4: case ID::N5: case ID::N6: case ID::N7: case ID::N8: case ID::N9:		
+		case ID::N10:case ID::N11:case ID::N12:case ID::N13:case ID::N14:case ID::N15:case ID::N16:case ID::N17:case ID::N18:case ID::N19:
+		case ID::N20:case ID::N21:case ID::N22:case ID::N23:case ID::N24:case ID::N25:case ID::N26:case ID::N27:case ID::N28:case ID::N29:
+		case ID::N30:case ID::N31:case ID::N32:case ID::N64:
 
-		case id2ui(MSET):		// mset
-		case id2ui(N):			// N
-		case id2ui(LIST):		// list
-		case id2ui(OBJECT):	// object
-		case id2ui(Q):			// Q
-		case id2ui(QUEUE):		// queue
-		case id2ui(R):			// R
-		case id2ui(REGEXP):	// regexp
-		case id2ui(SET):		// set
-		case id2ui(STACK):		// stack
-		case id2ui(TIME):		// time
-		case id2ui(TYPE_NAME):	// type-name
+		case ID::MSET:		// mset
+		case ID::N:			// N
+		case ID::LIST:		// list
+		case ID::OBJECT:	// object
+		case ID::Q:			// Q
+		case ID::QUEUE:		// queue
+		case ID::R:			// R
+		case ID::REGEXP:	// regexp
+		case ID::SET:		// set
+		case ID::STACK:		// stack
+		case ID::TIME:		// time
+		case ID::TYPE_NAME:	// type-name
 
-		case id2ui(VOID):		// void
+		case ID::VOID:		// void
 
-		case id2ui(Z):			// Z
+		case ID::Z:			// Z
 		{
-printf( "%s):%d\n", __FILE__, __LINE__ );
+printf( "%s:%d\n", __FILE__, __LINE__ );
 			VarDef * vd;
 			Executable * ex;
 			rc = parseVarFuncDef( val, &vd, &ex );
@@ -134,84 +134,84 @@ printf( "%s):%d\n", __FILE__, __LINE__ );
 	
 		// Statements
 		//	
-		case id2ui(BREAK):		// break
+		case ID::BREAK:		// break
 		{
 			Break * b;
 			rc = parseBreak( &b );
 			*statement = b;
 			break;
 		}
-		case id2ui(CASE):		// case
+		case ID::CASE:		// case
 		{
 			Case * c;
 			rc = parseCase( &c );
 			*statement = c;
 			break;
 		}
-		case id2ui(CONTINUE):	// continue
+		case ID::CONTINUE:	// continue
 		{
 			Continue * con;
 			rc = parseContinue( &con );
 			*statement = con;
 			break;
 		}
-		case id2ui(DEFAULT):	// default
+		case ID::DEFAULT:	// default
 		{
 			Default * def;
 			rc = parseDefault( &def );
 			*statement = def;
 			break;
 		}
-		case id2ui(DO):		// do ... while 
+		case ID::DO:		// do ... while 
 		{
 			Do * un;
 			rc = parseDo( &un );
 			*statement = un;
 			break;
 		}
-		case id2ui(FOR):		// for
+		case ID::FOR:		// for
 		{
 			For * f;
 			rc = parseFor( &f );
 			*statement = f;
 			break;
 		}
-		case id2ui(IF):		// if 
+		case ID::IF:		// if 
 		{
 			If * i;
 			rc = parseIf( &i );
 			*statement = i;
 			break;
 		}
-		case id2ui(NAMESPACE):	// namespace
+		case ID::NAMESPACE:	// namespace
 		{
 			Namespace * ns;
 			rc = parseNamespace( &ns );
 			*statement = ns;
 			break;
 		}
-		case id2ui(RETURN):	// return
+		case ID::RETURN:	// return
 		{
 			Return * r;
 			rc = parseReturn( &r );
 			*statement = r;
 			break;
 		}
-		case id2ui(SWITCH):	// switch 
+		case ID::SWITCH:	// switch 
 		{
 			Switch * sw;
 			rc = parseSwitch( &sw );
 			*statement = sw;
 			break;
 		}
-		case id2ui(TRY):		// try
+		case ID::TRY:		// try
 		{
 			Try * t;
 			rc = parseTry( &t );
 			*statement = t;
 			break;
 		}
-		case id2ui(USING):		// using 
+		case ID::USING:		// using 
 		{
 			Using * u;
 			UsingNamespace * uns;
@@ -219,7 +219,7 @@ printf( "%s):%d\n", __FILE__, __LINE__ );
 			*statement = uns;
 			break;
 		}
-		case id2ui(WHILE):		// while 
+		case ID::WHILE:		// while 
 		{
 			While * w;
 			rc = parseWhile( &w );
@@ -229,35 +229,35 @@ printf( "%s):%d\n", __FILE__, __LINE__ );
 	
 		// Type definitions
 		//
-		case id2ui(CLASS):
+		case ID::CLASS:
 		{
 			ClassType * ct;
 			rc = parseClass( &ct );
 			*statement = ct;
 			break;
 		}
-		case id2ui(ENUM):
+		case ID::ENUM:
 		{
 			EnumType * et;
 			rc = parseEnum( &et );
 			*statement = et;
 			break;
 		}
-		case id2ui(TYPE):
+		case ID::TYPE:
 		{
 			TypeType * tt;
 			rc = parseTypeDef( &tt );
 			*statement = tt;
 			break;
 		}
-		case id2ui(UNION):
+		case ID::UNION:
 		{
 			UnionType * ut;
 			rc = parseUnion( &ut );
 			*statement = ut;
 			break;
 		}
-		case id2ui(INTERFACE):
+		case ID::INTERFACE:
 		{
 			InterfaceType * it;
 			rc = parseInterface( &it );
@@ -266,7 +266,7 @@ printf( "%s):%d\n", __FILE__, __LINE__ );
 		}
 	
 		// pure function definitions
-		case id2ui(FUN):		// fun
+		case ID::FUN:		// fun
 		{
 			PureFuncDef * pfd;
 			rc = parsePureFunction( &pfd );

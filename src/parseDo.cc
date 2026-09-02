@@ -22,7 +22,7 @@ PENTER
 	{
 		// get WHILE
 		lex( lval, this );
-		if( lval.id != id2ui(WHILE) )
+		if( lval.id() != ID::WHILE )
 		{
 			parserError( "do block is not followed by while" );
 			return false;
@@ -30,7 +30,7 @@ PENTER
 
 		// get (
 		lex( lval, this );
-		if( lval.id != '(' )
+		if( lval.id() != ID::LPAREN )
 		{
 			parserError( "do .. while is not followed by (" );
 			return false;

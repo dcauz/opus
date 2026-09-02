@@ -34,7 +34,7 @@ bool Parser::parseFor( For ** f )
 PENTER
 	Token lval;
 	lex( lval, this );
-	if( lval.id != '(' )
+	if( lval.id() != ID::LPAREN )
 	{
 		parserError( "catch is not followed by ( character" );
 		return false;
@@ -47,13 +47,13 @@ PENTER
 	Expr	* expr3  = nullptr;
 	VarDef	* varDef = nullptr;
 
-	int termToken = 0;
+	ID termToken = ID::NIL;
 	bool	rc = true;
 
 	// Cases 5-13
-	if( lval.id != ';' )
+	if( lval.id() != ID::SCOLON )
 	{
-		lookahead = lval;
+		lookahead = std::move(lval);
 
 		rc = parseVarDefOrExpr( &varDef, &expr1 );
 		if( !rc )
@@ -61,16 +61,16 @@ PENTER
 	}
 
 	// Cases 1-12
-	if( termToken == ';' )
+	if( termToken == ID::SCOLON )
 	{
 		lex( lval, this );
 
-		termToken = 0;
+		termToken = ID::NIL;
 
 		// cases 3,4,7,8,11,12
-		if( lval.id != ';' )
+		if( lval.id() != ID::SCOLON )
 		{
-			lookahead = lval;
+			lookahead = std::move(lval);
 
 			Token tt;
 			rc = parseExpr( &expr2, tt );
@@ -82,7 +82,7 @@ PENTER
 		lex( lval, this );
 
 		// cases  2,4,6,8,10,12
-		if( lval.id != ')' )
+		if( lval.id() != ID::RPAREN )
 		{
 			Token tt;
 			rc = parseExpr( &expr3, tt );
@@ -90,14 +90,14 @@ PENTER
 			if(!rc)
 				return false;
 
-			if( termToken != ')' )
+			if( termToken != ID::RPAREN )
 			{
 				parserError( "for statement missing ) character" );
 				return false;
 			}
 		}
 	}
-	else if( termToken == ':' )	// case 13
+	else if( termToken == ID::COLON )	// case 13
 	{
 		Expr	* cExpr;
 		Token tt;
@@ -105,7 +105,7 @@ PENTER
 
 		if(!rc)
 			return false;
-		if( termToken != ')' )
+		if( termToken != ID::RPAREN )
 		{
 			parserError( "for statement missing ) character" );
 			return false;

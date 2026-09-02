@@ -34,6 +34,7 @@
 %token  OR              "||"
 %token  OR_ASS          "|="
 %token  PTR             "->"
+%token  SCOPE           "::"
 %token  SLFT            "<<"
 %token  SLFT_ASS        "<<="
 %token  SRGHT           ">>"
@@ -451,6 +452,7 @@ exp
     | exp RIGHT JOIN exp
     | exp OUTER JOIN exp
 	| exp IN exp
+	| exp SCOPE exp
 
 	| exp '?' exp ':' exp
 	| '|' exp '|' %prec ABS

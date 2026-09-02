@@ -13,7 +13,7 @@ PENTER
 	Token	lval;
 	lex( lval, this );
 
-	if( lval.id != ';' )
+	if( lval.id() != ID::SCOLON )
 	{
 		parserError( "continue was not followed by ;" );
 		return false;

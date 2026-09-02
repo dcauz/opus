@@ -808,42 +808,42 @@ sp<Type> TemplateParam::semCheck( SemCheckContext & ) const
 	return nullptr;
 }
 
-const char * OperatorDef::opName( int op )
+const char * OperatorDef::opName( ID op )
 {
 	switch(op)
 	{
 	default:	return "ERROR";
 
-	case '+':	return "+";
-	case '-':	return "-";
-	case '&':	return "&";
-	case '/':	return "/";
-	case '*':	return "*";
-	case '|':	return "|";
-	case id2ui(AND):	return "&&";
-	case id2ui(OR):	return "||";
-	case '^':	return "^";
-	case '%':	return "%";
-	case '=':	return "=";
-	case '>':	return ">";
-	case '<':	return "<";
+	case ID::ADD:	return "+";
+	case ID::SUB:	return "-";
+	case ID::BAND:	return "&";
+	case ID::DIV:	return "/";
+	case ID::MUL:	return "*";
+	case ID::BOR:	return "|";
+	case ID::AND:	return "&&";
+	case ID::OR:	return "||";
+	case ID::XOR:	return "^";
+	case ID::MOD:	return "%";
+	case ID::ASSIGN:return "=";
+	case ID::GT:	return ">";
+	case ID::LT:	return "<";
 
-	case id2ui(EQ):	return "==";
-	case id2ui(GE):	return ">=";
-	case id2ui(LE):	return "<=";
-	case id2ui(NE):	return "!=";
+	case ID::EQ:	return "==";
+	case ID::GE:	return ">=";
+	case ID::LE:	return "<=";
+	case ID::NE:	return "!=";
 
-	case id2ui(AND_ASS):	return "&=";
-	case id2ui(DIV_ASS):	return "/=";
-	case id2ui(MUL_ASS):	return "*=";
+	case ID::AND_ASS:	return "&=";
+	case ID::DIV_ASS:	return "/=";
+	case ID::MUL_ASS:	return "*=";
 
-	case id2ui(OR_ASS):	return "|=";
-	case id2ui(ADD_ASS):	return "+=";
-	case id2ui(SUB_ASS):	return "-=";
-	case id2ui(XOR_ASS):	return "^=";
-	case id2ui(MOD_ASS):	return "%=";
+	case ID::OR_ASS:	return "|=";
+	case ID::ADD_ASS:	return "+=";
+	case ID::SUB_ASS:	return "-=";
+	case ID::XOR_ASS:	return "^=";
+	case ID::MOD_ASS:	return "%=";
 
-	case id2ui(DEC):	return "++";
-	case id2ui(INC):	return "--";
+	case ID::DEC:	return "++";
+	case ID::INC:	return "--";
 	}
 }

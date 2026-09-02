@@ -73,15 +73,15 @@ PENTER
 	Token	type;
 	Token	name;
 	unsigned modifiers = 0;
-	int ptr = 0;
-	int aPtr = 0;
+	ID ptr = ID::NIL;
+	ID aPtr = ID::NIL;
 	bool	hasRef = false;
 
 	Token	pType;
 	Token	pName;
 	unsigned pModifiers = 0;
-	int pPtr = 0;
-	int paPtr = 0;
+	ID pPtr = ID::NIL;
+	ID paPtr = ID::NIL;
 	bool	pHasRef = false;
 
 	while(true)
@@ -91,13 +91,13 @@ PENTER
 		case start:
 			if( token.isType() )
 			{
-				type = token;
+				type = std::move(token);
 				state = typeSeen;
 			}
 			else if( token.isModifier())
 			{
 				state = modSeen;
-				modifiers |= token.id;
+				modifiers |= static_cast<unsigned int>(token.id());
 			}
 			else
 				TODO
@@ -109,21 +109,21 @@ PENTER
 			break;
 
 		case typeSeen:
-			if( token.id == id2ui(ID) )
+			if( token.isId())
 			{
-				name = token;
+				name = std::move(token);
 				state = idSeen;
 			}
-			else if( token.id == '[' )
+			else if( token.id() == ID::LBRACK )
 				state = arrayOpenSeen;
-			else if( token.id == '&' )
+			else if( token.id() == ID::QUEST )
 			{
 				hasRef = true;
 				state = refSeen;
 			}
 			else if( token.isPointer() )
 			{
-				ptr = token.id;
+				ptr = token.id();
 				state = ptrSeen;
 			}
 			else
@@ -136,7 +136,7 @@ PENTER
 			break;
 
 		case arrayOpenSeen:
-			if( token.id == ']' )
+			if( token.id() == ID::RBRACK )
 				state = arrayCloseSeen;
 			else
 			{
@@ -146,9 +146,9 @@ PENTER
 			break;
 
 		case arrayCloseSeen:
-			if( token.id == id2ui(ID) )
+			if( token.isId() )
 				state = idSeen;
-			else if( token.id == '&' )
+			else if( token.id() == ID::QUEST )
 			{
 				hasRef = true;
 				state = refSeen;
@@ -156,16 +156,16 @@ PENTER
 			else if( token.isPointer() )
 			{
 				state = arrayPtrSeen;
-				aPtr = token.id;
+				aPtr = token.id();
 			}
 			else
 				TODO
 			break;
 
 		case arrayPtrSeen:
-			if( token.id == id2ui(ID) )
+			if( token.isId() )
 				state = idSeen;
-			else if( token.id == '&' )
+			else if( token.id() == ID::QUEST )
 			{
 				hasRef = true;
 				state = refSeen;
@@ -175,18 +175,18 @@ PENTER
 			break;
 
 		case refSeen:
-			if( token.id == id2ui(ID) )
+			if( token.isId() )
 				state = idSeen;
 			else
 				TODO
 			break;
 
 		case idSeen:
-			if( token.id == '(' )
+			if( token.id() == ID::LPAREN )
 				state = lParenSeen;
-			else if( token.id == '=' )
+			else if( token.id() == ID::ASSIGN )
 				state = assSeen;
-			else if( token.id == ';' )
+			else if( token.id() == ID::SCOLON )
 			{
 				TODO
 			}
@@ -197,7 +197,7 @@ PENTER
 		case assSeen:
 		{
  			Expr * expr;
-			if( !parseExpr( & expr, token ) || token.id != ';' )
+			if( !parseExpr( & expr, token ) || token.id() != ID::SCOLON )
 			{
 				TODO
 			}
@@ -211,13 +211,13 @@ PENTER
 		case lParenSeen:
 			if( token.isType() )
 			{
-				pType = token;
+				pType = std::move(token);
 				state = pTypeSeen;
 			}
 			else if( token.isModifier())
 			{
 				state = pModSeen;
-				pModifiers |= token.id;
+				pModifiers |= static_cast<unsigned>(token.id());
 			}
 			else
 				TODO
@@ -226,13 +226,13 @@ PENTER
 		case pModSeen:
 			if( token.isType() )
 			{
-				pType = token;
+				pType = std::move(token);
 				state = pTypeSeen;
 			}
 			else if( token.isModifier())
 			{
 				state = pModSeen;
-				pModifiers |= token.id;
+				pModifiers |= static_cast<unsigned>(token.id());
 			}
 			else
 				TODO
@@ -240,19 +240,19 @@ PENTER
 
 		case pTypeSeen:
  			// ptr lbracket id ref
-			if( token.id == id2ui(ID) )
+			if( token.isId() )
 			{
-				pName = token;
+				pName = std::move(token);
 				state = pIdSeen;
 			}
-			else if( token.id == '[' )
+			else if( token.id() == ID::LBRACK )
 				state = pArrayOpenSeen;
-			else if( token.id == '&' )
+			else if( token.id() == ID::BAND )
 				state = pRefSeen;
 			else if( token.isPointer() )
 			{
 				state = pPtrSeen;
-				pPtr = token.id;
+				pPtr = token.id();
 			}
 			else
 				TODO
@@ -264,7 +264,7 @@ PENTER
 			break;
 
 		case pArrayOpenSeen:
-			if( token.id == ']' )
+			if( token.id() == ID::RBRACK )
 			{
 				state = pArrayCloseSeen;
 			}
@@ -276,9 +276,9 @@ PENTER
 			break;
 
 		case pArrayCloseSeen:
-			if( token.id == id2ui(ID) )
+			if( token.isId() )
 				state = pIdSeen;
-			else if( token.id == '&' )
+			else if( token.id() == ID::BAND )
 			{
 				pHasRef = true;
 				state = pRefSeen;
@@ -286,7 +286,7 @@ PENTER
 			else if( token.isPointer() )
 			{
 				state = pArrayPtrSeen;
-				paPtr = token.id;
+				paPtr = token.id();
 			}
 			else
 				TODO
@@ -304,11 +304,11 @@ PENTER
 
 		case pIdSeen:
 			// todo: process param
-			if( token.id == ',' )
+			if( token.id() == ID::COMMA )
 				state = lParenSeen;
-			else if( token.id == ')' )
+			else if( token.id() == ID::RPAREN )
 				state = rParenSeen;
-			else if( token.id == id2ui(DOT_DOT_DOT) )
+			else if( token.id() == ID::DOT_DOT_DOT )
 				state = dotDotDotSeen;
 			else
 				TODO
@@ -331,7 +331,7 @@ PENTER
 
 		case rParenSeen:
 			// func-modifier {
-			if( token.id == '{' )
+			if( token.id() == ID::LBRACE )
 			{
 				Block * body;
 				return parseBlock( & body );	

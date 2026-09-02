@@ -14,7 +14,7 @@ PENTER
 	Token	val;
 	lex( val, this );
 
-	if( val.id != ':' )
+	if( val.id() != ID::COLON )
 	{
 		parserError( "default token is not followed by :" );
 		return false;

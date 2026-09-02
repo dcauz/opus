@@ -21,7 +21,7 @@ bool Parser::parseIf( If ** i )
 PENTER
 	Token	lval;
 	lex( lval, this );
-	if( lval.id != '(' )
+	if( lval.id() != ID::LPAREN )
 	{
 		parserError( "catch is not followed by ( character" );
 		return false;
@@ -50,9 +50,9 @@ PENTER
 		return false;
 	
     lex( lval, this );
-	if( lval.id != id2ui(ELSE) )
+	if( lval.id() != ID::ELSE )
 	{
-		lookahead = lval;
+		lookahead = std::move(lval);
 
 		if( expr )
 			*i = new If( 0, 0, expr, istatement );

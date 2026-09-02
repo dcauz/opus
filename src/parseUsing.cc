@@ -22,7 +22,7 @@ PENTER
 
 	lex( lval, this );
 
-	if( lval.id == id2ui(NAMESPACE) )
+	if( lval.id() == ID::NAMESPACE )
 	{
 		vector<string>	name;
 
@@ -30,16 +30,16 @@ PENTER
 		{
 			lex( lval, this );
 
-			if( lval.id == id2ui(ID) )
+			if( lval.isId())
 			{
-				name.push_back(lval.lexium());
+				name.push_back(lval.idLexium());
 				lex( lval, this );
 
-				if( lval.id == id2ui(QUAL) )
+				if( lval.id() == ID::QUAL )
 				{
 					; // no-op
 				}
-				else if( lval.id == ';' )
+				else if( lval.id() == ID::SCOLON )
 				{
 					*uns = new UsingNamespace( 0, 0, move(name) );
 					return true;
@@ -57,25 +57,25 @@ PENTER
 			}
 		}
 	}
-	else if( lval.id == id2ui(ID) )
+	else if( lval.isId())
 	{
 		vector<string>	name;
 
 		while(true)
 		{
-			name.push_back(lval.lexium());
+			name.push_back(lval.idLexium());
 
 			lex( lval, this );
 
-			if( lval.id == id2ui(QUAL) )
+			if( lval.id() == ID::QUAL )
 			{
 				lex( lval, this );
-				if( lval.id == id2ui(ID) )
+				if( lval.isId() )
 				{
-					name.push_back(lval.lexium());
+					name.push_back(lval.idLexium());
 					lex( lval, this );
 				}
-				else if( lval.id == ';' )
+				else if( lval.id() == ID::SCOLON )
 				{
 					*u = new Using( 0, 0, move(name) );
 					return true;

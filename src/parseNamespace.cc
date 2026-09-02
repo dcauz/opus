@@ -15,7 +15,7 @@ PENTER
 	Token lval;
 	lex( lval, this );
 
-	if( lval.id != id2ui(ID) )
+	if( !lval.isId() )
 	{
 		parserError( "namespace was not followed by a name" );
 		return false;
@@ -25,7 +25,7 @@ PENTER
 	bool rc = parseStatement( &statement );
 
 	if(rc)
-		*ns = new Namespace( 0, 0, lval.lexium(), statement );
+		*ns = new Namespace( 0, 0, lval.idLexium(), statement );
 
 	return true;
 }

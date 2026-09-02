@@ -19,7 +19,7 @@ PENTER
 
 	if( rc )
 	{
-		if( termTok.id != ';' )
+		if( termTok.id() != ID::SCOLON )
 		{
 			parserError( "Expression statement is not terminated by ;" );
 			return false;

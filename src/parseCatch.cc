@@ -16,7 +16,7 @@ PENTER
 	Token	lval;
 	lex( lval, this );
 
-	if( lval.id != '(' )
+	if( lval.id() != ID::LPAREN )
 	{
 		parserError( "catch is not followed by ( character" );
 		return false;
@@ -25,9 +25,9 @@ PENTER
 	lex( lval, this );
 
 	VarDef	* varDef = nullptr;
-	if( lval.id != id2ui(DOT_DOT_DOT) )
+	if( lval.id() != ID::DOT_DOT_DOT )
 	{
-		lookahead = lval;
+		lookahead = std::move(lval);
 
 		int termToken;
 		bool rc = parseVariableDef( &varDef );
@@ -43,7 +43,7 @@ PENTER
 	{
 		Token	lval;
 		lex( lval, this );
-		if(lval.id != ')')
+		if(lval.id() != ID::RPAREN)
 		{
 			parserError( "missing ) character in catch statement" );
 			return false;

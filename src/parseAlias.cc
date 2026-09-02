@@ -21,7 +21,7 @@ PENTER
 
 	lex( lval1, this );
 
-	if( lval1.id != id2ui(ID) )
+	if( lval1.isId() )
 	{
 		parserError( "ALIAS NAME expected" );
 		return false;
@@ -30,7 +30,7 @@ PENTER
 	Token	lval2;
 	lex( lval2, this );
 
-	if( lval2.id != '=' )
+	if( lval2.id() != ID::ASSIGN )
 	{
 		parserError( "ALIAS NAME = expected" );
 		return false;
@@ -47,7 +47,7 @@ PENTER
 		return false;
 	}
 	if(rc)
-		*alias = new Alias( 0, 0, lval1.lexium(), ty );
+		*alias = new Alias( 0, 0, lval1.idLexium(), ty );
 	else
 		return false;
 

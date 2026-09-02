@@ -103,7 +103,7 @@ PENTER
 
 	while( lval.isModifier() )
 	{
-		declarators += lval.id;
+		declarators += static_cast<unsigned>(lval.id());
 		lex( lval, this );
 	}
 
@@ -111,78 +111,90 @@ PENTER
 
 	std::vector<up<Expr>>	dims;
 
-	switch(lval.id)
+	switch(lval.id())
 	{
 	default:
 		// Not a type. Set lookahead 
-		lookahead = lval;
+		lookahead = std::move(lval);
 		return false;
 
-	case id2ui(AUTO):
-	case id2ui(BOOL):
+	case ID::AUTO:
+	case ID::BOOL:
 
-	case id2ui(DATE):
-	case id2ui(DATETIME):
+	case ID::DATE:
+	case ID::DATETIME:
 
-	case id2ui(FLOAT32):
-	case id2ui(FLOAT64):
-	case id2ui(FLOAT80):
+	case ID::FLOAT32:
+	case ID::FLOAT64:
+	case ID::FLOAT80:
 
-	case id2ui(I0): case id2ui(I1): case id2ui(I2): case id2ui(I3): case id2ui(I4): case id2ui(I5): case id2ui(I6): case id2ui(I7): case id2ui(I8): case id2ui(I9):
-	case id2ui(I10):case id2ui(I11):case id2ui(I12):case id2ui(I13):case id2ui(I14):case id2ui(I15):case id2ui(I16):case id2ui(I17):case id2ui(I18):case id2ui(I19):
-	case id2ui(I20):case id2ui(I21):case id2ui(I22):case id2ui(I23):case id2ui(I24):case id2ui(I25):case id2ui(I26):case id2ui(I27):case id2ui(I28):case id2ui(I29):
-	case id2ui(I30):case id2ui(I31):case id2ui(I32):case id2ui(I64):
+	case ID::I0: case ID::I1: case ID::I2: case ID::I3: case ID::I4: 
+	case ID::I5: case ID::I6: case ID::I7: case ID::I8: case ID::I9:
+	case ID::I10:case ID::I11:case ID::I12:case ID::I13:case ID::I14:
+	case ID::I15:case ID::I16:case ID::I17:case ID::I18:case ID::I19:
+	case ID::I20:case ID::I21:case ID::I22:case ID::I23:case ID::I24:
+	case ID::I25:case ID::I26:case ID::I27:case ID::I28:case ID::I29:
+	case ID::I30:case ID::I31:case ID::I32:case ID::I64:case ID::I128:
 
-	case id2ui(Z0): case id2ui(Z1): case id2ui(Z2): case id2ui(Z3): case id2ui(Z4): case id2ui(Z5): case id2ui(Z6): case id2ui(Z7): case id2ui(Z8): case id2ui(Z9):
-	case id2ui(Z10):case id2ui(Z11):case id2ui(Z12):case id2ui(Z13):case id2ui(Z14):case id2ui(Z15):case id2ui(Z16):case id2ui(Z17):case id2ui(Z18):case id2ui(Z19):
-	case id2ui(Z20):case id2ui(Z21):case id2ui(Z22):case id2ui(Z23):case id2ui(Z24):case id2ui(Z25):case id2ui(Z26):case id2ui(Z27):case id2ui(Z28):case id2ui(Z29):
-	case id2ui(Z30):case id2ui(Z31):case id2ui(Z32):case id2ui(Z64):
+	case ID::Z0: case ID::Z1: case ID::Z2: case ID::Z3: case ID::Z4: 
+	case ID::Z5: case ID::Z6: case ID::Z7: case ID::Z8: case ID::Z9:
+	case ID::Z10:case ID::Z11:case ID::Z12:case ID::Z13:case ID::Z14:
+	case ID::Z15:case ID::Z16:case ID::Z17:case ID::Z18:case ID::Z19:
+	case ID::Z20:case ID::Z21:case ID::Z22:case ID::Z23:case ID::Z24:
+	case ID::Z25:case ID::Z26:case ID::Z27:case ID::Z28:case ID::Z29:
+	case ID::Z30:case ID::Z31:case ID::Z32:case ID::Z64:case ID::Z128:
 
-	case id2ui(U0): case id2ui(U1): case id2ui(U2): case id2ui(U3): case id2ui(U4): case id2ui(U5): case id2ui(U6): case id2ui(U7): case id2ui(U8): case id2ui(U9):
-	case id2ui(U10):case id2ui(U11):case id2ui(U12):case id2ui(U13):case id2ui(U14):case id2ui(U15):case id2ui(U16):case id2ui(U17):case id2ui(U18):case id2ui(U19):
-	case id2ui(U20):case id2ui(U21):case id2ui(U22):case id2ui(U23):case id2ui(U24):case id2ui(U25):case id2ui(U26):case id2ui(U27):case id2ui(U28):case id2ui(U29):
-	case id2ui(U30):case id2ui(U31):case id2ui(U32):case id2ui(U64):
+	case ID::U0: case ID::U1: case ID::U2: case ID::U3: case ID::U4: 
+	case ID::U5: case ID::U6: case ID::U7: case ID::U8: case ID::U9:
+	case ID::U10:case ID::U11:case ID::U12:case ID::U13:case ID::U14:
+	case ID::U15:case ID::U16:case ID::U17:case ID::U18:case ID::U19:
+	case ID::U20:case ID::U21:case ID::U22:case ID::U23:case ID::U24:
+	case ID::U25:case ID::U26:case ID::U27:case ID::U28:case ID::U29:
+	case ID::U30:case ID::U31:case ID::U32:case ID::U64:case ID::U128:
 
-	case id2ui(N0): case id2ui(N1): case id2ui(N2): case id2ui(N3): case id2ui(N4): case id2ui(N5): case id2ui(N6): case id2ui(N7): case id2ui(N8): case id2ui(N9):
-	case id2ui(N10):case id2ui(N11):case id2ui(N12):case id2ui(N13):case id2ui(N14):case id2ui(N15):case id2ui(N16):case id2ui(N17):case id2ui(N18):case id2ui(N19):
-	case id2ui(N20):case id2ui(N21):case id2ui(N22):case id2ui(N23):case id2ui(N24):case id2ui(N25):case id2ui(N26):case id2ui(N27):case id2ui(N28):case id2ui(N29):
-	case id2ui(N30):case id2ui(N31):case id2ui(N32):case id2ui(N64):
+	case ID::N0: case ID::N1: case ID::N2: case ID::N3: case ID::N4: 
+	case ID::N5: case ID::N6: case ID::N7: case ID::N8: case ID::N9:
+	case ID::N10:case ID::N11:case ID::N12:case ID::N13:case ID::N14:
+	case ID::N15:case ID::N16:case ID::N17:case ID::N18:case ID::N19:
+	case ID::N20:case ID::N21:case ID::N22:case ID::N23:case ID::N24:
+	case ID::N25:case ID::N26:case ID::N27:case ID::N28:case ID::N29:
+	case ID::N30:case ID::N31:case ID::N32:case ID::N64:case ID::N128:
 
-	case id2ui(N):
-	case id2ui(OBJECT):
-	case id2ui(R):
-	case id2ui(REGEXP):
-	case id2ui(STRING):
-	case id2ui(TIME):
-	case id2ui(VOID):
-	case id2ui(Z):
+	case ID::N:
+	case ID::OBJECT:
+	case ID::R:
+	case ID::REGEXP:
+	case ID::STRING:
+	case ID::TIME:
+	case ID::VOID:
+	case ID::Z:
 		// no-op
 		break;
 
 	// Optional type parameters
-	case id2ui(Q):
-	case id2ui(TYPE_NAME):
+	case ID::Q:
+	case ID::TYPE_NAME:
 		lex( lval, this );
 
-		if( lval.id == '<' )
+		if( lval.id() == ID::LT )
 		{
 			TODO // check for type parameters
 		}
 		break;
 
 	// Requires type parameters
-	case id2ui(C):
-	case id2ui(DLIST):
-	case id2ui(DQUEUE):
-	case id2ui(DURATION):
-	case id2ui(LIST):
-	case id2ui(MSET):
-	case id2ui(QUEUE):
-	case id2ui(SET):
-	case id2ui(STACK):
+	case ID::C:
+	case ID::DLIST:
+	case ID::DQUEUE:
+	case ID::DURATION:
+	case ID::LIST:
+	case ID::MSET:
+	case ID::QUEUE:
+	case ID::SET:
+	case ID::STACK:
 		lex( lval, this );
 
-		if( lval.id == '<' )
+		if( lval.id() == ID::LT )
 		{
 			TODO // ensure type parameters present
 		}
@@ -200,21 +212,21 @@ PENTER
 	{
 		lex( lval, this );
 
-		switch(lval.id)
+		switch(lval.id())
 		{
 		default:
 			// we are done. Set lookahead to token
 			TODO
 			break;
 
-		case '?':
-		case '*':
-		case '&':
-		case '#':
+		case ID::QUEST:
+		case ID::MUL:
+		case ID::BAND:
+		case ID::WEAK:
 			if(dims.size() == 0 )
 			{
 				if( collectionPtr == NONE )
-					collectionPtr = static_cast<Pointer>(lval.id);
+					collectionPtr = static_cast<Pointer>(lval.id());
 				else
 				{
 					TODO	// multiple pointer modifiers error
@@ -223,7 +235,7 @@ PENTER
 			else
 			{
 				if( elementPtr == NONE )
-					elementPtr = static_cast<Pointer>(lval.id);
+					elementPtr = static_cast<Pointer>(lval.id());
 				else
 				{
 					TODO	// multiple pointer modifiers error
@@ -231,7 +243,7 @@ PENTER
 			}
 			break;
 
-		case '[':
+		case ID::LBRACK:
 		{
 			Expr * expr;
 			int termToken;

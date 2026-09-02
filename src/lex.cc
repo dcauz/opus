@@ -168,7 +168,7 @@ DATE_LIT
 	'yyyy-mm-dd'd
 	0000-01-01	- 9999-12-31
 */
-bool isDate( Token	& tok, Parser	* context )
+bool isDate( Token & tok, Parser	* context )
 {
 	char * start = context->cp;
 	char * cp = start;
@@ -180,11 +180,10 @@ bool isDate( Token	& tok, Parser	* context )
 		if( is1stTokenChar(cp[10]))
 			throw std::runtime_error( "Invalid token" );
 
-			tok.date ( 
-				Date(D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
-					 D(cp[5])*10 + D(cp[6]),
-					 D(cp[8])*10 + D(cp[9]))
-			);
+			tok.set( context->lineNo, context->columnNo, Date(
+				D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
+				D(cp[5])*10 + D(cp[6]),
+				D(cp[8])*10 + D(cp[9])) );
 			
 		return true;
 	}
@@ -205,7 +204,7 @@ DATETIME_LIT
 	'yyyy-mm-dd hh:mm:ss.dddddd'dt
 	'yyyy-mm-dd hh:mm:ss.ddddddddd'dt
 */
-bool isDatetime( Token	& tok, Parser * context )
+bool isDatetime( Token & tok, Parser * context )
 {
 	char * start = context->cp;
 	char * cp = start;
@@ -269,7 +268,7 @@ bool isDatetime( Token	& tok, Parser * context )
 		if( is1stTokenChar(cp[next]))
 			throw std::runtime_error( "Invalid token" );
 
-		tok.datetime(Datetime( y, m, d, hour, min, sec, ms ));
+		tok.set( context->lineNo, context->columnNo, Datetime( y, m, d, hour, min, sec, ms ) );
 		return true;
 	}
 	return false;
@@ -287,7 +286,7 @@ TIME_LIT
 	'hh:mm:ss.dddddd't
 	'hh:mm:ss.ddddddddd't
 */
-bool isTime( Token	& tok, Parser * context )
+bool isTime( Token & tok, Parser * context )
 {
 	char * start = context->cp;
 	char * cp = start;
@@ -306,14 +305,17 @@ bool isTime( Token	& tok, Parser * context )
 				++n;
 			}
 
-			tok.time(Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), ms ));
+			tok.set( context->lineNo, context->columnNo, 
+				Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), ms ) );
 		}
 		else
 		{
-			tok.time(Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), 0 ));
+			tok.set( context->lineNo, context->columnNo,
+				Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
+				D(cp[6])*10+D(cp[7]), 0 ) );
 		}	
+
 		return true;
 	}
 	return false;
@@ -358,11 +360,10 @@ bool isInt( Parser * context, Token & tok )
 		if( v > ( std::numeric_limits<uint64_t>::max() - d )/10)
 		{
 			// Too big. It is an integer
-			tok.id = id2ui(INTEGER_LIT);
 			while(isdigit(*cp))
 				++cp;
 			if( !isTokenChar(*cp))
-				tok.integer( new Integer( start, cp ));
+				tok.set( context->lineNo, context->columnNo, new Integer( start, cp ) );
 			else
 				return false;
 
@@ -387,22 +388,16 @@ bool isInt( Parser * context, Token & tok )
 			if(isSigned)
 			{
 				if( v <= std::numeric_limits<int8_t>::max())
-				{
-					tok.id = id2ui(INT8_LIT);
-					tok.value.i8 = static_cast<int8_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<int8_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint8_t>::max())
-				{
-					tok.id = id2ui(UINT8_LIT);
-					tok.value.u8 = static_cast<uint8_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<uint8_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set(context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 		}
 		else if( *cp == '1' && cp[1] == '6' && !isTokenChar(cp[2]))
@@ -411,22 +406,16 @@ bool isInt( Parser * context, Token & tok )
 			if(isSigned)
 			{
 				if( v <= std::numeric_limits<int16_t>::max())
-				{
-					tok.id = id2ui(INT16_LIT);
-					tok.value.i16 = static_cast<int16_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<int16_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint16_t>::max())
-				{
-					tok.id = id2ui(UINT16_LIT);
-					tok.value.u16 = static_cast<uint16_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<uint16_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 		}
 		else if( *cp == '3' && cp[1] == '2' && !isTokenChar(cp[2]))
@@ -435,22 +424,16 @@ bool isInt( Parser * context, Token & tok )
 			if(isSigned)
 			{
 				if( v <= std::numeric_limits<int32_t>::max())
-				{
-					tok.id = id2ui(INT32_LIT);
-					tok.value.i32 = static_cast<int32_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint32_t>::max())
-				{
-					tok.id = id2ui(UINT32_LIT);
-					tok.value.u32 = static_cast<uint32_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 		}
 		else if( *cp == '6' && cp[1] == '4' && !isTokenChar(cp[2]))
@@ -459,52 +442,31 @@ bool isInt( Parser * context, Token & tok )
 			if(isSigned)
 			{
 				if( v <= std::numeric_limits<int64_t>::max())
-				{
-					tok.id = id2ui(INT64_LIT);
-					tok.value.i64 = static_cast<int64_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 			else
 			{
 				if( v <= std::numeric_limits<uint64_t>::max())
-				{
-					tok.id = id2ui(UINT64_LIT);
-					tok.value.u64 = static_cast<uint64_t>(v);
-				}
+					tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
 				else
-					tok.id = id2ui(INVALID_NUMBER);
+					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
 			}
 		}
 	}
 	else
 	{
 		if( v <= std::numeric_limits<int8_t>::max())
-		{
-			tok.id = id2ui(INT8_LIT);
-			tok.value.i8 = static_cast<int8_t>(v);
-		}
+			tok.set( context->lineNo, context->columnNo, static_cast<int8_t>(v));
 		else if( v <= std::numeric_limits<int16_t>::max())
-		{
-			tok.id = id2ui(INT16_LIT);
-			tok.value.i16 = static_cast<int16_t>(v);
-		}
+			tok.set( context->lineNo, context->columnNo, static_cast<int16_t>(v));
 		else if( v <= std::numeric_limits<int32_t>::max())
-		{
-			tok.id = id2ui(INT32_LIT);
-			tok.value.i32 = static_cast<int32_t>(v);
-		}
+			tok.set( context->lineNo, context->columnNo, static_cast<int32_t>(v));
 		else if( v <= std::numeric_limits<int64_t>::max())
-		{
-			tok.id = id2ui(INT64_LIT);
-			tok.value.i64 = static_cast<int64_t>(v);
-		}
+			tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
 		else
-		{
-			tok.id = id2ui(UINT64_LIT);
-			tok.value.u64 = static_cast<uint64_t>(v);
-		}
+			tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
 	}
 
 	// Update cp past end of token
@@ -581,13 +543,20 @@ int nextChar( Parser * context )
 	else if( !context->cp )
 	{
 getLine:if( fgets( context->line, Parser::MAX_LINE, context->fh ) )
+		{
+			++context->lineNo;
+			context->columnNo = 0;
 			context->cp = context->line;
+		}
 		else
 			RET_CHAR(0);
 	}
 
 	if( *context->cp )
+	{
+		++context->columnNo;
 		RET_CHAR(*context->cp++);
+	}
 	else
 		goto getLine;
 
@@ -647,7 +616,8 @@ bool isRegexp( Parser * context, Token & tok )
 
 	if( c == 'r' )
 	{
-		tok.id = id2ui(REGEXP_LIT);
+		TODO
+//		tok.id = ID::REGEXP_LIT;
 		return true;
 	}
 	else
@@ -665,10 +635,7 @@ void nextToken( Token & tok, Parser * context )
 		c = nextChar( context );
 
 	if( c == 0 )
-	{
-		tok.id = 0;
 		return;
-	}
 
 	while(true)
 	{
@@ -676,15 +643,40 @@ void nextToken( Token & tok, Parser * context )
 		{
 		case ';':
 			context->inSelect = false;
-
+			tok.set( context->lineNo, context->columnNo, ID::SCOLON );
+			return;
 		case ':':
+			tok.set( context->lineNo, context->columnNo, ID::COLON );
+			return;
 		case ',':
+			tok.set( context->lineNo, context->columnNo, ID::COMMA );
+			return;
 		case '?':
-		case '(': case ')':
-		case '{': case '}':
-		case '[': case ']':
-		case '~': case '#':
-			tok.id = c;
+			tok.set( context->lineNo, context->columnNo, ID::QUEST );
+			return;
+		case '(': 
+			tok.set( context->lineNo, context->columnNo, ID::LPAREN );
+			return;
+		case ')':
+			tok.set( context->lineNo, context->columnNo, ID::RPAREN );
+			return;
+		case '{': 
+			tok.set( context->lineNo, context->columnNo, ID::LBRACE );
+			return;
+		case '}':
+			tok.set( context->lineNo, context->columnNo, ID::RBRACE );
+			return;
+		case '[': 
+			tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+			return;
+		case ']':
+			tok.set( context->lineNo, context->columnNo, ID::RBRACK );
+			return;
+		case '~': 
+			tok.set( context->lineNo, context->columnNo, ID::BNOT );
+			return;
+		case '#':
+			tok.set( context->lineNo, context->columnNo, ID::WEAK );
 			return;
 		}
 
@@ -699,13 +691,13 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(NE);
+				tok.set( context->lineNo, context->columnNo, ID::NE );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::NOT );
 				return;
 			}
 		}
@@ -717,13 +709,13 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(MOD_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::MOD_ASS );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::MOD );
 				return;
 			}
 		}
@@ -736,18 +728,18 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(AND_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::AND_ASS );
 				return;
 			}
 			else if( n == '&')
 			{
-				tok.id = id2ui(AND);
+				tok.set( context->lineNo, context->columnNo, ID::AND );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::BAND );
 				return;
 			}
 		}
@@ -760,21 +752,20 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar(context );
 				context->charLookahead[0] = n;
 				context->charLookahead[1] = n2;
-				tok.id = c;
-				return;
+				tok.set( context->lineNo, context->columnNo, ID::LBRACK );
 			}
 			else if( n == '/' )
 			{
 				char n2 = nextChar(context );
 				context->charLookahead[0] = n;
 				context->charLookahead[1] = n2;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::LBRACK );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::LBRACK );
 				return;
 			}
 		}
@@ -784,18 +775,18 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(MUL_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::MUL_ASS );
 				return;
 			}
 			else if( n == '*')
 			{
-				tok.id = id2ui(EXP);
+				tok.set( context->lineNo, context->columnNo, ID::EXP );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::MUL );
 				return;
 			}
 		}
@@ -809,18 +800,18 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(ADD_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::ADD_ASS );
 				return;
 			}
 			else if( n == '+' )
 			{
-				tok.id = id2ui(INC);
+				tok.set( context->lineNo, context->columnNo, ID::INC );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::ADD );
 				return;
 			}
 		}
@@ -835,18 +826,18 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(SUB_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::SUB_ASS );
 				return;
 			}
 			else if( n == '-' )
 			{
-				tok.id = id2ui(DEC);
+				tok.set( context->lineNo, context->columnNo, ID::DEC );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::SUB );
 				return;
 			}
 		}
@@ -858,13 +849,13 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(DIV_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::DIV_ASS );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::DIV );
 				return;
 			}
 		}
@@ -880,18 +871,18 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 				
 				if(n2 == '.')
-					tok.id = id2ui(DOT_DOT_DOT);
+					tok.set( context->lineNo, context->columnNo, ID::DOT_DOT_DOT );
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = id2ui(DOT_DOT);
+					tok.set( context->lineNo, context->columnNo, ID::DOT_DOT );
 				}
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::DOT );
 				return;
 			}
 		}
@@ -903,13 +894,13 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(EQ);
+				tok.set( context->lineNo, context->columnNo, ID::EQ );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::ASSIGN );
 				return;
 			}
 		}
@@ -923,7 +914,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(LE);
+				tok.set( context->lineNo, context->columnNo, ID::LE );
 				return;
 			}
 			else if( n == '<')
@@ -931,18 +922,18 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 
 				if( n2 == '=' )
-					tok.id = id2ui(SLFT_ASS);
+					tok.set( context->lineNo, context->columnNo, ID::SLFT_ASS );
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = id2ui(SLFT);
+					tok.set( context->lineNo, context->columnNo, ID::SLFT );
 				}
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::LT );
 				return;
 			}
 		}
@@ -956,7 +947,7 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(GE);
+				tok.set( context->lineNo, context->columnNo, ID::GE );
 				return;
 			}
 			else if( n == '>')
@@ -964,18 +955,18 @@ void nextToken( Token & tok, Parser * context )
 				char n2 = nextChar( context );
 
 				if( n2 == '=' )
-					tok.id = id2ui(SRGHT_ASS);
+					tok.set( context->lineNo, context->columnNo, ID::SRGHT_ASS );
 				else
 				{
 					context->charLookahead[0] = n2;
-					tok.id = id2ui(SRGHT);
+					tok.set( context->lineNo, context->columnNo, ID::SRGHT );
 				}
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::GT );
 				return;
 			}
 		}
@@ -987,13 +978,13 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(XOR_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::XOR_ASS );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::XOR );
 				return;
 			}
 		}
@@ -1006,18 +997,18 @@ void nextToken( Token & tok, Parser * context )
 			char n = nextChar( context );
 			if( n == '=')
 			{
-				tok.id = id2ui(OR_ASS);
+				tok.set( context->lineNo, context->columnNo, ID::OR_ASS );
 				return;
 			}
 			else if( n == '|')
 			{
-				tok.id = id2ui(OR);
+				tok.set( context->lineNo, context->columnNo, ID::OR );
 				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
-				tok.id = c;
+				tok.set( context->lineNo, context->columnNo, ID::OR );
 				return;
 			}
 		}
@@ -1030,53 +1021,60 @@ void nextToken( Token & tok, Parser * context )
 	
 			if( isFloat( context, tok ) )
 			{
-				tok.id = tok.id;
+//				tok.id = tok.id;
+TODO
 				return;
 			}
 	
 			int loc = 0;
+			std::string lexium;
+			lexium += c;
 			do
 			{
-				tok.add( c );
+				lexium += c;
 				++loc;
 				c = nextChar( context );
 			} while( c && !isspace(c) );
 
-			tok.id = id2ui(INVALID_NUMBER);
+			tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER, lexium );
 			return;
 		}
 		else if( c == '_' )
 		{
 			int loc = 0;
-			tok.add( c );
+			std::string lexium;
+			lexium = c;
 			++loc;
 	
 			c = nextChar( context );
 			while( c == '_' || isalnum(c))
 			{
-				tok.add( c );
+				lexium += c;
 				++loc;
 				c = nextChar( context );
 			}
 			context->charLookahead[0] = c;
 	
-			tok.id = id2ui(ID);
+			if( lexium.size() < 16 )
+				tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
+			else
+				tok.set( context->lineNo, context->columnNo, ID::ID, lexium );
+
 			return;
 		}
 		else if(isalpha(c))
 		{
-//printf( "%s:%d c [%c]\n", __FILE__, __LINE__, c );
 			int loc = 0;
 
-			tok.lexium( c );
+			std::string lexium;
+			lexium = c;
 			++loc;
 	
 			c = nextChar( context );
-//printf( "%s:%d c [%c]\n", __FILE__, __LINE__, c );
 	
 			while( c == '_' || isalnum(c))
 			{
-				tok.add( c );
+				lexium += c;
 				++loc;
 				c = nextChar( context );
 			}
@@ -1084,10 +1082,10 @@ void nextToken( Token & tok, Parser * context )
 	
 			for (unsigned int i = 0; i < noOfKeyWords; ++i )
 			{
-				if( tok.lexium() == keyWords[i].lexium )
+				if( lexium == keyWords[i].lexium )
 				{
-					tok.id=keyWords[i].id;
-					if( tok.id == id2ui(SELECT) )
+					tok.set( context->lineNo, context->columnNo, keyWords[i].id );
+					if( tok.id() == ID::SELECT )
 						context->inSelect = true;
 					return;
 				}
@@ -1095,42 +1093,50 @@ void nextToken( Token & tok, Parser * context )
 
 			if( context->inSelect )
 			{
-				static const std::map<std::string, int > sqlReservedWords =
+				static const std::map<std::string, ID > sqlReservedWords =
 				{
-					{ "as",		id2ui(AS) },
-					{ "asc",	id2ui(ASC) },
-					{ "by",		id2ui(BY) },
-					{ "closure",id2ui(CLOSURE) },
-					{ "distinct",id2ui(DISTINCT) },
-					{ "dsc",	id2ui(DSC) },
-					{ "foreign",id2ui(FOREIGN) },
-					{ "from", 	id2ui(FROM) },
-					{ "group", 	id2ui(GROUP) },
-					{ "having", id2ui(HAVING) },
-					{ "into", 	id2ui(INTO) },
-					{ "join", 	id2ui(JOIN) },
-					{ "left", 	id2ui(LEFT) },
-					{ "order", 	id2ui(ORDER) },
-					{ "outer", 	id2ui(OUTER) },
-					{ "percent",id2ui(PERCENT) },
-					{ "right", 	id2ui(RIGHT) },
-					{ "ties", 	id2ui(TIES) },
-					{ "top", 	id2ui(TOP) },
-					{ "unique", id2ui(UNIQUE) },
-					{ "values", id2ui(VALUES) },
-					{ "where", 	id2ui(WHERE) },
-					{ "with", 	id2ui(WITH) },
+					{ "as",		ID::AS },
+					{ "asc",	ID::ASC },
+					{ "by",		ID::BY },
+					{ "closure",ID::CLOSURE },
+					{ "distinct",ID::DISTINCT },
+					{ "dsc",	ID::DSC },
+					{ "foreign",ID::FOREIGN },
+					{ "from", 	ID::FROM },
+					{ "group", 	ID::GROUP },
+					{ "having", ID::HAVING },
+					{ "into", 	ID::INTO },
+					{ "join", 	ID::JOIN },
+					{ "left", 	ID::LEFT },
+					{ "order", 	ID::ORDER },
+					{ "outer", 	ID::OUTER },
+					{ "percent",ID::PERCENT },
+					{ "right", 	ID::RIGHT },
+					{ "ties", 	ID::TIES },
+					{ "top", 	ID::TOP },
+					{ "unique", ID::UNIQUE },
+					{ "values", ID::VALUES },
+					{ "where", 	ID::WHERE },
+					{ "with", 	ID::WITH },
 				};
 
-				auto it = sqlReservedWords.find( tok.lexium() );
+				auto it = sqlReservedWords.find( lexium );
 				if( it != sqlReservedWords.end() )
 				{
-					tok.id = it->second;
+					tok.set( context->lineNo, context->columnNo, it->second );
 					return;
 				}
 			}
 	
-			tok.id = id2ui(ID);
+			if( lexium.size() < 16 )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
+			}
+			else
+			{
+				tok.set( context->lineNo, context->columnNo, ID::ID, lexium );
+			}
+
 			return;
 		}
 		//  Raw string literal
@@ -1140,6 +1146,8 @@ void nextToken( Token & tok, Parser * context )
 	
 			c = nextChar( context );
 
+			std::string lexium;
+			lexium = c;
 			int loc = 0;
 	
 			while( c )
@@ -1150,7 +1158,7 @@ void nextToken( Token & tok, Parser * context )
 						escaped = true;
 					else
 					{
-						tok.add( c );
+						lexium += c ;
 						++loc;
 					}
 				}
@@ -1159,26 +1167,29 @@ void nextToken( Token & tok, Parser * context )
 					escaped = false;
 					char es;
 					if( escapeChar( c, es ))
-						tok.add( es );
+						lexium += es;
 					++loc;
 				}
 				else if( c == '\'' )
 				{
 					if( isRegexp( context, tok ) )
 						return;
-					tok.id = id2ui(STRING_LIT);
+					if( lexium.size() < 16 )
+						tok.set( context->lineNo, context->columnNo,  ID::SSTRING_LIT, lexium );
+					else
+						tok.set( context->lineNo, context->columnNo,  ID::STRING_LIT, lexium );
 					return;
 				}
 				else
 				{
-					tok.add( c );
+					lexium += c;
 					++loc;
 				}
 
 				c = nextChar( context );
 			}
 			
-			tok.id = id2ui(INVALID_STRING);
+			tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
 			return;
 		}
 		//  STRING_LIT
@@ -1187,7 +1198,8 @@ void nextToken( Token & tok, Parser * context )
 			bool escaped = false;
 	
 			c = nextChar( context );
-
+			std::string lexium;
+			lexium = c;
 			int loc = 0;
 	
 			while( c )
@@ -1197,33 +1209,36 @@ void nextToken( Token & tok, Parser * context )
 					if( !escaped )
 						escaped = true;
 					else
-						tok.add( c );
+						lexium += c;
 				}
 				else if( escaped )
 				{
 					escaped = false;
 					char es;
 					if( escapeChar( c, es ) )
-						 tok.add( es );
+						lexium += es;
 					++loc;
 				}
 				else if( c == '"' )
 				{
 					if( isRegexp( context, tok ) )
 						return;
-					tok.id = id2ui(STRING_LIT);
+					if( lexium.size() < 16 )
+						tok.set( context->lineNo, context->columnNo, ID::SSTRING_LIT, lexium );
+					else
+						tok.set( context->lineNo, context->columnNo, ID::STRING_LIT, lexium );
 					return;
 				}
 				else
 				{
-					tok.add( c );
+					lexium += c;
 					++loc;
 				}
 
 				c = nextChar( context );
 			}
 			
-			tok.id = id2ui(INVALID_STRING);
+			tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
 			return;
 		}
 	}
@@ -1233,15 +1248,14 @@ void nextToken( Token & tok, Parser * context )
 
 void lexPushBack( Token & tok, Parser * context )
 {
-	context->lookahead = tok;
+	context->lookahead = std::move(tok);
 }
 
 void lex( Token & tok, Parser * context )
 {
-	if( context->lookahead.id != 0 )
+	if( context->lookahead.id() != ID::NIL )
 	{
-		tok = context->lookahead;
-		context->lookahead.id = 0;
+		tok = std::move(context->lookahead);
 #define DEBUG_YYLEX
 #ifdef DEBUG_YYLEX
 	dumpToken( tok );
@@ -1251,39 +1265,39 @@ void lex( Token & tok, Parser * context )
 
 	nextToken( tok, context );
 
-	if( tok.id == id2ui(TYPE) || tok.id == id2ui(ENUM) || tok.id == id2ui(INTERFACE) || tok.id == id2ui(UNION) )
+	if( tok.id() == ID::TYPE || tok.id() == ID::ENUM || tok.id() == ID::INTERFACE || tok.id() == ID::UNION )
 		context->typeSeen = true;
 
-	if( context->typeSeen && tok.id == id2ui(ID) )
+	if( context->typeSeen && tok.isId() )
 	{
 		context->typeSeen = false;
-		context->classes.push(tok.lexium());
-		context->pushSymTbl(tok.lexium());
+		context->classes.push(tok.idLexium());
+		context->pushSymTbl(tok.idLexium());
 	}
 
-	if( tok.id == id2ui(ID) )
+	if( tok.isId() )
 	{
-		Symbol * sym = context->currSymTbl->find(tok.lexium());
+		Symbol * sym = context->currSymTbl->find(tok.idLexium());
 
 		if( sym != nullptr )
 		{
 			if( FunctionType * ft = dynamic_cast<FunctionType *>(sym))
-				tok.id = id2ui(FUNCTION_NAME);
+				tok.setNameType( ID::FUNCTION_NAME );
 			else if( Type * t = dynamic_cast<Type *>(sym))
-				tok.id = id2ui(TYPE_NAME);
+				tok.setNameType( ID::TYPE_NAME );
 			else if( Alias * a = dynamic_cast<Alias *>(sym))
-				tok.id = id2ui(TYPE_NAME);
+				tok.setNameType( ID::TYPE_NAME );
 			else if( TemplateParam * tp = dynamic_cast<TemplateParam *>(sym))
 			{
-				Type	* typ = tp->type();
+				Type * typ = tp->type();
 
 				if( typ != nullptr )
-					tok.id = id2ui(VARIABLE_NAME);
+					tok.setNameType( ID::VARIABLE_NAME );
 				else
-					tok.id = id2ui(TYPE_NAME);
+					tok.setNameType( ID::TYPE_NAME );
 			}
 			else if( Variable * v = dynamic_cast<Variable *>(sym))
-				tok.id = id2ui(VARIABLE_NAME);
+				tok.setNameType( ID::VARIABLE_NAME );
 		}
 	}
 

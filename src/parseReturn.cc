@@ -15,7 +15,7 @@ PENTER
 
 	lex( lval, this );
 
-	if( lval.id == ';' )
+	if( lval.id() == ID::SCOLON )
 		*r = new Return( 0, 0, nullptr );
 	else
 	{

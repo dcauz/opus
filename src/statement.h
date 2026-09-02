@@ -7,6 +7,7 @@
 #include "symtbl.h"
 #include "type.h"
 #include "expr.h"
+#include "token.h"
 
 
 class GenCodeContext;
@@ -499,7 +500,7 @@ public:
 		int s, 
 		int e, 
 		Type * t, 
-		int n, 
+		ID n, 
 		std::vector<up<Arg>> * args, 
 		Statement * bl = nullptr ):
 			Executable(s,e,static_cast<Block *>(bl)),
@@ -511,7 +512,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
 private:
-	const char * opName( int );
+	const char * opName( ID );
 };
 
 class CtorDef: public Executable, public FunctionType

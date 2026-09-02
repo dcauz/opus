@@ -63,6 +63,9 @@ public:
 	char * cp;
 	int  charLookahead[2];
 
+	unsigned short lineNo;
+	unsigned short columnNo;
+
 	static const int MAX_LINE = 2028;
 	char line[MAX_LINE];
 
@@ -75,10 +78,9 @@ public:
 
 	std::stack<std::string> classes;
 	std::stack<int>			opStack;
-	std::stack<Token>		valueStack;
 	std::stack<Expr *>		exprStack;
 
-	Token	lookahead;
+	Token lookahead;
 
 private:
 	Program		program_;
