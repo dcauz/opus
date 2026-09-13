@@ -28,6 +28,35 @@ private:
 	double value_;
 };
 
+class Float80: public Value
+{
+public:
+	Float80( __float80 d ): value_(d) {}
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+
+private:
+	__float80 value_;
+};
+
+class Nan : public Value
+{
+public:
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+};
+
+class Inf : public Value
+{
+public:
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+};
+
+///////////////////////////////////////////////////////////////////////////////
 
 class Float32Type: public Type
 {
@@ -51,6 +80,16 @@ public:
 
 extern sp<Float64Type> float64Type;
 
-// TODO: Float80
+class Float80Type: public Type
+{
+public:
+
+    bool eqCompareTo( Type * ) const override;
+    bool compareTo( Type * ) const override;
+    bool assignableTo( Type * ) const override;
+};
+
+extern sp<Float80Type> float80Type;
+
 // TODO: Float128
 // TODO: Float256

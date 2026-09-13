@@ -44,7 +44,19 @@ public:
 
 };
 
-class PI: public Real
+class Gamma: public Real
+{
+public:
+
+};
+
+class Phi: public Real
+{
+public:
+
+};
+
+class Pi: public Real
 {
 public:
 

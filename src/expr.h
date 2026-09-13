@@ -16,15 +16,21 @@ class Type;
 class Expr
 {
 public:
+	Expr( unsigned short l, unsigned short c ):line_(l), column_(c) {}
+
 	virtual ~Expr() {}
 	virtual bool genCode( GenCodeContext & gcc ) const = 0;
 	virtual sp<Type> semCheck( SemCheckContext & scc ) const = 0;
+
+private:
+	unsigned short line_;
+	unsigned short column_;
 };
 
 class UnknownRef : public Expr
 {
 public:
-	UnknownRef( const char * n ):name_(n) {}
+	UnknownRef( unsigned short l, unsigned short c, const char * n ):Expr(l,c), name_(n) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -35,19 +41,23 @@ private:
 	std::string name_;
 };
 
-class Literal: public Expr
+struct Token;
+
+template <typename V> class Literal: public Expr
 {
 public:
-	Literal( Value * v ):value_(v) {}
+	Literal( unsigned short l, unsigned short c, V && v ):Expr(l,c), value_(std::move(v)) {}
 
+	bool genCode( GenCodeContext & gcc ) const final       { return value_.genCode(gcc); }
+	sp<Type> semCheck( SemCheckContext & scc ) const final { return value_.semCheck(scc); }
 protected:
-	up<Value> value_;
+	V value_;
 };
 
 class Uniary: public Expr
 {
 public:
-	Uniary( Expr * o ):operand_(o) {}
+	Uniary( unsigned short l, unsigned short c, Expr * o ):Expr(l,c), operand_(o) {}
 
 protected:
 	up<Expr> operand_;
@@ -56,7 +66,7 @@ protected:
 class Binary: public Expr
 {
 public:
-	Binary( Expr * l, Expr * r ):left_(l), right_(r) {}
+	Binary( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Expr(l,c), left_(lf), right_(r) {}
 
 protected:
 	up<Expr> left_;
@@ -66,7 +76,8 @@ protected:
 class Trinary: public Expr
 {
 public:
-	Trinary( Expr * a, Expr * b, Expr * c ):operand1_(a), operand2_(b), operand3_(c) {}
+	Trinary( unsigned short l, unsigned short cl, Expr * a, Expr * b, Expr * c ):
+		Expr(l,cl), operand1_(a), operand2_(b), operand3_(c) {}
 
 protected:
 	up<Expr> operand1_;
@@ -80,8 +91,8 @@ protected:
 class FuncCall: public Expr
 {
 public:
-	FuncCall( Expr * n, std::vector<up<Expr>> * args = nullptr ):
-		name_(n), args_(args) {}
+	FuncCall( unsigned short l, unsigned short c, Expr * n, std::vector<up<Expr>> * args = nullptr ):
+		Expr(l,c), name_(n), args_(args) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -95,8 +106,8 @@ private:
 class CtorCall: public Expr
 {
 public:
-	CtorCall( Expr * n, std::vector<up<Expr>> * args = nullptr ):
-		name_(n), args_(args) {}
+	CtorCall( unsigned short l, unsigned short c, Expr * n, std::vector<up<Expr>> * args = nullptr ):
+		Expr(l,c), name_(n), args_(args) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -110,7 +121,7 @@ private:
 class IsVoid: public Expr
 {
 public:
-	IsVoid( Expr * arg ): arg_(arg) {}
+	IsVoid( unsigned short l, unsigned short c, Expr * arg ): Expr(l,c), arg_(arg) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -123,7 +134,7 @@ private:
 class Name: public Expr
 {
 public:
-	Name( const char * n ):name_(n) {}
+	Name( unsigned short l, unsigned short c, const char * n ):Expr(l,c), name_(n) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -135,7 +146,7 @@ private:
 class Lvalue: public Expr
 {
 public:
-	Lvalue( const char * n ):first_(new Name(n)), isDot_(false) {}
+	Lvalue( const char * n ):first_(new Name(n), isDot_(false) {}
 	Lvalue( Expr * f, Expr * s, bool d = false ):
 		first_(f), second_(s), isDot_(d)
 	{
@@ -156,7 +167,7 @@ private:
 class ShiftL: public Binary
 {
 public:
-	ShiftL( Expr * l, Expr * r ):Binary(l,r) {}
+	ShiftL( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -166,7 +177,7 @@ public:
 class ShiftR: public Binary
 {
 public:
-	ShiftR( Expr * l, Expr * r ):Binary(l,r) {}
+	ShiftR( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -176,7 +187,7 @@ public:
 class DotProd: public Binary
 {
 public:
-	DotProd( Expr * l, Expr * r ):Binary(l,r) {}
+	DotProd( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -186,7 +197,7 @@ public:
 class CrossProd: public Binary
 {
 public:
-	CrossProd( Expr * l, Expr * r ):Binary(l,r) {}
+	CrossProd( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -196,7 +207,7 @@ public:
 class MDiv: public Binary
 {
 public:
-	MDiv( Expr * l, Expr * r ):Binary(l,r) {}
+	MDiv( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -206,7 +217,7 @@ public:
 class MPow: public Binary
 {
 public:
-	MPow( Expr * l, Expr * r ):Binary(l,r) {}
+	MPow( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -216,7 +227,7 @@ public:
 class Assign: public Binary
 {
 public:
-	Assign( Expr * l, Expr * r ):Binary(l,r) {}
+	Assign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -226,7 +237,7 @@ public:
 class Exponent: public Binary
 {
 public:
-	Exponent( Expr * l, Expr * r ):Binary(l,r) {}
+	Exponent( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -236,7 +247,7 @@ public:
 class Range: public Binary
 {
 public:
-	Range( Expr * l, Expr * r ):Binary(l,r) {}
+	Range( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -246,7 +257,7 @@ public:
 class Add: public Binary 
 {
 public:
-	Add( Expr * l, Expr * r ):Binary(l,r) {}
+	Add( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -256,7 +267,7 @@ public:
 class Sub: public Binary 
 {
 public:
-	Sub( Expr * l, Expr * r ):Binary(l,r) {}
+	Sub( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -266,7 +277,7 @@ public:
 class Mul: public Binary 
 {
 public:
-	Mul( Expr * l, Expr * r ):Binary(l,r) {}
+	Mul( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -276,7 +287,7 @@ public:
 class Div: public Binary 
 {
 public:
-	Div( Expr * l, Expr * r ):Binary(l,r) {}
+	Div( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -286,7 +297,7 @@ public:
 class Mod: public Binary 
 {
 public:
-	Mod( Expr * l, Expr * r ):Binary(l,r) {}
+	Mod( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -296,7 +307,7 @@ public:
 class NotEq: public Binary 
 {
 public:
-	NotEq( Expr * l, Expr * r ):Binary(l,r) {}
+	NotEq( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -306,7 +317,7 @@ public:
 class Eq: public Binary
 {
 public:
-	Eq( Expr * l, Expr * r ):Binary(l,r) {}
+	Eq( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -316,7 +327,7 @@ public:
 class SpaceShip: public Binary
 {
 public:
-	SpaceShip( Expr * l, Expr * r ):Binary(l,r) {}
+	SpaceShip( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -326,7 +337,7 @@ public:
 class GreaterEq: public Binary
 {
 public:
-	GreaterEq( Expr * l, Expr * r ):Binary(l,r) {}
+	GreaterEq( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -336,7 +347,7 @@ public:
 class Greater: public Binary
 {
 public:
-	Greater( Expr * l, Expr * r ):Binary(l,r) {}
+	Greater( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -346,7 +357,7 @@ public:
 class LessEq: public Binary
 {
 public:
-	LessEq( Expr * l, Expr * r ):Binary(l,r) {}
+	LessEq( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -356,7 +367,7 @@ public:
 class Less: public Binary
 {
 public:
-	Less( Expr * l, Expr * r ):Binary(l,r) {}
+	Less( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -366,7 +377,7 @@ public:
 class Dot: public Binary
 {
 public:
-	Dot( Expr * l, Expr * r ):Binary(l,r) {}
+	Dot( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -376,7 +387,7 @@ public:
 class DotMem: public Binary
 {
 public:
-	DotMem( Expr * l, Expr * r ):Binary(l,r) {}
+	DotMem( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -386,7 +397,7 @@ public:
 class Ptr: public Binary
 {
 public:
-	Ptr( Expr * l, Expr * r ):Binary(l,r) {}
+	Ptr( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -396,7 +407,7 @@ public:
 class PtrMem: public Binary
 {
 public:
-	PtrMem( Expr * l, Expr * r ):Binary(l,r) {}
+	PtrMem( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -406,7 +417,7 @@ public:
 class ArrayMem: public Binary
 {
 public:
-	ArrayMem( Expr * l, Expr * r ):Binary(l,r) {}
+	ArrayMem( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -416,7 +427,7 @@ public:
 class AddAssign: public Binary 
 {
 public:
-	AddAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	AddAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -426,7 +437,7 @@ public:
 class SubAssign: public Binary
 {
 public:
-	SubAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	SubAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -436,7 +447,7 @@ public:
 class MulAssign: public Binary 
 {
 public:
-	MulAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	MulAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -446,7 +457,7 @@ public:
 class DivAssign: public Binary
 {
 public:
-	DivAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	DivAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -456,7 +467,7 @@ public:
 class ModAssign: public Binary
 {
 public:
-	ModAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	ModAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -466,7 +477,7 @@ public:
 class AndAssign: public Binary
 {
 public:
-	AndAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	AndAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -476,7 +487,7 @@ public:
 class OrAssign: public Binary
 {
 public:
-	OrAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	OrAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -486,7 +497,7 @@ public:
 class XorAssign: public Binary
 {
 public:
-	XorAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	XorAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -496,7 +507,7 @@ public:
 class ParamAssign: public Binary
 {
 public:
-	ParamAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	ParamAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -506,7 +517,7 @@ public:
 class BNotAssign: public Binary
 {
 public:
-	BNotAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	BNotAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -516,7 +527,7 @@ public:
 class PowAssign: public Binary
 {
 public:
-	PowAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	PowAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -526,7 +537,7 @@ public:
 class SLftAssign: public Binary
 {
 public:
-	SLftAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	SLftAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -536,7 +547,7 @@ public:
 class SRghtAssign: public Binary
 {
 public:
-	SRghtAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	SRghtAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -546,7 +557,7 @@ public:
 class DPrdAssign: public Binary
 {
 public:
-	DPrdAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	DPrdAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -556,7 +567,7 @@ public:
 class XPrdAssign: public Binary
 {
 public:
-	XPrdAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	XPrdAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -566,7 +577,7 @@ public:
 class MDivAssign: public Binary
 {
 public:
-	MDivAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	MDivAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -576,7 +587,7 @@ public:
 class MPowAssign: public Binary
 {
 public:
-	MPowAssign( Expr * l, Expr * r ):Binary(l,r) {}
+	MPowAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -586,7 +597,7 @@ public:
 class Or: public Binary
 {
 public:
-	Or( Expr * l, Expr * r ):Binary(l,r) {}
+	Or( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -596,7 +607,7 @@ public:
 class Lor: public Binary
 {
 public:
-	Lor( Expr * l, Expr * r ):Binary(l,r) {}
+	Lor( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -606,7 +617,7 @@ public:
 class Xor: public Binary
 {
 public:
-	Xor( Expr * l, Expr * r ):Binary(l,r) {}
+	Xor( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -616,7 +627,7 @@ public:
 class And: public Binary
 {
 public:
-	And( Expr * l, Expr * r ):Binary(l,r) {}
+	And( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -626,7 +637,7 @@ public:
 class Land: public Binary
 {
 public:
-	Land( Expr * l, Expr * r ):Binary(l,r) {}
+	Land( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -635,7 +646,7 @@ public:
 class Union: public Binary
 {
 public:
-	Union( Expr * l, Expr * r ):Binary(l,r) {}
+	Union( Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -644,7 +655,7 @@ public:
 class Intersect: public Binary
 {
 public:
-	Intersect( Expr * l, Expr * r ):Binary(l,r) {}
+	Intersect( Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -654,7 +665,7 @@ public:
 class In: public Binary
 {
 public:
-	In( Expr * l, Expr * r ):Binary(l,r) {}
+	In( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -664,7 +675,7 @@ public:
 class Apply: public Binary
 {
 public:
-	Apply( Expr * l, Expr * r ):Binary(l,r) {}
+	Apply( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -674,7 +685,7 @@ public:
 class Filter: public Binary
 {
 public:
-	Filter( Expr * l, Expr * r ):Binary(l,r) {}
+	Filter( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -684,7 +695,7 @@ public:
 class Order: public Binary
 {
 public:
-	Order( Expr * l, Expr * r ):Binary(l,r) {}
+	Order( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -694,7 +705,7 @@ public:
 class Reduce: public Binary
 {
 public:
-	Reduce( Expr * l, Expr * r ):Binary(l,r) {}
+	Reduce( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -703,7 +714,7 @@ public:
 class Where : public Binary
 {
 public:
-	Where( Expr * col, Expr * con ):Binary(col,con) {}
+	Where( unsigned short l, unsigned short c, Expr * col, Expr * con ):Binary(l,c,col,con) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -712,9 +723,9 @@ public:
 class Index : public Expr
 {
 public:
-	Index( 
+	Index( unsigned short l, unsigned short c, 
 		Expr * v, 
-		std::vector<up<Expr>> * i ):tensor_(v), index_(i)  {}
+		std::vector<up<Expr>> * i ):Expr(l,c), tensor_(v), index_(i)  {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -728,7 +739,7 @@ private:
 class UniDer: public Uniary
 {
 public:
-	UniDer( Expr * o ):Uniary(o) {}
+	UniDer( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -738,7 +749,7 @@ public:
 class ShrDer: public Uniary
 {
 public:
-	ShrDer( Expr * o ):Uniary(o) {}
+	ShrDer( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -748,7 +759,7 @@ public:
 class Abs: public Uniary
 {
 public:
-	Abs( Expr * o ):Uniary(o) {}
+	Abs( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -758,7 +769,7 @@ public:
 class Eval: public Uniary
 {
 public:
-	Eval( Expr * o ):Uniary(o) {}
+	Eval( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -768,7 +779,7 @@ public:
 class Async: public Uniary
 {
 public:
-	Async( Expr * o ):Uniary(o) {}
+	Async( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -778,7 +789,7 @@ public:
 class Lazy: public Uniary
 {
 public:
-	Lazy( Expr * o ):Uniary(o) {}
+	Lazy( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -788,7 +799,7 @@ public:
 class Co_await: public Uniary
 {
 public:
-	Co_await( Expr * o ):Uniary(o) {}
+	Co_await( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -798,7 +809,7 @@ public:
 class Co_yield: public Uniary
 {
 public:
-	Co_yield( Expr * o ):Uniary(o) {}
+	Co_yield( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -808,7 +819,7 @@ public:
 class Sizeof: public Uniary
 {
 public:
-	Sizeof( Expr * o ):Uniary(o) {}
+	Sizeof( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -818,7 +829,7 @@ public:
 class Alignof: public Uniary
 {
 public:
-	Alignof( Expr * o ):Uniary(o) {}
+	Alignof( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -828,7 +839,7 @@ public:
 class Alignas: public Uniary
 {
 public:
-	Alignas( Expr * o ):Uniary(o) {}
+	Alignas( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -838,7 +849,7 @@ public:
 class New: public Uniary
 {
 public:
-	New( Expr * o ):Uniary(o) {}
+	New( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -848,7 +859,7 @@ public:
 class Inc: public Uniary
 {
 public:
-	Inc( Expr * o ):Uniary(o) {}
+	Inc( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -858,7 +869,7 @@ public:
 class Factorial: public Uniary
 {
 public:
-	Factorial( Expr * o ):Uniary(o) {}
+	Factorial( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -868,7 +879,7 @@ public:
 class Delete: public Uniary
 {
 public:
-	Delete( Expr * o ):Uniary(o) {}
+	Delete( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -878,7 +889,7 @@ public:
 class Dec: public Uniary
 {
 public:
-	Dec( Expr * o ):Uniary(o) {}
+	Dec( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -888,7 +899,7 @@ public:
 class PostInc: public Uniary
 {
 public:
-	PostInc( Expr * o ):Uniary(o) {}
+	PostInc( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -898,7 +909,7 @@ public:
 class PostDec: public Uniary
 {
 public:
-	PostDec( Expr * o ):Uniary(o) {}
+	PostDec( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -908,7 +919,7 @@ public:
 class Lnot: public Uniary
 {
 public:
-	Lnot( Expr * o ):Uniary(o) {}
+	Lnot( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -918,7 +929,7 @@ public:
 class Not: public Uniary
 {
 public:
-	Not( Expr * o ):Uniary(o) {}
+	Not( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -928,7 +939,7 @@ public:
 class Minus: public Uniary
 {
 public:
-	Minus( Expr * o ):Uniary(o) {}
+	Minus( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -938,7 +949,7 @@ public:
 class Throw: public Uniary
 {
 public:
-	Throw( Expr * o ):Uniary(o) {}
+	Throw( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -947,8 +958,8 @@ public:
 class Distinct: public Expr
 {
 public:
-	Distinct( Expr * e = nullptr ):expr_(e) {}
-	Distinct( std::vector<up<Expr>> * el ): exprList_(el) {}
+	Distinct( unsigned short l, unsigned short c, Expr * e = nullptr ):Expr(l,c), expr_(e) {}
+	Distinct( unsigned short l, unsigned short c, std::vector<up<Expr>> * el ): Expr(l,c), exprList_(el) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -961,8 +972,8 @@ private:
 class OrderBy: public Expr
 {
 public:
-	OrderBy( Expr * e = nullptr ): expr_(e) {}
-	OrderBy( std::vector<up<Expr>> * el ):exprList_(el) {}
+	OrderBy( unsigned short l, unsigned short c, Expr * e = nullptr ): Expr(l,c), expr_(e) {}
+	OrderBy( unsigned short l, unsigned short c, std::vector<up<Expr>> * el ):Expr(l,c), exprList_(el) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -976,7 +987,7 @@ private:
 class Conditional: public Trinary
 {
 public:
-	Conditional( Expr * c, Expr * e1, Expr * e2 ):Trinary(c,e1,e2) {}
+	Conditional( unsigned short l, unsigned short c, Expr * cn, Expr * e1, Expr * e2 ):Trinary(l,c,cn,e1,e2) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -985,7 +996,7 @@ public:
 class Join: public Trinary
 {
 public:
-	Join( Expr * l, Expr * r, Expr * c ):Trinary( l,r,c) {}
+	Join( unsigned short l, unsigned short c, Expr * lf, Expr * r, Expr * cn ):Trinary( l,c,lf,r,cn) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -994,7 +1005,7 @@ public:
 class LeftJoin: public Trinary
 {
 public:
-	LeftJoin( Expr * l, Expr * r, Expr * c ):Trinary( l,r,c) {}
+	LeftJoin( unsigned short l, unsigned short c, Expr * lf, Expr * r, Expr * cn ):Trinary( l,c,lf,r,cn) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -1003,7 +1014,7 @@ public:
 class RightJoin: public Trinary
 {
 public:
-	RightJoin( Expr * l, Expr * r, Expr * c ):Trinary( l,r,c) {}
+	RightJoin( unsigned short l, unsigned short c, Expr * lf, Expr * r, Expr * cn ):Trinary( l,c,lf,r,cn) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -1012,7 +1023,7 @@ public:
 class OuterJoin: public Trinary
 {
 public:
-	OuterJoin( Expr * l, Expr * r, Expr * c ):Trinary( l,r,c) {}
+	OuterJoin( unsigned short l, unsigned short c, Expr * lf, Expr * r, Expr * cn ):Trinary( l,c,lf,r,cn) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -1021,20 +1032,22 @@ public:
 class Top
 {
 public:
-	Top( Expr * e, bool percent = false, bool ties = false ):
-		expr_(e), percent_(percent), ties_(ties)
+	Top( unsigned short l, unsigned short c, Expr * e, bool percent = false, bool ties = false ):
+		line_(l), column_(c), expr_(e), percent_(percent), ties_(ties)
 	{}
 
 private:
 	up<Expr> expr_;
 	bool	percent_;
 	bool	ties_;
+	unsigned short line_;
+	unsigned short column_;
 };
 
 class Column
 {
 public:
-	Column( Expr * e = nullptr, const char * n = nullptr )
+	Column( unsigned short l, unsigned short c, Expr * e = nullptr, const char * n = nullptr ):line_(l), column_(c)
 	{
 		if(e)
 			expr_.reset(e);
@@ -1045,12 +1058,14 @@ public:
 private:
 	up<Expr> expr_;
 	std::string name_;
+	unsigned short line_;
+	unsigned short column_;
 };
 
 class GroupBy
 {
 public:
-	GroupBy( Expr * e ):expr_(e) {}
+	GroupBy( unsigned short l, unsigned short c, Expr * e ):expr_(e) {}
 
 private:
 	up<Expr> expr_;
@@ -1059,7 +1074,7 @@ private:
 class Having
 {
 public:
-	Having( Expr * e ):expr_(e) {}
+	Having( unsigned short l, unsigned short c, Expr * e ):expr_(e) {}
 
 private:
 	up<Expr> expr_;
@@ -1068,7 +1083,7 @@ private:
 class Select: public Expr
 {
 public:
-	Select( 
+	Select( unsigned short l, unsigned short c, 
 		int dist, 
 		Top * top, 
 		std::vector<up<Column>> * cols, 
@@ -1094,7 +1109,7 @@ private:
 class As : public Expr
 {
 public:
-	As( Expr * e, const char * n ):expr_(e), name_(n) {}
+	As( unsigned short l, unsigned short c, Expr * e, const char * n ):Expr(l,c), expr_(e), name_(n) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -1107,7 +1122,7 @@ private:
 class ListLit : public Expr
 {
 public:
-	ListLit ( std::vector<up<Expr>> * vals ) : vals_(vals) {}
+	ListLit ( unsigned short l, unsigned short c, std::vector<up<Expr>> * vals ) : Expr(l,c), vals_(vals) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -1120,7 +1135,7 @@ private:
 class Lambda : public Expr
 {
 public:
-	Lambda( Expr * ) {}
+	Lambda( unsigned short l, unsigned short c, Expr * ):Expr(l,c) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;

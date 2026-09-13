@@ -447,10 +447,6 @@ exp
 	| exp CRS_PROD exp
 	| exp M_DIV exp
 	| exp M_EXP exp
-    | exp JOIN exp
-    | exp LEFT JOIN exp
-    | exp RIGHT JOIN exp
-    | exp OUTER JOIN exp
 	| exp IN exp
 	| exp SCOPE exp
 

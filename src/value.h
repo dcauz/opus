@@ -15,7 +15,6 @@ public:
     virtual sp<Type> semCheck( SemCheckContext & scc ) const = 0;
 };
 
-
 class FunctionType;
 
 class FunctionRef: public Value

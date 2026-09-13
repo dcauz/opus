@@ -4,6 +4,8 @@
 
 
 Select::Select( 
+            unsigned short l,
+            unsigned short c,
                        int dis, 
                      Top * top, 
  std::vector<up<Column>> * cols, 
@@ -11,6 +13,7 @@ std::vector<std::string> * tbls,
                    Where * w, 
                  GroupBy * gb, 
                   Having * h ):
+	Expr(l,c),
 	distinct_(dis), 
 	top_(top), 
 	cols_(cols), 

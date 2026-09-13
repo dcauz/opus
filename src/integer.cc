@@ -149,6 +149,20 @@ sp<Type> Int64::semCheck( SemCheckContext & ) const
 
 ///////////////////////////////////////////////////////////////////
 
+bool Int128::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+sp<Type> Int128::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+///////////////////////////////////////////////////////////////////
+
 bool Uint8::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
@@ -198,6 +212,20 @@ bool Uint64::genCode( GenCodeContext & ) const
 }
 
 sp<Type> Uint64::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+///////////////////////////////////////////////////////////////////
+
+bool Uint128::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+sp<Type> Uint128::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;

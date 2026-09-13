@@ -89,6 +89,7 @@ PENTER
 		switch(state)
 		{
 		case start:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isType() )
 			{
 				type = std::move(token);
@@ -104,11 +105,13 @@ PENTER
 			break;
 
 		case modSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// modifer or type
 			TODO
 			break;
 
 		case typeSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isId())
 			{
 				name = std::move(token);
@@ -131,11 +134,13 @@ PENTER
 			break;
 
 		case ptrSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// lbracket ref id
 			TODO
 			break;
 
 		case arrayOpenSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.id() == ID::RBRACK )
 				state = arrayCloseSeen;
 			else
@@ -146,6 +151,7 @@ PENTER
 			break;
 
 		case arrayCloseSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isId() )
 				state = idSeen;
 			else if( token.id() == ID::QUEST )
@@ -163,6 +169,7 @@ PENTER
 			break;
 
 		case arrayPtrSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isId() )
 				state = idSeen;
 			else if( token.id() == ID::QUEST )
@@ -175,6 +182,7 @@ PENTER
 			break;
 
 		case refSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isId() )
 				state = idSeen;
 			else
@@ -182,6 +190,7 @@ PENTER
 			break;
 
 		case idSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.id() == ID::LPAREN )
 				state = lParenSeen;
 			else if( token.id() == ID::ASSIGN )
@@ -196,6 +205,7 @@ PENTER
 
 		case assSeen:
 		{
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
  			Expr * expr;
 			if( !parseExpr( & expr, token ) || token.id() != ID::SCOLON )
 			{
@@ -204,11 +214,13 @@ PENTER
 			return true;
 		}
         case exprSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
  			// ;
 			TODO
 			break;
 
 		case lParenSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isType() )
 			{
 				pType = std::move(token);
@@ -224,6 +236,7 @@ PENTER
 			break;
 
 		case pModSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isType() )
 			{
 				pType = std::move(token);
@@ -239,6 +252,7 @@ PENTER
 			break;
 
 		case pTypeSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
  			// ptr lbracket id ref
 			if( token.isId() )
 			{
@@ -259,11 +273,13 @@ PENTER
 			break;
 
 		case pPtrSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// lbracket ref id , ) ...
 			TODO
 			break;
 
 		case pArrayOpenSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.id() == ID::RBRACK )
 			{
 				state = pArrayCloseSeen;
@@ -276,6 +292,7 @@ PENTER
 			break;
 
 		case pArrayCloseSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( token.isId() )
 				state = pIdSeen;
 			else if( token.id() == ID::BAND )
@@ -293,16 +310,19 @@ PENTER
 			break;
 
 		case pArrayPtrSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// ref id , ) ...
 			TODO
 			break;
 
 		case pRefSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// id , ) ...
 			TODO
 			break;
 
 		case pIdSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// todo: process param
 			if( token.id() == ID::COMMA )
 				state = lParenSeen;
@@ -315,21 +335,25 @@ PENTER
 			break;
 
 		case pAssSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// expr
 			TODO
 			break;
 
         case pExprSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// id , ) ...
 			TODO
 			break;
 
 		case dotDotDotSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// )
 			TODO
 			break;
 
 		case rParenSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			// func-modifier {
 			if( token.id() == ID::LBRACE )
 			{

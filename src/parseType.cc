@@ -44,8 +44,9 @@ dimList
 
 builtInType
 	: BOOL
-	| FLOAT32
-	| FLOAT64
+	| F32
+	| F64
+	| F80
 	| INT8
 	| INT8C
 	| INT16
@@ -124,9 +125,9 @@ PENTER
 	case ID::DATE:
 	case ID::DATETIME:
 
-	case ID::FLOAT32:
-	case ID::FLOAT64:
-	case ID::FLOAT80:
+	case ID::F32:
+	case ID::F64:
+	case ID::F80:
 
 	case ID::I0: case ID::I1: case ID::I2: case ID::I3: case ID::I4: 
 	case ID::I5: case ID::I6: case ID::I7: case ID::I8: case ID::I9:

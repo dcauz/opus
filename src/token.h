@@ -17,97 +17,103 @@ enum class ID : unsigned int
 	///////////////////////////////////////
 	// Operators and punctuators
 	///////////////////////////////////////
-	NOT   =33,	// !
-	WEAK  =35,	// #
-	MOD   =37,	// %
-	BAND  =38,	// &
-	QUOT  =39,	// '
-	LPAREN=40,	// (
-	RPAREN=41,	// )
-	MUL   =42,	// *
-	ADD   =43,	// +
-	COMMA =44,	// ,
-	SUB   =45,	// -
-	DOT   =46,	// .
-	DIV   =47,	// /
-	COLON =58,	// :
-	SCOLON=59,	// ;
+	ADD_ASS,	 // +=
+	BAND_ASS,	 // &=
+	CP_ASS,		 // [*]=
+	CRS_PROD,	 // [*]
+	DEC,		 // --
+	DIV_ASS,	 // /=
+	DOT_ASK,	 // .*
+	DOT_DOT,	 // ..
+	DOT_DOT_DOT, // ...
+
+	// 10
+	DOT_PROD,	 // [.]
+	DP_ASS,		 // [.]=
+	AND,		 // &&
+	EQ,  		 // ==
+	EXP,		 // **
+	EXP_ASS,	 // **=
+	FACTORIAL,   // .!
+	GE,			 // >=
+	INC,		 // ++
+	LE,			 // <=
+
+	// 20
+	M_DIV,		 // [/]
+	MD_ASS,		 // [/]=
+	MOD_ASS,	 // %=
+	MUL_ASS,	 // *=
+	M_EXP,		 // [**]
+	ME_ASS,		 // [**]=
+	MPTR,		 // ->*
+	NE,			 // !=
+	OR,			 // ||
+	BOR_ASS,	 // |=
+
+	// 30
+	PARAM_ASS,	 // :=
+	POST_DEC,	 // .--
+	POST_INC,	 // .++
+	NOT   =33,	 // !
+	PTR,		 // ->
+	WEAK  =35,	 // #		weak pointer (not an operator)
+	QUAL,		 // ::
+	MOD   =37,	 // %
+	BAND  =38,	 // &
+    DEREF,      // * .
+
+	// 40
+	LPAREN=40,	 // (
+	RPAREN=41,	 // )
+	MUL   =42,	 // *
+	ADD   =43,	 // +
+	COMMA =44,	 // ,
+	SUB   =45,	 // -
+	DOT   =46,	 // .
+	DIV   =47,	 // /
+	SLFT,		 // <<
+	SLFT_ASS,	 // <<=
+
+	// 50
+	SRGHT,		 // >>
+	SRGHT_ASS,	 // >>=
+	SS,			 // <=>
+	SUB_ASS,	 // -=
+	TIL_ASS,	 // ~=
+	UNIARY_MINUS,// -.
+	UNIARY_PLUS, // +.
+	XOR_ASS,	 // ^^=
+	COLON =58, 	 // :
+	SCOLON=59,	 // ;
+
+	// 60
 	LT    =60,	// <
-	ASSIGN =61,	// =
+	ASSIGN=61,	// =
 	GT    =62,	// >
 	QUEST =63,	// ?
+	IN,         // <-
+	OR_ASS,	    // ||=
+	AND_ASS,    // &&=
+	INSERT,     // insert
+	SELECT,     // select
+	UPDATE,     // update
+
+	// 70
+	S_DELETE,   // delete (SQL)
+	ABS,        // |.|
+
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
 	RBRACK=93,	// ]
-	XOR   =94,	// ^
+	BXOR   =94,	// ^
+	XOR,		// ^^
+	BXOR_ASS,	 // ^=
+
 	LBRACE=123,	// {
 	BOR   =124,	// |
 	RBRACE=125,	// }
 	BNOT  =126,	// ~
-
-	BASE_ID = 127,	// force the value of the other ids above 127
-
-	ADD_ASS,	// +=
-
-	AND,		// &&
-	AND_ASS,	// &=
-				//
-	CP_ASS,		// [*]=
-	CRS_PROD,	// [*]
-
-	DEC,		// --
-	DIV_ASS,	// /=
-	DOT_ASK,	// .*
-	DOT_DOT,	// ..
-	DOT_DOT_DOT,// ...
-	DOT_PROD,	// [.]
-	DP_ASS,		// [.]=
-
-	EQ,  		// ==
-	EXP,		// **
-	EXP_ASS,	// **=
-				//
-	FACTORIAL,  // .!
-
-	GE,			// >=
-
-	INC,		// ++
-
-	LE,			// <=
-
-	M_DIV,		// [/]
-	MD_ASS,		// [/]=
-	MOD_ASS,	// %=
-	MUL_ASS,	// *=
-	M_EXP,		// [**]
-	ME_ASS,		// [**]=
-	MPTR,		// ->*
-
-	NE,			// !=
-
-	OR,			// ||
-	OR_ASS,		// |=
-
-	PARAM_ASS,	// :=
-	POST_DEC,	// .--
-	POST_INC,	// .++
-	PTR,		// ->
-
-	QUAL,		// ::
-
-	SLFT,		// <<
-	SLFT_ASS,	// <<=
-	SRGHT,		// >>
-	SRGHT_ASS,	// >>=
-	SS,			// <=>
-	SUB_ASS,	// -=
-
-	TIL_ASS,	// ~=
-
-	UNIARY_MINUS,// -.
-	UNIARY_PLUS, // +.
-
-	XOR_ASS,	// ^=
 
 	///////////////////////////////////////
 	// Built in type names
@@ -115,26 +121,17 @@ enum class ID : unsigned int
 	BUILT_IN_TYPES_FIRST,
 
 	AUTO,
-
 	BOOL,
-
 	C, 
 	CHAR,
-
 	DATE, 
 	DATETIME, 
 	DLIST, 
 	DQUEUE, 
 	DURATION,
-
-	FLOAT32, 
-	FLOAT64, 
-	FLOAT80, 
-
+	F32, F64, F80, 
 	GRAPH,         
-
 	HEAP,
-
 	I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, 
 	I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, 
 	I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, 
@@ -144,38 +141,30 @@ enum class ID : unsigned int
 	LIST,
 	LSTRING,
 	LTSTRING,
-
-	MAP,
-	MMAP,
+	MAP, MMAP,
 	MSET,
 	MUTEX,
-
 	N,
 	N0, N1, N2, N3, N4, N5, N6, N7, N8, N9, 
 	N10, N11, N12, N13, N14, N15, N16, N17, N18, N19, 
 	N20, N21, N22, N23, N24, N25, N26, N27, N28, N29, 
 	N30, N31, N32, 
 	N64, N128,
-
 	OBJECT,
-
 	Q,
 	QUEUE,
-
 	R,
 	REGEXP,
-
 	SEMAPHORE,
 	STACK,
 	STRING,
+	SET,
 
 	U0, U1, U2, U3, U4, U5, U6, U7, U8, U9, 
 	U10, U11, U12, U13, U14, U15, U16, U17, U18, U19, 
 	U20, U21, U22, U23, U24, U25, U26, U27, U28, U29, 
 	U30, U31, U32, 
 	U64, U128,
-
-	SET,
 
 	VOID,
 
@@ -189,63 +178,30 @@ enum class ID : unsigned int
 	BUILT_IN_TYPES_LAST,
 
 	///////////////////////////////////////
-	// Type modifiers
-	///////////////////////////////////////
-
-	FIRST_TYPE_MODIFIER,
-
-	ATOMIC       = 1 << 9,
-	FINAL        = 1 << 10,
-	INLINE       = 1 << 11,
-	MUTABLE      = 1 << 12,
-	PRIVATE      = 1 << 13,
-	PUBLIC       = 1 << 14,
-	PURE         = 1 << 15,
-	THREAD_LOCAL = 1 << 16,
-
-	LAST_TYPE_MODIFIER,
-
-	///////////////////////////////////////
 	// SQL expression keywords
 	///////////////////////////////////////
 
 	AS,			// as
 	ASC,		// asc
-
 	BY,			// by
-
 	CLOSURE,
-
 	DISTINCT,	// distinct
 	DSC,  		// dsc
-
 	FOREIGN,	// foreign
 	FROM,		// from
-
 	GROUP,		// group
-
 	HAVING,		// having
-
 	INTO,		// into
-
 	JOIN,		// join
-
 	LEFT,		// left
-
 	ORDER,		// order
 	OUTER,		// outer
-
 	PERCENT,	// percent
-
 	RIGHT,		// right
-
 	TIES,		// ties
 	TOP,		// top
-
 	UNIQUE,		// unique
-
 	VALUES,		// values
-
 	WHERE,		// where
 	WITH,		// with
 
@@ -299,39 +255,44 @@ enum class ID : unsigned int
 	_PI,		// .pi
 	TRUE,		
 	THIS,
+
 	CHAR_LIT,		// 'x'
+					//
 	DATETIME_LIT,	// d"YYYY-MM-DD:HH:MM:SS[:sssssssss]"
-	DATE_LIT,		// d"YYYY-MM-DD"
-	DAYS_LIT,       // 111d
-	FLOAT32_LIT,
-	FLOAT64_LIT,
-	FLOAT80_LIT,
-	HOURS_LIT,      // 111h
-	INT8_LIT,       // 1111
-	INT16_LIT,      // 1111
-	INT32_LIT,      // 1111
-	INT64_LIT,      // 1111
-	INT128_LIT,     // 1111
-	INTEGER_LIT,    // 765 432 109 876 543 210
-	LSTRING_LIT,    // l"sss"
-	LSSTRING_LIT,   // short lengthed string literal
-	LTSTRING_LIT,  // t"aaa"
-	LTSSTRING_LIT,   // short lengthed and terminated string literal
-	MINS_LIT,       // 111m
-	NAT_LIT,        // 1212u
-	Q_LIT,          // 111q
-	REAL_LIT,       // 123r
-	REGEXP_LIT,     // re"s*"
-	SECS_LIT,       // 111.123s
-	STRING_LIT,     // "ssss"
-	SSTRING_LIT,	// short string literal
 	TIME_LIT,       // t"HH:MM:SS:sssssssss"
-	UINT8_LIT,      // 111u
-	UINT16_LIT,     // 111u
-	UINT32_LIT,     // 111u
-	UINT64_LIT,     // 111u
-	UINT128_LIT,    // 1111
+	DATE_LIT,		// d"YYYY-MM-DD"
     YEARS_LIT,      // 111y
+	DAYS_LIT,       // 111d
+	HOURS_LIT,      // 111h
+	MINS_LIT,       // 111m
+	SECS_LIT,       // 111.123s
+
+	F32_LIT,
+	F64_LIT,
+	F80_LIT,
+
+	I32_LIT,        // 1111i32 or i
+	I64_LIT,        // 1111i64
+	I128_LIT,       // 1111i128
+
+	U32_LIT,        // 111u32 or u		or 01234567				octal
+	U64_LIT,        // 111u64
+	U128_LIT,       // 1111u128
+
+	N_LIT,          // 1212N
+	Z_LIT,          // 765 432 109 876 543 210Z
+	Q_LIT,          // 111Q
+	R_LIT,          // 123R
+	C_LIT,			// 1C
+
+	LSTRING_LIT,    // l"sss"
+	LTSTRING_LIT,   // t"aaa"
+	LSSTRING_LIT,   // l"sss"
+	LTSSTRING_LIT,  // t"aaa"
+	STRING_LIT,     // "ssss"
+	SSTRING_LIT,    // "ssss"
+
+	REGEXP_LIT,     // re"s*"
 
 	///////////////////////////////////////
 	// Type constructors
@@ -375,7 +336,6 @@ enum class ID : unsigned int
 	TRY,
 	WHILE,
 
-	APPLY,
 	ASYNC,
 
 	///////////////////////////////////////
@@ -386,16 +346,10 @@ enum class ID : unsigned int
 	ALIGNOF,
 	DELETE,
 	EVAL,
-	FILTER,
-	IN, 
 	IS_VOID,
-	INSERT,
 	NEW,
-	REDUCE,
-	SELECT,
 	SIZEOF,
 	TYPEID,
-	UPDATE,
 
 	TIME,
 	TYPE,
@@ -406,6 +360,24 @@ enum class ID : unsigned int
 	// error tokens
 	INVALID_NUMBER,
 	INVALID_STRING,
+	ERROR,
+
+	///////////////////////////////////////
+	// Type modifiers
+	///////////////////////////////////////
+
+	FIRST_TYPE_MODIFIER,
+
+	ATOMIC       = 1 << 9,
+	FINAL        = 1 << 10,
+	INLINE       = 1 << 11,
+	MUTABLE      = 1 << 12,
+	PRIVATE      = 1 << 13,
+	PUBLIC       = 1 << 14,
+	PURE         = 1 << 15,
+	THREAD_LOCAL = 1 << 16,
+
+	LAST_TYPE_MODIFIER,
 };
 
 struct Token
@@ -421,105 +393,77 @@ struct Token
 
 	void set( unsigned short l, unsigned short c, ID i )
 	{
-		line    = l;
-		column  = c;
+		line_   = l;
+		column_ = c;
 		id_     = i;
-	}
-	void set( unsigned short l, unsigned short c, int8_t i )
-	{
-		line    = l;
-		column  = c;
-		id_     = ID::INT8_LIT;
-		i8_		= i;
-	}
-	void set( unsigned short l, unsigned short c, uint8_t u )
-	{
-		line    = l;
-		column  = c;
-		id_     = ID::UINT8_LIT;
-		u8_		= u;
-	}
-	void set( unsigned short l, unsigned short c, int16_t i )
-	{
-		line    = l;
-		column  = c;
-		id_     = ID::INT16_LIT;
-		i16_	= i;
-	}
-	void set( unsigned short l, unsigned short c, uint16_t u )
-	{
-		line    = l;
-		column  = c;
-		id_     = ID::UINT16_LIT;
-		u16_	= u;
 	}
 	void set( unsigned short l, unsigned short c, int32_t i )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::INT32_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::I32_LIT;
 		i32_	= i;
 	}
 	void set( unsigned short l, unsigned short c, uint32_t u )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::UINT32_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::U32_LIT;
 		u32_	= u;
 	}
 	void set( unsigned short l, unsigned short c, int64_t i )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::INT64_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::I64_LIT;
 		i64_	= i;
 	}
 	void set( unsigned short l, unsigned short c, uint64_t u )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::UINT64_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::U64_LIT;
 		u64_	= u;
 	}
 	void set( unsigned short l, unsigned short c, __int128_t i )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::INT128_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::I128_LIT;
 		i128_	= i;
 	}
 	void set( unsigned short l, unsigned short c, __uint128_t u )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::UINT128_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::U128_LIT;
 		u128_	= u;
 	}
 	void set( unsigned short l, unsigned short c, float f )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::FLOAT32_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::F32_LIT;
 		f32_	= f;
 	}
 	void set( unsigned short l, unsigned short c, double d )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::FLOAT64_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::F64_LIT;
 		f64_	= d;
 	}
-	void set( unsigned short l, unsigned short c, long double ld )
+	void set( unsigned short l, unsigned short c, __float80 ld )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::FLOAT80_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::F80_LIT;
 		f80_	= ld;
 	}
 	void set( unsigned short l, unsigned short c, ID id, const std::string & lex)
 	{
-		line    = l;
-		column  = c;
+		line_   = l;
+		column_ = c;
 		id_     = id;
 		if( lex.size() < 16 )
 			strcpy( shortLex_, lex.c_str());
@@ -528,30 +472,30 @@ struct Token
 	}
 	void set( unsigned short l, unsigned short c, const Date & d )
 	{
-		line    = l;
-		column  = c;
+		line_   = l;
+		column_ = c;
 		id_     = ID::DATE_LIT;
 		u32_    = d.toUint32();
 	}
 	void set( unsigned short l, unsigned short c, const Datetime & dt )
 	{
-		line    = l;
-		column  = c;
+		line_   = l;
+		column_ = c;
 		id_     = ID::DATETIME_LIT;
 		u128_   = dt.toUint128();
 	}
 	void set( unsigned short l, unsigned short c, const Time & t )
 	{
-		line    = l;
-		column  = c;
+		line_   = l;
+		column_ = c;
 		id_     = ID::TIME_LIT;
 		u64_	= t.toUint64();
 	}
 	void set( unsigned short l, unsigned short c, Integer * i )
 	{
-		line    = l;
-		column  = c;
-		id_     = ID::INTEGER_LIT;
+		line_   = l;
+		column_ = c;
+		id_     = ID::Z_LIT;
 		integer_= i;
 	}
 
@@ -563,12 +507,14 @@ struct Token
 	bool isType() const         { return isBasicType() || isDefinedType(); }
 	bool isModifier() const		{ return id_ > ID::FIRST_TYPE_MODIFIER && id_ < ID::LAST_TYPE_MODIFIER; }
 	bool isPointer() const		{ return id_ == ID::MUL || id_ == ID::XOR || id_ == ID::WEAK; }
+	bool isLongString() const   { return id_ == ID::STRING_LIT || id_ == ID::LSTRING_LIT || id_ == ID::LTSTRING_LIT; }
 
 	ID	id() const				{ return id_; }
 	bool isId() const			{ return id_ == ID::ID || id_ == ID::SID; }
 
 	const char * idLexium() const	{ return id_ == ID::ID ? lexium_->c_str() : shortLex_; }
-	const char * str() const	{ return id_ == ID::STRING_LIT ? lexium_->c_str() : shortLex_; }
+	const char * str() const		{ return isLongString() ? lexium_->c_str() : shortLex_; }
+	size_t str_size() const		    { return isLongString() ? lexium_->size() : strlen(shortLex_); }
 
 	int8_t   	i8() const	{ return i8_; }
 	uint8_t  	u8() const	{ return u8_; }
@@ -593,9 +539,12 @@ struct Token
 
 	void	clear() { id_ = ID::NIL; }
 
+	unsigned short line() const   { return line_; }
+	unsigned short column() const { return column_; }
+
 private:
-	unsigned short line;
-	unsigned short column;
+	unsigned short line_;
+	unsigned short column_;
 
 	ID id_;
 

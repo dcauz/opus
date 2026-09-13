@@ -70,44 +70,50 @@ i32 main( i32 argc, final string [] argv )
 	z32	zi32 = 12345678;
 	z64	zi64 = 123456789012345678;
 
-	u0 	ui0  = 0u;
-	u1 	ui1  = 1u;
-	u2 	ui2  = 2u;
-	u3 	ui3  = 3u;
-	u4 	ui4  = 12u;
-	u5 	ui5  = 23u;
-	u6 	ui6  = 53u;
-	u7 	ui7  = 123u;
-	u8 	ui8  = 123u;
-	u9 	ui9  = 123u;
-	u10	ui10 = 1234u;
-	u11	ui11 = 1234u;
-	u12	ui12 = 1234u;
-	u13	ui13 = 1234u;
-	u14	ui14 = 1234u;
-	u15	ui15 = 1234u;
-	u16	ui16 = 1234u;
-	u17	ui17 = 1234u;
-	u18	ui18 = 1234u;
-	u19	ui19 = 1234u;
-	u20	ui20 = 1234u;
-	u21	ui21 = 1234u;
-	u22	ui22 = 1234u;
-	u23	ui23 = 1234u;
-	u24	ui24 = 1234u;
-	u25	ui25 = 1234u;
-	u26	ui26 = 1234u;
-	u27	ui27 = 1234u;
-	u28	ui28 = 1234u;
-	u29	ui29 = 1234u;
-	u30	ui30 = 12345678u;
-	u31	ui31 = 12345678u;
-	u32	ui32 = 12345678u;
-	u64	ui64 = 123456789012345678u;
+	u0 	ui0  = 0;
+	u1 	ui1  = 1;
+	u2 	ui2  = 2;
+	u3 	ui3  = 3;
+	u4 	ui4  = 12;
+	u5 	ui5  = 23;
+	u6 	ui6  = 53;
+	u7 	ui7  = 123;
+	u8 	ui8  = 123;
+	u9 	ui9  = 123;
+	u10	ui10 = 1234;
+	u11	ui11 = 1234;
+	u12	ui12 = 1234;
+	u13	ui13 = 1234;
+	u14	ui14 = 1234;
+	u15	ui15 = 1234;
+	u16	ui16 = 1234;
+	u17	ui17 = 1234;
+	u18	ui18 = 1234;
+	u19	ui19 = 1234;
+	u20	ui20 = 1234;
+	u21	ui21 = 1234;
+	u22	ui22 = 1234;
+	u23	ui23 = 1234;
+	u24	ui24 = 1234;
+	u25	ui25 = 1234;
+	u26	ui26 = 1234;
+	u27	ui27 = 1234;
+	u28	ui28 = 1234;
+	u29	ui29 = 1234;
+	u30	ui30 = 12345678;
+	u31	ui31 = 12345678;
+	u32	ui32 = 12345678;
+	u64	ui64 = 123456789012345678;
 
-	n0 	na0 = 0u;
+	u64 x = 0xabcdef1234567890;
+	u64 X = 0Xabcdef1234567890;
+	u64 b = 0b0101010101010101;
+	u64 B = 0B0101010101010101;
+	u64 o = 0x12345670;
+
+	n0 	na0 = 0;
 	n1 	na1 = 1;
-	n2 	na2 = 2u;
+	n2 	na2 = 2;
 	n3 	na3 = 3;
 	n4 	na4 = 7;
 	n5 	na5 = 12;
@@ -140,29 +146,50 @@ i32 main( i32 argc, final string [] argv )
 	n32	na32 = 12345678;
 	n64	na64 = 123456789012345678;
 
-	float32	f = 1.1e10f;
-	float64	d = 1.1E10;
-	float80	ld= 1.1E10;
+	f32	f = 1.1f10;
+	f64	d = 1.1e10;
+	f80	ld= 1.1E10;
 	
-	R nan = .nan;
-	R inf = .inf;
+	R nan = _nan;
+	R inf = _inf;
 
 	N	n = 123456789012345678901234567890;
 	Z	z = -123456789012345678901234567890;
-	R	r = .phi + .gamma + .pi + .e + 111r;
-	Q   q = 1 / 2;
-	C   c = 1 + .i;
-
-    auto a = 1q / 2;
+	Q   q = 1;
+	R	phi = _phi;
+	R	gamma =  _gamma;
+	R	pi =  _pi;
+	R	e =  _e;
+	C   c = _i;
 
 	string	 s =  "abc\n";
 	lstring	 ls = l"abc\n";
 	ltstring ts = lt"abc\n";
-	char     c  = 'a';
+	char     ch  = 'a';
 
-	bool b = true & false;
+	bool tr = true;
+	bool fa = false;
 
 	object obj = "aas";
+
+	date     d  = d"2026-08-05";
+	datetime dt = d"2026-08-05:10:10:10.123456789";
+	time     t1 = t"10:10:10";
+	time     t2 = t"10:10:10.000000001";
+
+	duration year  = 2Y;
+	duration month = 1M;
+	duration day   = 1D;
+
+	duration hour  = 1h;
+	duration min   = 1m;
+	duration sec   = 1s;
+	duration msec  = 0.001s;
+	duration usec  = 0.000001s;
+	duration nsec  = 0.000000001s;
+
+	regexp   re    = re"ab.*";
+
 
 	int32 [] vec = [ 1,2,3,4,5,6,7,8,9 ];
 
@@ -173,18 +200,6 @@ i32 main( i32 argc, final string [] argv )
 	}
 	E e = E.A;
 
-	date     d  = d"2026-08-05";
-	datetime dt = d"2026-08-05:10:10:10:211234";
-	time     t  = t"10:10:10";
-	duration year  = 2y;
-	duration month = 1m;
-	duration day   = 1d;
-	duration hour  = 1H;
-	duration min   = 1M;
-	duration sec   = 1S;
-
-	regexp   re    = re"ab.*";
-
 	set<Z>	ints = { 1,2,3 };
 	mset<Z>	mints = { 1,1,2,3 };
 
@@ -194,9 +209,9 @@ i32 main( i32 argc, final string [] argv )
 	relation R
 	{
 		i32 k primary key;
-		string v;
+		string? v;
 	}
-	R rel = { { 1:"s" } };
+	R rel = { { k:1, v:"s" }, { k:2 } };
 	
 	class Cl
 	{

@@ -48,7 +48,8 @@ extern StringType	stringType;
 class LString : public Value
 {
 public:
-	LString( const char * cp ): value_(cp) {}
+	LString( const char * cp );
+	virtual ~LString() { delete value_; }
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	sp<Type> semCheck( SemCheckContext & scc ) const override;
@@ -71,7 +72,8 @@ public:
 	}
 
 private:
-	std::string value_;
+	unsigned short len_;
+	char * value_;
 };
 
 class LStringType: public Type
@@ -89,7 +91,8 @@ extern LStringType	lstringType;
 class LTString : public Value
 {
 public:
-	LTString( const char * cp ): value_(cp) {}
+	LTString( const char * cp );
+	~LTString() = default;
 
 	bool genCode( GenCodeContext & gcc ) const override;
 	sp<Type> semCheck( SemCheckContext & scc ) const override;
@@ -112,6 +115,7 @@ public:
 	}
 
 private:
+	unsigned short len_;
 	std::string value_;
 };
 

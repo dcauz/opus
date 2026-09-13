@@ -10,8 +10,8 @@
 
 struct Ptrace
 {
-Ptrace( const char * f ):f_(f)	{ printf( "ENTER:[ %s\n", f_ ); }
-~Ptrace( )						{ printf( "EXIT:] %s\n", f_ ); }
+Ptrace( const char * f ):f_(f)	{ printf( "ENTER:[ %s\n", f_ ); fflush(stdout); }
+~Ptrace( )						{ printf( "EXIT:] %s\n", f_ ); fflush(stdout); }
 
 const char * f_;
 };
@@ -22,6 +22,8 @@ class Parser
 {
 public:
 	Parser( const char * file ):
+		lineNo(0),
+		columnNo(0),
 		typeSeen(false),
 		inSelect(false),
 		currSymTbl(&globalSymTbl_),
@@ -125,4 +127,6 @@ private:
 	bool parseUsing( Using **, UsingNamespace ** );
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );
+
+	bool evalStacks( Expr ** );
 };

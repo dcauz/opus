@@ -108,6 +108,28 @@ private:
 	unsigned long long	data_;
 };
 
+class Int128: public Value
+{
+public:
+	Int128( __int128_t l ): data_(l) {}
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+private:
+	__int128_t data_;
+};
+
+class Uint128: public Value
+{
+public:
+	Uint128( __uint128_t l ): data_(l) {}
+
+	bool genCode( GenCodeContext & gcc ) const override;
+	sp<Type> semCheck( SemCheckContext & scc ) const override;
+private:
+	__uint128_t data_;
+};
+
 class Integer : public Value
 {
 public:

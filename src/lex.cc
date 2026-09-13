@@ -168,7 +168,7 @@ DATE_LIT
 	'yyyy-mm-dd'd
 	0000-01-01	- 9999-12-31
 */
-bool isDate( Token & tok, Parser	* context )
+bool isDate( Token & tok, Parser * context )
 {
 	char * start = context->cp;
 	char * cp = start;
@@ -321,153 +321,147 @@ bool isTime( Token & tok, Parser * context )
 	return false;
 }
 
-/**********************************************
- *
- *	INT8_LIT		
- *		-128,127, Ni8
- *	INT16_LIT		
- *		-32,378, 32,377,	Ni16
- *	INT32_LIT		
- *		-2,147,483,648, 2,147,483,647, Ni32
- *	INT64_LIT		
- *		-9,223,372,036,854,775,808, 9,223,372,036,854,775,807,	Ni64
- *	UINT8_LIT		
- *		0u8, 256u8
- *	UINT16_LIT		
- *		0u16, 65,535u
- *	UINT32_LIT		
- *		0u32, 4,294,967,296u32
- *	UINT64_LIT		
- *		0u64, 18,446,744,073,709,551,616u64
- *	INTEGER_LIT
- */
-bool isInt( Parser * context, Token & tok )
+static bool isInteger( Parser * context, char c, Token & tok )
 {
-	// If the value will fit into uint16_t
-	//	if has suffix, attempt to fit value into type
-	//  else, assign to smallest int type
-	//  else, assign to uint64_t
-	// else
-	// 	integer
-	//
+	TODO
+	return false;
+}
+
+static bool isNumber( Parser * context, char c, Token & tok )
+{
 	char * start = context->cp;
 	char * cp = start;
 
-	uint64_t	v = 0;
-	while(*cp && isdigit(*cp))
+	__uint128_t	v = 0;
+
+	if( c == '0' )
 	{
-		int d = *cp - '0';
-		if( v > ( std::numeric_limits<uint64_t>::max() - d )/10)
+		if((*cp == 'x' ) || (*cp == 'X' )) 	// hexidecimal
 		{
-			// Too big. It is an integer
-			while(isdigit(*cp))
+			++cp;
+			while( isxdigit(*cp) )
+			{
+				int d;
+				if( isdigit(*cp))
+					d = *cp - '0';
+				else if( *cp >= 'a' )
+					d = *cp - 'a' + 10;
+				else
+					d = *cp - 'A' + 10;
+
+				if( v > ( std::numeric_limits<uint64_t>::max() - d )/16)
+					// Too big. It is an integer
+					return isInteger( context, c, tok );
+				else
+					v = 16*v + d;
 				++cp;
-			if( !isTokenChar(*cp))
-				tok.set( context->lineNo, context->columnNo, new Integer( start, cp ) );
-			else
-				return false;
+			}
 
-			// Update cp past end of token
-			context->cp = cp;
+			goto isInt;
+		}
+		else if((*cp == 'b' ) || (*cp == 'B' )) // binary
+		{
+			++cp;
+			__uint128_t v = 0;
+			__uint128_t d = 1;
+			while( *cp == '0' || *cp == '1' )
+			{
+				d = *cp - '0';
+				if( *cp == 1 && ( v > ( std::numeric_limits<uint64_t>::max() - d )/2))
+					// Too big. It is an integer
+					return isInteger( context, c, tok );
+				else
+					v = v*2 + d;
+				++cp;
+			}
 
-			return !isTokenChar(*cp);
+			goto isInt;
 		}
-		v = v*10 + d;
-		++cp;
-	}
-	
-	if( *cp == 'i' || *cp == 'u' )
-	{
-		bool isSigned = (*cp == 'i');
+		else // octal
+		{
+			__uint128_t v = 0;
+			__uint128_t d = 1;
+			while(*cp >= '0' && *cp <= '7')
+			{
+				d = *cp - '0';
+				if( *cp != 0 && ( v > ( std::numeric_limits<uint64_t>::max() - d )/8))
+					// Too big. It is an integer
+					return isInteger( context, c, tok );
+				else
+					v = 8*v + d;
+				++cp;
+			}
 
-		++cp;
-
-		if( *cp == '8' && !isTokenChar(cp[1]) )
-		{
-			cp += 2;
-			if(isSigned)
-			{
-				if( v <= std::numeric_limits<int8_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<int8_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-			else
-			{
-				if( v <= std::numeric_limits<uint8_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<uint8_t>(v));
-				else
-					tok.set(context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-		}
-		else if( *cp == '1' && cp[1] == '6' && !isTokenChar(cp[2]))
-		{
-			cp += 2;
-			if(isSigned)
-			{
-				if( v <= std::numeric_limits<int16_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<int16_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-			else
-			{
-				if( v <= std::numeric_limits<uint16_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<uint16_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-		}
-		else if( *cp == '3' && cp[1] == '2' && !isTokenChar(cp[2]))
-		{
-			cp += 2;
-			if(isSigned)
-			{
-				if( v <= std::numeric_limits<int32_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-			else
-			{
-				if( v <= std::numeric_limits<uint32_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-		}
-		else if( *cp == '6' && cp[1] == '4' && !isTokenChar(cp[2]))
-		{
-			cp += 2;
-			if(isSigned)
-			{
-				if( v <= std::numeric_limits<int64_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-			else
-			{
-				if( v <= std::numeric_limits<uint64_t>::max())
-					tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
-				else
-					tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER );
-			}
-		}
+			goto isInt;
+	 	}
 	}
 	else
 	{
-		if( v <= std::numeric_limits<int8_t>::max())
-			tok.set( context->lineNo, context->columnNo, static_cast<int8_t>(v));
-		else if( v <= std::numeric_limits<int16_t>::max())
-			tok.set( context->lineNo, context->columnNo, static_cast<int16_t>(v));
-		else if( v <= std::numeric_limits<int32_t>::max())
-			tok.set( context->lineNo, context->columnNo, static_cast<int32_t>(v));
-		else if( v <= std::numeric_limits<int64_t>::max())
-			tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
-		else
-			tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
+		int d = c - '0';
+		while(*cp && isdigit(*cp))
+		{
+			d = *cp - '0';
+			if( v > ( std::numeric_limits<__uint128_t>::max() - d )/10)
+			{
+					// Too big. It is an integer
+					return isInteger( context, c, tok );
+			}
+
+			v = v*10 + d;
+			++cp;
+		}
+
+		if( *cp == '.' )
+		{
+			++cp;
+			while(*cp && isdigit(*cp))
+					++cp;
+		}
+
+		if( *cp == 'f' || *cp == 'e' || *cp == 'E' )
+		{
+			char t = *cp++;
+			bool negExp = *cp++ == '-';
+			while(*cp && isdigit(*cp))
+					++cp;
+
+			char * end;
+			if( t == 'f' )
+			{
+				double d = strtod( start, &end );
+				tok.set( context->lineNo, context->columnNo, static_cast<float>(d));
+			}
+			else if( t == 'e' )
+			{
+				double d = strtod( start, &end );
+				tok.set( context->lineNo, context->columnNo, d );
+			}
+			else
+			{
+				__float80 val = strtold(start, &end);
+				tok.set( context->lineNo, context->columnNo, val );
+			}
+
+			// Update cp past end of token
+			context->cp = cp;
+	
+			return !isTokenChar(*cp);
+		}
 	}
+
+isInt:	
+	if(( v >= std::numeric_limits<int32_t>::min()) && ( v <= std::numeric_limits<int32_t>::max()))
+		tok.set( context->lineNo, context->columnNo, static_cast<int32_t>(v));
+	else if( v >= 0 && v <= std::numeric_limits<uint32_t>::max())
+		tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
+	else if(( v >= std::numeric_limits<int64_t>::min()) && ( v <= std::numeric_limits<int64_t>::max()))
+		tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
+	else if( v >= 0 && v <= std::numeric_limits<uint64_t>::max())
+		tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
+	else if(( v >= std::numeric_limits<__int128_t>::max()) && ( v <= std::numeric_limits<__int128_t>::max()))
+		tok.set( context->lineNo, context->columnNo, static_cast<__int128_t>(v));
+	else
+		tok.set( context->lineNo, context->columnNo, static_cast<__uint128_t>(v));
 
 	// Update cp past end of token
 	context->cp = cp;
@@ -511,7 +505,7 @@ bool isReal( Parser * context, Token & tok )
 	return false;
 }
 
-//#define DEBUG_NEXTCHAR
+#define DEBUG_NEXTCHAR
 
 #ifdef DEBUG_NEXTCHAR
 #define RET_CHAR(i) \
@@ -605,6 +599,79 @@ bool escapeChar( char c, char & out )
 	return true;
 }
 
+enum Stype
+{
+	NULL_TERM,
+	LEN_PRE,
+	LEN_PRE_NULL_TERM
+};
+
+static void isString( Parser * context, Token & tok, Stype stype )
+{
+printf( "%s:%d\n", __FILE__, __LINE__ );
+	bool escaped = false;
+	
+	int c = nextChar( context );
+	std::string lexium;
+	lexium = c;
+	int loc = 0;
+	
+	while( c )
+	{
+		if( c == '\\' )
+		{
+			if( !escaped )
+				escaped = true;
+			else
+				lexium += c;
+		}
+		else if( escaped )
+		{
+			escaped = false;
+			char es;
+			if( escapeChar( c, es ) )
+				lexium += es;
+				++loc;
+		}
+		else if( c == '"' )
+		{
+			if( stype == NULL_TERM )
+			{
+				if( lexium.size() < 16 )
+					tok.set( context->lineNo, context->columnNo, ID::SSTRING_LIT, lexium );
+				else
+					tok.set( context->lineNo, context->columnNo, ID::STRING_LIT, lexium );
+			}
+			else if( stype == LEN_PRE )
+			{
+				if( lexium.size() < 16 )
+					tok.set( context->lineNo, context->columnNo, ID::LSSTRING_LIT, lexium );
+				else
+					tok.set( context->lineNo, context->columnNo, ID::LSTRING_LIT, lexium );
+			}
+			else // LEN_PRE_NULL_TERM
+			{
+				if( lexium.size() < 16 )
+					tok.set( context->lineNo, context->columnNo, ID::LTSSTRING_LIT, lexium );
+				else
+					tok.set( context->lineNo, context->columnNo, ID::LTSTRING_LIT, lexium );
+			}
+
+			return;
+		}
+		else
+		{
+			lexium += c;
+			++loc;
+		}
+
+		c = nextChar( context );
+	}
+			
+	tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
+}
+
 /*
 REGEX_LIT		
 	' 'r
@@ -630,15 +697,17 @@ bool isRegexp( Parser * context, Token & tok )
 void nextToken( Token & tok, Parser * context )
 {
 	int c = nextChar( context );
-
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 	while( c && isspace(c) )
 		c = nextChar( context );
 
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 	if( c == 0 )
 		return;
 
 	while(true)
 	{
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		switch(c)
 		{
 		case ';':
@@ -680,9 +749,9 @@ void nextToken( Token & tok, Parser * context )
 			return;
 		}
 
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		switch(c)
 		{
-
 		// !
 		// .!  POST_EXCLAIM
 		// !=  NE
@@ -877,14 +946,13 @@ void nextToken( Token & tok, Parser * context )
 					context->charLookahead[0] = n2;
 					tok.set( context->lineNo, context->columnNo, ID::DOT_DOT );
 				}
-				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::DOT );
-				return;
 			}
+			return;
 		}
 
 		// =
@@ -893,16 +961,13 @@ void nextToken( Token & tok, Parser * context )
 		{
 			char n = nextChar( context );
 			if( n == '=')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::EQ );
-				return;
-			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::ASSIGN );
-				return;
 			}
+			return;
 		}
 
 		// <
@@ -913,10 +978,7 @@ void nextToken( Token & tok, Parser * context )
 		{
 			char n = nextChar( context );
 			if( n == '=')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::LE );
-				return;
-			}
 			else if( n == '<')
 			{
 				char n2 = nextChar( context );
@@ -928,14 +990,13 @@ void nextToken( Token & tok, Parser * context )
 					context->charLookahead[0] = n2;
 					tok.set( context->lineNo, context->columnNo, ID::SLFT );
 				}
-				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::LT );
-				return;
 			}
+			return;
 		}
 
 		// >
@@ -946,10 +1007,7 @@ void nextToken( Token & tok, Parser * context )
 		{
 			char n = nextChar( context );
 			if( n == '=')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::GE );
-				return;
-			}
 			else if( n == '>')
 			{
 				char n2 = nextChar( context );
@@ -961,14 +1019,13 @@ void nextToken( Token & tok, Parser * context )
 					context->charLookahead[0] = n2;
 					tok.set( context->lineNo, context->columnNo, ID::SRGHT );
 				}
-				return;
 			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::GT );
-				return;
 			}
+			return;
 		}
 
 		// ^
@@ -977,16 +1034,13 @@ void nextToken( Token & tok, Parser * context )
 		{
 			char n = nextChar( context );
 			if( n == '=')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::XOR_ASS );
-				return;
-			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::XOR );
-				return;
 			}
+			return;
 		}
 
 		// |
@@ -996,35 +1050,24 @@ void nextToken( Token & tok, Parser * context )
 		{
 			char n = nextChar( context );
 			if( n == '=')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::OR_ASS );
-				return;
-			}
 			else if( n == '|')
-			{
 				tok.set( context->lineNo, context->columnNo, ID::OR );
-				return;
-			}
 			else
 			{
 				context->charLookahead[0] = n;
 				tok.set( context->lineNo, context->columnNo, ID::OR );
-				return;
 			}
+			return;
 		}
 		}
 
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		if( isdigit(c))
 		{
-			if( isInt( context, tok ) )
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
+			if( isNumber( context, c, tok ) )
 				return;
-	
-			if( isFloat( context, tok ) )
-			{
-//				tok.id = tok.id;
-TODO
-				return;
-			}
 	
 			int loc = 0;
 			std::string lexium;
@@ -1041,6 +1084,7 @@ TODO
 		}
 		else if( c == '_' )
 		{
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			int loc = 0;
 			std::string lexium;
 			lexium = c;
@@ -1055,6 +1099,42 @@ TODO
 			}
 			context->charLookahead[0] = c;
 	
+			if( lexium == "_e" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_E );
+				return;
+			}
+			else if( lexium == "_gamma" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_GAMMA );
+				return;
+			}
+			else if( lexium == "_i" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_I );
+				return;
+			}
+			else if( lexium == "_inf" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_INF );
+				return;
+			}
+			else if( lexium == "_nan" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_NAN );
+				return;
+			}
+			else if( lexium == "_phi" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_PHI );
+				return;
+			}
+			else if( lexium == "_pi" )
+			{
+				tok.set( context->lineNo, context->columnNo, ID::_PI );
+				return;
+			}
+
 			if( lexium.size() < 16 )
 				tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
 			else
@@ -1064,14 +1144,36 @@ TODO
 		}
 		else if(isalpha(c))
 		{
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			int loc = 0;
 
 			std::string lexium;
 			lexium = c;
 			++loc;
 	
+			char firstChar = c;
 			c = nextChar( context );
 	
+			if( firstChar == 'l' && c == '"' )
+			{
+				isString( context, tok, LEN_PRE );
+				return;
+			}
+
+			if( firstChar == 'l' && c == 't' )
+			{
+				char secondChar = c;
+				c = nextChar( context );
+
+				if( c == '"' )
+				{
+					isString( context, tok, LEN_PRE_NULL_TERM );
+					return;
+				}
+				else
+					lexium += secondChar;
+			}
+
 			while( c == '_' || isalnum(c))
 			{
 				lexium += c;
@@ -1127,21 +1229,18 @@ TODO
 					return;
 				}
 			}
-	
+
 			if( lexium.size() < 16 )
-			{
 				tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
-			}
 			else
-			{
 				tok.set( context->lineNo, context->columnNo, ID::ID, lexium );
-			}
 
 			return;
 		}
 		//  Raw string literal
 		else if( c == '\'' )
 		{
+printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			bool escaped = false;
 	
 			c = nextChar( context );
@@ -1190,55 +1289,12 @@ TODO
 			}
 			
 			tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
-			return;
+			return ;
 		}
 		//  STRING_LIT
 		else if( c == '"' )
 		{
-			bool escaped = false;
-	
-			c = nextChar( context );
-			std::string lexium;
-			lexium = c;
-			int loc = 0;
-	
-			while( c )
-			{
-				if( c == '\\' )
-				{
-					if( !escaped )
-						escaped = true;
-					else
-						lexium += c;
-				}
-				else if( escaped )
-				{
-					escaped = false;
-					char es;
-					if( escapeChar( c, es ) )
-						lexium += es;
-					++loc;
-				}
-				else if( c == '"' )
-				{
-					if( isRegexp( context, tok ) )
-						return;
-					if( lexium.size() < 16 )
-						tok.set( context->lineNo, context->columnNo, ID::SSTRING_LIT, lexium );
-					else
-						tok.set( context->lineNo, context->columnNo, ID::STRING_LIT, lexium );
-					return;
-				}
-				else
-				{
-					lexium += c;
-					++loc;
-				}
-
-				c = nextChar( context );
-			}
-			
-			tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
+			isString( context, tok, NULL_TERM );
 			return;
 		}
 	}
@@ -1253,6 +1309,7 @@ void lexPushBack( Token & tok, Parser * context )
 
 void lex( Token & tok, Parser * context )
 {
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( context->lookahead.id() != ID::NIL )
 	{
 		tok = std::move(context->lookahead);
@@ -1263,11 +1320,14 @@ void lex( Token & tok, Parser * context )
 		return;
 	}
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	nextToken( tok, context );
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 
 	if( tok.id() == ID::TYPE || tok.id() == ID::ENUM || tok.id() == ID::INTERFACE || tok.id() == ID::UNION )
 		context->typeSeen = true;
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( context->typeSeen && tok.isId() )
 	{
 		context->typeSeen = false;
@@ -1275,12 +1335,15 @@ void lex( Token & tok, Parser * context )
 		context->pushSymTbl(tok.idLexium());
 	}
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( tok.isId() )
 	{
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		Symbol * sym = context->currSymTbl->find(tok.idLexium());
 
 		if( sym != nullptr )
 		{
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 			if( FunctionType * ft = dynamic_cast<FunctionType *>(sym))
 				tok.setNameType( ID::FUNCTION_NAME );
 			else if( Type * t = dynamic_cast<Type *>(sym))
@@ -1298,8 +1361,10 @@ void lex( Token & tok, Parser * context )
 			}
 			else if( Variable * v = dynamic_cast<Variable *>(sym))
 				tok.setNameType( ID::VARIABLE_NAME );
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		}
 	}
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 
 #ifdef DEBUG_YYLEX
 	dumpToken( tok );
