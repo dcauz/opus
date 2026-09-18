@@ -39,39 +39,40 @@ Integer::Integer(int64_t l):isNeg_(false)
 
 Integer::Integer(const char * s, const char * e) :isNeg_(false)
 {
-	// Pull off chunks of 19 digits, from right to left
-	// The number of chunks is approximately (e-s)/19.
-	//
-	size_t len = e - s;
+	const char  * cp = e;
 
-	size_t	vLen = len / 19;
-	size_t	rLen = len % 19;
-	if(rLen)
-		++vLen;
-	values_.resize(vLen);
-	
-	int ele = 0;
+	size_t len = e-s;
+	size_t chunks = (len+9)/10;
 
-	// The first rLen digits go to the first element
-	if(rLen)
-	{
-		values_[0] = 0;
-		while(rLen > 0 )
+	values_.resize(chunks);
+	int c = 0;
+
+    // Extract chunks of digits. Each chunck is between 0 and 999,999,999
+    while( (cp-10) > s )
+    {
+        const char * chunk = cp-10;
+		uint64_t value = 0;
+
+		while( chunk < cp )
 		{
-			values_[0] = (*s - '0') + values_[0]*10;
+			value = 10*value + *cp-'0';
+			++chunk;
+		}
+		values_[c++] = value;
+
+        cp -= 10;
+    }
+
+    if( cp > s )
+	{
+		uint64_t value = 0;
+
+		while( s < cp )
+		{
+			value = 10*value + *cp-'0';
 			++s;
 		}
-		++ele;
-	}
-
-	while( s < e )
-	{
-		++ele;
-		for( int i = 0; i < 19; ++i )
-		{
-			values_[ele] = (*s - '0') + values_[ele]*10;
-			++s;
-		}
+		values_[c] = value;
 	}
 }
 

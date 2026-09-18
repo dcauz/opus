@@ -7,3 +7,16 @@ Datetime::Datetime( int y, int m, int d, int h, int mn, int s, int ms ) :
 	time_(h,mn,s,ms)
 {
 }
+
+bool Datetime::genCode( GenCodeContext & gcc ) const
+{
+	TODO
+	return false;
+}
+
+sp<Type> Datetime::semCheck( SemCheckContext & scc ) const
+{
+	TODO
+	return errorType;
+}
+

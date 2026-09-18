@@ -1,19 +1,20 @@
-#include <cctype>
-#include <iostream>
-#include <cstring>
-#include <limits>
-#include <string>
-#include <cstdlib>
-#include <map>
-
-#include "opus.h"
 #include "date.h"
 #include "datetime.h"
 #include "duration.h"
 #include "lex.h"
+#include "opus.h"
 #include "parser.h"
 #include "time.h"
 #include "token.h"
+
+#include <cassert>
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <limits>
+#include <string>
+#include <map>
 
 
 namespace
@@ -160,140 +161,111 @@ bool isDuration( Token	& tok, Parser * context )
 }
 */
 
-// date       yyyy.mm.dd
-//
 /*
-DATE_LIT		
-	"yyyy-mm-dd"d
-	'yyyy-mm-dd'd
-	0000-01-01	- 9999-12-31
+DATE_LIT	
+	d"yyyy-mm-dd"
+
+DATETIME_LIT	
+      0123456789012345678 9
+	d"yyyy-mm-dd hh:mm:ss[.d*]"
 */
-bool isDate( Token & tok, Parser * context )
+void isDatetime( Token & tok, Parser * context )
 {
-	char * start = context->cp;
-	char * cp = start;
+	size_t len = strlen(context->cp);
 
-	if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&
-		isdigit(cp[5]) && isdigit(cp[6]) &&
-		isdigit(cp[8]) && isdigit(cp[9]) )
+	if( len < 11 )
 	{
-		if( is1stTokenChar(cp[10]))
-			throw std::runtime_error( "Invalid token" );
-
-			tok.set( context->lineNo, context->columnNo, Date(
-				D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]),
-				D(cp[5])*10 + D(cp[6]),
-				D(cp[8])*10 + D(cp[9])) );
-			
-		return true;
+		TODO
+		return;
 	}
 
-	return false;
-}
-
-//            0123456789012 345 678 9012345
-// datetime   yyyy.mm.dd.hh[.mm[.ss[.mmmmmm]]]
-/*
-DATETIME_LIT	
-	"yyyy-mm-dd hh:mm:ss"dt
-	"yyyy-mm-dd hh:mm:ss.ddd"dt
-	"yyyy-mm-dd hh:mm:ss.dddddd"dt
-	"yyyy-mm-dd hh:mm:ss.ddddddddd"dt
-	'yyyy-mm-dd hh:mm:ss'dt
-	'yyyy-mm-dd hh:mm:ss.ddd'dt
-	'yyyy-mm-dd hh:mm:ss.dddddd'dt
-	'yyyy-mm-dd hh:mm:ss.ddddddddd'dt
-*/
-bool isDatetime( Token & tok, Parser * context )
-{
 	char * start = context->cp;
 	char * cp = start;
 
-	if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&
-		isdigit(cp[5]) && isdigit(cp[6]) &&
-		isdigit(cp[8]) && isdigit(cp[9]) &&
-		isdigit(cp[11]) && isdigit(cp[12]))
+	if( len >= 20 &&
+		isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&	// YYYY
+		isdigit(cp[5]) && isdigit(cp[6]) &&		// MM
+		isdigit(cp[8]) && isdigit(cp[9]) && 	// DD
+		isdigit(cp[11]) && isdigit(cp[12]) &&	// hh
+		isdigit(cp[14]) && isdigit(cp[15]) &&	// mm
+		isdigit(cp[17]) && isdigit(cp[18]) )	// ss
 	{
 		int y = D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]);
 		int m = D(cp[5])*10 + D(cp[6]);
 		int d = D(cp[8])*10 + D(cp[9]);
 		int hour = D(cp[11])*10 + D(cp[12]);
-		int min = 0;
-		int sec = 0;
+		int min = D(cp[14])*10 + D(cp[15]);
+		int sec = D(cp[17])*10 + D(cp[18]);
 		int ms = 0;
 
 		int next;
-		if(cp[13] == '.' )
+		if(cp[19] == '.' )
 		{
-			if(isdigit(cp[14]) && isdigit(cp[15]))
+			if(isdigit(cp[20]))
 			{
-				min = D(cp[14])*10 + D(cp[15]);
+				ms = D(cp[20]);
 
-				if(cp[16] == '.' )
+				int n = 21;
+				while(isdigit(cp[n]))
 				{
-					if(isdigit(cp[17]) && isdigit(cp[18]))
-					{
-						min = D(cp[17])*10 + D(cp[18]);
-
-						if(cp[19] == '.' && isdigit(cp[20]))
-						{
-							sec = D(cp[19])*10 + D(cp[20]);
-
-							int n = 21;
-							while(isdigit(cp[n]))
-							{
-								ms = ms*10 + D(cp[n]);
-								++n;
-							}
-
-							next = n;
-						}
-						else
-							next = 19;
-					}
-					else
-						throw std::runtime_error( "Invalid token" );
+					ms = ms*10 + D(cp[n]);
+					++n;
 				}
-				else
-					next = 16;
+
+				if( cp[n] != '"' )
+					throw std::runtime_error( "Invalid token" );
+
+				context->columnNo += n+1;
+				context->cp += n+1;
 			}
 			else
 				throw std::runtime_error( "Invalid token" );
-
-			return false;
 		}
-		else
-			next = 13;
+		else if( cp[19] == '"' )
+		{
+			context->columnNo += 20;
+			context->cp += 20;
+		}
 
 		if( is1stTokenChar(cp[next]))
 			throw std::runtime_error( "Invalid token" );
 
 		tok.set( context->lineNo, context->columnNo, Datetime( y, m, d, hour, min, sec, ms ) );
-		return true;
 	}
-	return false;
+	else if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&	// YYYY
+		isdigit(cp[5]) && isdigit(cp[6]) &&												// MM
+		isdigit(cp[8]) && isdigit(cp[9]) && 											// DD
+		cp[10] == '"' ) 
+	{
+		int y = D(cp[0])*1000 + D(cp[1])*100 + D(cp[2])*10 + D(cp[3]);
+		int m = D(cp[5])*10 + D(cp[6]);
+		int d = D(cp[8])*10 + D(cp[9]);
+
+		context->columnNo += 11;
+		context->cp += 11;
+
+		tok.set( context->lineNo, context->columnNo, Date( y, m, d ) );
+	}
 }
 
-// time       hh.mm.ss[.ms]
 /*
 TIME_LIT		
-	"hh:mm:ss"t
-	"hh:mm:ss.ddd"t
-	"hh:mm:ss.dddddd"t
-	"hh:mm:ss.ddddddddd"t
-	'hh:mm:ss't
-	'hh:mm:ss.ddd't
-	'hh:mm:ss.dddddd't
-	'hh:mm:ss.ddddddddd't
+	t"hh:mm:ss"
+	t"hh:mm:ss.ddd"
+	t"hh:mm:ss.dddddd"
+	t"hh:mm:ss.ddddddddd"
 */
-bool isTime( Token & tok, Parser * context )
+void isTime( Token & tok, Parser * context )
 {
 	char * start = context->cp;
 	char * cp = start;
 
-	if( isdigit(cp[0]) && isdigit(cp[1]) &&
-		isdigit(cp[3]) && isdigit(cp[4]) &&
-		isdigit(cp[6]) && isdigit(cp[7]) )
+	size_t len = strlen(cp);
+
+	if( len > 8 && 
+		isdigit(cp[0]) && isdigit(cp[1]) && // hh
+		isdigit(cp[3]) && isdigit(cp[4]) &&	// mm
+		isdigit(cp[6]) && isdigit(cp[7]) )	// ss
 	{
 		if( cp[8] == '.' )
 		{
@@ -305,26 +277,118 @@ bool isTime( Token & tok, Parser * context )
 				++n;
 			}
 
+			if( cp[n] != '"' )
+				throw std::runtime_error( "Invalid token" );
+
+			context->columnNo += n+1;
+			context->cp += n+1;
+
 			tok.set( context->lineNo, context->columnNo, 
-				Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), ms ) );
+				Time( 	D(cp[0])*10+D(cp[1]), 
+						D(cp[3])*10+D(cp[4]),
+						D(cp[6])*10+D(cp[7]), 
+						ms ) );
 		}
-		else
+		else if( cp[8] == '"' )
 		{
 			tok.set( context->lineNo, context->columnNo,
-				Time( D(cp[0])*10+D(cp[1]), D(cp[3])*10+D(cp[4]),
-				D(cp[6])*10+D(cp[7]), 0 ) );
-		}	
+				Time(	D(cp[0])*10+D(cp[1]), 
+						D(cp[3])*10+D(cp[4]),
+						D(cp[6])*10+D(cp[7]), 0 ) );
 
-		return true;
+			context->columnNo += 9;
+			context->cp += 9;
+		}	
+		else
+			throw std::runtime_error( "Invalid token" );
 	}
-	return false;
 }
 
 static bool isInteger( Parser * context, char c, Token & tok )
 {
-	TODO
-	return false;
+	char * start = context->cp;
+	char * cp = start;
+
+	while(isdigit(*cp))
+		++cp;
+
+	Integer * out = new Integer(start,cp);
+
+	tok.set( context->lineNo, context->columnNo, out );
+
+	context->cp += cp-start;
+	context->columnNo+= cp-start;
+
+	return true;
+}
+
+static bool isFloat( Parser * context, __uint128_t v, Token & tok )
+{
+	char * start = context->cp;
+	char * cp = start;
+
+	assert( *cp == '.' );
+
+	double secs = v;
+
+	double div = 0.1;
+	++cp;
+	while(*cp && isdigit(*cp))
+	{
+		int d = *cp - '0';
+		v += d/div;
+		div /= 10;
+		++cp;
+	}
+
+	char t = 0;
+	if( *cp == 'f' || *cp == 'e' || *cp == 'E' )
+	{
+		t = *cp++;
+
+		bool negExp = *cp++ == '-';
+		int exp = 0;
+		while(*cp && isdigit(*cp))
+		{
+			exp = 10*exp + *cp-'0';
+			++cp;
+		}
+	}
+
+	if( *cp == 's' )
+	{
+		if( t != 0 )
+			throw std::runtime_error( "Invalid token" );
+
+		tok.set( context->lineNo, context->columnNo, Second(secs) );
+
+		context->cp += cp-start+1;
+		context->columnNo+= cp-start+1;
+	}
+	else
+	{
+		char * end;
+		if( t == 'f' )
+		{
+			double d = strtod( start, &end );
+			tok.set( context->lineNo, context->columnNo, static_cast<float>(d));
+		}
+		else if( t == 'e' )
+		{
+			double d = strtod( start, &end );
+			tok.set( context->lineNo, context->columnNo, d );
+		}
+		else
+		{
+			__float80 val = strtold(start, &end);
+			tok.set( context->lineNo, context->columnNo, val );
+		}
+
+		context->cp += cp-start;
+		context->columnNo+= cp-start;
+	}
+
+	return !isTokenChar(*cp);
 }
 
 static bool isNumber( Parser * context, char c, Token & tok )
@@ -336,6 +400,9 @@ static bool isNumber( Parser * context, char c, Token & tok )
 
 	if( c == '0' )
 	{
+		if( *cp == '.' )
+			return isFloat( context, 0, tok );
+
 		if((*cp == 'x' ) || (*cp == 'X' )) 	// hexidecimal
 		{
 			++cp;
@@ -349,9 +416,9 @@ static bool isNumber( Parser * context, char c, Token & tok )
 				else
 					d = *cp - 'A' + 10;
 
-				if( v > ( std::numeric_limits<uint64_t>::max() - d )/16)
+				if( v > ( std::numeric_limits<__uint128_t>::max() - d )/16)
 					// Too big. It is an integer
-					return isInteger( context, c, tok );
+					throw std::runtime_error( "integer constant is too big" );
 				else
 					v = 16*v + d;
 				++cp;
@@ -367,9 +434,9 @@ static bool isNumber( Parser * context, char c, Token & tok )
 			while( *cp == '0' || *cp == '1' )
 			{
 				d = *cp - '0';
-				if( *cp == 1 && ( v > ( std::numeric_limits<uint64_t>::max() - d )/2))
+				if( *cp == 1 && ( v > ( std::numeric_limits<__uint128_t>::max() - d )/2))
 					// Too big. It is an integer
-					return isInteger( context, c, tok );
+					throw std::runtime_error( "integer constant is too big" );
 				else
 					v = v*2 + d;
 				++cp;
@@ -384,9 +451,9 @@ static bool isNumber( Parser * context, char c, Token & tok )
 			while(*cp >= '0' && *cp <= '7')
 			{
 				d = *cp - '0';
-				if( *cp != 0 && ( v > ( std::numeric_limits<uint64_t>::max() - d )/8))
+				if( *cp != 0 && ( v > ( std::numeric_limits<__uint128_t>::max() - d )/8))
 					// Too big. It is an integer
-					return isInteger( context, c, tok );
+					throw std::runtime_error( "integer constant is too big" );
 				else
 					v = 8*v + d;
 				++cp;
@@ -398,6 +465,8 @@ static bool isNumber( Parser * context, char c, Token & tok )
 	else
 	{
 		int d = c - '0';
+		v = d;
+
 		while(*cp && isdigit(*cp))
 		{
 			d = *cp - '0';
@@ -412,41 +481,63 @@ static bool isNumber( Parser * context, char c, Token & tok )
 		}
 
 		if( *cp == '.' )
+			return isFloat( context, v, tok );
+		else if( *cp == 'Y' )
 		{
-			++cp;
-			while(*cp && isdigit(*cp))
-					++cp;
-		}
+			tok.set( context->lineNo, context->columnNo, Year(v) );
 
-		if( *cp == 'f' || *cp == 'e' || *cp == 'E' )
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
+
+			return true;
+		}
+		else if( *cp == 'M' )
 		{
-			char t = *cp++;
-			bool negExp = *cp++ == '-';
-			while(*cp && isdigit(*cp))
-					++cp;
+			tok.set( context->lineNo, context->columnNo, Month(v) );
 
-			char * end;
-			if( t == 'f' )
-			{
-				double d = strtod( start, &end );
-				tok.set( context->lineNo, context->columnNo, static_cast<float>(d));
-			}
-			else if( t == 'e' )
-			{
-				double d = strtod( start, &end );
-				tok.set( context->lineNo, context->columnNo, d );
-			}
-			else
-			{
-				__float80 val = strtold(start, &end);
-				tok.set( context->lineNo, context->columnNo, val );
-			}
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
 
-			// Update cp past end of token
-			context->cp = cp;
-	
-			return !isTokenChar(*cp);
+			return true;
 		}
+		else if( *cp == 'D' )
+		{
+			tok.set( context->lineNo, context->columnNo, Day(v) );
+
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
+
+			return true;
+		}
+		else if( *cp == 'h' )
+		{
+			tok.set( context->lineNo, context->columnNo, Hour(v) );
+
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
+
+			return true;
+		}
+		else if( *cp == 'm' )
+		{
+			tok.set( context->lineNo, context->columnNo, Minute(v) );
+
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
+
+			return true;
+		}
+		else if( *cp == 's' )
+		{
+			tok.set( context->lineNo, context->columnNo, Second(v) );
+
+			context->cp += cp-start+1;
+			context->columnNo+= cp-start+1;
+
+			return true;
+		}
+		else if(isTokenChar(*cp))
+			throw std::runtime_error( "Invalid token" );
 	}
 
 isInt:	
@@ -505,7 +596,7 @@ bool isReal( Parser * context, Token & tok )
 	return false;
 }
 
-#define DEBUG_NEXTCHAR
+//#define DEBUG_NEXTCHAR
 
 #ifdef DEBUG_NEXTCHAR
 #define RET_CHAR(i) \
@@ -608,7 +699,6 @@ enum Stype
 
 static void isString( Parser * context, Token & tok, Stype stype )
 {
-printf( "%s:%d\n", __FILE__, __LINE__ );
 	bool escaped = false;
 	
 	int c = nextChar( context );
@@ -669,7 +759,6 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 	}
 			
 	tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 }
 
 /*
@@ -697,17 +786,14 @@ bool isRegexp( Parser * context, Token & tok )
 void nextToken( Token & tok, Parser * context )
 {
 	int c = nextChar( context );
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 	while( c && isspace(c) )
 		c = nextChar( context );
 
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 	if( c == 0 )
 		return;
 
 	while(true)
 	{
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		switch(c)
 		{
 		case ';':
@@ -749,7 +835,6 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			return;
 		}
 
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		switch(c)
 		{
 		// !
@@ -1062,10 +1147,8 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		}
 		}
 
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		if( isdigit(c))
 		{
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			if( isNumber( context, c, tok ) )
 				return;
 	
@@ -1084,7 +1167,6 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		}
 		else if( c == '_' )
 		{
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			int loc = 0;
 			std::string lexium;
 			lexium = c;
@@ -1144,7 +1226,6 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		}
 		else if(isalpha(c))
 		{
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			int loc = 0;
 
 			std::string lexium;
@@ -1159,19 +1240,20 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 				isString( context, tok, LEN_PRE );
 				return;
 			}
-
-			if( firstChar == 'l' && c == 't' )
+			else if( firstChar == 'L' && c == '"' )
 			{
-				char secondChar = c;
-				c = nextChar( context );
-
-				if( c == '"' )
-				{
-					isString( context, tok, LEN_PRE_NULL_TERM );
-					return;
-				}
-				else
-					lexium += secondChar;
+				isString( context, tok, LEN_PRE_NULL_TERM );
+				return;
+			}
+			else if( firstChar == 'd' && c == '"' )
+			{
+				isDatetime( tok, context );
+				return;
+			}
+			else if( firstChar == 't' && c == '"' )
+			{
+				isTime( tok, context );
+				return;
 			}
 
 			while( c == '_' || isalnum(c))
@@ -1240,7 +1322,6 @@ printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 		//  Raw string literal
 		else if( c == '\'' )
 		{
-printf( "%s:%d c %c\n", __FILE__, __LINE__, c );
 			bool escaped = false;
 	
 			c = nextChar( context );
@@ -1309,7 +1390,6 @@ void lexPushBack( Token & tok, Parser * context )
 
 void lex( Token & tok, Parser * context )
 {
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( context->lookahead.id() != ID::NIL )
 	{
 		tok = std::move(context->lookahead);
@@ -1320,14 +1400,11 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		return;
 	}
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	nextToken( tok, context );
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 
 	if( tok.id() == ID::TYPE || tok.id() == ID::ENUM || tok.id() == ID::INTERFACE || tok.id() == ID::UNION )
 		context->typeSeen = true;
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( context->typeSeen && tok.isId() )
 	{
 		context->typeSeen = false;
@@ -1335,15 +1412,12 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		context->pushSymTbl(tok.idLexium());
 	}
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 	if( tok.isId() )
 	{
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		Symbol * sym = context->currSymTbl->find(tok.idLexium());
 
 		if( sym != nullptr )
 		{
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 			if( FunctionType * ft = dynamic_cast<FunctionType *>(sym))
 				tok.setNameType( ID::FUNCTION_NAME );
 			else if( Type * t = dynamic_cast<Type *>(sym))
@@ -1361,10 +1435,8 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 			}
 			else if( Variable * v = dynamic_cast<Variable *>(sym))
 				tok.setNameType( ID::VARIABLE_NAME );
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 		}
 	}
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 
 #ifdef DEBUG_YYLEX
 	dumpToken( tok );

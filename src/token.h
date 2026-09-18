@@ -159,6 +159,7 @@ enum class ID : unsigned int
 	STACK,
 	STRING,
 	SET,
+	TIME,
 
 	U0, U1, U2, U3, U4, U5, U6, U7, U8, U9, 
 	U10, U11, U12, U13, U14, U15, U16, U17, U18, U19, 
@@ -261,8 +262,9 @@ enum class ID : unsigned int
 	DATETIME_LIT,	// d"YYYY-MM-DD:HH:MM:SS[:sssssssss]"
 	TIME_LIT,       // t"HH:MM:SS:sssssssss"
 	DATE_LIT,		// d"YYYY-MM-DD"
-    YEARS_LIT,      // 111y
-	DAYS_LIT,       // 111d
+    YEARS_LIT,      // 111Y
+	MONTHS_LIT,		// 10M
+	DAYS_LIT,       // 111D
 	HOURS_LIT,      // 111h
 	MINS_LIT,       // 111m
 	SECS_LIT,       // 111.123s
@@ -280,10 +282,6 @@ enum class ID : unsigned int
 	U128_LIT,       // 1111u128
 
 	N_LIT,          // 1212N
-	Z_LIT,          // 765 432 109 876 543 210Z
-	Q_LIT,          // 111Q
-	R_LIT,          // 123R
-	C_LIT,			// 1C
 
 	LSTRING_LIT,    // l"sss"
 	LTSTRING_LIT,   // t"aaa"
@@ -351,7 +349,6 @@ enum class ID : unsigned int
 	SIZEOF,
 	TYPEID,
 
-	TIME,
 	TYPE,
 
 	USING,
@@ -491,11 +488,53 @@ struct Token
 		id_     = ID::TIME_LIT;
 		u64_	= t.toUint64();
 	}
+	void set( unsigned short l, unsigned short c, const Year & y )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::YEARS_LIT;
+		i32_	= y.toInt();
+	}
+	void set( unsigned short l, unsigned short c, const Month & m )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::MONTHS_LIT;
+		i32_	= m.toInt();
+	}
+	void set( unsigned short l, unsigned short c, const Day & d )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::DAYS_LIT;
+		i32_	= d.toInt();
+	}
+	void set( unsigned short l, unsigned short c, const Hour & h )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::HOURS_LIT;
+		i32_	= h.toInt();
+	}
+	void set( unsigned short l, unsigned short c, const Minute & m )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::MINS_LIT;
+		i32_	= m.toInt();
+	}
+	void set( unsigned short l, unsigned short c, const Second & s )
+	{
+		line_   = l;
+		column_ = c;
+		id_     = ID::SECS_LIT;
+		f64_	= s.toDouble();
+	}
 	void set( unsigned short l, unsigned short c, Integer * i )
 	{
 		line_   = l;
 		column_ = c;
-		id_     = ID::Z_LIT;
+		id_     = ID::N_LIT;
 		integer_= i;
 	}
 
@@ -534,6 +573,8 @@ struct Token
 	float		f32() const	{ return f32_; }
 	double		f64() const	{ return f64_; }
 	long double	f80() const	{ return f80_; }
+
+	Integer * integer() const { return integer_; }
 
 	void	setNameType( ID n )	{ id_ = n; }
 

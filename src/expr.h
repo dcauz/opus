@@ -54,9 +54,21 @@ protected:
 	V value_;
 };
 
-class Uniary: public Expr
+class Integer;
+template <> class Literal<Integer *>: public Expr
 {
 public:
+	Literal( unsigned short l, unsigned short c, Integer * v ):Expr(l,c), value_(v) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;      
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+protected:
+	Integer * value_;
+};
+
+class Uniary: public Expr
+{
+public: 
 	Uniary( unsigned short l, unsigned short c, Expr * o ):Expr(l,c), operand_(o) {}
 
 protected:

@@ -134,8 +134,14 @@ class Integer : public Value
 {
 public:
 	Integer( const char *, const char * );
+
 	Integer( int );
 	Integer( int64_t );
+	Integer( __int128_t );
+	Integer( unsigned int );
+	Integer( uint64_t );
+	Integer( __uint128_t );
+
 	Integer();
 
 	~Integer();
@@ -143,10 +149,12 @@ public:
 	bool genCode( GenCodeContext & gcc ) const override;
 	sp<Type> semCheck( SemCheckContext & scc ) const override;
 
+	void addChunk( const char * start, const char * end );
+
 private:
 
-	bool	 isNeg_;
 	std::vector<uint64_t> values_;
+	bool isNeg_;
 };
 
 class Int8Type : public Type

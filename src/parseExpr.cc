@@ -152,8 +152,11 @@ static bool isLiteral( ID id )
 		ID::DATETIME_LIT,
 		ID::TIME_LIT,
 		ID::DATE_LIT,
+
 		ID::YEARS_LIT,
+		ID::MONTHS_LIT,
 		ID::DAYS_LIT,
+
 		ID::HOURS_LIT,
 		ID::MINS_LIT,
 		ID::SECS_LIT,
@@ -171,10 +174,6 @@ static bool isLiteral( ID id )
 		ID::U128_LIT,
 
 		ID::N_LIT,
-		ID::Z_LIT,
-		ID::Q_LIT,
-		ID::R_LIT,
-		ID::C_LIT,
 
 		ID::LSTRING_LIT,
 		ID::LSSTRING_LIT,
@@ -217,31 +216,37 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		return new Literal<Bool>(t.line(),t.column(), Bool(false) );
 	case ID::TRUE:
 		return new Literal<Bool>(t.line(),t.column(), Bool(true) );
-
 	case ID::THIS:
 		TODO
 		break;
-	case ID::CHAR_LIT:
-		TODO
-		break;
+
 	case ID::DATETIME_LIT:
-		TODO
-		break;
+		return new Literal<Datetime>(t.line(),t.column(), t.u128());
 	case ID::DATE_LIT:
-		TODO
-		break;
+		return new Literal<Date>(t.line(),t.column(), t.u32());
+	case ID::TIME_LIT:
+		return new Literal<Time>(t.line(),t.column(), t.u64());
+
+	case ID::YEARS_LIT:
+		return new Literal<Year>(t.line(),t.column(), t.i32());
+	case ID::MONTHS_LIT:
+		return new Literal<Month>(t.line(),t.column(), t.i32());
 	case ID::DAYS_LIT:
-		TODO
-		break;
+		return new Literal<Day>(t.line(),t.column(), t.i32());
+
+	case ID::HOURS_LIT:
+		return new Literal<Hour>(t.line(),t.column(), t.i32());
+	case ID::MINS_LIT:
+		return new Literal<Minute>(t.line(),t.column(), t.i32());
+	case ID::SECS_LIT:
+		return new Literal<Second>(t.line(),t.column(), t.f64());
+
 	case ID::F32_LIT:
 		return new Literal<Float32>(t.line(),t.column(), Float32(t.f32()));
 	case ID::F64_LIT:
 		return new Literal<Float64>(t.line(),t.column(), Float64(t.f64()));
 	case ID::F80_LIT:
 		return new Literal<Float80>(t.line(),t.column(), Float80(t.f80()));
-	case ID::HOURS_LIT:
-		TODO
-		break;
 	case ID::I32_LIT:
 		return new Literal<Int32>(t.line(),t.column(), Int32(t.i32()));
 	case ID::I64_LIT:
@@ -249,9 +254,9 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	case ID::I128_LIT:
 		TODO
 		break;
-	case ID::Z_LIT:
-		TODO
-		break;
+	case ID::N_LIT:
+		return new Literal<Integer *>(t.line(),t.column(), t.integer());
+
 	case ID::STRING_LIT:
 	case ID::SSTRING_LIT:
 		return new Literal<String>(t.line(),t.column(), String(t.str()));
@@ -261,36 +266,20 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	case ID::LTSTRING_LIT:
 	case ID::LTSSTRING_LIT:
 		return new Literal<LTString>(t.line(),t.column(), LTString(t.str()));
-	case ID::MINS_LIT:
+	case ID::CHAR_LIT:
 		TODO
 		break;
-	case ID::N_LIT:
-		TODO
-		break;
-	case ID::Q_LIT:
-		TODO
-		break;
-	case ID::R_LIT:
-		TODO
-		break;
+
 	case ID::REGEXP_LIT:
 		TODO
 		break;
-	case ID::SECS_LIT:
-		TODO
-		break;
-	case ID::TIME_LIT:
-		TODO
-		break;
+
 	case ID::U32_LIT:
 		return new Literal<Uint32>(t.line(),t.column(), Uint32(t.u32()));
 	case ID::U64_LIT:
 		return new Literal<Uint64>(t.line(),t.column(), Uint64(t.u64()));
 	case ID::U128_LIT:
 		return new Literal<Uint128>(t.line(),t.column(), Uint128(t.u128()));
-	case ID::YEARS_LIT:
-		TODO
-		break;
 	}
 }
 
@@ -536,11 +525,14 @@ PENTER
 		binSeen
 	} state = start;
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	while(true)
 	{
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		switch( state )
 		{
 		default:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			TODO
 			break;
 
@@ -586,13 +578,16 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			break;
 
 		case binSeen:
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			TODO
 			break;
 		}
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		lex(token, this );	
 	}
 
+printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	return false;
 }
 #if 0
@@ -993,7 +988,10 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		case ID::UINT64_LIT:    // 111u
 			TODO
 			break;
-    	case ID::YEARS_LIT:     // 111y
+    	case ID::MONTHS_LIT:    // 111M
+			TODO
+			break;
+    	case ID::YEARS_LIT:     // 111Y
 			TODO
 			break;
 		}

@@ -1,9 +1,11 @@
 #pragma once
 
+#include "value.h"
+
 #include <cstdint>
 
 
-class Time
+class Time : public Value
 {
 public:
 	Time( int h, int m, int s, int ms );
@@ -20,6 +22,9 @@ public:
 		return ((uint64_t)ms_ << 32) + (h_ << 24) + (m_ << 16) + (s_ << 8);
 	}
 
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
 private:
 	unsigned int  ms_;
 	unsigned char h_;
@@ -27,29 +32,44 @@ private:
 	unsigned char s_;
 };
 
-class Hour
+class Hour : public Value
 {
 public:
 	Hour( int h );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	int toInt() const { return h_; }
 
 private:
 	int h_;
 };
 
-class Minute
+class Minute : public Value
 {
 public:
 	Minute( int m );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	int toInt() const { return m_; }
 
 private:
 	int m_;
 };
 
-class Second
+class Second : public Value
 {
 public:
-	Second( int s );
+	Second( double s );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	double toDouble() const { return s_; }
 
 private:
-	int s_;
+	double s_;
 };

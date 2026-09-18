@@ -34,6 +34,7 @@ i32 main( i32 argc, final string [] argv )
 	i31	in31 = 12345678;
 	i32	in32 = 12345678;
 	i64	in64 = 123456789012345678;
+	i128 in128 = 12345678901234567890123456789;
 
 	z0 	zi0 = 0;
 	z1 	zi1 = -1;
@@ -69,6 +70,7 @@ i32 main( i32 argc, final string [] argv )
 	z31	zi31 = 12345678;
 	z32	zi32 = 12345678;
 	z64	zi64 = 123456789012345678;
+	z128 zi128 = 12345678901234567890123456789;
 
 	u0 	ui0  = 0;
 	u1 	ui1  = 1;
@@ -104,12 +106,15 @@ i32 main( i32 argc, final string [] argv )
 	u31	ui31 = 12345678;
 	u32	ui32 = 12345678;
 	u64	ui64 = 123456789012345678;
+	u128 ui128 = 12345678901234567890123456789;
 
 	u64 x = 0xabcdef1234567890;
 	u64 X = 0Xabcdef1234567890;
 	u64 b = 0b0101010101010101;
 	u64 B = 0B0101010101010101;
 	u64 o = 0x12345670;
+
+	u128 x128 = 0xabcdabcdef12ef123456345678907890;
 
 	n0 	na0 = 0;
 	n1 	na1 = 1;
@@ -145,6 +150,7 @@ i32 main( i32 argc, final string [] argv )
 	n31	na31 = 12345678;
 	n32	na32 = 12345678;
 	n64	na64 = 123456789012345678;
+	n128 na128 = 12345678901234567890123456789;
 
 	f32	f = 1.1f10;
 	f64	d = 1.1e10;
@@ -153,7 +159,7 @@ i32 main( i32 argc, final string [] argv )
 	R nan = _nan;
 	R inf = _inf;
 
-	N	n = 123456789012345678901234567890;
+	N	n = 1234567890123456789012345678901234567890;
 	Z	z = -123456789012345678901234567890;
 	Q   q = 1;
 	R	phi = _phi;
@@ -164,7 +170,7 @@ i32 main( i32 argc, final string [] argv )
 
 	string	 s =  "abc\n";
 	lstring	 ls = l"abc\n";
-	ltstring ts = lt"abc\n";
+	ltstring ts = L"abc\n";
 	char     ch  = 'a';
 
 	bool tr = true;
@@ -172,53 +178,37 @@ i32 main( i32 argc, final string [] argv )
 
 	object obj = "aas";
 
-	date     d  = d"2026-08-05";
-	datetime dt = d"2026-08-05:10:10:10.123456789";
+	date     d   = d"2026-08-05";
+	datetime dt1 = d"2026-08-05 10:10:10";
+	datetime dt2 = d"2026-08-05 10:10:10.123";
+	datetime dt3 = d"2026-08-05 10:10:10.123456";
+	datetime dt4 = d"2026-08-05 10:10:10.123456789";
+
 	time     t1 = t"10:10:10";
-	time     t2 = t"10:10:10.000000001";
+	time     t2 = t"10:10:10.001";
+	time     t3 = t"10:10:10.000001";
+	time     t4 = t"10:10:10.000000001";
 
-	duration year  = 2Y;
-	duration month = 1M;
-	duration day   = 1D;
+	duration year  = 20Y;
+	duration month = 10M;
+	duration day   = 10D;
 
-	duration hour  = 1h;
-	duration min   = 1m;
-	duration sec   = 1s;
-	duration msec  = 0.001s;
-	duration usec  = 0.000001s;
-	duration nsec  = 0.000000001s;
+	duration hour  = 10h;
+	duration min   = 11m;
+	duration sec   = 12s;
+	duration msec  = 1.001s;
+	duration usec  = 12.000001s;
+	duration nsec  = 122.000000001s;
 
-	regexp   re    = re"ab.*";
-
+	regexp   re    = r"ab.*";
 
 	int32 [] vec = [ 1,2,3,4,5,6,7,8,9 ];
-
-    enum E : string
-	{
-		A = "a",
-		B = "b"
-	}
-	E e = E.A;
 
 	set<Z>	ints = { 1,2,3 };
 	mset<Z>	mints = { 1,1,2,3 };
 
 	map<string,i32>   pairs = { "a":1, "b":2 };
 	mmap<string,i32> mpairs = { "a":1, "a":2, "b":3, "b":3 };
-
-	relation R
-	{
-		i32 k primary key;
-		string? v;
-	}
-	R rel = { { k:1, v:"s" }, { k:2 } };
-	
-	class Cl
-	{
-		public i32 x;
-		public string y;
-	}
-	Cl cl = { 1, "s" };
 
 	graph<string> g = 
 	{ 

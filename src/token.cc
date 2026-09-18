@@ -63,6 +63,7 @@ Keyword keyWords[] =
 	{ ID::I31,          "i31" },
 	{ ID::I32,          "i32" },
 	{ ID::I64,          "i64" },
+	{ ID::I128,         "i128" },
 	{ ID::LIST,         "list" },
 	{ ID::LSTRING,      "lstring" },
 	{ ID::LTSTRING,     "ltstring" },
@@ -105,6 +106,7 @@ Keyword keyWords[] =
 	{ ID::N31,          "n31" },
 	{ ID::N32,          "n32" },
 	{ ID::N64,          "n64" },
+	{ ID::N128,         "n128" },
 	{ ID::OBJECT,       "object" },
 	{ ID::Q,            "Q" },
 	{ ID::QUEUE,        "queue" },
@@ -148,6 +150,7 @@ Keyword keyWords[] =
 	{ ID::U31,          "u31" },
 	{ ID::U32,          "u32" },
 	{ ID::U64,          "u64" },
+	{ ID::U128,         "u128" },
 	{ ID::SET,          "set" },
 	{ ID::VOID,         "void" },
 	{ ID::Z,            "Z" },
@@ -185,6 +188,7 @@ Keyword keyWords[] =
 	{ ID::Z31,          "z31" },
 	{ ID::Z32,          "z32" },
 	{ ID::Z64,          "z64" },
+	{ ID::Z128,         "z128" },
 	{ ID::ATOMIC,       "atomic" },
 	{ ID::FINAL,        "final" },
 	{ ID::INLINE,       "inline" },
@@ -244,7 +248,7 @@ Token::Token( const Token & src ):
 	column_(src.column_),
 	id_(src.id_)
 {
-	if( src.id_ == ID::Z_LIT )
+	if( src.id_ == ID::N_LIT )
 		integer_ = new Integer( *src.integer_ );
 	else if(src.id_ == ID::ID || 
 			src.id_ == ID::STRING_LIT || 
@@ -260,7 +264,7 @@ Token::Token( Token && src ):
 	column_(src.column_),
 	id_(src.id_)
 {
-	if( src.id_ == ID::Z_LIT )
+	if( src.id_ == ID::N_LIT )
 		integer_ = src.integer_;
 	else if(src.id_ == ID::ID || 
 			src.id_ == ID::STRING_LIT || 
@@ -278,7 +282,7 @@ Token & Token::operator = ( Token && in )
 		line_ = in.line_;
 		column_ = in.column_;
 
-		if( in.id_ == ID::Z_LIT )
+		if( in.id_ == ID::N_LIT )
 			integer_ = in.integer_;
 		else if(in.id_ == ID::ID || 
 			in.id_ == ID::STRING_LIT || 
@@ -318,7 +322,7 @@ void Token::lexium( char c )
 
 Token::~Token()
 {
-	if( id_ == ID::Z_LIT)
+	if( id_ == ID::N_LIT)
 		delete integer_;
 	else if( id_ == ID::ID || id_ == ID::STRING_LIT || id_ == ID::LSTRING_LIT || id_ == ID::LTSTRING_LIT )
 		delete lexium_;
@@ -517,6 +521,7 @@ void dumpToken( const Token & token )
 	case ID::I32:			ss << "i32"; 	    break;
 
 	case ID::I64:			ss << "i64"; 	    break;
+	case ID::I128:			ss << "i128"; 	    break;
 
 	case ID::LIST:     	 	ss << "list";		break;
 
@@ -568,6 +573,7 @@ void dumpToken( const Token & token )
 	case ID::N32:			ss << "n32"; 	    break;
 
 	case ID::N64:			ss << "i64"; 	    break;
+	case ID::N128:			ss << "i128"; 	    break;
 
 	case ID::OBJECT:		ss << "object";	break;
 
@@ -619,6 +625,7 @@ void dumpToken( const Token & token )
 	case ID::U32:			ss << "u32"; 	    break;
 	
 	case ID::U64:			ss << "u64"; 	    break;
+	case ID::U128:			ss << "u128"; 	    break;
 
 	case ID::SET:			ss << "set"; 		break;
 
@@ -664,6 +671,7 @@ void dumpToken( const Token & token )
 	case ID::Z32:			ss << "z32"; 	    break;
 
 	case ID::Z64:			ss << "z64"; 	    break;
+	case ID::Z128:			ss << "z128"; 	    break;
 
 	case ID::ATOMIC:		ss << "atomic";	break;
 
@@ -747,8 +755,6 @@ void dumpToken( const Token & token )
 	case ID::TRUE:			ss << "true"; 		break;
 	case ID::THIS:      	ss << "this"; 		break;
 	case ID::CHAR_LIT:     	ss << "char-lit:";	break;
-	case ID::DAYS_LIT:     	ss << "days-lit:";	break;
-	case ID::HOURS_LIT:    	ss << "hours-lit:";	break;
 
 	case ID::LSTRING_LIT:  	ss << "lsstring-lit:";	break;
 	case ID::LSSTRING_LIT: 	ss << "lstring-lit:";	break;
@@ -756,12 +762,16 @@ void dumpToken( const Token & token )
 	case ID::LTSTRING_LIT: 	ss << "ltstring-lit:";break;
 	case ID::LTSSTRING_LIT:	ss << "ltsstring-lit:";break;
 
+	case ID::YEARS_LIT:    	ss << "years-lit:";	break;
+	case ID::MONTHS_LIT:   	ss << "months-lit:";	break;
+	case ID::DAYS_LIT:     	ss << "days-lit:";	break;
+
+	case ID::HOURS_LIT:    	ss << "hours-lit:";	break;
 	case ID::MINS_LIT:     	ss << "mins_lit:";	break;
 	case ID::SECS_LIT:     	ss << "sec-lit:";		break;
-	case ID::YEARS_LIT:    	ss << "years-lit:";	break;
 
-	case ID::DATE_LIT:		ss << "date: " 					;break;
-	case ID::DATETIME_LIT:	ss << "datetime: " 				;break;
+	case ID::DATE_LIT:		ss << "date: " 		; break;
+	case ID::DATETIME_LIT:	ss << "datetime: " 	; break;
 
 	case ID::F32_LIT: 		ss << "f32:" << token.f32();break;
 	case ID::F64_LIT: 		ss << "f64:" << token.f64();break;
@@ -772,12 +782,8 @@ void dumpToken( const Token & token )
 	case ID::I128_LIT: 		ss << "i128:" << decimal_string(token.i128()); break;
 
 	case ID::N_LIT:      	ss << "N-lit:";		break;
-	case ID::Z_LIT:			ss << "Z:" 					  ;break;
-	case ID::Q_LIT:        	ss << "Q-lit:";		break;
-	case ID::R_LIT:			ss << "R:" 					  ;break;
-	case ID::C_LIT:			ss << "C:" 					  ;break;
 
-	case ID::REGEXP_LIT:	ss << "re:" 				  ;break;
+	case ID::REGEXP_LIT:	ss << "re:" 	  ;break;
 
 	case ID::STRING_LIT:	ss << "str:"  << token.str();break;
 	case ID::SSTRING_LIT:	ss << "sstr:" << token.str();break;

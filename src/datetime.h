@@ -6,7 +6,7 @@
 #include <cstdint>
 
 
-class Datetime
+class Datetime : public Value
 {
 public:
 	Datetime( int y, int m, int d, int h, int mn, int s, int ms );
@@ -16,8 +16,14 @@ public:
 	Datetime( __uint128_t value ):date_(value >> 64 ), time_(value & 0xffffffff)
 	{ }
 
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
 private:
 
 	Date	date_;	
 	Time	time_;
 };
+
+
+

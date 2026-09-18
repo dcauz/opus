@@ -1,9 +1,11 @@
 #pragma once
 
+#include "value.h"
+
 #include <cstdint>
 
 
-class Date
+class Date : public Value
 {
 public:
 	Date() {}
@@ -20,34 +22,52 @@ public:
 		return (y_ << 16) + (m_ << 8) + d_;
 	}
 
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
 private:
 	unsigned short y_;
 	unsigned char m_;
 	unsigned char d_;
 };
 
-class Year
+class Year : public Value
 {
 public:
 	Year( int y );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	int toInt() const { return y_; }
 
 private:
 	int y_;
 };
 
-class Month
+class Month : public Value
 {
 public:
 	Month( int m );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	int toInt() const { return m_; }
 
 private:
 	int m_;
 };
 
-class Day
+class Day : public Value
 {
 public:
 	Day( int d );
+
+	bool genCode( GenCodeContext & gcc ) const;
+    sp<Type> semCheck( SemCheckContext & scc ) const;
+
+	int toInt() const { return d_; }
 
 private:
 	int d_;

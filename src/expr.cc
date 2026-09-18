@@ -1,6 +1,7 @@
 #include "expr.h"
 #include "opus.h"
 #include "type.h"
+#include "integer.h"
 
 
 Select::Select( 
@@ -645,4 +646,16 @@ bool IsVoid::genCode( GenCodeContext & ) const
 {
 	TODO // genCode
 	return false;
+}
+
+///////////////////////////////////////////////////////////////////////
+///
+bool Literal<Integer *>::genCode( GenCodeContext & gcc ) const
+{
+	return value_->genCode( gcc );
+}
+
+sp<Type> Literal<Integer *>::semCheck( SemCheckContext & scc ) const
+{
+	return value_->semCheck( scc );
 }
