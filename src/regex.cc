@@ -1,25 +1,40 @@
 #include "regex.h"
 
 
-sp<RegExType>	regexType(new RegExType);
+sp<RegExpType>	regexType(new RegExpType);
 
-bool RegExType::eqCompareTo( Type * t ) const
+bool RegExpType::eqCompareTo( Type * t ) const
 {
-	RegExType * re = dynamic_cast<RegExType *>(t);
+	RegExpType * re = dynamic_cast<RegExpType *>(t);
 
 	return nullptr != re;
 }
 
-bool RegExType::compareTo( Type * t )  const
+bool RegExpType::compareTo( Type * t )  const
 {
-	RegExType * re = dynamic_cast<RegExType *>(t);
+	RegExpType * re = dynamic_cast<RegExpType *>(t);
 
 	return nullptr != re;
 }
 
-bool RegExType::assignableTo( Type * t ) const
+bool RegExpType::assignableTo( Type * t ) const
 {
-	RegExType * re = dynamic_cast<RegExType *>(t);
+	RegExpType * re = dynamic_cast<RegExpType *>(t);
 
 	return nullptr != re;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+bool RegExp::genCode( GenCodeContext & gcc ) const
+{
+	TODO
+	return false;
+}
+
+sp<Type> RegExp::semCheck( SemCheckContext & scc ) const
+{
+	TODO
+	 return errorType;
 }

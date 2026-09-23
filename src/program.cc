@@ -9,14 +9,14 @@
 Program * program;
 
 
-void Program::statements( std::vector<up<Statement>> * defs ) 
+/*void Program::statements( std::vector<up<Statement>> * defs ) 
 { 
-	statements_.reset(defs); 
+	statements_ = *defs; 
 }
-
+*/
 std::vector<up<Statement>> & Program::statements() 
 { 
-	return *statements_; 
+	return statements_; 
 }
 
 std::vector<up<ILentity>>   & Program::ilEntities()  
@@ -34,14 +34,14 @@ Program::Program( const char * srcFile ):srcFile_(srcFile)
 
 bool Program::semCheck() const
 {
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = statements_.begin();
+	auto e = statements_.end();
 	
 	SemCheckContext	context;
 
 	while( i != e )
 	{
-		up<Statement>& def = *i;
+		Statement * def = i->get();
 
 		sp<Type> type = def->semCheck( context );
 		if( type == errorType )
@@ -55,8 +55,8 @@ bool Program::semCheck() const
 
 bool Program::genCode()
 {
-	auto i = statements_->begin();
-	auto e = statements_->end();
+	auto i = statements_.begin();
+	auto e = statements_.end();
 
 	GenCodeContext	context(this);
 

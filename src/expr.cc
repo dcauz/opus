@@ -649,7 +649,7 @@ bool IsVoid::genCode( GenCodeContext & ) const
 }
 
 ///////////////////////////////////////////////////////////////////////
-///
+
 bool Literal<Integer *>::genCode( GenCodeContext & gcc ) const
 {
 	return value_->genCode( gcc );
@@ -658,4 +658,18 @@ bool Literal<Integer *>::genCode( GenCodeContext & gcc ) const
 sp<Type> Literal<Integer *>::semCheck( SemCheckContext & scc ) const
 {
 	return value_->semCheck( scc );
+}
+
+///////////////////////////////////////////////////////////////////////
+
+bool KeyValue::genCode( GenCodeContext & gcc ) const
+{
+	TODO // genCode
+	return false;
+}
+
+sp<Type> KeyValue::semCheck( SemCheckContext & scc ) const
+{
+	TODO // semCheck
+	return errorType;
 }

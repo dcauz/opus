@@ -37,36 +37,47 @@ usage:	std::cerr << "usage: " << argv[0] << " [-d|-p] program-files" << std::end
 			else
 				goto usage;
 		}
-
+SNAT
 		for( int i = arg; i < argc; ++i )
 		{
+SNAT
 			if(debug)
 				printf( "Compile %s\n", argv[i] );
+SNAT
 
 			Parser	parser(argv[i]);
 			parser.populateGlobalSymTbl();
 
+SNAT
 			int rc = parser.parse();
 
+SNAT
 			if( parseOnly )
 				return rc;
 
+SNAT
 			if( !rc )
 			{
+SNAT
 				parser.program().genCode();
+SNAT
 				parser.program().outputIL();
+SNAT
 			}
 			else
 			{
 				std::cerr << "compilation failed" << std::endl;
 				return 2;
 			}
+SNAT
 		}
+SNAT
 	}
 	catch( const std::string & msg )
 	{
 		std::cerr << "compile terminated with exception: " << msg << std::endl;
 		return 2;
 	}
+SNAT
 	return 0;
 }

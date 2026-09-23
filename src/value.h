@@ -45,3 +45,32 @@ public:
 private:
 	Variable	* variable_;
 };
+
+
+class Expr;
+
+class Vector : public Value
+{
+public:
+	Vector( std::vector<Expr *> && vals );
+	~Vector();
+
+    virtual bool genCode( GenCodeContext & gcc ) const final;
+    virtual sp<Type> semCheck( SemCheckContext & scc ) const final;
+
+private:
+	std::vector<Expr * > values_;
+};
+
+class MSet : public Value
+{
+public:
+	MSet( std::vector<Expr *> && vals );
+	~MSet();
+
+    virtual bool genCode( GenCodeContext & gcc ) const final;
+    virtual sp<Type> semCheck( SemCheckContext & scc ) const final;
+
+private:
+	std::vector<Expr * > values_;
+};

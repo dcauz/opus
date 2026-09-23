@@ -768,7 +768,7 @@ void dumpToken( const Token & token )
 
 	case ID::HOURS_LIT:    	ss << "hours-lit:";	break;
 	case ID::MINS_LIT:     	ss << "mins_lit:";	break;
-	case ID::SECS_LIT:     	ss << "sec-lit:";		break;
+	case ID::SECS_LIT:     	ss << "sec-lit:" << token.f64();		break;
 
 	case ID::DATE_LIT:		ss << "date: " 		; break;
 	case ID::DATETIME_LIT:	ss << "datetime: " 	; break;
@@ -783,7 +783,8 @@ void dumpToken( const Token & token )
 
 	case ID::N_LIT:      	ss << "N-lit:";		break;
 
-	case ID::REGEXP_LIT:	ss << "re:" 	  ;break;
+	case ID::REGEXP_LIT:	ss << "r:" << token.str() 	  ;break;
+	case ID::SREGEXP_LIT:	ss << "r:" << token.str() 	  ;break;
 
 	case ID::STRING_LIT:	ss << "str:"  << token.str();break;
 	case ID::SSTRING_LIT:	ss << "sstr:" << token.str();break;

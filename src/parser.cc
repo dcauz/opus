@@ -26,7 +26,6 @@ PENTER
 	{
 		Statement * statement;
 		rc &= parseStatement( &statement );
-
 		program_.statements().push_back(up<Statement>(statement));
 	}
 

@@ -13,8 +13,10 @@ bool Parser::parseExprStatement( ExprStatement ** es )
 {
 PENTER
 	// get expr
-	Expr * ex;
 	Token termTok;
+	lex( termTok, this );
+
+	Expr * ex;
 	bool rc = parseExpr( &ex, termTok );
 
 	if( rc )

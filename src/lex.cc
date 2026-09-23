@@ -15,6 +15,7 @@
 #include <limits>
 #include <string>
 #include <map>
+#include <inttypes.h>
 
 
 namespace
@@ -35,131 +36,6 @@ inline bool isTokenChar( char c )
 }
 
 inline int D(char c)	{ return c - '0'; }
-
-/*
-// duration   one or more of
-//
-// [<d>d][.<h>h][.<m>m][.<s>s][.<ms>ms|.<us>us]
-//
-bool isDuration( Token	& tok, Parser * context )
-{
-	char * start = context->cp;
-	char * cp = start;
-
-	int d = 0;
-	int h = 0;
-	int m = 0;
-	int s = 0;
-	int ms= 0;
-	int us= 0;
-
-	enum State
-	{
-		begin,
-		daysSeen,
-		hoursSeen,
-		minsSeen,
-		secsSeen,
-		end
-	} state = begin;
-
-	int n = 0;
-	while(state != end)
-	{
-		int v = 0;
-		while(isdigit(cp[n]))
-		{
-			v = v*10 + cp[n] - '0';
-			++n;
-		}
-
-		switch(state)
-		{
-		case begin:
-			if(cp[n] == 'D' )
-			{
-				d = v;
-				state = daysSeen;
-			}
-			else if(cp[n] == 'h' )
-			{
-				h = v;
-				state = hoursSeen;
-			}
-			else if(cp[n] == 'm' )
-			{
-				m = v;
-				state = minsSeen;
-			}
-			else if(cp[n] == 's' )
-			{
-				s = v;
-				state = secsSeen;
-			}
-			else
-				throw std::runtime_error( "Invalid token" );
-			break;
-		case daysSeen:
-			if(cp[n] == 'h' )
-			{
-				h = v;
-				state = hoursSeen;
-			}
-			else if(cp[n] == 'm' )
-			{
-				m = v;
-				state = minsSeen;
-			}
-			else if(cp[n] == 's' )
-			{
-				s = v;
-				state = secsSeen;
-			}
-			else
-				throw std::runtime_error( "Invalid token" );
-			break;
-		case hoursSeen:
-			if(cp[n] == 'm' )
-			{
-				m = v;
-				state = minsSeen;
-			}
-			else if(cp[n] == 's' )
-			{
-				s = v;
-				state = secsSeen;
-			}
-			else
-				throw std::runtime_error( "Invalid token" );
-			break;
-		case minsSeen:
-			if(cp[n] == 's' )
-			{
-				s = v;
-				state = secsSeen;
-			}
-			else
-				throw std::runtime_error( "Invalid token" );
-			break;
-		case secsSeen:
-			ms = v;
-			state = end;
-			break;
-		}
-	}
-
-
-	if(is1stTokenChar(cp[n]))
-		throw std::runtime_error( "Invalid token" );
-
-	if( ms != 0 )
-		us = ms*1000;
-
-	tok.value.duration = Duration( d, h, m, s, us ).toUint64();
-
-	return true;
-}
-*/
 
 /*
 DATE_LIT	
@@ -331,13 +207,14 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
 
 	double secs = v;
 
-	double div = 0.1;
+	double div = 10;
 	++cp;
 	while(*cp && isdigit(*cp))
 	{
 		int d = *cp - '0';
-		v += d/div;
-		div /= 10;
+		secs += d/div;
+		div *= 10;
+
 		++cp;
 	}
 
@@ -362,8 +239,9 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
 
 		tok.set( context->lineNo, context->columnNo, Second(secs) );
 
-		context->cp += cp-start+1;
-		context->columnNo+= cp-start+1;
+		++cp;
+		context->cp += cp-start;
+		context->columnNo+= cp-start;
 	}
 	else
 	{
@@ -477,11 +355,16 @@ static bool isNumber( Parser * context, char c, Token & tok )
 			}
 
 			v = v*10 + d;
+
 			++cp;
 		}
 
 		if( *cp == '.' )
+		{
+			context->columnNo += cp - context->cp;
+			context->cp = cp;
 			return isFloat( context, v, tok );
+		}
 		else if( *cp == 'Y' )
 		{
 			tok.set( context->lineNo, context->columnNo, Year(v) );
@@ -541,59 +424,35 @@ static bool isNumber( Parser * context, char c, Token & tok )
 	}
 
 isInt:	
-	if(( v >= std::numeric_limits<int32_t>::min()) && ( v <= std::numeric_limits<int32_t>::max()))
+	if( v <= std::numeric_limits<int32_t>::max())
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<int32_t>(v));
-	else if( v >= 0 && v <= std::numeric_limits<uint32_t>::max())
+	}
+	else if( v <= std::numeric_limits<uint32_t>::max())
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<uint32_t>(v));
-	else if(( v >= std::numeric_limits<int64_t>::min()) && ( v <= std::numeric_limits<int64_t>::max()))
+	}
+	else if( v <= std::numeric_limits<int64_t>::max())
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<int64_t>(v));
-	else if( v >= 0 && v <= std::numeric_limits<uint64_t>::max())
+	}
+	else if( v <= std::numeric_limits<uint64_t>::max())
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<uint64_t>(v));
-	else if(( v >= std::numeric_limits<__int128_t>::max()) && ( v <= std::numeric_limits<__int128_t>::max()))
+	}
+	else if( v <= std::numeric_limits<__int128_t>::max())
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<__int128_t>(v));
+	}
 	else
+	{
 		tok.set( context->lineNo, context->columnNo, static_cast<__uint128_t>(v));
+	}
 
 	// Update cp past end of token
 	context->cp = cp;
 
 	return !isTokenChar(*cp);
-}
-
-// double_lit = d+(f|m)
-// f = .d+[m]
-// m = (e|E)[+|-]d+
-//
-/*
-FLOAT32_LIT		
-	[+|-][0-9][0-9]*[[.[0-9][0-9]*][(e|E)[+|-][1-9][0-9]*][f|F]
-FLOAT64_LIT		
-	[+|-][0-9][0-9]*[[.[0-9][0-9]*][(e|E)[+|-][1-9][0-9]*]
-*/
-bool isFloat( Parser * context, Token & tok )
-{
-	char * start = context->cp;
-	char * cp = start;
-
-	char * end;
-
-	double d = strtod( cp, &end );
-
-	bool ans = (end == cp + strlen(cp));
-	if(ans)
-		context->cp = end;
-
-	return ans;
-}
-
-/*
-REAL_LIT		
-	well formed real expression
-*/
-bool isReal( Parser * context, Token & tok )
-{
-	TODO
-	return false;
 }
 
 //#define DEBUG_NEXTCHAR
@@ -694,7 +553,8 @@ enum Stype
 {
 	NULL_TERM,
 	LEN_PRE,
-	LEN_PRE_NULL_TERM
+	LEN_PRE_NULL_TERM,
+	REG_EXP
 };
 
 static void isString( Parser * context, Token & tok, Stype stype )
@@ -739,12 +599,19 @@ static void isString( Parser * context, Token & tok, Stype stype )
 				else
 					tok.set( context->lineNo, context->columnNo, ID::LSTRING_LIT, lexium );
 			}
-			else // LEN_PRE_NULL_TERM
+			else if( stype == LEN_PRE_NULL_TERM )
 			{
 				if( lexium.size() < 16 )
 					tok.set( context->lineNo, context->columnNo, ID::LTSSTRING_LIT, lexium );
 				else
 					tok.set( context->lineNo, context->columnNo, ID::LTSTRING_LIT, lexium );
+			}
+			else // REG_EXP
+			{
+				if( lexium.size() < 16 )
+					tok.set( context->lineNo, context->columnNo, ID::SREGEXP_LIT, lexium );
+				else
+					tok.set( context->lineNo, context->columnNo, ID::REGEXP_LIT, lexium );
 			}
 
 			return;
@@ -1154,7 +1021,7 @@ void nextToken( Token & tok, Parser * context )
 	
 			int loc = 0;
 			std::string lexium;
-			lexium += c;
+
 			do
 			{
 				lexium += c;
@@ -1245,6 +1112,11 @@ void nextToken( Token & tok, Parser * context )
 				isString( context, tok, LEN_PRE_NULL_TERM );
 				return;
 			}
+			else if( firstChar == 'r' && c == '"' )
+			{
+				isString( context, tok, REG_EXP );
+				return;
+			}
 			else if( firstChar == 'd' && c == '"' )
 			{
 				isDatetime( tok, context );
@@ -1319,7 +1191,7 @@ void nextToken( Token & tok, Parser * context )
 
 			return;
 		}
-		//  Raw string literal
+		//  Char literal
 		else if( c == '\'' )
 		{
 			bool escaped = false;
@@ -1355,9 +1227,9 @@ void nextToken( Token & tok, Parser * context )
 					if( isRegexp( context, tok ) )
 						return;
 					if( lexium.size() < 16 )
-						tok.set( context->lineNo, context->columnNo,  ID::SSTRING_LIT, lexium );
+						tok.set( context->lineNo, context->columnNo,  ID::CHAR_LIT, lexium );
 					else
-						tok.set( context->lineNo, context->columnNo,  ID::STRING_LIT, lexium );
+						tok.set( context->lineNo, context->columnNo,  ID::CHAR_LIT, lexium );
 					return;
 				}
 				else

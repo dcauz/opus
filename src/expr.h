@@ -175,6 +175,15 @@ private:
 */
 /////////////////////////////////////////////////////////////////
 
+class KeyValue : public Binary
+{
+public:
+	KeyValue( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
 // expr << expr
 class ShiftL: public Binary
 {

@@ -103,7 +103,7 @@ clean:
 clobber: clean
 	rm -rf bin
 
-test test1: bin/opus.exe
+test test1 test2: bin/opus.exe
 	cd test; make $@
 
 ########################################

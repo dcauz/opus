@@ -17,7 +17,7 @@ class Program
 public:
 	Program( const char * srcFile );
 
-	void statements( std::vector<up<Statement>> * defs );
+//	void statements( std::vector<up<Statement>> * defs );
 
 	std::vector<up<Statement>> & statements();
 	std::vector<up<ILentity>>  & ilEntities();
@@ -33,7 +33,7 @@ public:
 
 private:
 
-	up<std::vector<up<Statement>>> statements_;
+	std::vector<up<Statement>> statements_;
 
 	std::string	srcFile_;
 

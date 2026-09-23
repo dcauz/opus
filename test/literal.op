@@ -106,7 +106,7 @@ i32 main( i32 argc, final string [] argv )
 	u31	ui31 = 12345678;
 	u32	ui32 = 12345678;
 	u64	ui64 = 123456789012345678;
-	u128 ui128 = 12345678901234567890123456789;
+	u128 ui128 = 300000000000000000000000000000000000000;
 
 	u64 x = 0xabcdef1234567890;
 	u64 X = 0Xabcdef1234567890;
@@ -172,6 +172,9 @@ i32 main( i32 argc, final string [] argv )
 	lstring	 ls = l"abc\n";
 	ltstring ts = L"abc\n";
 	char     ch  = 'a';
+	char     nl  = '\n';
+	char     qt  = '\'';
+	char     dqt = '"';
 
 	bool tr = true;
 	bool fa = false;
@@ -202,19 +205,13 @@ i32 main( i32 argc, final string [] argv )
 
 	regexp   re    = r"ab.*";
 
-	int32 [] vec = [ 1,2,3,4,5,6,7,8,9 ];
+	i32 [] vec = [ 1,2,3,4,5,6,7,8,9 ];
 
-	set<Z>	ints = { 1,2,3 };
-	mset<Z>	mints = { 1,1,2,3 };
+	set	 ints  = { 1,2,3 };
+	mset mints = { 1,1,2,3 };
 
-	map<string,i32>   pairs = { "a":1, "b":2 };
-	mmap<string,i32> mpairs = { "a":1, "a":2, "b":3, "b":3 };
-
-	graph<string> g = 
-	{ 
-		[ "a", "b" ], 
-		[ "c", "d" ] 
-	};
+	map  pairs  = { "a":1, "b":2 };
+	mmap mpairs = { "a":1, "a":2, "b":3, "b":3 };
 
 	return 0;
 }

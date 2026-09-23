@@ -20,13 +20,11 @@ PENTER
 	else
 	{
 		Expr * ex;
-		int termTok;
-		Token tt;
-		bool rc = parseExpr( &ex, tt );
+		bool rc = parseExpr( &ex, lval );
 
 		if( rc )
 		{
-			if( termTok != ';' )
+			if( lval.id() != ID::SCOLON )
 			{
 				parserError( "; missing from return statement" );
 				return false;

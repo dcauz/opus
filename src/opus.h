@@ -15,4 +15,5 @@ inline void throwNotImpl( const char * f, int l )
        throw std::string(msg);
 }
 
-#define        TODO    do { printf( "TODO:%s:%d\n", __FILE__, __LINE__ ); fflush(stdout); throwNotImpl( __FILE__, __LINE__ ); } while(false);
+#define SNAT printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
+#define TODO do { printf( "TODO:%s:%d\n", __FILE__, __LINE__ ); fflush(stdout); throwNotImpl( __FILE__, __LINE__ ); } while(false);

@@ -61,7 +61,7 @@ enum class ID : unsigned int
 	QUAL,		 // ::
 	MOD   =37,	 // %
 	BAND  =38,	 // &
-    DEREF,      // * .
+    DEREF,       // * .
 
 	// 40
 	LPAREN=40,	 // (
@@ -284,13 +284,19 @@ enum class ID : unsigned int
 	N_LIT,          // 1212N
 
 	LSTRING_LIT,    // l"sss"
-	LTSTRING_LIT,   // t"aaa"
+	LTSTRING_LIT,   // L"aaa"
 	LSSTRING_LIT,   // l"sss"
-	LTSSTRING_LIT,  // t"aaa"
+	LTSSTRING_LIT,  // L"aaa"
 	STRING_LIT,     // "ssss"
 	SSTRING_LIT,    // "ssss"
 
-	REGEXP_LIT,     // re"s*"
+	REGEXP_LIT,     // r"s*"
+	SREGEXP_LIT,    // r"s*"
+
+	SEQ_LIT,		// [ e1, e2, ... ]
+	MSET_LIT,		// { e1, e2, ... }
+	MMAP_LIT,		// { k1:v1, k2:v2, ... }
+	TUPLE_LIT,		// { id1:v1, id2:v2, ... }
 
 	///////////////////////////////////////
 	// Type constructors
@@ -387,6 +393,9 @@ struct Token
 	Token & operator = ( Token && );
 
 	~Token();
+
+	unsigned short line() const   { return line_; }
+	unsigned short column() const { return column_; }
 
 	void set( unsigned short l, unsigned short c, ID i )
 	{
@@ -580,9 +589,6 @@ struct Token
 
 	void	clear() { id_ = ID::NIL; }
 
-	unsigned short line() const   { return line_; }
-	unsigned short column() const { return column_; }
-
 private:
 	unsigned short line_;
 	unsigned short column_;
@@ -620,12 +626,7 @@ struct Keyword
 extern Keyword keyWords[];
 extern unsigned noOfKeyWords;
 
-
 #define DEBUG_YYLEX
 #ifdef DEBUG_YYLEX
-
-struct Token;
-
 void dumpToken( const Token & tok );
-
 #endif

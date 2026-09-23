@@ -1,60 +1,24 @@
-
-
-auto temp<f,s>( bool b, f a, s b )
+i32 main( i32 argc, final string [] argv )
 {
-	f aa = a*a;
-	s bb = b*b;
-
-	return b ? aa : bb;
-}
-
-int64 g = 1;
-
-int64 foo()
-{
-	return g;
-}
-
-type T
-{
-	T(string k, int32 v)
-	{
-		key = k;
-		value = v;
-	}
-
-	string key;
-	int32 value;
-};
-
-int32 main( int32 argc, const string [] argv )
-{
-	int32 i = argc;
+	i32 i = argc;
 
 	i = argc + i;
 	i = argc - i;
 	i = argc * i;
+	i = argc / i;
 	i = argc % i;
 
-	if( i != 0 )
-		i /= argc / i;
+	i += argc;
+	i -= argc;
+	i *= argc;
+	i /= argc;
+	i %= argc;
 
-	if( i == 0 )
-		i += 1;
+	i = i ** (6+i);
+	i **= i;
 
-	if( i <= 10 )
-		i -= 11;
-
-	if( i >= 100 )
-		i &= 101;
-
-	if( i < 10 )
-		i |= 11;
-
-	if( i > 100 )
-		i ^= -101;
-
-	i %= -101;
+	i = +i;
+	i = -i;
 
 	++i;
 	--i;
@@ -62,63 +26,130 @@ int32 main( int32 argc, const string [] argv )
 	i++;
 
     i = i ^ 1111;
+	i ^= i;
+    i = i ^^ 1111;
+	i ^^= i;
+
     i = i & 2321;
+	i &= i;
 
-	C<float64> c = (1.0,1.0);
+    i = i && 2321;
+	i &&= i;
 
-	float64 r = re c;
-	float64 i = im c;
+	v = v | nv;
+	i |= i;
 
-	Q<float32>	q = (1.0, 2.0, 3.0, 4.0);
+	v = v || nv;
+	i ||= i;
 
-	q *= q;
-	q *= 23.0;
+	i = i!;
 
 	int8 ? x;
 	bool v = isvoid x;
-	vool nv =  !v;
+	bool nv =  !v;
+	nv =  ~v;
+	nv ~=  v;
 	
-	v = v && nv;
-	v = v || nv;
+	i32 j = 123;
 
-	i = i ** (6+i);
+	bool eq = i == j;
+	bool neq = i != j;
+	bool nneq = !neq;
+	bool ge = i >= j;
+	bool ge = i <= j;
+	bool ge = i < j;
+	bool ge = i > j;
 
-	int [10] a;
+	i32 s1 = i << 2;
+	i32 s3 = i >> 2;
+	s1 <<= 2;
+	s3 >>= 2;
 
-	a[0] = 11;
-	i = +a[0];
+	i16 a = -10;
+	a = |a|;
 
-	auto r = temp( r, c );
+	set s = {1,2,3};
+	bool isin = i <- s;
 
-	int64 l = foo();
+	q [3][3] m = [1,2,3,4,5,6,7,8,9];
 
-	set<int32>	s;
-	s += 1;
-	s += 2;
+	m *= 2;
+	m -= 2;
+	m += 2;
+	m /= 2;
 
-	if( 3 in s )
-		put("surprise");
-
-	s = s where element % 2 == 0;
-
-	set<T>	ts1;
-	ts.insert(T("a", 1));
-	ts.insert(T("b", 2));
-	ts.insert(T("c", 3));
-
-	T t;
-	t.key = "abc";
-
-	set<T>	ts2;
-	ts.insert(t);
-
-	set<T>	tsj = ts1 join ts2;
-
-	tsj = ts1 left join ts2;
-	tsj = ts1 right join ts2;
-	tsj = ts1 outer join ts2;
-
-	set<T>	ts = select * from t1 where key == "a";
+	m = m [.] m;
 
 	return 0;
 }
+
+/*
+	CP_ASS		 [*]=
+	MD_ASS		 [/]=
+	ME_ASS		 [**]=
+	DP_ASS		 [.]=
+
+	CRS_PROD	 [*]
+	M_DIV		 [/]
+	M_EXP		 [**]
+	DOT_PROD	 [.]
+
+	DOT_ASK	 .*
+	DOT_DOT	 ..
+
+	SS			 <=>
+
+	MPTR		 ->*
+
+	PARAM_ASS	 :=
+	PTR		 ->
+	WEAK  		 #
+	QUAL		 ::
+    DEREF       * .
+
+	LPAREN	 (
+	RPAREN	 )
+	DOT   	 .
+
+	QUEST 	?
+	INSERT     insert
+	SELECT     select
+	UPDATE     update
+	S_DELETE   delete
+
+	LBRACK	[
+	BSLASH	back slash
+	RBRACK	]
+
+	AS			as
+	ASC		asc
+	BY			by
+	CLOSURE
+	DISTINCT	distinct
+	DSC  		dsc
+	FOREIGN	foreign
+	FROM		from
+	GROUP		group
+	HAVING		having
+	INTO		into
+	JOIN		join
+	LEFT		left
+	ORDER		order
+	OUTER		outer
+	PERCENT	percent
+	RIGHT		right
+	TIES		ties
+	TOP		top
+	UNIQUE		unique
+	VALUES		values
+	WHERE		where
+	WITH		with
+
+	ALIGNAS		alignas
+	ALIGNOF		alignof
+	DELETE		delete
+	EVAL		eval
+	NEW			new
+	SIZEOF		sizeof
+	TYPEID		typeid
+*/

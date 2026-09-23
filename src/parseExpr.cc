@@ -3,9 +3,12 @@
 #include "float.h"
 #include "complex.h"
 #include "string.h"
+#include "char.h"
 #include "bool.h"
+#include "regex.h"
 
 #include <unordered_set>
+#include <vector>
 
 
 enum class Assoc
@@ -183,14 +186,42 @@ static bool isLiteral( ID id )
 		ID::SSTRING_LIT,
 
 		ID::REGEXP_LIT,
+		ID::SREGEXP_LIT,
+
+		ID::SEQ_LIT,
+		ID::MSET_LIT,
+		ID::MMAP_LIT,
+		ID::TUPLE_LIT,
 	};
 
 	return literalIds.find(id) != literalIds.end();
 }
 
+static Expr * createLiteral( const Token & t, std::vector<Expr *> & values, ID type )
+{
+	switch( type )
+	{
+	default:
+		TODO
+		break;
+
+	case ID::SEQ_LIT:
+		return new Literal<Vector>( t.line(), t.column(), Vector(std::move(values)) );
+
+	case ID::MSET_LIT:
+		return new Literal<MSet>( t.line(), t.column(), MSet(std::move(values)) );
+	
+	case ID::MMAP_LIT:
+		TODO
+		break;
+	case ID::TUPLE_LIT:
+		TODO
+		break;
+	}
+}
+
 static Expr * createLiteral( const Token & t )
 {
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	switch( t.id() )
 	{
 	default:
@@ -252,8 +283,8 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	case ID::I64_LIT:
 		return new Literal<Int64>(t.line(),t.column(), Int64(t.i64()));
 	case ID::I128_LIT:
-		TODO
-		break;
+		return new Literal<Int128>(t.line(),t.column(), Int128(t.i128()));
+
 	case ID::N_LIT:
 		return new Literal<Integer *>(t.line(),t.column(), t.integer());
 
@@ -266,13 +297,13 @@ printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	case ID::LTSTRING_LIT:
 	case ID::LTSSTRING_LIT:
 		return new Literal<LTString>(t.line(),t.column(), LTString(t.str()));
-	case ID::CHAR_LIT:
-		TODO
-		break;
 
+	case ID::CHAR_LIT:
+		return new Literal<Char>(t.line(),t.column(), Char(t.str()[0]));
+
+	case ID::SREGEXP_LIT:
 	case ID::REGEXP_LIT:
-		TODO
-		break;
+		return new Literal<RegExp>(t.line(),t.column(), RegExp(t.str()));
 
 	case ID::U32_LIT:
 		return new Literal<Uint32>(t.line(),t.column(), Uint32(t.u32()));
@@ -498,7 +529,19 @@ bool Parser::evalStacks( Expr ** expr )
 {
 	if(opStack.size() > 0 )
 	{
-		TODO
+		if( opStack.size() == 1 && opStack.top().id() == ID::COLON )
+		{
+			const Token & op = opStack.top();
+			opStack.pop();
+			Expr * right = exprStack.top();
+			exprStack.pop();
+			Expr * left = exprStack.top();
+			exprStack.pop();
+
+			*expr = new KeyValue( op.line(), op.column(), left, right );
+		}
+		else
+			TODO
 	}
 	else if( exprStack.size() == 1 )
 	{
@@ -521,478 +564,179 @@ PENTER
 	{
 		start,
 		uniarySeen,
+		binarySeen,
 		valueSeen,
-		binSeen
+		binSeen,
+		vecLiteralBeginSeen,
+		assocLiteralBeginSeen,
 	} state = start;
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
+	std::vector<Expr *>	seq;
+
 	while(true)
 	{
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		switch( state )
 		{
 		default:
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
+		{
 			TODO
 			break;
 
 		case start:
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 			if( isLiteral( token.id() ))
 			{
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 				Expr * lit = createLiteral( token );
 				exprStack.push(lit);
+				state = valueSeen;
+			}
+			else if( token.isId() )
+			{
+				Expr * name = new Name( token.line(), token.column(),  token.str() );
+				exprStack.push(name);
 				state = valueSeen;
 			}
 			else if( isPrefixOp( token.id() ))
 			{
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 				ID prefixOp = mapPrefixOp( token.id() );
 				state = uniarySeen;
+			}
+			else if( isBinaryOp( token.id() ) )
+			{
+				opStack.push(token);
+				state = binarySeen;
+			}
+			else if( token.id() == ID::LBRACK )
+			{
+				// Vector literal
+				state = vecLiteralBeginSeen;
+			}
+			else if( token.id() == ID::LBRACE )
+			{
+				// Associative collection literal
+				state = assocLiteralBeginSeen;
+			}
+			else
+			{
+				dumpToken(token);
+				TODO
+			}
+			break;
+		}
+		case vecLiteralBeginSeen:
+		{
+			Expr * ex;
+			parseExpr( &ex, token );
+
+			if( token.id() == ID::COMMA )
+				seq.push_back(ex);
+			else if( token.id() == ID::RBRACK )
+			{
+				state = valueSeen;
+				Expr * vec = createLiteral(token, seq, ID::SEQ_LIT );
+				exprStack.push(vec);
 			}
 			else
 				TODO
 			break;
+		}
+		case assocLiteralBeginSeen:
+		{
+			Expr * ex;
+			parseExpr( &ex, token );
 
+			if( token.id() == ID::COMMA )
+			{
+				seq.push_back(ex);
+			}
+			else if( token.id() == ID::RBRACE )
+			{
+				state = valueSeen;
+				Expr * vec = createLiteral(token, seq, ID::MSET_LIT );
+				exprStack.push(vec);
+			}
+			else
+				TODO
+			break;
+		}
 		case uniarySeen:
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
+		{
 			if( isLiteral( token.id() ))
 			{
 				Expr * lit = createLiteral( token );
 				exprStack.push(lit);
 				state = valueSeen;
 			}
+			else if( token.isId() )
+			{
+				Expr * name = new Name( token.line(), token.column(),  token.str() );
+				exprStack.push(name);
+				state = valueSeen;
+			}
 			else
 				TODO
 			break;
-
+		}
+		case binarySeen:
+		{
+			if( isLiteral( token.id() ))
+			{
+				Expr * lit = createLiteral( token );
+				exprStack.push(lit);
+				state = valueSeen;
+			}
+			else if( token.isId() )
+			{
+				Expr * name = new Name( token.line(), token.column(),  token.str() );
+				exprStack.push(name);
+				state = valueSeen;
+			}
+			else
+				TODO
+			break;
+		}
 		case valueSeen:
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
+		{
 			if( token.id() == ID::SCOLON)
+			{
 				return evalStacks( expr );
+			}
+			else if( token.id() == ID::COMMA)
+			{
+				return evalStacks( expr );
+			}
+			else if( token.id() == ID::RBRACK)
+			{
+				return evalStacks( expr );
+			}
+			else if( token.id() == ID::RBRACE)
+			{
+				return evalStacks( expr );
+			}
+			else if( token.id() == ID::COLON )
+			{
+				opStack.push(token);
+				state = start;
+			}
+			else if( isBinaryOp( token.id() ) )
+			{
+				opStack.push(token);
+				state = binarySeen;
+			}
 			else
 			{
 				TODO
 			}
 			break;
-
+		}
 		case binSeen:
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
+		{
 			TODO
 			break;
 		}
+		}
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 		lex(token, this );	
 	}
 
-printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ ); fflush(stdout);
 	return false;
 }
-#if 0
-		switch(token.id() )
-		{
-		default:
-			TODO
-			break;
-
-		///////////////////////////////////////////////
-		// punctuators
-		///////////////////////////////////////////////
-		case ID::COMMA:
-			TODO
-			break;
-		case ID::SCOLON:
-			// *expr = new Literal();
-			return true;
-		case ID::LBRACE:// {
-			TODO
-			break;
-		case ID::RBRACE:// }
-			TODO
-			break;
-
-		///////////////////////////////////////////////
-		// operators
-		///////////////////////////////////////////////
-
-		case ID::QUAL:			// ::
-			TODO
-			break;
-		case ID::ALIGNOF:		// alignof
-			TODO
-			break;
-		case ID::LPAREN:		// (
-			TODO
-			break;
-		case ID::RPAREN:		// )
-			TODO
-			break;
-		case ID::LBRACK:		// [
-			TODO
-			break;
-		case ID::RBRACK:		// ]
-			TODO
-			break;
-		case ID::NOT:			// !
-			TODO
-			break;
-		case ID::INC:			// ++
-			TODO
-			break;
-		case ID::DEC:			// --
-			TODO
-			break;
-		case ID::DOT:			// .
-			TODO
-			break;
-		case ID::PTR:			// ->
-			TODO
-			break;
-		case ID::EXP:			// **
-			TODO
-			break;
-		case ID::M_EXP:			// [**]
-			TODO
-			break;
-		case ID::BNOT:			// ~
-			TODO
-			break;
-		case ID::ADD:			// +
-			TODO
-			break;
-		case ID::SUB:			// -
-			TODO
-			break;
-		case ID::MUL:			// *
-			TODO
-			break;
-		case ID::BOR:			// |
-			TODO
-			break;
-		case ID::NEW:			// new
-			TODO
-			break;
-		case ID::DELETE:		// delete	
-			TODO
-			break;
-		case ID::CO_AWAIT:		// co_await
-			TODO
-			break;
-		case ID::SIZEOF:		// sizeof
-			TODO
-			break;
-		case ID::IS_VOID:		// is_void
-			TODO
-			break;
-		case ID::DOT_ASK:		// .*
-			TODO
-			break;
-		case ID::MPTR:			// ->*
-			TODO
-			break;
-		case ID::DIV:			// /
-			TODO
-			break;
-		case ID::MOD:			// %
-			TODO
-			break;
-		case ID::CRS_PROD:		// [*]
-			TODO
-			break;
-		case ID::DOT_PROD:		// [.]
-			TODO
-			break;
-		case ID::M_DIV:			// [/]
-			TODO
-			break;
-		case ID::SLFT:			// <<
-			TODO
-			break;
-		case ID::SRGHT:			// >>
-			TODO
-			break;
-		case ID::SS:			// <=>
-			TODO
-			break;
-		case ID::LT:			// <
-			TODO
-			break;
-		case ID::LE:			// <=
-			TODO
-			break;
-		case ID::GT:			// >
-			TODO
-			break;
-		case ID::GE:			// >=
-			TODO
-			break;
-		case ID::EQ:			// ==
-			TODO
-			break;
-		case ID::NE:			// !=
-			TODO
-			break;
-		case ID::BAND:			// &
-			TODO
-			break;
-		case ID::XOR:			// ^
-			TODO
-			break;
-		case ID::IN:			// in
-			TODO
-			break;
-		case ID::AND:			// &&
-			TODO
-			break;
-		case ID::OR:			// ||
-			TODO
-			break;
-		case ID::QUEST:			// ?
-			TODO
-			break;
-		case ID::COLON:			// :
-			TODO
-			break;
-		case ID::ASSIGN:		// =
-			TODO
-			break;
-		case ID::MOD_ASS:		// %=
-			TODO
-			break;
-		case ID::MUL_ASS:		// *=
-			TODO
-			break;
-		case ID::AND_ASS:		// &=		
-			TODO
-			break;
-		case ID::ADD_ASS:		// +=		
-			TODO
-			break;
-		case ID::CP_ASS:		// [*]=	
-			TODO
-			break;
-		case ID::DIV_ASS:		// /=
-			TODO
-			break;
-		case ID::DP_ASS:		// [.]=
-			TODO
-			break;
-		case ID::EXP_ASS:		// **=
-			TODO
-			break;
-		case ID::MD_ASS:		// [/]=
-			TODO
-			break;
-		case ID::ME_ASS:		// [**]=
-			TODO
-			break;
-		case ID::SUB_ASS:		// -=
-			TODO
-			break;
-		case ID::TIL_ASS:		// ~=
-			TODO
-			break;
-		case ID::XOR_ASS:		// ^=
-			TODO
-			break;
-		case ID::SLFT_ASS:		// <<=
-			TODO
-			break;
-		case ID::SRGHT_ASS:		// >>=
-			TODO
-			break;
-		case ID::OR_ASS:		// |=
-			TODO
-			break;
-		case ID::CO_YIELD:		// co_yield
-			TODO
-			break;
-		case ID::THROW:			// throw
-			TODO
-			break;
-		case ID::APPLY:			// apply
-			TODO
-			break;
-		case ID::ASYNC:			// async
-			TODO
-			break;
-		case ID::CLOSURE:		// closure
-			TODO
-			break;
-		case ID::EVAL:			// eval
-			TODO
-			break;
-		case ID::FILTER:		// filter
-			TODO
-			break;
-		case ID::REDUCE:		// reduce
-			TODO
-			break;
-		case ID::ORDER:			// order
-			TODO
-			break;
-		case ID::INSERT:		// insert		
-			TODO
-			break;
-		case ID::SELECT:		// select		
-			TODO
-			break;
-		case ID::UPDATE:		// update		
-			TODO
-			break;
-		case ID::DOT_DOT:		// ..
-			TODO
-			break;
-		case ID::PARAM_ASS:		// :=
-			TODO
-			break;
-
-		/////////////////////////////////////////
-		// Identifiers
-		/////////////////////////////////////////
-		case ID::FUN_NAME:
-			TODO
-			break;
-		case ID::FUNCTION_NAME:
-			TODO
-			break;
-		case ID::NAMESPACE_NAME:
-			TODO
-			break;
-		case ID::VARIABLE_NAME:
-			TODO
-			break;
-		case ID::ID:
-			TODO
-			break;
-		case ID::SID:
-			TODO
-			break;
-
-		/////////////////////////////////////////
-		// literals
-		/////////////////////////////////////////
-		case ID::_E:			// .e
-			TODO
-			break;
-		case ID::FALSE:
-			TODO
-			break;
-		case ID::_GAMMA:		// .gamma
-			TODO
-			break;
-		case ID::_I:			// .i
-			TODO
-			break;
-		case ID::_INF:			// .inf
-			TODO
-			break;
-		case ID::_NAN:			// .nan
-			TODO
-			break;
-		case ID::_PHI:			// .phi
-			TODO
-			break;
-		case ID::_PI:			// .pi
-			TODO
-			break;
-		case ID::TRUE:		
-			TODO
-			break;
-		case ID::THIS:
-			TODO
-			break;
-		case ID::CHAR_LIT:		// 'x'
-			TODO
-			break;
-		case ID::DATETIME_LIT:	// d"YYYY-MM-DD:HH:MM:SS[:sssssssss]"
-			TODO
-			break;
-		case ID::DATE_LIT:		// d"YYYY-MM-DD"
-			TODO
-			break;
-		case ID::DAYS_LIT:       // 111d
-			TODO
-			break;
-		case ID::F32_LIT:	// 1.1e10
-			TODO
-			break;
-		case ID::F64_LIT:	// 1.1e100
-			TODO
-			break;
-		case ID::F80_LIT:	// 1.1e100
-			TODO
-			break;
-		case ID::HOURS_LIT:     // 111h
-			TODO
-			break;
-		case ID::INT8_LIT:      // 1111
-			TODO
-			break;
-		case ID::INT16_LIT:     // 1111
-			TODO
-			break;
-		case ID::INT32_LIT:     // 1111
-			TODO
-			break;
-		case ID::INT64_LIT:     // 1111
-			TODO
-			break;
-		case ID::INTEGER_LIT:   // 765 432 109 876 543 210
-			TODO
-			break;
-		case ID::LSTRING_LIT:   // l"sss"
-		case ID::LSSTRING_LIT:   // l"sss"
-			TODO
-			break;
-		case ID::LTSTRING_LIT:  // t"aaa"
-		case ID::LTSSTRING_LIT:  // t"aaa"
-			TODO
-			break;
-		case ID::MINS_LIT:      // 111m
-			TODO
-			break;
-		case ID::NAT_LIT:       // 1212u
-			TODO
-			break;
-		case ID::Q_LIT:         // 111q
-			TODO
-			break;
-		case ID::REAL_LIT:      // 123r
-			TODO
-			break;
-		case ID::REGEXP_LIT:    // re"s*"
-			TODO
-			break;
-		case ID::SECS_LIT:      // 111.123s
-			TODO
-			break;
-		case ID::STRING_LIT:    // "ssss"
-		case ID::SSTRING_LIT:   // "ssss"
-			TODO
-			break;
-		case ID::TIME_LIT:      // t"HH:MM:SS:sssssssss"
-			TODO
-			break;
-		case ID::UINT8_LIT:     // 111u
-			TODO
-			break;
-		case ID::UINT16_LIT:    // 111u
-			TODO
-			break;
-		case ID::UINT32_LIT:    // 111u
-			TODO
-			break;
-		case ID::UINT64_LIT:    // 111u
-			TODO
-			break;
-    	case ID::MONTHS_LIT:    // 111M
-			TODO
-			break;
-    	case ID::YEARS_LIT:     // 111Y
-			TODO
-			break;
-		}
-#endif

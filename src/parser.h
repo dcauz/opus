@@ -41,6 +41,7 @@ public:
 	}
 	~Parser()
 	{
+PENTER
 		fclose( fh );
 	}
 
@@ -79,7 +80,7 @@ public:
 	SymbolTable	* currSymTbl;
 
 	std::stack<std::string> classes;
-	std::stack<int>			opStack;
+	std::stack<Token>		opStack;
 	std::stack<Expr *>		exprStack;
 
 	Token lookahead;
