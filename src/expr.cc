@@ -137,6 +137,18 @@ sp<Type> Add::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+sp<Type> ShiftL::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> ShiftR::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> Sub::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
@@ -149,7 +161,67 @@ sp<Type> Mul::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+sp<Type> Exponent::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> MPow::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> PowAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> MPowAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> ParamAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> SpaceShip::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> Div::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> MDiv::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> MDivAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> SLftAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> SRghtAssign::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -203,6 +275,24 @@ sp<Type> Dot::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+sp<Type> Ptr::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> PtrMem::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> DotMem::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> AddAssign::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
@@ -216,6 +306,36 @@ sp<Type> SubAssign::semCheck( SemCheckContext & ) const
 }
 
 sp<Type> MulAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> XPrdAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> DPrdAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> BNotAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> CrossProd::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> DotProd::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -239,13 +359,31 @@ sp<Type> AndAssign::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+sp<Type> BAndAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> OrAssign::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
+sp<Type> BOrAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> XorAssign::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> BXorAssign::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -263,13 +401,31 @@ sp<Type> Or::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+sp<Type> Lor::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> Xor::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
+sp<Type> BXor::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
 sp<Type> And::semCheck( SemCheckContext & ) const 
+{
+	TODO // semCheck
+	return errorType;
+}
+
+sp<Type> Land::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -414,6 +570,18 @@ bool Add::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool ShiftL::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool ShiftR::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool Sub::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
@@ -426,7 +594,49 @@ bool Mul::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool Exponent::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool MPow::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool PowAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool MPowAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool ParamAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool SpaceShip::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool Div::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool MDiv::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -480,6 +690,24 @@ bool Dot::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool Ptr::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool PtrMem::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool DotMem::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool AddAssign::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
@@ -498,7 +726,55 @@ bool MulAssign::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool XPrdAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool DPrdAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool BNotAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool CrossProd::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool DotProd::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool DivAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool MDivAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool SLftAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool SRghtAssign::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -516,13 +792,31 @@ bool AndAssign::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool BAndAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool OrAssign::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
 }
 
+bool BOrAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool XorAssign::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool BXorAssign::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -540,13 +834,31 @@ bool Or::genCode( GenCodeContext & ) const
 	return false;
 }
 
+bool Lor::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool Xor::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
 }
 
+bool BXor::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
 bool And::genCode( GenCodeContext & ) const 
+{
+	TODO // genCode
+	return false;
+}
+
+bool Land::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -672,4 +984,18 @@ sp<Type> KeyValue::semCheck( SemCheckContext & scc ) const
 {
 	TODO // semCheck
 	return errorType;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool BNot::genCode( GenCodeContext & gcc ) const
+{
+    TODO // genCode
+    return false;
+}
+
+sp<Type> BNot::semCheck( SemCheckContext & scc ) const
+{
+    TODO // semCheck
+    return errorType;
 }

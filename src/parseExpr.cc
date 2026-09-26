@@ -314,6 +314,82 @@ static Expr * createLiteral( const Token & t )
 	}
 }
 
+static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
+{
+      switch(token.id())
+      {
+      default:
+              TODO
+              return nullptr;
+      case ID::ADD:           return new Add( token.line(), token.column(), left, right );
+      case ID::ADD_ASS:       return new AddAssign( token.line(), token.column(), left, right );
+      case ID::AND:           return new Land( token.line(), token.column(), left, right );
+      case ID::AND_ASS:       return new AndAssign( token.line(), token.column(), left, right );
+      case ID::ASSIGN:        return new Assign( token.line(), token.column(), left, right );
+
+      case ID::BAND:          return new And( token.line(), token.column(), left, right );
+      case ID::BAND_ASS:      return new BAndAssign( token.line(), token.column(), left, right );
+      case ID::BOR:           return new Or( token.line(), token.column(), left, right );
+      case ID::BOR_ASS:       return new BOrAssign( token.line(), token.column(), left, right );
+      case ID::BXOR:          return new BXor( token.line(), token.column(), left, right );
+      case ID::BXOR_ASS:      return new BXorAssign( token.line(), token.column(), left, right );
+
+      case ID::CP_ASS:        return new XPrdAssign( token.line(), token.column(), left, right );
+      case ID::CRS_PROD:      return new CrossProd( token.line(), token.column(), left, right );
+
+      case ID::DIV:           return new Div( token.line(), token.column(), left, right );
+      case ID::DIV_ASS:       return new DivAssign( token.line(), token.column(), left, right );
+      case ID::DOT:           return new Dot( token.line(), token.column(), left, right );
+      case ID::DOT_ASK:       return new DotMem( token.line(), token.column(), left, right );
+      case ID::DOT_DOT:       return new Range( token.line(), token.column(), left, right );
+      case ID::DOT_PROD:      return new DotProd( token.line(), token.column(), left, right );
+      case ID::DP_ASS:        return new DPrdAssign( token.line(), token.column(), left, right );
+
+      case ID::EQ:            return new Eq( token.line(), token.column(), left, right );
+      case ID::EXP:           return new Exponent( token.line(), token.column(), left, right );
+      case ID::EXP_ASS:       return new PowAssign( token.line(), token.column(), left, right );
+
+      case ID::GE:            return new GreaterEq( token.line(), token.column(), left, right );
+      case ID::GT:            return new Greater( token.line(), token.column(), left, right );
+
+      case ID::IN:            return new In( token.line(), token.column(), left, right );
+
+      case ID::LE:            return new LessEq( token.line(), token.column(), left, right );
+      case ID::LT:            return new Less( token.line(), token.column(), left, right );
+
+      case ID::M_DIV:         return new MDiv( token.line(), token.column(), left, right );
+      case ID::M_EXP:         return new MPow( token.line(), token.column(), left, right );
+      case ID::MD_ASS:        return new MDivAssign( token.line(), token.column(), left, right );
+      case ID::ME_ASS:        return new MPowAssign( token.line(), token.column(), left, right );
+      case ID::MOD:           return new Mod( token.line(), token.column(), left, right );
+      case ID::MOD_ASS:       return new ModAssign( token.line(), token.column(), left, right );
+      case ID::MPTR:          return new PtrMem( token.line(), token.column(), left, right );
+      case ID::MUL:           return new Mul( token.line(), token.column(), left, right );
+      case ID::MUL_ASS:       return new MulAssign( token.line(), token.column(), left, right );
+
+      case ID::NE:            return new NotEq( token.line(), token.column(), left, right );
+
+      case ID::OR:            return new Lor( token.line(), token.column(), left, right );
+      case ID::OR_ASS:        return new OrAssign( token.line(), token.column(), left, right );
+
+      case ID::PARAM_ASS: 	return new ParamAssign( token.line(), token.column(), left, right );
+      case ID::PTR:           return new Ptr( token.line(), token.column(), left, right );
+
+      case ID::SLFT:          return new ShiftL( token.line(), token.column(), left, right );
+      case ID::SLFT_ASS:      return new SLftAssign( token.line(), token.column(), left, right );
+      case ID::SRGHT:         return new ShiftR( token.line(), token.column(), left, right );
+      case ID::SRGHT_ASS: 	return new SRghtAssign( token.line(), token.column(), left, right );
+      case ID::SS:            return new SpaceShip( token.line(), token.column(), left, right );
+      case ID::SUB:           return new Sub( token.line(), token.column(), left, right );
+      case ID::SUB_ASS:       return new SubAssign( token.line(), token.column(), left, right );
+
+      case ID::TIL_ASS:       return new BNotAssign( token.line(), token.column(), left, right );
+
+      case ID::XOR:           return new Xor( token.line(), token.column(), left, right );
+      case ID::XOR_ASS:       return new XorAssign( token.line(), token.column(), left, right );
+      }
+}
+
 static bool isTypeName( ID id )
 {
 	static std::unordered_set<ID>	typeNameIds

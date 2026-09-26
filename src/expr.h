@@ -504,6 +504,16 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
+// expr &&= expr
+class BAndAssign: public Binary
+{
+public:
+	BAndAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
 // expr |= expr
 class OrAssign: public Binary
 {
@@ -514,11 +524,31 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
+// expr ||= expr
+class BOrAssign: public Binary
+{
+public:
+	BOrAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
 // expr ^= expr
 class XorAssign: public Binary
 {
 public:
 	XorAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
+// expr ^^= expr
+class BXorAssign: public Binary
+{
+public:
+	BXorAssign( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -639,6 +669,16 @@ class Xor: public Binary
 {
 public:
 	Xor( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
+// expr ^^ expr
+class BXor: public Binary
+{
+public:
+	BXor( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
@@ -951,6 +991,16 @@ class Not: public Uniary
 {
 public:
 	Not( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
+// ~ expr
+class BNot: public Uniary
+{
+public:
+	BNot( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
