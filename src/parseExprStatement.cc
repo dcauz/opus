@@ -9,19 +9,19 @@ exprStatement
 	: expr ';'	
 */
 
-bool Parser::parseExprStatement( ExprStatement ** es )
+bool Parser::parseExprStatement( ExprStatement ** es, Token & tok )
 {
 PENTER
-	// get expr
-	Token termTok;
-	lex( termTok, this );
+	
+	if( tok.id() == ID::NIL )
+		lex( tok, this );
 
 	Expr * ex;
-	bool rc = parseExpr( &ex, termTok );
+	bool rc = parseExpr( &ex, tok );
 
 	if( rc )
 	{
-		if( termTok.id() != ID::SCOLON )
+		if( tok.id() != ID::SCOLON )
 		{
 			parserError( "Expression statement is not terminated by ;" );
 			return false;

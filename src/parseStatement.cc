@@ -26,7 +26,7 @@ PENTER
 		default:
 		{
 			ExprStatement * exprS;
-			rc = parseExprStatement( &exprS );
+			rc = parseExprStatement( &exprS, val );
 			*statement = exprS;
 printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;

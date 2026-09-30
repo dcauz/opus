@@ -534,7 +534,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
-// expr ^= expr
+// expr ^^= expr
 class XorAssign: public Binary
 {
 public:
@@ -544,7 +544,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
-// expr ^^= expr
+// expr ^= expr
 class BXorAssign: public Binary
 {
 public:
@@ -664,7 +664,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
-// expr ^ expr
+// expr ^^ expr
 class Xor: public Binary
 {
 public:
@@ -674,7 +674,7 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
-// expr ^^ expr
+// expr ^ expr
 class BXor: public Binary
 {
 public:
@@ -1016,6 +1016,26 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 };
 
+// + expr
+class Plus: public Uniary
+{
+public:
+	Plus( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
+// * expr
+class Deref: public Uniary
+{
+public:
+	Deref( unsigned short l, unsigned short c, Expr * o ):Uniary(l,c,o) {}
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	sp<Type> semCheck( SemCheckContext & scc ) const final;
+};
+
 // throw expr
 class Throw: public Uniary
 {
@@ -1104,7 +1124,7 @@ class Top
 {
 public:
 	Top( unsigned short l, unsigned short c, Expr * e, bool percent = false, bool ties = false ):
-		line_(l), column_(c), expr_(e), percent_(percent), ties_(ties)
+		expr_(e), percent_(percent), ties_(ties), line_(l), column_(c)
 	{}
 
 private:

@@ -14,7 +14,7 @@ i32 main( i32 argc, final string [] argv )
 	i /= argc;
 	i %= argc;
 
-	i = i ** (6+i);
+	i = i ** 6;
 	i **= i;
 
 	i = +i;
@@ -44,12 +44,6 @@ i32 main( i32 argc, final string [] argv )
 
 	i = i!;
 
-	int8 ? x;
-	bool v = isvoid x;
-	bool nv =  !v;
-	nv =  ~v;
-	nv ~=  v;
-	
 	i32 j = 123;
 
 	bool eq = i == j;
@@ -64,6 +58,13 @@ i32 main( i32 argc, final string [] argv )
 	i32 s3 = i >> 2;
 	s1 <<= 2;
 	s3 >>= 2;
+
+	bool nv =  !v;
+	nv =  ~v;
+	nv ~=  v;
+	
+	int8 ? x;
+	bool v = isvoid x;
 
 	i16 a = -10;
 	a = |a|;

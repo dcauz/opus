@@ -822,7 +822,8 @@ const char * OperatorDef::opName( ID op )
 	case ID::BOR:	return "|";
 	case ID::AND:	return "&&";
 	case ID::OR:	return "||";
-	case ID::XOR:	return "^";
+	case ID::BXOR:	return "^";
+	case ID::XOR:	return "^^";
 	case ID::MOD:	return "%";
 	case ID::ASSIGN:return "=";
 	case ID::GT:	return ">";
@@ -833,14 +834,17 @@ const char * OperatorDef::opName( ID op )
 	case ID::LE:	return "<=";
 	case ID::NE:	return "!=";
 
-	case ID::AND_ASS:	return "&=";
+	case ID::BAND_ASS:	return "&=";
+	case ID::AND_ASS:	return "&&=";
 	case ID::DIV_ASS:	return "/=";
 	case ID::MUL_ASS:	return "*=";
 
+	case ID::BOR_ASS:	return "|=";
 	case ID::OR_ASS:	return "|=";
 	case ID::ADD_ASS:	return "+=";
 	case ID::SUB_ASS:	return "-=";
-	case ID::XOR_ASS:	return "^=";
+	case ID::XOR_ASS:	return "^^=";
+	case ID::BXOR_ASS:	return "^=";
 	case ID::MOD_ASS:	return "%=";
 
 	case ID::DEC:	return "++";

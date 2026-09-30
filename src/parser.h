@@ -114,7 +114,7 @@ private:
 	bool parseDefault( Default ** );
 	bool parseDo( Do ** );
 	bool parseEnum( EnumType **);
-	bool parseExprStatement( ExprStatement **);
+	bool parseExprStatement( ExprStatement **, Token & );
 	bool parseFor( For ** );
 	bool parseIf( If ** );
 	bool parseInterface( InterfaceType ** );

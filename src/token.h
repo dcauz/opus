@@ -101,13 +101,14 @@ enum class ID : unsigned int
 
 	// 70
 	S_DELETE,   // delete (SQL)
-	ABS,        // |.|
+	ABS,        // |.
+	POST_ABS,   // .|
 
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
 	RBRACK=93,	// ]
-	BXOR   =94,	// ^
-	XOR,		// ^^
+	BXOR   =94,	// ^^
+	XOR,		// ^
 	BXOR_ASS,	 // ^=
 
 	LBRACE=123,	// {
@@ -558,6 +559,8 @@ struct Token
 	bool isLongString() const   { return id_ == ID::STRING_LIT || id_ == ID::LSTRING_LIT || id_ == ID::LTSTRING_LIT; }
 
 	ID	id() const				{ return id_; }
+	void id( ID newId ) 		{ id_ = newId; }
+
 	bool isId() const			{ return id_ == ID::ID || id_ == ID::SID; }
 
 	const char * idLexium() const	{ return id_ == ID::ID ? lexium_->c_str() : shortLex_; }
@@ -628,5 +631,5 @@ extern unsigned noOfKeyWords;
 
 #define DEBUG_YYLEX
 #ifdef DEBUG_YYLEX
-void dumpToken( const Token & tok );
+void dumpToken( const char *, int, const Token & tok );
 #endif
