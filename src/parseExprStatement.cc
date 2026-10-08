@@ -17,7 +17,7 @@ PENTER
 		lex( tok, this );
 
 	Expr * ex;
-	bool rc = parseExpr( &ex, tok );
+	bool rc = parseExpr( &ex, ET::SCOLON, tok, 0, 0 );
 
 	if( rc )
 	{
@@ -34,4 +34,3 @@ PENTER
 
 	return true;
 }
-

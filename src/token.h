@@ -19,17 +19,15 @@ enum class ID : unsigned int
 	///////////////////////////////////////
 	ADD_ASS,	 // +=
 	BAND_ASS,	 // &=
-	CP_ASS,		 // [*]=
 	CRS_PROD,	 // [*]
 	DEC,		 // --
 	DIV_ASS,	 // /=
 	DOT_ASK,	 // .*
 	DOT_DOT,	 // ..
 	DOT_DOT_DOT, // ...
+	DOT_PROD,	 // [.]
 
 	// 10
-	DOT_PROD,	 // [.]
-	DP_ASS,		 // [.]=
 	AND,		 // &&
 	EQ,  		 // ==
 	EXP,		 // **
@@ -38,30 +36,32 @@ enum class ID : unsigned int
 	GE,			 // >=
 	INC,		 // ++
 	LE,			 // <=
+	M_DIV,		 // [/]
+	MOD_ASS,	 // %=
 
 	// 20
-	M_DIV,		 // [/]
-	MD_ASS,		 // [/]=
-	MOD_ASS,	 // %=
 	MUL_ASS,	 // *=
 	M_EXP,		 // [**]
-	ME_ASS,		 // [**]=
 	MPTR,		 // ->*
 	NE,			 // !=
 	OR,			 // ||
 	BOR_ASS,	 // |=
-
-	// 30
 	PARAM_ASS,	 // :=
 	POST_DEC,	 // .--
 	POST_INC,	 // .++
-	NOT   =33,	 // !
 	PTR,		 // ->
-	WEAK  =35,	 // #		weak pointer (not an operator)
+
+	// 30
 	QUAL,		 // ::
+    DEREF,       // * .
+	SLFT,		 // <<
+	NOT   =33,	 // !
+	SRGHT,		 // >>
+	WEAK  =35,	 // #		weak pointer (not an operator)
+	SRGHT_ASS,	 // >>=
 	MOD   =37,	 // %
 	BAND  =38,	 // &
-    DEREF,       // * .
+	SS,			 // <=>
 
 	// 40
 	LPAREN=40,	 // (
@@ -72,18 +72,18 @@ enum class ID : unsigned int
 	SUB   =45,	 // -
 	DOT   =46,	 // .
 	DIV   =47,	 // /
-	SLFT,		 // <<
 	SLFT_ASS,	 // <<=
+	SUB_ASS,	 // -=
 
 	// 50
-	SRGHT,		 // >>
-	SRGHT_ASS,	 // >>=
-	SS,			 // <=>
-	SUB_ASS,	 // -=
-	TIL_ASS,	 // ~=
+	BNOT_ASS,	 // ~=
 	UNIARY_MINUS,// -.
 	UNIARY_PLUS, // +.
 	XOR_ASS,	 // ^^=
+	IN,         // <-
+	OR_ASS,	    // ||=
+	AND_ASS,    // &&=
+	INSERT,     // insert
 	COLON =58, 	 // :
 	SCOLON=59,	 // ;
 
@@ -92,24 +92,20 @@ enum class ID : unsigned int
 	ASSIGN=61,	// =
 	GT    =62,	// >
 	QUEST =63,	// ?
-	IN,         // <-
-	OR_ASS,	    // ||=
-	AND_ASS,    // &&=
-	INSERT,     // insert
 	SELECT,     // select
 	UPDATE,     // update
-
-	// 70
 	S_DELETE,   // delete (SQL)
 	ABS,        // |.
 	POST_ABS,   // .|
+	XOR,		// ^
+
+	// 70
+	BXOR_ASS,	 // ^=
 
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
 	RBRACK=93,	// ]
 	BXOR   =94,	// ^^
-	XOR,		// ^
-	BXOR_ASS,	 // ^=
 
 	LBRACE=123,	// {
 	BOR   =124,	// |
@@ -365,6 +361,9 @@ enum class ID : unsigned int
 	INVALID_NUMBER,
 	INVALID_STRING,
 	ERROR,
+
+	LINE_COMMENT,
+	MULTI_LINE_COMMENT,
 
 	///////////////////////////////////////
 	// Type modifiers

@@ -40,7 +40,7 @@ PENTER
 		Expr * ex;
 		int termTok;
 		Token tt;
-		rc = parseExpr( &ex,tt );
+		rc = parseExpr( &ex, ET::RPAREN, tt, 0, 0 );
 
 		if( rc )
 		{

@@ -20,7 +20,7 @@ PENTER
 	else
 	{
 		Expr * ex;
-		bool rc = parseExpr( &ex, lval );
+		bool rc = parseExpr( &ex, ET::SCOLON, lval, 0, 0 );
 
 		if( rc )
 		{

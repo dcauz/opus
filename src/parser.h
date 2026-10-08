@@ -41,7 +41,6 @@ public:
 	}
 	~Parser()
 	{
-PENTER
 		fclose( fh );
 	}
 
@@ -64,7 +63,7 @@ PENTER
 
 
 	char * cp;
-	int  charLookahead[2];
+	int  charLookahead[4];
 
 	unsigned short lineNo;
 	unsigned short columnNo;
@@ -92,10 +91,22 @@ private:
 	unsigned	declarators_;
 	int		selectNests_;
 
+	enum class ET
+	{
+		COMMA_OR_RBRACE,// { e1 , ... }
+		COMMA_OR_COLON_OR_RBRACE,// { i1:e1 , ... }
+		COMMA_OR_RBRACK,// [ e1, ... ]
+		COMMA_OR_RPAREN,// ( e1, ... )
+		RPAREN,         // ( e1 )
+		ABS,        	// | e |
+		SCOLON,	        // e ;
+		COLON	        // e1 ? e2 : e3
+	};
+
 	void parserError( const char * );
 
 	bool parseArgs( std::vector<up<Arg>> ** );
-	bool parseExpr( Expr ** expr, Token & );
+	bool parseExpr( Expr ** expr, ET et, Token &, int, int );
 	bool parseExprTypes( std::vector<up<TypeArg>> & );
 	bool parseSelect( Select ** );
 	bool parseStatement( Statement ** );
@@ -129,5 +140,5 @@ private:
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );
 
-	bool evalStacks( Expr ** );
+	bool evalStacks( Expr **, int, int );
 };

@@ -13,7 +13,7 @@ PENTER
 	// get expr
 	Expr * ex;
 	Token tt;
-	bool rc = parseExpr( &ex, tt );	
+	bool rc = parseExpr( &ex, ET::COLON, tt, 0, 0 );	
 	int termTok = 0;
 
 	if(rc)

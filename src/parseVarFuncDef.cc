@@ -38,35 +38,35 @@ PENTER
 
 	enum State
 	{
-		start,
+		start           = 0,
 
-		modSeen,
-		typeSeen,
-		ptrSeen,
-		arrayOpenSeen,
-		arrayCloseSeen,
-		arrayPtrSeen,
-		refSeen,
-		idSeen,
-		assSeen,
-        exprSeen,
+		modSeen         = 1,
+		typeSeen        = 2,
+		ptrSeen         = 3,
+		arrayOpenSeen   = 4,
+		arrayCloseSeen  = 5,
+		arrayPtrSeen    = 6,
+		refSeen         = 7,
+		idSeen          = 8,
+		assSeen         = 9,
+        exprSeen        = 10,
 
-		lParenSeen,
+		lParenSeen      = 11,
 
-		pModSeen,
-		pTypeSeen,
-		pPtrSeen,
-		pArrayOpenSeen,
-		pArrayCloseSeen,
-		pArrayPtrSeen,
-		pRefSeen,
-		pIdSeen,
-		pAssSeen,
-        pExprSeen,
+		pModSeen        = 12,
+		pTypeSeen       = 13,
+		pPtrSeen        = 14,
+		pArrayOpenSeen  = 15,
+		pArrayCloseSeen = 16,
+		pArrayPtrSeen   = 17,
+		pRefSeen        = 18,
+		pIdSeen         = 19,
+		pAssSeen        = 20,
+        pExprSeen       = 21,
 
-		dotDotDotSeen,
+		dotDotDotSeen   = 22,
 
-		rParenSeen,
+		rParenSeen      = 23,
 	} state = start;
 
 	std::string id;
@@ -83,9 +83,14 @@ PENTER
 	ID pPtr = ID::NIL;
 	ID paPtr = ID::NIL;
 	bool	pHasRef = false;
+	bool	pHasPtr = false;
+
+	Expr 	* dim;
 
 	while(true)
 	{
+printf( "%s:%d VF START state %d\n", __FILE__, __LINE__, state );
+dumpToken( __FILE__, __LINE__, token );
 		switch(state)
 		{
 		case start:
@@ -131,8 +136,13 @@ PENTER
 			break;
 
 		case ptrSeen:
-			// lbracket ref id
-			TODO
+			if( token.isId())
+			{
+				name = std::move(token);
+				state = idSeen;
+			}
+			else
+				TODO
 			break;
 
 		case arrayOpenSeen:
@@ -141,7 +151,9 @@ PENTER
 			else
 			{
 				// get dims
-				TODO
+				if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, 0, 0 ))
+					TODO
+				state = arrayCloseSeen;
 			}
 			break;
 
@@ -158,6 +170,8 @@ PENTER
 				state = arrayPtrSeen;
 				aPtr = token.id();
 			}
+			else if( token.id() == ID::LBRACK )
+				state = arrayOpenSeen;
 			else
 				TODO
 			break;
@@ -187,9 +201,7 @@ PENTER
 			else if( token.id() == ID::ASSIGN )
 				state = assSeen;
 			else if( token.id() == ID::SCOLON )
-			{
-				TODO
-			}
+				return true;
 			else
 				TODO
 			break;
@@ -197,7 +209,7 @@ PENTER
 		case assSeen:
 		{
  			Expr * expr;
-			if( !parseExpr( & expr, token ) || token.id() != ID::SCOLON )
+			if( !parseExpr( &expr, ET::SCOLON, token, 0, 0 ) || token.id() != ID::SCOLON )
 			{
 				TODO
 			}
@@ -341,6 +353,7 @@ PENTER
 			break;
 		}
 
+printf( "\n%s:%d VF UPDATED state %d\n\n", __FILE__, __LINE__, state );
 		lex( token, this );
 	}
 

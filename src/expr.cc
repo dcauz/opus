@@ -538,6 +538,24 @@ sp<Type> IsVoid::semCheck( SemCheckContext & ) const
   return errorType;
 }
 
+sp<Type> CtorCall::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+sp<Type> Delete::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+sp<Type> Sizeof::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 bool Select::genCode( GenCodeContext & ) const 
@@ -979,6 +997,24 @@ bool OuterJoin::genCode( GenCodeContext & ) const
 }
 
 bool IsVoid::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+bool CtorCall::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+bool Delete::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+bool Sizeof::genCode( GenCodeContext & ) const 
 {
   TODO // genCode
   return false;

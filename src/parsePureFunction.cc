@@ -48,7 +48,7 @@ PENTER
 
 	Expr * expr;
 	Token tt;
-	rc = parseExpr( &expr, tt );
+	rc = parseExpr( &expr, ET::SCOLON, tt, 0, 0 );
 
 	if( rc && termToken != ID::SCOLON )
 		parserError( "Pure function is not terminated by ; character" );

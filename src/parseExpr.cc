@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <vector>
 #include <cassert>
+#include <map>
 
 
 enum class Assoc
@@ -21,121 +22,135 @@ enum class Assoc
 
 struct Operator
 {
-  ID    id;
   Assoc  assoc;
   int   prec;
 };
 
-Operator ops [] =
+static std::map<ID, Operator> ops =
 {
-  { ID::QUAL,   Assoc::LEFT,    0 }, // ::    Namespace qualifier
+  { ID::QUAL,     {Assoc::LEFT, 0 }}, // ::    Namespace qualifier
 
-  { ID::ALIGNOF,  Assoc::NON,   1 }, // alignof   Align of a type.
-  { ID::LPAREN,  Assoc::NON,    1 }, // (     Parenthesis / ctor / function call
-  { ID::RPAREN,  Assoc::NON,    1 }, // )     Parenthesis
-  { ID::LBRACK,  Assoc::NON,    1 }, // [     Array index
-  { ID::RBRACK,  Assoc::NON,    1 }, // ]     Array index
-  { ID::FACTORIAL,Assoc::NON,   1 }, // . !     Factorial (post)
-  { ID::POST_INC, Assoc::NON,   1 }, // . ++    Post increment
-  { ID::POST_DEC, Assoc::NON,   1 }, // . --    Post decrement
-  { ID::DOT,    Assoc::LEFT,    1 }, // .     Member access
-  { ID::PTR,    Assoc::LEFT,    1 }, // ->    Pointer member access
+  { ID::ALIGNOF,     {Assoc::NON,   1 }}, // alignof   Align of a type.
+  { ID::LPAREN,      {Assoc::NON,   1 }}, // (     Parenthesis / ctor / function call
+  { ID::RPAREN,      {Assoc::NON,   1 }}, // )     Parenthesis
+  { ID::LBRACK,      {Assoc::NON,   1 }}, // [     Array index
+  { ID::RBRACK,      {Assoc::NON,   1 }}, // ]     Array index
+  { ID::ABS,         {Assoc::NON,   1 }}, // |..|										  //
+  { ID::FACTORIAL,   {Assoc::NON,   1 }}, // . !     Factorial (post)
+  { ID::POST_INC,    {Assoc::NON,   1 }}, // . ++    Post increment
+  { ID::POST_DEC,    {Assoc::NON,   1 }}, // . --    Post decrement
+  { ID::DOT,         {Assoc::LEFT,  1 }}, // .     Member access
+  { ID::PTR,         {Assoc::LEFT,  1 }}, // ->    Pointer member access
 
-  { ID::EXP,    Assoc::RIGHT,   2 }, // **    Exponent
-  { ID::CRS_PROD, Assoc::RIGHT, 2 }, // [**]    Matrix exponent
+  { ID::EXP,         {Assoc::RIGHT, 2 }}, // **    Exponent
+  { ID::CRS_PROD,    {Assoc::RIGHT, 2 }}, // [**]    Matrix exponent
 
-  { ID::NOT,    Assoc::NON,     3 }, // !     Logical not
-  { ID::BNOT,   Assoc::NON,     3 }, // ~ .     Binary not
-  { ID::UNIARY_PLUS, Assoc::NON,3}, // + .     No-op
-  { ID::UNIARY_MINUS,Assoc::NON,3}, // - .     Negate
-  { ID::DEREF,  Assoc::NON,     3 }, // * .     Pointer dereference
-  { ID::INC,    Assoc::NON,     3 }, // ++ .    Pre increment
-  { ID::DEC,    Assoc::NON,     3 }, // -- .    Pre decrement
-  { ID::ABS,    Assoc::NON,     3 }, // |.|     Absolute value
-  { ID::NEW,    Assoc::NON,     3 }, // new     Create operator
-  { ID::DELETE,   Assoc::NON,   3 }, // delete  Delete operator
-  { ID::CO_AWAIT, Assoc::NON,   3 }, // co_await  Co-routine await
-  { ID::SIZEOF,   Assoc::NON,   3 }, // sizeof  Size of operator
-  { ID::IS_VOID,  Assoc::NON,   3 }, // is_void   Value in variable check
+  { ID::NOT,         {Assoc::NON,   3 }}, // !     Logical not
+  { ID::BNOT,        {Assoc::NON,   3 }}, // ~ .     Binary not
+  { ID::UNIARY_PLUS, {Assoc::NON,   3 }}, // + .     No-op
+  { ID::UNIARY_MINUS,{Assoc::NON,   3 }}, // - .     Negate
+  { ID::DEREF,       {Assoc::NON,   3 }}, // * .     Pointer dereference
+  { ID::INC,         {Assoc::NON,   3 }}, // ++ .    Pre increment
+  { ID::DEC,         {Assoc::NON,   3 }}, // -- .    Pre decrement
+  { ID::ABS,         {Assoc::NON,   3 }}, // |.|     Absolute value
+  { ID::NEW,         {Assoc::NON,   3 }}, // new     Create operator
+  { ID::DELETE,      {Assoc::NON,   3 }}, // delete  Delete operator
+  { ID::CO_AWAIT,    {Assoc::NON,   3 }}, // co_await  Co-routine await
+  { ID::SIZEOF,      {Assoc::NON,   3 }}, // sizeof  Size of operator
+  { ID::IS_VOID,     {Assoc::NON,   3 }}, // is_void   Value in variable check
  
-  { ID::DOT_ASK,  Assoc::LEFT,  4 }, // .*    Member access
-  { ID::MPTR,   Assoc::LEFT,    4 }, // ->*     Pointer member access
+  { ID::DOT_ASK,     {Assoc::LEFT,  4 }}, // .*    Member access
+  { ID::MPTR,        {Assoc::LEFT,  4 }}, // ->*     Pointer member access
 
-  { ID::MUL,    Assoc::LEFT,    5 }, // *     Multiplication
-  { ID::DIV,    Assoc::LEFT,    5 }, // /     Division
-  { ID::MOD,    Assoc::LEFT,    5 }, // %     Modulus
-  { ID::CRS_PROD, Assoc::LEFT,  5 }, // [*]     Matrix cross product
-  { ID::DOT_PROD, Assoc::LEFT,  5 }, // [.]     Matrix dot product
-  { ID::M_DIV,  Assoc::LEFT,    5 }, // [/]     Matrix division product
+  { ID::MUL,         {Assoc::LEFT,  5 }}, // *     Multiplication
+  { ID::DIV,         {Assoc::LEFT,  5 }}, // /     Division
+  { ID::MOD,         {Assoc::LEFT,  5 }}, // %     Modulus
+  { ID::CRS_PROD,    {Assoc::LEFT,  5 }}, // [*]     Matrix cross product
+  { ID::DOT_PROD,    {Assoc::LEFT,  5 }}, // [.]     Matrix dot product
+  { ID::M_DIV,       {Assoc::LEFT,  5 }}, // [/]     Matrix division product
 
-  { ID::ADD,    Assoc::LEFT,    6 }, // +     Plus
-  { ID::SUB,    Assoc::LEFT,    6 }, // -     Subtract
+  { ID::ADD,         {Assoc::LEFT,  6 }}, // +     Plus
+  { ID::SUB,         {Assoc::LEFT,  6 }}, // -     Subtract
 
-  { ID::SLFT,   Assoc::LEFT,    7 }, // <<    Shift left
-  { ID::SRGHT,  Assoc::LEFT,    7 }, // >>    Shift right
+  { ID::SLFT,        {Assoc::LEFT,  7 }}, // <<    Shift left
+  { ID::SRGHT,       {Assoc::LEFT,  7 }}, // >>    Shift right
 
-  { ID::SS,     Assoc::LEFT,    8 }, // <=>     Three way comparison 
+  { ID::SS,          {Assoc::LEFT,  8 }}, // <=>     Three way comparison 
 
-  { ID::LT,     Assoc::NON,     9 }, // <     Less than
-  { ID::LE,     Assoc::NON,     9 }, // <=    Less than or equal to
-  { ID::GT,     Assoc::NON,     9 }, // >     Greater than
-  { ID::GE,     Assoc::NON,     9 }, // >=    Greater than or equal to
+  { ID::LT,          {Assoc::NON,   9 }}, // <     Less than
+  { ID::LE,          {Assoc::NON,   9 }}, // <=    Less than or equal to
+  { ID::GT,          {Assoc::NON,   9 }}, // >     Greater than
+  { ID::GE,          {Assoc::NON,   9 }}, // >=    Greater than or equal to
 
-  { ID::EQ,     Assoc::LEFT,   10}, // ==    Equal to
-  { ID::NE,     Assoc::RIGHT,  10}, // !=    Not equal to
+  { ID::EQ,          {Assoc::LEFT,  10}}, // ==    Equal to
+  { ID::NE,          {Assoc::RIGHT, 10}}, // !=    Not equal to
 
-  { ID::BAND,   Assoc::LEFT,   11}, // &     Binary and
+  { ID::BAND,        {Assoc::LEFT,  11}}, // &     Binary and
 
-  { ID::BXOR,   Assoc::LEFT,   12}, // ^     Binary xor
+  { ID::BXOR,        {Assoc::LEFT,  12}}, // ^     Binary xor
 
-  { ID::BOR,    Assoc::LEFT,   13}, // |     Binary or
+  { ID::BOR,         {Assoc::LEFT,  13}}, // |     Binary or
 
-  { ID::IN,     Assoc::LEFT,   14}, // <-    Element of a collection 
+  { ID::IN,          {Assoc::LEFT,  14}}, // <-    Element of a collection 
 
-  { ID::AND,    Assoc::LEFT,   15}, // &&    And
+  { ID::AND,         {Assoc::LEFT,  15}}, // &&    And
 
-  { ID::XOR,    Assoc::LEFT,   16}, // ^^    Xor
-								  //
-  { ID::OR,     Assoc::LEFT,   17}, // ||    Or
+  { ID::XOR,         {Assoc::LEFT,  16}}, // ^^    Xor
 
-  { ID::QUEST,  Assoc::RIGHT,  18}, // ?     Conditional
-  { ID::COLON,  Assoc::RIGHT,  18}, // :     Conditional
-  { ID::ASSIGN,   Assoc::RIGHT,18}, // =     Assign
-  { ID::MOD_ASS,  Assoc::RIGHT,18}, // %=    Modulus assign
-  { ID::MUL_ASS,  Assoc::RIGHT,18}, // *=    Multiply assign
-  { ID::AND_ASS,  Assoc::RIGHT,18}, // &&=     And assign
-  { ID::BAND_ASS, Assoc::RIGHT,18}, // &=    And assign
-  { ID::OR_ASS,   Assoc::RIGHT,18}, // ||=     And assign
-  { ID::BOR_ASS,  Assoc::RIGHT,18}, // |=    And assign
-  { ID::ADD_ASS,  Assoc::RIGHT,18}, // +=    Plus assign
+  { ID::OR,          {Assoc::LEFT,  17}}, // ||    Or
 
-  { ID::CP_ASS,   Assoc::RIGHT,18 }, // [*]=   Matrix cross product assign
-  { ID::DIV_ASS,  Assoc::RIGHT,18 }, // /=     Divide assign
-  { ID::DP_ASS,   Assoc::RIGHT,18 }, // [.]=   Matrix dot product assign
-  { ID::EXP_ASS,  Assoc::RIGHT,18 }, // **=    Exponent assign
-  { ID::M_DIV,    Assoc::RIGHT,18 }, // [/]=   Matrix divide assign
-  { ID::ME_ASS,   Assoc::RIGHT,18 }, // [**]=  Matrix exponent assign
-  { ID::SUB_ASS,  Assoc::RIGHT,18 }, // -=     Subtract assign
-  { ID::TIL_ASS,  Assoc::RIGHT,18 }, // ~=     Binary not assign
-  { ID::XOR_ASS,  Assoc::RIGHT,18 }, // ^^=     Xor assign
-  { ID::BXOR_ASS, Assoc::RIGHT,18 }, // ^=     BXor assign
-  { ID::SLFT_ASS, Assoc::RIGHT,18 }, // <<=    Shift left assign
-  { ID::SRGHT_ASS,Assoc::RIGHT,18 }, // >>=    Shift right assign
-  { ID::OR_ASS,   Assoc::RIGHT,18 }, // ||=    Or assign
-  { ID::BOR_ASS,  Assoc::RIGHT,18 }, // |=     Binary or assign
-  { ID::CO_YIELD, Assoc::NON,  18 }, // co_yield Yield expression
-  { ID::THROW,  Assoc::NON,    18 }, // throw  Throw exception
-  { ID::ASYNC,  Assoc::NON,    18 }, // async  Execute function asynchronously
+  { ID::QUEST,       {Assoc::RIGHT, 18}}, // ?     Conditional
+  { ID::COLON,       {Assoc::RIGHT, 18}}, // :     Conditional
+  { ID::ASSIGN,      {Assoc::RIGHT, 18}}, // =     Assign
+  { ID::MOD_ASS,     {Assoc::RIGHT, 18}}, // %=    Modulus assign
+  { ID::MUL_ASS,     {Assoc::RIGHT, 18}}, // *=    Multiply assign
+  { ID::AND_ASS,     {Assoc::RIGHT, 18}}, // &&=     And assign
+  { ID::BAND_ASS,    {Assoc::RIGHT, 18}}, // &=    And assign
+  { ID::OR_ASS,      {Assoc::RIGHT, 18}}, // ||=     And assign
+  { ID::BOR_ASS,     {Assoc::RIGHT, 18}}, // |=    And assign
+  { ID::ADD_ASS,     {Assoc::RIGHT, 18}}, // +=    Plus assign
 
-  { ID::S_DELETE, Assoc::NON,  19 }, // delete   SQL delete
-  { ID::INSERT,   Assoc::NON,  19 }, // insert   SQL insert
-  { ID::SELECT,   Assoc::LEFT, 19 }, // select   SQL select
-  { ID::UPDATE,   Assoc::NON,  19 }, // update   SQL update
+  { ID::DIV_ASS,     {Assoc::RIGHT, 18}}, // /=     Divide assign
+  { ID::EXP_ASS,     {Assoc::RIGHT, 18}}, // **=    Exponent assign
+  { ID::SUB_ASS,     {Assoc::RIGHT, 18}}, // -=     Subtract assign
+  { ID::BNOT_ASS,    {Assoc::RIGHT, 18}}, // ~=     Binary not assign
+  { ID::XOR_ASS,     {Assoc::RIGHT, 18}}, // ^^=     Xor assign
+  { ID::BXOR_ASS,    {Assoc::RIGHT, 18}}, // ^=     BXor assign
+  { ID::SLFT_ASS,    {Assoc::RIGHT, 18}}, // <<=    Shift left assign
+  { ID::SRGHT_ASS,   {Assoc::RIGHT, 18}}, // >>=    Shift right assign
+  { ID::OR_ASS,      {Assoc::RIGHT, 18}}, // ||=    Or assign
+  { ID::BOR_ASS,     {Assoc::RIGHT, 18}}, // |=     Binary or assign
+  { ID::CO_YIELD,    {Assoc::NON,   18}}, // co_yield Yield expression
+  { ID::THROW,       {Assoc::NON,   18}}, // throw  Throw exception
+  { ID::ASYNC,       {Assoc::NON,   18}}, // async  Execute function asynchronously
 
-  { ID::DOT_DOT,  Assoc::NON,  20 }, // ..     Index range operator
-  { ID::PARAM_ASS,Assoc::NON,  20 }, // :=     Parameter assignment
+  { ID::S_DELETE,    {Assoc::NON,   19}}, // delete   SQL delete
+  { ID::INSERT,      {Assoc::NON,   19}}, // insert   SQL insert
+  { ID::SELECT,      {Assoc::LEFT,  19}}, // select   SQL select
+  { ID::UPDATE,      {Assoc::NON,   19}}, // update   SQL update
+
+  { ID::DOT_DOT,     {Assoc::NON,   20}}, // ..     Index range operator
+  { ID::PARAM_ASS,   {Assoc::NON,   20}}, // :=     Parameter assignment
 };
 
+// Returns true if the op and expressions on the stack should be evaluated.
+//
+// This is the case if op1 == op2 and op1 is not right associative or op1 precedence is greater
+// than op2 precedence.
+//
+static bool shouldEval( ID op1, ID op2 )
+{
+printf( "%s:%d op1 %d op2 %d\n", __FILE__, __LINE__, op1, op2 );
+  auto it1 = ops.find(op1);
+
+  if( op1 == op2 )
+	return it1->second.assoc != Assoc::RIGHT;
+  else
+  {
+    auto it2 = ops.find(op2);
+    return it1->second.prec < it2->second.prec;
+  }
+}
 
 static bool isLiteral( ID id )
 {
@@ -222,6 +237,8 @@ static Expr * createLiteral( const Token & t, std::vector<Expr *> & values, ID t
     TODO
     break;
   }
+
+  return nullptr;
 }
 
 static Expr * createLiteral( const Token & t )
@@ -316,24 +333,29 @@ static Expr * createLiteral( const Token & t )
   case ID::U128_LIT:
     return new Literal<Uint128>(t.line(),t.column(), Uint128(t.u128()));
   }
+
+  return nullptr;
 }
 
 static Expr * createUniOpExpr( const Token & token, Expr * operand )
 {
   switch(token.id())
   {
-  default:
-     TODO
+  default:         TODO return nullptr;
   case ID::DEC:         return new Dec(token.line(), token.column(), operand );
   case ID::INC:         return new Inc(token.line(), token.column(), operand );
   case ID::FACTORIAL:   return new Factorial(token.line(), token.column(), operand );
   case ID::POST_DEC:    return new PostDec(token.line(), token.column(), operand );
   case ID::POST_INC:    return new PostInc(token.line(), token.column(), operand );
   case ID::NOT:         return new Not(token.line(), token.column(), operand );
+  case ID::BNOT:        return new BNot(token.line(), token.column(), operand );
   case ID::DEREF:       return new Deref(token.line(), token.column(), operand );
   case ID::UNIARY_MINUS:return new Minus(token.line(), token.column(), operand );
   case ID::UNIARY_PLUS: return new Plus(token.line(), token.column(), operand );
   case ID::ABS:         return new Abs(token.line(), token.column(), operand );
+  case ID::IS_VOID:		return new IsVoid(token.line(), token.column(), operand );
+  case ID::DELETE:		return new Delete(token.line(), token.column(), operand );
+  case ID::SIZEOF:		return new Sizeof(token.line(), token.column(), operand );
   }
 }
 
@@ -344,6 +366,7 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
   default:
     TODO
     return nullptr;
+
   case ID::ADD:       return new Add( token.line(), token.column(), left, right );
   case ID::ADD_ASS:   return new AddAssign( token.line(), token.column(), left, right );
   case ID::AND:       return new Land( token.line(), token.column(), left, right );
@@ -357,7 +380,6 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
   case ID::BXOR:      return new BXor( token.line(), token.column(), left, right );
   case ID::BXOR_ASS:  return new BXorAssign( token.line(), token.column(), left, right );
 
-  case ID::CP_ASS:    return new XPrdAssign( token.line(), token.column(), left, right );
   case ID::CRS_PROD:  return new CrossProd( token.line(), token.column(), left, right );
 
   case ID::DIV:       return new Div( token.line(), token.column(), left, right );
@@ -366,7 +388,6 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
   case ID::DOT_ASK:   return new DotMem( token.line(), token.column(), left, right );
   case ID::DOT_DOT:   return new Range( token.line(), token.column(), left, right );
   case ID::DOT_PROD:  return new DotProd( token.line(), token.column(), left, right );
-  case ID::DP_ASS:    return new DPrdAssign( token.line(), token.column(), left, right );
 
   case ID::EQ:        return new Eq( token.line(), token.column(), left, right );
   case ID::EXP:       return new Exponent( token.line(), token.column(), left, right );
@@ -382,8 +403,6 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
 
   case ID::M_DIV:     return new MDiv( token.line(), token.column(), left, right );
   case ID::M_EXP:     return new MPow( token.line(), token.column(), left, right );
-  case ID::MD_ASS:    return new MDivAssign( token.line(), token.column(), left, right );
-  case ID::ME_ASS:    return new MPowAssign( token.line(), token.column(), left, right );
   case ID::MOD:       return new Mod( token.line(), token.column(), left, right );
   case ID::MOD_ASS:   return new ModAssign( token.line(), token.column(), left, right );
   case ID::MPTR:      return new PtrMem( token.line(), token.column(), left, right );
@@ -406,13 +425,14 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
   case ID::SUB:       return new Sub( token.line(), token.column(), left, right );
   case ID::SUB_ASS:   return new SubAssign( token.line(), token.column(), left, right );
 
-  case ID::TIL_ASS:   return new BNotAssign( token.line(), token.column(), left, right );
+  case ID::BNOT_ASS:  return new BNotAssign( token.line(), token.column(), left, right );
 
   case ID::XOR:       return new Xor( token.line(), token.column(), left, right );
   case ID::XOR_ASS:   return new XorAssign( token.line(), token.column(), left, right );
   }
 }
 
+/*
 static bool isTypeName( ID id )
 {
   static std::unordered_set<ID>  typeNameIds
@@ -477,19 +497,23 @@ static bool isTypeName( ID id )
 
   return typeNameIds.find(id) != typeNameIds.end();
 }
+*/
 
 static bool isPrefixOp( ID id )
 {
   static std::unordered_set<ID>  prefixOpIds
   {
-    ID::MUL,  // -> DEREF
-    ID::ADD,  // -> UNIARY_PLUS
-    ID::SUB,  // -> UNIARY_MINUS
-    ID::BOR,  // -> ABS
-    ID::BNOT,  // -> BNOT
-    ID::DEC,  // -> DEC
-    ID::INC,  // -> INC
-    ID::NOT,  // -> NOT
+    ID::MUL,      // -> DEREF		 *
+    ID::ADD,      // -> UNIARY_PLUS	 +
+    ID::SUB,      // -> UNIARY_MINUS -
+    ID::BNOT,     // -> BNOT ~
+    ID::DEC,      // -> DEC --
+    ID::INC,      // -> INC ++
+    ID::NOT,      // -> NOT !
+	ID::BOR,      // -> ABS |
+	ID::IS_VOID,  // is_void
+	ID::DELETE,   // delete
+	ID::SIZEOF,   // sizeof
   };
 
   return prefixOpIds.find(id) != prefixOpIds.end();
@@ -499,15 +523,19 @@ static inline void mapPrefixOp( Token & in )
 {
   switch(in.id())
   {
-  default:      in.id(ID::ERROR); break;
-  case ID::MUL: in.id(ID::DEREF); break;
-  case ID::ADD: in.id(ID::UNIARY_PLUS); break;
-  case ID::SUB: in.id(ID::UNIARY_MINUS); break;
-  case ID::BOR: in.id(ID::ABS); break;
-  case ID::BNOT:in.id(ID::BNOT); break;
-  case ID::DEC: in.id(ID::DEC); break;
-  case ID::INC: in.id(ID::INC); break;
-  case ID::NOT: in.id(ID::NOT); break;
+  default:          in.id(ID::ERROR);       break;
+
+  case ID::MUL:     in.id(ID::DEREF);       break;
+  case ID::ADD:     in.id(ID::UNIARY_PLUS); break;
+  case ID::SUB:     in.id(ID::UNIARY_MINUS);break;
+  case ID::BOR:     in.id(ID::ABS);         break;
+  case ID::DEC:     break;
+  case ID::INC:     break;
+  case ID::NOT:     break;
+  case ID::BNOT:    break;
+  case ID::IS_VOID: break;
+  case ID::DELETE:  break;
+  case ID::SIZEOF:  break;
   }
 }
 
@@ -515,7 +543,6 @@ static bool isPostOp( ID id )
 {
   static std::unordered_set<ID>  postOpIds
   {
-    ID::QUEST,
     ID::COLON,
     ID::BOR,
     ID::DEC,
@@ -531,7 +558,6 @@ static inline void mapPostOp( Token & in )
   switch(in.id())
   {
   default:       in.id(ID::ERROR);  break;
-  case ID::QUEST:in.id(ID::QUEST);  break;
   case ID::COLON:in.id(ID::COLON);  break;
   case ID::BOR:  in.id(ID::POST_ABS);break;
   case ID::DEC:  in.id(ID::POST_DEC);break;
@@ -549,11 +575,15 @@ static bool isUniaryOp( ID id )
     ID::INC,  
     ID::POST_INC,
     ID::NOT,  
+    ID::BNOT,  
     ID::FACTORIAL,
     ID::DEREF,       
     ID::UNIARY_MINUS,
     ID::UNIARY_PLUS,
     ID::ABS,
+	ID::IS_VOID,
+	ID::DELETE,
+	ID::SIZEOF,
   };
 
   return uniOpIds.find(id) != uniOpIds.end();
@@ -569,6 +599,7 @@ static bool isBinaryOp( ID id )
     ID::MUL,
     ID::DIV,
     ID::DOT,
+	ID::DOT_DOT,
     ID::LT,
     ID::GT,
     ID::BNOT,
@@ -579,7 +610,7 @@ static bool isBinaryOp( ID id )
     ID::PARAM_ASS,
     ID::ADD_ASS,
     ID::SUB_ASS,
-    ID::TIL_ASS,
+    ID::BNOT_ASS,
     ID::MOD_ASS,
     ID::MUL_ASS,
     ID::DIV_ASS,
@@ -592,10 +623,6 @@ static bool isBinaryOp( ID id )
     ID::BXOR_ASS,
     ID::SLFT_ASS,
     ID::SRGHT_ASS,
-    ID::DP_ASS,
-    ID::CP_ASS,
-    ID::MD_ASS,
-    ID::ME_ASS,
     ID::EXP,
     ID::DOT_ASK,
     ID::PTR,
@@ -605,6 +632,7 @@ static bool isBinaryOp( ID id )
     ID::SS,
     ID::EQ,
     ID::NE,
+	ID::SS,
     ID::AND,
     ID::OR,
     ID::BOR,
@@ -620,7 +648,7 @@ static bool isBinaryOp( ID id )
 
   return binOpIds.find(id) != binOpIds.end();
 }
-
+/*
 static bool isStartToken( ID id )
 {
   static std::unordered_set<ID>  startIds
@@ -658,18 +686,17 @@ static bool isStartToken( ID id )
 
   return startIds.find(id) != startIds.end();
 }
-
-bool Parser::evalStacks( Expr ** expr )
+*/
+bool Parser::evalStacks( Expr ** expr, int initOpStack, int initExprStack )
 {
 PENTER
-printf( "%s:%d %d %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
-
-  while(opStack.size() > 0 )
+  while(opStack.size() > initOpStack )
   {
     const Token op = opStack.top();
     opStack.pop();
-
-    if( opStack.size() == 0 && op.id() == ID::COLON )
+printf( "%s:%d op %d ex %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
+dumpToken( __FILE__, __LINE__, op );
+    if( opStack.size() == initOpStack && op.id() == ID::COLON )
     {
       Expr * right = exprStack.top();
       exprStack.pop();
@@ -680,7 +707,14 @@ printf( "%s:%d %d %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
     }
     else
     {
-      if( isBinaryOp(op.id()))
+      if(isUniaryOp(op.id()))
+      {
+        Expr * operand = exprStack.top();
+        exprStack.pop();
+
+        exprStack.push(createUniOpExpr( op, operand ));
+      }
+	  else if( isBinaryOp(op.id()) )
       {
         Expr * right = exprStack.top();
         exprStack.pop();
@@ -688,37 +722,45 @@ printf( "%s:%d %d %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
         exprStack.pop();
 
         exprStack.push(createBinOpExpr( op, left, right ));
-      }
-      else
-      {
-        assert(isUniaryOp(op.id()));
-
-        Expr * operand = exprStack.top();
+	  }
+	  else if( op.id() == ID::LBRACK )
+	  {
+        Expr * right = exprStack.top();
         exprStack.pop();
-
-        exprStack.push(createUniOpExpr( op, operand ));
+        Expr * left = exprStack.top();
+        exprStack.pop();
+        Expr * ind = new Index( op.line(), op.column(), right, left );
+		exprStack.push( ind );
       }
+	  else
+	  {
+        TODO	
+	  }
     }
+printf( "%s:%d op %d ex %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
   }
 
-  assert( opStack.size() == 0 );
+  assert( (int)opStack.size() == initOpStack );
 
-  if( exprStack.size() == 1 )
+  if( exprStack.size() == (initExprStack+1) )
   {
     *expr = exprStack.top();
     exprStack.pop();
-printf( "%s:%d %d %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
-    return true;
   }
-  else
-  {
-    TODO
-  }
+printf( "%s:%d op %d ex %d\n", __FILE__, __LINE__, opStack.size(), exprStack.size() );
 
-  return false;
+  return true;
 }
 
-bool Parser::parseExpr( Expr ** expr, Token & token )
+// Expression terminators:
+//
+// { => , }
+// ( => , )
+// [ => , ]
+// | => |
+// otherwise  ;
+// 
+bool Parser::parseExpr( Expr ** expr, ET et, Token & token, int initOpStack, int initExprStack )
 {
 PENTER
   enum State
@@ -728,16 +770,23 @@ PENTER
     postfixSeen          = 2,
     binarySeen           = 3,
     valueSeen            = 4,
-    binSeen              = 5,
+	arrayIndexSeen       = 5,
     vecLiteralBeginSeen  = 6,
     assocLiteralBeginSeen= 7,
+	lparenSeen           = 8,
+	absSeen              = 9,
+	newSeen              = 10,
+	ctorSeen             = 11,
+	inCallSeen           = 12,
+	questSeen            = 13,
+	colonSeen            = 14,
   } state = start;
 
   std::vector<Expr *>  seq;
 
   while(true)
   {
-printf( "%s:%d START state %d\n", __FILE__, __LINE__, state );
+printf( "%s:%d START state %d opS size %d exS size %d et %d\n", __FILE__, __LINE__, state, opStack.size(), exprStack.size(), et );
 dumpToken( __FILE__, __LINE__, token );
     switch( state )
     {
@@ -747,38 +796,55 @@ dumpToken( __FILE__, __LINE__, token );
       break;
 
     case start:
+	  // 1212 or true, etc
       if( isLiteral( token.id() ))
       {
         Expr * lit = createLiteral( token );
         exprStack.push(lit);
         state = valueSeen;
       }
+	  // id
       else if( token.isId() )
       {
         Expr * name = new Name( token.line(), token.column(),  token.str() );
         exprStack.push(name);
         state = valueSeen;
       }
+	  // ++ . or -- . , etc
       else if( isPrefixOp( token.id() ))
       {
         mapPrefixOp( token );
+printf( "%s:%d PUSH\n", __FILE__, __LINE__ );
+dumpToken( __FILE__, __LINE__, token );
+        opStack.push(token);
         state = prefixSeen;
       }
-      else if( isBinaryOp( token.id() ) )
-      {
-        opStack.push(token);
-        state = binarySeen;
-      }
+	  // [ ... ]
       else if( token.id() == ID::LBRACK )
       {
         // Vector literal
         state = vecLiteralBeginSeen;
       }
+	  // { ... }
       else if( token.id() == ID::LBRACE )
       {
         // Associative collection literal
         state = assocLiteralBeginSeen;
       }
+	  // ( ... )
+	  else if (token.id() == ID::LPAREN )
+	  {
+	    state = lparenSeen;
+	  }
+	  // | ... |
+      else if( token.id() == ID::BNOT )
+	  {
+	    state = absSeen;
+	  }
+	  else if( token.id() == ID::NEW )
+	  {
+	    state = newSeen;
+	  }
       else
       {
         dumpToken( __FILE__, __LINE__, token);
@@ -788,11 +854,14 @@ dumpToken( __FILE__, __LINE__, token );
     }
     case vecLiteralBeginSeen:
     {
+	  // .. , ... ]
       Expr * ex;
-      parseExpr( &ex, token );
+      if(!parseExpr( &ex, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
+	    TODO
 
       if( token.id() == ID::COMMA )
         seq.push_back(ex);
+	  // ]
       else if( token.id() == ID::RBRACK )
       {
         state = valueSeen;
@@ -805,10 +874,11 @@ dumpToken( __FILE__, __LINE__, token );
     }
     case assocLiteralBeginSeen:
     {
+	  // .. , ... }
       Expr * ex;
-      if( !parseExpr( &ex, token ) )
+      if( !parseExpr( &ex, ET::COMMA_OR_COLON_OR_RBRACE, token, opStack.size(), exprStack.size() ) )
       {
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
+        assert( (int)opStack.size() == initOpStack && exprStack.size() == initExprStack );
         return false;
       }
 
@@ -816,6 +886,7 @@ dumpToken( __FILE__, __LINE__, token );
       {
         seq.push_back(ex);
       }
+	  // }
       else if( token.id() == ID::RBRACE )
       {
         seq.push_back(ex);
@@ -827,35 +898,6 @@ dumpToken( __FILE__, __LINE__, token );
       else
         TODO
       break;
-    }
-    case postfixSeen:
-    {
-      if( token.id() == ID::SCOLON)
-      {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
-        return rc;
-      }
-      else if( token.id() == ID::COMMA)
-      {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
-        return rc;
-      }
-      else if( token.id() == ID::RBRACK)
-      {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
-        return rc;
-      }
-      else if( token.id() == ID::RBRACE)
-      {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
-        return rc;
-      }
-      else
-        TODO
     }
     case prefixSeen:
     {
@@ -871,6 +913,10 @@ dumpToken( __FILE__, __LINE__, token );
         exprStack.push(name);
         state = valueSeen;
       }
+      else if( token.id() == ID::LPAREN )
+	  {
+        state = lparenSeen;
+	  }
       else
         TODO
       break;
@@ -893,9 +939,49 @@ dumpToken( __FILE__, __LINE__, token );
       {
         mapPrefixOp( token );
         opStack.push(token);
-        state = prefixSeen;
+        if( token.id() == ID::ABS )
+		  state = absSeen;
+		else
+          state = prefixSeen;
       }
-      else
+	  /*
+      else if( token.id() == ID::SCOLON )
+      {
+        if( opStack.top().id() == ID::BOR )
+        {
+		  opStack.pop();
+          // This is the trailing absolute value operator
+          bool rc = evalStacks( expr, initOp, initExpr );
+          assert( opStack.size() == initOpStack && exprStack.size() == initExprStack );
+          return rc;
+		}
+		else
+		  TODO
+      }
+	  */
+	  // [ ... ]
+      else if( token.id() == ID::LBRACK )
+      {
+        // Vector literal
+        state = vecLiteralBeginSeen;
+      }
+	  // { ... }
+      else if( token.id() == ID::LBRACE )
+      {
+        // Associative collection literal
+        state = assocLiteralBeginSeen;
+      }
+	  // ( ... )
+	  else if (token.id() == ID::LPAREN )
+	  {
+	    state = lparenSeen;
+	  }
+	  // | ... |
+      else if( token.id() == ID::BNOT )
+	  {
+	    state = absSeen;
+	  }
+	  else
         TODO
       break;
     }
@@ -903,35 +989,85 @@ dumpToken( __FILE__, __LINE__, token );
     {
       if( token.id() == ID::SCOLON)
       {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
+        if( et != ET::SCOLON )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
       else if( token.id() == ID::COMMA)
       {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
+        if( et != ET::COMMA_OR_RBRACE && 
+		  ( et != ET::COMMA_OR_RBRACK ) && 
+		  ( et != ET::COMMA_OR_RPAREN ) && 
+		  ( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
       else if( token.id() == ID::RBRACK)
       {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
+        if( et != ET::COMMA_OR_RBRACK )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
+      else if( token.id() == ID::RPAREN)
+	  {
+        if( et != ET::COMMA_OR_RPAREN )
+		  TODO
+
+		return evalStacks( expr, initOpStack, initExprStack );
+	  }
       else if( token.id() == ID::RBRACE)
       {
-        bool rc = evalStacks( expr );
-        assert( opStack.size() == 0 && exprStack.size() == 0 );
+        if( et != ET::COMMA_OR_RBRACE && et != ET::COMMA_OR_COLON_OR_RBRACE )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
       else if( token.id() == ID::COLON )
       {
+        if( et != ET::COLON && et != ET::COMMA_OR_COLON_OR_RBRACE )
+		  TODO
+
         opStack.push(token);
         state = start;
       }
+	  else if( token.id() == ID::BNOT )
+	  {
+	    TODO
+	  }
+      else if( token.id() == ID::LBRACK)
+      {
+	    opStack.push(token);
+	    state = arrayIndexSeen;
+      }
+	  else if( token.id() == ID::BOR && et == ET::ABS )
+	  {
+        return evalStacks( expr, initOpStack, initExprStack );
+	  }
       else if( isBinaryOp( token.id() ) )
       {
+		if( opStack.size() > initOpStack )
+		{
+            // decide if current stack state should be evaluated or 
+            // not based on operator precedence and associativity
+			if( !shouldEval( opStack.top().id(), token.id() ))
+			{
+			  if(!evalStacks( expr, initOpStack, initExprStack ))
+				TODO
+			  exprStack.push(*expr);
+			}
+		}
+
         opStack.push(token);
         state = binarySeen;
       }
@@ -940,22 +1076,207 @@ dumpToken( __FILE__, __LINE__, token );
         mapPostOp( token );
         state = postfixSeen;
       }
+      else if( token.id() == ID::QUEST )
+	  {
+        if(!evalStacks( expr, initOpStack, initExprStack ))
+		  TODO
+	    opStack.push(token);
+	    state = questSeen;
+	  }
       else
       {
         TODO
       }
       break;
     }
-    case binSeen:
+    case postfixSeen:
     {
-      TODO
+      if( token.id() == ID::SCOLON)
+      {
+        if( et != ET::SCOLON )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+        return rc;
+      }
+      else if( token.id() == ID::COMMA)
+      {
+        if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+        return rc;
+      }
+      else if( token.id() == ID::RBRACK)
+      {
+        if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+        return rc;
+      }
+      else if( token.id() == ID::RBRACE)
+      {
+        if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+		  TODO
+
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+        assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+        return rc;
+      }
+      else if( token.id() == ID::RPAREN)
+	  {
+         TODO     
+	  }
+      else if( token.id() == ID::BNOT)
+	  {
+         TODO     
+	  }
+      else if( token.id() == ID::COLON)
+	  {
+         TODO     
+	  }
+      else if( isBinaryOp( token.id() ) )
+	  {
+        bool rc = evalStacks( expr, initOpStack, initExprStack );
+		if(!rc)
+		  TODO
+		exprStack.push( *expr );
+		opStack.push( token );
+		state = binarySeen;
+	  }
+      else
+	  {
+        TODO
+	  }
+	  break;
+    }
+	case arrayIndexSeen:
+    {
+      Expr * dim;
+
+	  if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
+	    TODO;
+      if( token.id() == ID::COMMA )
+      {
+        seq.push_back(dim);
+      }
+      else if( token.id() == ID::RBRACK )
+      {
+
+		Expr * arr = exprStack.top();
+		exprStack.pop();
+		opStack.pop();
+
+        Expr * vec = new Index( token.line(), token.column(), arr, seq );
+        exprStack.push(vec);
+
+        state = valueSeen;
+      }
+	  else
+        TODO
       break;
     }
+	case lparenSeen:
+	{
+	  if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+	    TODO;
+	  exprStack.push(*expr);
+	  state = valueSeen;
+	  if( token.id() == ID::COMMA )
+	  {
+		TODO
+	  }
+	  else if( token.id() != ID::RPAREN )
+	  {
+	    TODO
+	  }
+      break;
+	}
+	case absSeen:
+	{
+	  if(!parseExpr( expr, ET::ABS, token, opStack.size(), exprStack.size() ))
+	    TODO;
+	  exprStack.push(*expr);
+	  state = valueSeen;
+      break;
+	}
+
+	case newSeen:
+	{
+      if( token.isId() )
+	  {
+        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), false ); 
+		exprStack.push(ctorCall);
+		state = ctorSeen;
+	  }
+	  else if(token.isType() )
+	  {
+        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), true ); 
+		exprStack.push(ctorCall);
+		state = ctorSeen;
+	  }
+      break;
+	}
+	case ctorSeen:
+	{
+		if( token.id() == ID::LPAREN )
+		{
+			state = inCallSeen;
+		}
+		else
+			TODO
+		break;
+	}
+	case inCallSeen:
+	{
+	  if( token.id() == ID::RPAREN )
+	  {
+	    TODO
+	  }
+	  else if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+	    TODO;
+
+	  if( token.id() == ID::COMMA )
+	  {
+		TODO
+	  }
+	  else if( token.id() == ID::RPAREN )
+	  {
+	    Expr * fun = exprStack.top();
+
+		state = valueSeen;
+	  }
+	  break;
+	}
+	case questSeen:
+	{
+	    if(!parseExpr( expr, ET::COLON, token, opStack.size(), exprStack.size() ))
+	      TODO;
+		if( token.id() == ID::COLON )
+        {
+		  exprStack.push(*expr);
+	      if(!parseExpr( expr, et, token, opStack.size(), exprStack.size() ))
+	        TODO;
+          bool rc = evalStacks( expr, initOpStack, initExprStack );
+		  if( !rc )
+		    TODO
+          exprStack.push( *expr );
+		}
+		else
+          TODO
+		break;
+	}
     }
 
+printf( "%s:%d UPDATED state %d\n\n", __FILE__, __LINE__, state );
     lex(token, this );  
   }
 
-  assert( opStack.size() == 0 && exprStack.size() == 0 );
+  assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+
   return false;
 }

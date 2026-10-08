@@ -73,7 +73,7 @@ PENTER
 			lookahead = std::move(lval);
 
 			Token tt;
-			rc = parseExpr( &expr2, tt );
+			rc = parseExpr( &expr2, ET::SCOLON, tt, 0, 0 );
 
 			if(!rc)
 				return false;
@@ -85,7 +85,7 @@ PENTER
 		if( lval.id() != ID::RPAREN )
 		{
 			Token tt;
-			rc = parseExpr( &expr3, tt );
+			rc = parseExpr( &expr3, ET::RPAREN, tt, 0, 0 );
 
 			if(!rc)
 				return false;
@@ -101,7 +101,7 @@ PENTER
 	{
 		Expr	* cExpr;
 		Token tt;
-		rc = parseExpr( &cExpr, tt );
+		rc = parseExpr( &cExpr, ET::RPAREN, tt, 0, 0 );
 
 		if(!rc)
 			return false;

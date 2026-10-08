@@ -118,15 +118,16 @@ private:
 class CtorCall: public Expr
 {
 public:
-	CtorCall( unsigned short l, unsigned short c, Expr * n, std::vector<up<Expr>> * args = nullptr ):
-		Expr(l,c), name_(n), args_(args) {}
+	CtorCall( unsigned short l, unsigned short c, const char * n, bool knownType ):
+		Expr(l,c), name_(n), knownType_(knownType) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr> name_;
-	up<std::vector<up<Expr>>> args_;
+	std::string name_;
+	bool knownType_;
+	std::vector<Expr *> args_;
 };
 
 // is_void expr
@@ -785,15 +786,19 @@ class Index : public Expr
 {
 public:
 	Index( unsigned short l, unsigned short c, 
-		Expr * v, 
-		std::vector<up<Expr>> * i ):Expr(l,c), tensor_(v), index_(i)  {}
+		Expr * arr, std::vector<Expr *> & i ):Expr(l,c), arr_(arr), index_(i)  {}
+	Index( unsigned short l, unsigned short c, Expr * arr,
+		Expr * i ):Expr(l,c), arr_(arr)
+	{
+		index_.push_back(i);
+	}
 
 	bool genCode( GenCodeContext & gcc ) const final;
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 
 private:
-	Expr				* tensor_;
-	up<std::vector<up<Expr>>> index_;
+	Expr * arr_;
+	std::vector<Expr * > index_;
 };
 
 //  *expr

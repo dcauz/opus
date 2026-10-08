@@ -249,7 +249,7 @@ PENTER
 			Expr * expr;
 			int termToken;
 			Token tt;
-			if( parseExpr( &expr, tt ) && termToken == ']' )
+			if( parseExpr( &expr, ET::COMMA_OR_RBRACK, tt, 0, 0 ) && termToken == ']' )
 				dims.push_back(up<Expr>(expr));
 			else
 			{

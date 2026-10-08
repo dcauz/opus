@@ -264,6 +264,7 @@ Token::Token( Token && src ):
 	column_(src.column_),
 	id_(src.id_)
 {
+	id_ = src.id_;
 	if( src.id_ == ID::N_LIT )
 		integer_ = src.integer_;
 	else if(src.id_ == ID::ID || 
@@ -281,6 +282,7 @@ Token & Token::operator = ( Token && in )
 	{
 		line_ = in.line_;
 		column_ = in.column_;
+		id_ = in.id_;
 
 		if( in.id_ == ID::N_LIT )
 			integer_ = in.integer_;
@@ -382,7 +384,7 @@ static std::string decimal_string( __uint128_t v )
 void dumpToken( const char * f, int l, const Token & token )
 {
 	std::stringstream ss;
-	ss << token.line() << ":" << token.column() << " token=";
+	ss << token.line() << ":" << token.column() << " >>> TOKEN ";
 
 	switch(token.id())
 	{
@@ -415,13 +417,13 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::XOR:     		ss << "^^";	break;
 	case ID::LBRACE: 		ss << "{";	break;
 	case ID::BOR:    		ss << "|";	break;
+	case ID::ABS:           ss << "abs";break;
 	case ID::RBRACE: 		ss << "}";	break;
 	case ID::BNOT:   		ss << "~";	break;
 
 	case ID::ADD_ASS: 		ss << "+=";	break;
 	case ID::AND:			ss << "&&";   	break;
 	case ID::AND_ASS:		ss << "&&=";  	break;
-    case ID::CP_ASS:   		ss << "[*]=";	break;
     case ID::CRS_PROD:		ss << "[*]";	break;
 	case ID::DEC: 			ss << "--";   	break;
 	case ID::DIV_ASS: 		ss << "/=";   	break;
@@ -429,7 +431,6 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::DOT_DOT: 		ss << "..";	break;
 	case ID::DOT_DOT_DOT:	ss << "...";	break;
     case ID::DOT_PROD:  	ss << "[.]" ;	break;
-    case ID::DP_ASS:    	ss << "[.]=";	break;
 	case ID::EQ: 			ss << "==";	break;
 	case ID::EXP: 			ss << "**";	break;
 	case ID::EXP_ASS:   	ss << "**=";	break;
@@ -438,11 +439,9 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::INC: 			ss << "++";	break;
 	case ID::LE: 			ss << "<=";	break;
     case ID::M_DIV:      	ss << "[/]";	break;
-    case ID::MD_ASS:     	ss << "[/]=";	break;
 	case ID::MOD_ASS: 		ss << "%=";	break;
 	case ID::MUL_ASS: 		ss << "*=";	break;
     case ID::M_EXP:      	ss << "[**]";	break;
-    case ID::ME_ASS:     	ss << "[**]=";	break;
     case ID::MPTR:       	ss << "->*";	break;
 	case ID::NE: 			ss << "!=";	break;
 	case ID::OR: 			ss << "||";	break;
@@ -459,7 +458,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::SRGHT_ASS:		ss << ">>=";	break;
     case ID::SS:         	ss << "<=>";	break;
 	case ID::SUB_ASS: 		ss << "-=";	break;
-    case ID::TIL_ASS:    	ss << "~=";	break;
+    case ID::BNOT_ASS:    	ss << "~=";	break;
 	case ID::UNIARY_MINUS:	ss << "-.";	break;
 	case ID::UNIARY_PLUS:	ss << "+.";	break;
 	case ID::BXOR_ASS:		ss << "^=";	break;
@@ -853,6 +852,9 @@ void dumpToken( const char * f, int l, const Token & token )
 
 	case ID::INVALID_NUMBER:ss << "inv num:" << token.idLexium();break;
 	case ID::INVALID_STRING:ss << "inv str:" << token.idLexium();break;
+
+	case ID::LINE_COMMENT:        ss << "line comment:" << token.str();break;
+	case ID::MULTI_LINE_COMMENT:  ss << "mline comment:" << token.str();break;
 	}
 
 	printf( "%s [%s:%d]\n", ss.str().c_str(), f, l );

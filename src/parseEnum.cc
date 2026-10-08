@@ -136,7 +136,7 @@ parseBody:
 			if( lval.id() == ID::ASSIGN )
 			{
 				Token tt;
-				if( !parseExpr( &expr, tt ) )
+				if( !parseExpr( &expr, ET::COMMA_OR_RBRACE, tt, 0, 0 ) )
 					return false;	
 			}
 			else
