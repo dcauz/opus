@@ -24,7 +24,7 @@ PENTER
 	VarDef * varDef;
 	Expr * expr;
 	int termToken;
-	bool rc = parseVarDefOrExpr( &varDef, &expr );
+	bool rc = parseVarDefOrExpr( val, ET::RPAREN, &varDef, &expr );
 
 	if( !rc )
 		return false;

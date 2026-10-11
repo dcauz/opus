@@ -732,9 +732,9 @@ inline bool reduceAndPop( Parser * context, Expr ** expr, int initOpStack, int i
 
 bool Parser::reduce( int initOpStack, int initExprStack, ID next )
 {
-PENTER
-printOpStack( opStack );
-printExprStack( exprStack );
+//PENTER
+//printOpStack( opStack );
+//printExprStack( exprStack );
   while((int)opStack.size() > initOpStack )
   {
     const Token op = opStack.top();
@@ -865,8 +865,8 @@ PENTER
 
   while(true)
   {
-printf( "\n%s:%d START state %s opS size %d exS size %d et %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et );
-dumpToken( __FILE__, __LINE__, token );
+//printf( "\n%s:%d START state %s opS size %d exS size %d et %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et );
+//dumpToken( __FILE__, __LINE__, token );
     switch( state )
     {
     default:
@@ -951,25 +951,21 @@ dumpToken( __FILE__, __LINE__, token );
     }
     case assocBeginSeen:
     {
-printf( "%s:%d\n", __FILE__, __LINE__ );
 	  // .. , ... }
       Expr * ex;
       if( !parseExpr( &ex, ET::COMMA_OR_COLON_OR_RBRACE, token, opStack.size(), exprStack.size() ) )
       {
-printf( "%s:%d\n", __FILE__, __LINE__ );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return false;
       }
 
       if( token.id() == ID::COMMA )
       {
-printf( "%s:%d\n", __FILE__, __LINE__ );
         seq.push_back(ex);
       }
 	  // }
       else if( token.id() == ID::RBRACE )
       {
-printf( "%s:%d\n", __FILE__, __LINE__ );
         seq.push_back(ex);
 
         state = valueSeen;
@@ -1070,9 +1066,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 		  ( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
 		  TODO
 
-printf( "%s:%d op %d ex %d iOp %d iEx %d\n", __FILE__, __LINE__, (int)opStack.size() , (int)exprStack.size() , initOpStack , initExprStack );
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
-printf( "%s:%d op %d ex %d iOp %d iEx %d\n", __FILE__, __LINE__, (int)opStack.size() , (int)exprStack.size() , initOpStack , initExprStack );
 
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
@@ -1088,7 +1082,7 @@ printf( "%s:%d op %d ex %d iOp %d iEx %d\n", __FILE__, __LINE__, (int)opStack.si
       }
       else if( token.id() == ID::RPAREN)
 	  {
-        if( et != ET::COMMA_OR_RPAREN )
+        if( et != ET::COMMA_OR_RPAREN && et != ET::RPAREN )
 		  TODO
 
 		return reduceAndPop( this, expr, initOpStack, initExprStack );

@@ -95,14 +95,15 @@ private:
 
 	enum class ET
 	{
-		COMMA_OR_RBRACE,// { e1 , ... }
+		COMMA_OR_RBRACE,  // { e1 , ... }
 		COMMA_OR_COLON_OR_RBRACE,// { i1:e1 , ... }
-		COMMA_OR_RBRACK,// [ e1, ... ]
-		COMMA_OR_RPAREN,// ( e1, ... )
-		RPAREN,         // ( e1 )
-		ABS,        	// | e |
-		SCOLON,	        // e ;
-		COLON	        // e1 ? e2 : e3
+		COMMA_OR_RBRACK,  // [ e1, ... ]
+		COMMA_OR_RPAREN,  // ( e1, ... )
+		RPAREN,           // ( e1 )
+		ABS,          	  // | e |
+		SCOLON,	          // e ;
+		SCOLON_OR_RPAREN, // ... ; or ... )
+		COLON	          // e1 ? e2 : e3
 	};
 
 	void parserError( const char * );
@@ -114,7 +115,7 @@ private:
 	bool parseStatement( Statement ** );
 	bool parseType( unsigned &, Type ** );
 	bool parseTypeParams( std::vector<up<TemplateParam>> ** );
-	bool parseVarDefOrExpr( VarDef ** variableDef, Expr ** initExpr );
+	bool parseVarDefOrExpr( Token & , ET, VarDef ** variableDef, Expr ** initExpr );
 	bool parseVariableDef( VarDef ** variableDef );
 
 	bool parseAlias( Alias ** );

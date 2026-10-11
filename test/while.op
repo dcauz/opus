@@ -1,4 +1,4 @@
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	while ( argc > 0 ) 
 	{

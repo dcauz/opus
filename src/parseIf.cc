@@ -27,11 +27,13 @@ PENTER
 		return false;
 	}
 
+	lex( lval, this );
+
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
 	ID termToken;
-	bool rc = parseVarDefOrExpr( &varDef, &expr );
+	bool rc = parseVarDefOrExpr( lval, ET::RPAREN, &varDef, &expr );
 
 	if( !rc )
 		return false;

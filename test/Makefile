@@ -28,6 +28,8 @@ test1: literal.il
 
 test2: expr.il
 
+test3: if.il
+
 test: $(IL_FILES)
 
 %.il: %.op

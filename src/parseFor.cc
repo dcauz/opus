@@ -55,7 +55,7 @@ PENTER
 	{
 		lookahead = std::move(lval);
 
-		rc = parseVarDefOrExpr( &varDef, &expr1 );
+		rc = parseVarDefOrExpr( lval, ET::SCOLON_OR_RPAREN, &varDef, &expr1 );
 		if( !rc )
 			return false;
 	}
