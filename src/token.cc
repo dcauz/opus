@@ -451,6 +451,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::POST_DEC: 		ss << ".--";	break;
 	case ID::POST_INC:		ss << ".++";	break;
     case ID::PTR:        	ss << "->";	break;
+	case ID::DEREF:      	ss << "*.";	break;
     case ID::QUAL:       	ss << "::";	break;
 	case ID::SLFT:			ss << "<<";	break;
 	case ID::SLFT_ASS:		ss << "<<=";	break;

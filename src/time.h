@@ -26,10 +26,10 @@ public:
     sp<Type> semCheck( SemCheckContext & scc ) const;
 
 private:
-	unsigned int  ms_;
 	unsigned char h_;
 	unsigned char m_;
 	unsigned char s_;
+	unsigned int  ms_;
 };
 
 class Hour : public Value

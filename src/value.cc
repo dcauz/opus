@@ -1,4 +1,5 @@
 #include "value.h"
+#include "expr.h"
 
 
 bool FunctionRef::genCode( GenCodeContext & ) const 

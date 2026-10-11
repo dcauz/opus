@@ -72,9 +72,9 @@ void isDatetime( Token & tok, Parser * context )
     int hour = D(cp[11])*10 + D(cp[12]);
     int min = D(cp[14])*10 + D(cp[15]);
     int sec = D(cp[17])*10 + D(cp[18]);
+	int next;
     int ms = 0;
 
-    int next;
     if(cp[19] == '.' )
     {
       if(isdigit(cp[20]))
@@ -180,7 +180,7 @@ void isTime( Token & tok, Parser * context )
   }
 }
 
-static bool isInteger( Parser * context, char c, Token & tok )
+static bool isInteger( Parser * context, Token & tok )
 {
   char * start = context->cp;
   char * cp = start;
@@ -254,7 +254,6 @@ printf( "%s:%d [%s]\n", __FILE__, __LINE__, context->cp );
   {
     t = *cp++;
 
-    bool negExp = *cp++ == '-';
     int exp = 0;
     while(*cp && isdigit(*cp))
     {
@@ -382,7 +381,7 @@ static bool isNumber( Parser * context, char c, Token & tok )
       if( v > ( std::numeric_limits<__uint128_t>::max() - d )/10)
       {
           // Too big. It is an integer
-          return isInteger( context, c, tok );
+          return isInteger( context, tok );
       }
 
       v = v*10 + d;
@@ -641,7 +640,7 @@ REGEX_LIT
   ' 'r
   " "r
 */
-bool isRegexp( Parser * context, Token & tok )
+bool isRegexp( Parser * context, Token & )
 {
   int c = nextChar( context );
 
@@ -981,6 +980,7 @@ void nextToken( Token & tok, Parser * context )
         tok.set( context->lineNo, context->columnNo, ID::DIV );
         return;
       }
+	  break;
     }
 
     // .
@@ -1429,11 +1429,11 @@ void lex( Token & tok, Parser * context )
 
     if( sym != nullptr )
     {
-      if( FunctionType * ft = dynamic_cast<FunctionType *>(sym))
+      if( dynamic_cast<FunctionType *>(sym))
         tok.setNameType( ID::FUNCTION_NAME );
-      else if( Type * t = dynamic_cast<Type *>(sym))
+      else if( dynamic_cast<Type *>(sym))
         tok.setNameType( ID::TYPE_NAME );
-      else if( Alias * a = dynamic_cast<Alias *>(sym))
+      else if( dynamic_cast<Alias *>(sym))
         tok.setNameType( ID::TYPE_NAME );
       else if( TemplateParam * tp = dynamic_cast<TemplateParam *>(sym))
       {
@@ -1444,7 +1444,7 @@ void lex( Token & tok, Parser * context )
         else
           tok.setNameType( ID::TYPE_NAME );
       }
-      else if( Variable * v = dynamic_cast<Variable *>(sym))
+      else if( dynamic_cast<Variable *>(sym))
         tok.setNameType( ID::VARIABLE_NAME );
     }
   }

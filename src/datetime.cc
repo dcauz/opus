@@ -8,13 +8,13 @@ Datetime::Datetime( int y, int m, int d, int h, int mn, int s, int ms ) :
 {
 }
 
-bool Datetime::genCode( GenCodeContext & gcc ) const
+bool Datetime::genCode( GenCodeContext & ) const
 {
 	TODO
 	return false;
 }
 
-sp<Type> Datetime::semCheck( SemCheckContext & scc ) const
+sp<Type> Datetime::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;

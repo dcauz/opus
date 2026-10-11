@@ -27,13 +27,13 @@ bool RegExpType::assignableTo( Type * t ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 
-bool RegExp::genCode( GenCodeContext & gcc ) const
+bool RegExp::genCode( GenCodeContext & ) const
 {
 	TODO
 	return false;
 }
 
-sp<Type> RegExp::semCheck( SemCheckContext & scc ) const
+sp<Type> RegExp::semCheck( SemCheckContext & ) const
 {
 	TODO
 	 return errorType;

@@ -25,7 +25,6 @@ std::vector<std::string> * tbls,
 {
 }
 
-
 bool UnknownRef::genCode( GenCodeContext & ) const
 {
   TODO // genCode
@@ -74,6 +73,174 @@ sp<Type> As::semCheck( SemCheckContext & ) const
 }
 
 bool As::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Alignas::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Alignas::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Alignof::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Alignof::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Apply::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Apply::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Async::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Async::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Co_await::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Co_await::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Co_yield::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Co_yield::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Eval::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Eval::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Filter::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Filter::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Lambda::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Lambda::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Lazy::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Lazy::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> New::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool New::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+////////////////////////////////////////////////////////
+
+sp<Type> Reduce::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
+bool Reduce::genCode( GenCodeContext & ) const 
 {
   TODO // genCode
   return false;
@@ -1034,13 +1201,13 @@ sp<Type> Literal<Integer *>::semCheck( SemCheckContext & scc ) const
 
 ///////////////////////////////////////////////////////////////////////
 
-bool KeyValue::genCode( GenCodeContext & gcc ) const
+bool KeyValue::genCode( GenCodeContext & ) const
 {
   TODO // genCode
   return false;
 }
 
-sp<Type> KeyValue::semCheck( SemCheckContext & scc ) const
+sp<Type> KeyValue::semCheck( SemCheckContext & ) const
 {
   TODO // semCheck
   return errorType;
@@ -1048,13 +1215,13 @@ sp<Type> KeyValue::semCheck( SemCheckContext & scc ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BNot::genCode( GenCodeContext & gcc ) const
+bool BNot::genCode( GenCodeContext & ) const
 {
     TODO // genCode
     return false;
 }
 
-sp<Type> BNot::semCheck( SemCheckContext & scc ) const
+sp<Type> BNot::semCheck( SemCheckContext & ) const
 {
     TODO // semCheck
     return errorType;
@@ -1062,13 +1229,13 @@ sp<Type> BNot::semCheck( SemCheckContext & scc ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Abs::genCode( GenCodeContext & gcc ) const
+bool Abs::genCode( GenCodeContext & ) const
 {
     TODO // genCode
     return false;
 }
 
-sp<Type> Abs::semCheck( SemCheckContext & scc ) const
+sp<Type> Abs::semCheck( SemCheckContext & ) const
 {
     TODO // semCheck
     return errorType;

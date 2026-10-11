@@ -134,6 +134,10 @@ const char * level( int l )
 	case Log::Level::INFO:		return "INFO";
 	case Log::Level::DEBUG:		return "DEBUG";
 	case Log::Level::TRACE:		return "TRACE";
+
+    case Log::Level::ALL:       return "ALL";
+    case Log::Level::ERR:       return "ERR";
+    case Log::Level::OUT:       return "OUT";
 	}
 
 	assert(false);

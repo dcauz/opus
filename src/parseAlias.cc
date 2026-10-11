@@ -37,11 +37,11 @@ PENTER
 	}
 
 	Type * ty;
-	int termToken;
+	ID termToken;
 	unsigned declarators;
 	bool rc = parseType( declarators, &ty );
 
-	if( termToken != ';' )
+	if( termToken != ID::SCOLON )
 	{
 		parserError( "ALIAS statement was not terminated with ;" );
 		return false;

@@ -31,10 +31,10 @@
 // dotDotDot
 //     ...
 //
-bool Parser::parseVarFuncDef( Token & token, VarDef ** varDef, Executable ** execDef )
+bool Parser::parseVarFuncDef( Token & token, VarDef **, Executable ** )
 {
 PENTER
-	int typeId;
+	//int typeId;
 
 	enum State
 	{
@@ -83,7 +83,7 @@ PENTER
 	ID pPtr = ID::NIL;
 	ID paPtr = ID::NIL;
 	bool	pHasRef = false;
-	bool	pHasPtr = false;
+	//bool	pHasPtr = false;
 
 	Expr 	* dim;
 

@@ -96,7 +96,7 @@ exprType
     | type
 */
 
-bool Parser::parseType( unsigned & declarators, Type ** type )
+bool Parser::parseType( unsigned & declarators, Type ** )
 {
 PENTER
 	Token	lval;

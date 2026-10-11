@@ -30,14 +30,14 @@ PENTER
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
-	int termToken;
+	ID termToken;
 	bool rc = parseVarDefOrExpr( &varDef, &expr );
 
 	if( !rc )
 		return false;
 
 	// ensure terminator is )
-	if( termToken != ')' )
+	if( termToken != ID::RPAREN )
 	{
 		parserError( "if clause is not terminated by ) character" );
 		return false;

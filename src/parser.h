@@ -46,6 +46,8 @@ public:
 
 	bool parse();
 
+	bool reduce( int, int, ID );
+
 	void pushSymTbl( const std::string & n )
 	{
 		auto st = new SymbolTable( currSymTbl, n );
@@ -139,6 +141,4 @@ private:
 	bool parseUsing( Using **, UsingNamespace ** );
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );
-
-	bool evalStacks( Expr **, int, int );
 };

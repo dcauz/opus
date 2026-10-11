@@ -38,13 +38,12 @@ PENTER
 
 		// get expr
 		Expr * ex;
-		int termTok;
 		Token tt;
 		rc = parseExpr( &ex, ET::RPAREN, tt, 0, 0 );
 
 		if( rc )
 		{
-			if( termTok != ')' )
+			if( tt.id() != ID::RPAREN )
 			{
 				parserError( "do .. while statement is not terminated by )" );
 				return false;
