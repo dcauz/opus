@@ -9,7 +9,7 @@ i32 main( i32 argc, final string [] argv )
 	while ( argc > 0 ) 
 		puts(--argc);
 
-	while ( bool b = (argc>0) )
+	while ( bool b = argc>0 )
 	{
 		puts( b );
 		if( b )
