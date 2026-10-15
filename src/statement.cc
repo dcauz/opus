@@ -325,7 +325,7 @@ sp<Type> If::semCheck( SemCheckContext & scc ) const
 
 	if(else_)
 	{
-		block = dynamic_cast<Block *>(else_.get());
+		block = dynamic_cast<Block *>(else_);
 		if(block)
 		{
 			scc.pushBlockOwner(BlockOwner::Else);

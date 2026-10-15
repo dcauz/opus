@@ -32,14 +32,14 @@ PENTER
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
-	ID termToken;
 	bool rc = parseVarDefOrExpr( lval, ET::RPAREN, &varDef, &expr );
-
 	if( !rc )
+	{
 		return false;
+	}
 
 	// ensure terminator is )
-	if( termToken != ID::RPAREN )
+	if( lval.id() != ID::RPAREN )
 	{
 		parserError( "if clause is not terminated by ) character" );
 		return false;
@@ -49,33 +49,46 @@ PENTER
 	Statement * istatement;
 	rc = parseStatement( &istatement );
 	if(!rc)
+	{
 		return false;
+	}
 	
     lex( lval, this );
-	if( lval.id() != ID::ELSE )
-	{
-		lookahead = std::move(lval);
 
-		if( expr )
-			*i = new If( 0, 0, expr, istatement );
+	if( expr )
+ 	  *i = new If( 0, 0, expr, istatement );
+	else
+	  *i = new If( 0, 0, varDef, istatement );
+
+	if( lval.id() == ID::ELSE )
+	{
+	    lex( lval, this );
+
+		if( lval.id() == ID::LBRACE )
+		{
+		  Block * block;
+		  if(!parseBlock( & block ))
+            TODO
+
+		  (*i)->addElse(block);
+		  return true;
+		}
+		else if( lval.id() == ID::IF )
+		{
+		  TODO
+		}
 		else
-			*i = new If( 0, 0, varDef, istatement );
+		{
+		   ExprStatement * expr;
+           if(!parseExprStatement( &expr, lval ))
+		     TODO
+		}
 
 		return true;
 	}
-
-	Statement * estatement = nullptr;
-	rc = parseStatement( &estatement );
-
-	if(rc)
+	else
 	{
-		if( expr )
-			*i = new If( 0, 0, expr, 
-				istatement, estatement );
-		else
-			*i = new If( 0, 0, varDef, 
-				istatement, estatement );
+	  lookahead = std::move(lval);
+	  return true;
 	}
-
-	return rc;
 }

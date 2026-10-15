@@ -27,13 +27,10 @@ PENTER
 	VarDef	* varDef = nullptr;
 	if( lval.id() != ID::DOT_DOT_DOT )
 	{
-		lookahead = std::move(lval);
-
-		int termToken;
-		bool rc = parseVariableDef( &varDef );
+		bool rc = parseVariableDef( lval, ET::RPAREN, &varDef );
 		if(!rc)
 			return false;
-		if(termToken != ')')
+		if(lval.id() != ID::RPAREN)
 		{
 			parserError( "missing ) character in catch statement" );
 			return false;

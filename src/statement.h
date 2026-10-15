@@ -363,32 +363,17 @@ class VarDef: public Definition, public Variable
 {
 public:
 	VarDef( int s, int e, 
-		Type * t, 
+		sp<Type>     t, 
 		const char * n, 
-		int pt=0,
-		std::vector<up<Expr>> * w=nullptr,
-		const char * f=nullptr ): 
-	Definition(s,e), 
-	Variable(n),
-	type_(t),
-	where_(w),
-	ptrType_(pt)
-	{
-		if(f)
-			from_ = f;
-	}
-
-	VarDef( int s, int e, 
-		Type * t, 
-		const char * n, 
-		int pt=0,
-		std::vector<up<Expr>> * = nullptr,
-		Expr * init = nullptr ):
+		int          pt=0,
+		Expr       * iv =nullptr ): 
 	Definition(s,e), 
 	Variable(n),
 	type_(t),
 	ptrType_(pt),
-	init_(init) {}
+	init_(iv)
+	{
+	}
 
 	bool genCode( GenCodeContext & ) const final;
 	sp<Type> semCheck( SemCheckContext & ) const final;
@@ -396,11 +381,10 @@ public:
 	sp<Type> type() const { return type_; }
 
 private:
-                 sp<Type> type_;
-up<std::vector<up<Expr>>> where_;
-                      int ptrType_;
-              std::string from_;
-                 up<Expr> init_;
+  sp<Type>    type_;
+  std::string from_;
+  int         ptrType_;
+  Expr      * init_;
 };
 
 class Arg: public Definition, public Variable
@@ -573,24 +557,25 @@ public:
 class If: public Statement
 {
 public:
-	If( int s, int e, Expr * c, Statement * ist, Statement * est = nullptr ):
-		Statement(s,e), cond_(c),variable_(nullptr), if_(ist), else_(est)
+	If( int s, int e, Expr * c, Statement * ist ):
+		Statement(s,e), cond_(c),variable_(nullptr), if_(ist)
 	{
 	}
 
-	If( int s, int e, VarDef * vd, Statement * ist, Statement * est = nullptr ):
-		Statement(s,e), cond_(nullptr),variable_(vd), if_(ist), else_(est)
+	If( int s, int e, VarDef * vd, Statement * ist ):
+		Statement(s,e), cond_(nullptr),variable_(vd), if_(ist)
 	{
 	}
 
 	bool genCode( GenCodeContext & ) const final;
 	sp<Type> semCheck( SemCheckContext & ) const final;
 
+	void addElse( Statement * s ) { else_ = s; }
 private:
-     up<Expr> cond_;
+   up<Expr> cond_;
    up<VarDef> variable_;
-up<Statement> if_;
-up<Statement> else_;
+   up<Statement> if_;
+   Statement * else_;
 };
 
 class For: public Statement

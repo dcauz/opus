@@ -19,7 +19,10 @@ PENTER
     {
 	  if(token.isType())
       {
-        TODO
+	    VarDef * varDef;
+	    if(!parseVariableDef( token, ET::RPAREN, &varDef ))
+          TODO
+		return true;
 	  }
 	  else if(token.isId())
       {
@@ -46,6 +49,7 @@ PENTER
 
 	    if(!parseExpr( expr, et, first, 0, 0 ))
           TODO
+		token = std::move(first);
 		return true;
       }
       break;

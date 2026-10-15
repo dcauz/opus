@@ -117,7 +117,7 @@ protected:
 class FuncCall: public Expr
 {
 public:
-	FuncCall( unsigned short l, unsigned short c, Expr * n, std::vector<up<Expr>> * args = nullptr ):
+	FuncCall( unsigned short l, unsigned short c, Expr * n, std::vector<Expr *> & args ):
 		Expr(l,c), name_(n), args_(args) {}
 
 	const char * id() const final { return "FuncCall"; }
@@ -126,8 +126,8 @@ public:
 	sp<Type> semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr> name_;
-	up<std::vector<up<Expr>>> args_;
+	Expr * name_;
+	std::vector<Expr *>  args_;
 };
 
 // type ( ... )

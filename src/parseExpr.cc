@@ -37,7 +37,7 @@ static std::map<ID, Operator> ops =
   { ID::RPAREN,      {Assoc::NON,   1 }}, // )     Parenthesis
   { ID::LBRACK,      {Assoc::NON,   1 }}, // [     Array index
   { ID::RBRACK,      {Assoc::NON,   1 }}, // ]     Array index
-  { ID::ABS,         {Assoc::NON,   1 }}, // |..|										  //
+  { ID::ABS,         {Assoc::NON,   1 }}, // |..|                                          //
   { ID::FACTORIAL,   {Assoc::NON,   1 }}, // . !     Factorial (post)
   { ID::POST_INC,    {Assoc::NON,   1 }}, // . ++    Post increment
   { ID::POST_DEC,    {Assoc::NON,   1 }}, // . --    Post decrement
@@ -137,27 +137,27 @@ static std::map<ID, Operator> ops =
 
 void printOpStack( const std::stack<Token> & ops )
 {
-	printf( "OPSTACK\n" );
-	std::stack<Token> tmp = ops;
-	while( tmp.size() > 0 )
-	{
-		Token t = tmp.top();
-		tmp.pop();
-		dumpToken( __FILE__, __LINE__, t );
-	}
+    printf( "OPSTACK\n" );
+    std::stack<Token> tmp = ops;
+    while( tmp.size() > 0 )
+    {
+        Token t = tmp.top();
+        tmp.pop();
+        dumpToken( __FILE__, __LINE__, t );
+    }
 }
 void printExprStack( const std::stack<Expr *> & exs )
 {
-	printf( "EXPR_STACK\n" );
-	fflush(stdout);
-	std::stack<Expr *> tmp = exs;
-	while( tmp.size() > 0 )
-	{
-		Expr * e = tmp.top();
-		printf( "%p\n", e );fflush(stdout);
-		tmp.pop();
-		printf( "%s\n", e->id() );fflush(stdout);
-	}
+    printf( "EXPR_STACK\n" );
+    fflush(stdout);
+    std::stack<Expr *> tmp = exs;
+    while( tmp.size() > 0 )
+    {
+        Expr * e = tmp.top();
+        printf( "%p\n", e );fflush(stdout);
+        tmp.pop();
+        printf( "%s\n", e->id() );fflush(stdout);
+    }
 }
 
 // Returns true if the op and expressions on the stack should be evaluated.
@@ -171,14 +171,14 @@ static bool shouldEval( ID op1, ID op2 )
 
   if( op1 == op2 )
   {
-	bool rc = it1->second.assoc != Assoc::RIGHT;
-	return rc;
+    bool rc = it1->second.assoc != Assoc::RIGHT;
+    return rc;
   }
   else
   {
     auto it2 = ops.find(op2);
     bool rc = it1->second.prec < it2->second.prec;
-	return rc;
+    return rc;
   }
 }
 
@@ -383,9 +383,9 @@ static Expr * createUniOpExpr( const Token & token, Expr * operand )
   case ID::UNIARY_MINUS:return new Minus(token.line(), token.column(), operand );
   case ID::UNIARY_PLUS: return new Plus(token.line(), token.column(), operand );
   case ID::ABS:         return new Abs(token.line(), token.column(), operand );
-  case ID::IS_VOID:		return new IsVoid(token.line(), token.column(), operand );
-  case ID::DELETE:		return new Delete(token.line(), token.column(), operand );
-  case ID::SIZEOF:		return new Sizeof(token.line(), token.column(), operand );
+  case ID::IS_VOID:        return new IsVoid(token.line(), token.column(), operand );
+  case ID::DELETE:        return new Delete(token.line(), token.column(), operand );
+  case ID::SIZEOF:        return new Sizeof(token.line(), token.column(), operand );
   }
 }
 
@@ -533,17 +533,17 @@ static bool isPrefixOp( ID id )
 {
   static std::unordered_set<ID>  prefixOpIds
   {
-    ID::MUL,      // -> DEREF		 *
-    ID::ADD,      // -> UNIARY_PLUS	 +
+    ID::MUL,      // -> DEREF         *
+    ID::ADD,      // -> UNIARY_PLUS     +
     ID::SUB,      // -> UNIARY_MINUS -
     ID::BNOT,     // -> BNOT ~
     ID::DEC,      // -> DEC --
     ID::INC,      // -> INC ++
     ID::NOT,      // -> NOT !
-	ID::BOR,      // -> ABS |
-	ID::IS_VOID,  // is_void
-	ID::DELETE,   // delete
-	ID::SIZEOF,   // sizeof
+    ID::BOR,      // -> ABS |
+    ID::IS_VOID,  // is_void
+    ID::DELETE,   // delete
+    ID::SIZEOF,   // sizeof
   };
 
   return prefixOpIds.find(id) != prefixOpIds.end();
@@ -611,9 +611,9 @@ static bool isUniaryOp( ID id )
     ID::UNIARY_MINUS,
     ID::UNIARY_PLUS,
     ID::ABS,
-	ID::IS_VOID,
-	ID::DELETE,
-	ID::SIZEOF,
+    ID::IS_VOID,
+    ID::DELETE,
+    ID::SIZEOF,
   };
 
   return uniOpIds.find(id) != uniOpIds.end();
@@ -629,7 +629,7 @@ static bool isBinaryOp( ID id )
     ID::MUL,
     ID::DIV,
     ID::DOT,
-	ID::DOT_DOT,
+    ID::DOT_DOT,
     ID::LT,
     ID::GT,
     ID::BNOT,
@@ -662,7 +662,7 @@ static bool isBinaryOp( ID id )
     ID::SS,
     ID::EQ,
     ID::NE,
-	ID::SS,
+    ID::SS,
     ID::AND,
     ID::OR,
     ID::BOR,
@@ -720,14 +720,14 @@ static bool isStartToken( ID id )
 
 inline bool reduceAndPop( Parser * context, Expr ** expr, int initOpStack, int initExprStack )
 {
-	bool rc = context->reduce( initOpStack, initExprStack, ID::NIL );
-	if( rc )
-	{
-		*expr = context->exprStack.top();
-		context->exprStack.pop();
-	}
+    bool rc = context->reduce( initOpStack, initExprStack, ID::NIL );
+    if( rc )
+    {
+        *expr = context->exprStack.top();
+        context->exprStack.pop();
+    }
 
-	return rc;
+    return rc;
 }
 
 bool Parser::reduce( int initOpStack, int initExprStack, ID next )
@@ -738,8 +738,8 @@ bool Parser::reduce( int initOpStack, int initExprStack, ID next )
   while((int)opStack.size() > initOpStack )
   {
     const Token op = opStack.top();
-	if( !shouldEval( op.id(), next ))
-	  return true;
+    if( !shouldEval( op.id(), next ))
+      return true;
 
     opStack.pop();
     if( (int)opStack.size() == initOpStack && op.id() == ID::COLON )
@@ -762,7 +762,7 @@ bool Parser::reduce( int initOpStack, int initExprStack, ID next )
         Expr * uni = createUniOpExpr( op, operand );
         exprStack.push( uni );
       }
-	  else if( isBinaryOp(op.id()) )
+      else if( isBinaryOp(op.id()) )
       {
         Expr * right = exprStack.top();
         exprStack.pop();
@@ -771,18 +771,18 @@ bool Parser::reduce( int initOpStack, int initExprStack, ID next )
 
         Expr * bin = createBinOpExpr( op, left, right );
         exprStack.push( bin );
-	  }
-	  else if( op.id() == ID::LBRACK )
-	  {
+      }
+      else if( op.id() == ID::LBRACK )
+      {
         Expr * right = exprStack.top();
         exprStack.pop();
         Expr * left = exprStack.top();
         exprStack.pop();
         Expr * ind = new Index( op.line(), op.column(), right, left );
-		exprStack.push( ind );
+        exprStack.push( ind );
       }
-	  else if( op.id() == ID::QUEST )
-	  {
+      else if( op.id() == ID::QUEST )
+      {
         Expr * e2 = exprStack.top();
         exprStack.pop();
 
@@ -793,12 +793,12 @@ bool Parser::reduce( int initOpStack, int initExprStack, ID next )
         exprStack.pop();
 
         Expr * cond = new Conditional( op.line(), op.column(), c, e1, e2 );
-	    exprStack.push( cond );
-	  }
-	  else
-	  {
-        TODO	
-	  }
+        exprStack.push( cond );
+      }
+      else
+      {
+        TODO    
+      }
     }
   }
 
@@ -824,6 +824,7 @@ enum State
   inCallSeen,
   questSeen,
   colonSeen,
+  funcNameSeen,
 };
 
 static const char * st2str( State s )
@@ -845,6 +846,7 @@ static const char * st2str( State s )
   case inCallSeen:    return "inCallSeen";
   case questSeen:     return "questSeen";
   case colonSeen:     return "colonSeen";
+  case funcNameSeen:  return "funcNameSeen";
   }
 }
 
@@ -875,53 +877,59 @@ PENTER
       break;
 
     case start:
-	  // 1212 or true, etc
+      // 1212 or true, etc
       if( isLiteral( token.id() ))
       {
         Expr * lit = createLiteral( token );
         exprStack.push(lit);
         state = valueSeen;
       }
-	  // id
+      // id
       else if( token.isId() )
       {
         Expr * name = new Name( token.line(), token.column(),  token.str() );
         exprStack.push(name);
         state = valueSeen;
       }
-	  // ++ . or -- . , etc
+      else if( token.id() == ID::FUNCTION_NAME )
+      {
+        Expr * name = new Name( token.line(), token.column(),  token.str() );
+        exprStack.push(name);
+        state = funcNameSeen;
+      }
+      // ++ . or -- . , etc
       else if( isPrefixOp( token.id() ))
       {
         mapPrefixOp( token );
         opStack.push(token);
         state = prefixSeen;
       }
-	  // [ ... ]
+      // [ ... ]
       else if( token.id() == ID::LBRACK )
       {
         // Vector literal
         state = vecBeginSeen;
       }
-	  // { ... }
+      // { ... }
       else if( token.id() == ID::LBRACE )
       {
         // Associative collection literal
         state = assocBeginSeen;
       }
-	  // ( ... )
-	  else if (token.id() == ID::LPAREN )
-	  {
-	    state = lparenSeen;
-	  }
-	  // | ... |
+      // ( ... )
+      else if (token.id() == ID::LPAREN )
+      {
+        state = lparenSeen;
+      }
+      // | ... |
       else if( token.id() == ID::BNOT )
-	  {
-	    state = absSeen;
-	  }
-	  else if( token.id() == ID::NEW )
-	  {
-	    state = newSeen;
-	  }
+      {
+        state = absSeen;
+      }
+      else if( token.id() == ID::NEW )
+      {
+        state = newSeen;
+      }
       else
       {
         dumpToken( __FILE__, __LINE__, token);
@@ -929,16 +937,49 @@ PENTER
       }
       break;
     }
+    case funcNameSeen:
+    {
+      if( token.id() == ID::LPAREN )
+      {
+	    while(true)
+		{
+          Expr * ex;
+          lex(token, this );  
+          if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+            TODO
+
+          if( token.id() == ID::COMMA )
+  		  {
+            seq.push_back(ex);
+          }
+          else if( token.id() == ID::RPAREN )
+          {
+            Expr * name = exprStack.top();
+		    exprStack.pop();
+
+            exprStack.push(new FuncCall( token.line(), token.column(), name, seq ));
+
+		    state = valueSeen;
+			break;
+          }
+          else
+            TODO
+		}
+      }
+      else
+        TODO
+      break;
+    }
     case vecBeginSeen:
     {
-	  // .. , ... ]
+      // .. , ... ]
       Expr * ex;
       if(!parseExpr( &ex, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
-	    TODO
+        TODO
 
       if( token.id() == ID::COMMA )
         seq.push_back(ex);
-	  // ]
+      // ]
       else if( token.id() == ID::RBRACK )
       {
         state = valueSeen;
@@ -951,7 +992,7 @@ PENTER
     }
     case assocBeginSeen:
     {
-	  // .. , ... }
+      // .. , ... }
       Expr * ex;
       if( !parseExpr( &ex, ET::COMMA_OR_COLON_OR_RBRACE, token, opStack.size(), exprStack.size() ) )
       {
@@ -963,7 +1004,7 @@ PENTER
       {
         seq.push_back(ex);
       }
-	  // }
+      // }
       else if( token.id() == ID::RBRACE )
       {
         seq.push_back(ex);
@@ -991,9 +1032,9 @@ PENTER
         state = valueSeen;
       }
       else if( token.id() == ID::LPAREN )
-	  {
+      {
         state = lparenSeen;
-	  }
+      }
       else
         TODO
       break;
@@ -1017,33 +1058,33 @@ PENTER
         mapPrefixOp( token );
         opStack.push(token);
         if( token.id() == ID::ABS )
-		  state = absSeen;
-		else
+          state = absSeen;
+        else
           state = prefixSeen;
       }
-	  // [ ... ]
+      // [ ... ]
       else if( token.id() == ID::LBRACK )
       {
         // Vector literal
         state = vecBeginSeen;
       }
-	  // { ... }
+      // { ... }
       else if( token.id() == ID::LBRACE )
       {
         // Associative collection literal
         state = assocBeginSeen;
       }
-	  // ( ... )
-	  else if (token.id() == ID::LPAREN )
-	  {
-	    state = lparenSeen;
-	  }
-	  // | ... |
+      // ( ... )
+      else if (token.id() == ID::LPAREN )
+      {
+        state = lparenSeen;
+      }
+      // | ... |
       else if( token.id() == ID::BNOT )
-	  {
-	    state = absSeen;
-	  }
-	  else
+      {
+        state = absSeen;
+      }
+      else
         TODO
       break;
     }
@@ -1052,7 +1093,7 @@ PENTER
       if( token.id() == ID::SCOLON)
       {
         if( et != ET::SCOLON )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1061,10 +1102,10 @@ PENTER
       else if( token.id() == ID::COMMA)
       {
         if( et != ET::COMMA_OR_RBRACE && 
-		  ( et != ET::COMMA_OR_RBRACK ) && 
-		  ( et != ET::COMMA_OR_RPAREN ) && 
-		  ( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
-		  TODO
+          ( et != ET::COMMA_OR_RBRACK ) && 
+          ( et != ET::COMMA_OR_RPAREN ) && 
+          ( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 
@@ -1074,23 +1115,23 @@ PENTER
       else if( token.id() == ID::RBRACK)
       {
         if( et != ET::COMMA_OR_RBRACK )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
       else if( token.id() == ID::RPAREN)
-	  {
+      {
         if( et != ET::COMMA_OR_RPAREN && et != ET::RPAREN )
-		  TODO
+          TODO
 
-		return reduceAndPop( this, expr, initOpStack, initExprStack );
-	  }
+        return reduceAndPop( this, expr, initOpStack, initExprStack );
+      }
       else if( token.id() == ID::RBRACE)
       {
         if( et != ET::COMMA_OR_RBRACE && et != ET::COMMA_OR_COLON_OR_RBRACE )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1099,52 +1140,52 @@ PENTER
       else if( token.id() == ID::COLON )
       {
         if( et != ET::COLON && et != ET::COMMA_OR_COLON_OR_RBRACE )
-		  TODO
+          TODO
 
-		if( et == ET::COLON )
-		{
+        if( et == ET::COLON )
+        {
           bool rc = reduce( initOpStack, initExprStack, ID::COLON );
-		  *expr = exprStack.top();
-		  exprStack.pop();
+          *expr = exprStack.top();
+          exprStack.pop();
           assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
-		}
-		else
-		{
-			Expr * value;
+        }
+        else
+        {
+            Expr * value;
             lex(token, this );  
             if(!parseExpr( &value, ET::COMMA_OR_RBRACE, token, opStack.size(), exprStack.size() ))
-				TODO
+                TODO
             Expr * key = exprStack.top();
-			exprStack.pop();
-			*expr = new KeyValue( token.line(), token.column(), key, value );
-		}
+            exprStack.pop();
+            *expr = new KeyValue( token.line(), token.column(), key, value );
+        }
         return true; 
       }
-	  else if( token.id() == ID::BNOT )
-	  {
-	    TODO
-	  }
+      else if( token.id() == ID::BNOT )
+      {
+        TODO
+      }
       else if( token.id() == ID::LBRACK)
       {
-	    opStack.push(token);
-	    state = arrayIndexSeen;
+        opStack.push(token);
+        state = arrayIndexSeen;
       }
-	  else if( token.id() == ID::BOR && et == ET::ABS )
-	  {
+      else if( token.id() == ID::BOR && et == ET::ABS )
+      {
         return reduceAndPop( this, expr, initOpStack, initExprStack );
-	  }
+      }
       else if( isBinaryOp( token.id() ) )
       {
-		if( static_cast<int>(opStack.size()) > initOpStack )
-		{
+        if( static_cast<int>(opStack.size()) > initOpStack )
+        {
             // decide if current stack state should be evaluated or 
             // not based on operator precedence and associativity
-			if( shouldEval( opStack.top().id(), token.id() ))
-			{
-			  if(!reduce( initOpStack, initExprStack, token.id() ))
-				TODO
-			}
-		}
+            if( shouldEval( opStack.top().id(), token.id() ))
+            {
+              if(!reduce( initOpStack, initExprStack, token.id() ))
+                TODO
+            }
+        }
 
         opStack.push(token);
         state = binarySeen;
@@ -1154,15 +1195,15 @@ PENTER
         mapPostOp( token );
         
         if(!reduce( initOpStack, initExprStack, token.id()))
-		  TODO
+          TODO
       }
       else if( token.id() == ID::QUEST )
-	  {
+      {
         if(!reduce( initOpStack, initExprStack, ID::QUEST ))
-		  TODO
-	    opStack.push(token);
-	    state = questSeen;
-	  }
+          TODO
+        opStack.push(token);
+        state = questSeen;
+      }
       else
       {
         TODO
@@ -1174,7 +1215,7 @@ PENTER
       if( token.id() == ID::SCOLON)
       {
         if( et != ET::SCOLON )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1183,7 +1224,7 @@ PENTER
       else if( token.id() == ID::COMMA)
       {
         if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1192,7 +1233,7 @@ PENTER
       else if( token.id() == ID::RBRACK)
       {
         if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1201,47 +1242,47 @@ PENTER
       else if( token.id() == ID::RBRACE)
       {
         if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
-		  TODO
+          TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
         return rc;
       }
       else if( token.id() == ID::RPAREN)
-	  {
+      {
          TODO     
-	  }
+      }
       else if( token.id() == ID::BNOT)
-	  {
+      {
          TODO     
-	  }
+      }
       else if( token.id() == ID::COLON)
-	  {
+      {
          TODO     
-	  }
+      }
       else if( isBinaryOp( token.id() ) )
-	  {
+      {
         bool rc = reduce( initOpStack, initExprStack, token.id() );
-		if(!rc)
-		  TODO
-		*expr = exprStack.top();
-		exprStack.pop();
+        if(!rc)
+          TODO
+        *expr = exprStack.top();
+        exprStack.pop();
 
-		exprStack.push( *expr );
-		opStack.push( token );
-		state = binarySeen;
-	  }
+        exprStack.push( *expr );
+        opStack.push( token );
+        state = binarySeen;
+      }
       else
-	  {
+      {
         TODO
-	  }
-	  break;
+      }
+      break;
     }
-	case arrayIndexSeen:
+    case arrayIndexSeen:
     {
       Expr * dim;
-	  if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
-	    TODO;
+      if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
+        TODO;
       if( token.id() == ID::COMMA )
       {
         seq.push_back(dim);
@@ -1249,124 +1290,129 @@ PENTER
       else if( token.id() == ID::RBRACK )
       {
 
-		Expr * arr = exprStack.top();
-		exprStack.pop();
-		opStack.pop();
+        Expr * arr = exprStack.top();
+        exprStack.pop();
+        opStack.pop();
 
         Expr * vec = new Index( token.line(), token.column(), arr, seq );
         exprStack.push(vec);
 
         state = valueSeen;
       }
-	  else
+      else
         TODO
       break;
     }
-	case lparenSeen:
-	{
-	  if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
-	    TODO;
-	  exprStack.push(*expr);
-	  state = valueSeen;
-	  if( token.id() == ID::COMMA )
-	  {
-		TODO
-	  }
-	  else if( token.id() != ID::RPAREN )
-	  {
-	    TODO
-	  }
-      break;
-	}
-	case absSeen:
-	{
-	  if(!parseExpr( expr, ET::ABS, token, opStack.size(), exprStack.size() ))
-	    TODO;
-	  exprStack.push(*expr);
-	  state = valueSeen;
-      break;
-	}
+    case lparenSeen:
+    {
+      if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+        TODO;
 
-	case newSeen:
-	{
-      if( token.isId() )
-	  {
-        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), false ); 
-		exprStack.push(ctorCall);
-		state = ctorSeen;
-	  }
-	  else if(token.isType() )
-	  {
-        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), true ); 
-		exprStack.push(ctorCall);
-		state = ctorSeen;
-	  }
-      break;
-	}
-	case ctorSeen:
-	{
-		if( token.id() == ID::LPAREN )
-		{
-			state = inCallSeen;
-		}
-		else
-			TODO
-		break;
-	}
-	case inCallSeen:
-	{
-	  if( token.id() == ID::RPAREN )
-	  {
-	    TODO
-	  }
-	  else if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
-	    TODO;
+      exprStack.push(*expr);
 
-	  if( token.id() == ID::COMMA )
-	  {
-		TODO
-	  }
+      if( token.id() == ID::COMMA )
+      {
+        TODO
+      }
 	  else if( token.id() == ID::RPAREN )
 	  {
-	    Expr * fun = exprStack.top();
-
-		state = valueSeen;
+	    state = valueSeen;
 	  }
-	  break;
-	}
-	case questSeen:
-	{
-		// c ? e1 : e2
-		// Parse e1
-	    if(!parseExpr( expr, ET::COLON, token, opStack.size(), exprStack.size() ))
-	      TODO;
-		if( token.id() == ID::COLON )
+      else 
+      {
+        TODO
+      }
+      break;
+    }
+    case absSeen:
+    {
+      if(!parseExpr( expr, ET::ABS, token, opStack.size(), exprStack.size() ))
+        TODO;
+      exprStack.push(*expr);
+      state = valueSeen;
+      break;
+    }
+
+    case newSeen:
+    {
+      if( token.isId() )
+      {
+        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), false ); 
+        exprStack.push(ctorCall);
+        state = ctorSeen;
+      }
+      else if(token.isType() )
+      {
+        Expr * ctorCall = new CtorCall( token.line(), token.column(), token.idLexium(), true ); 
+        exprStack.push(ctorCall);
+        state = ctorSeen;
+      }
+      break;
+    }
+    case ctorSeen:
+    {
+        if( token.id() == ID::LPAREN )
         {
-		  // Push e1 onto stack
-		  exprStack.push(*expr);
+            state = inCallSeen;
+        }
+        else
+            TODO
+        break;
+    }
+    case inCallSeen:
+    {
+      if( token.id() == ID::RPAREN )
+      {
+        TODO
+      }
+      else if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+        TODO;
 
-		 // Parse e2
+      if( token.id() == ID::COMMA )
+      {
+        TODO
+      }
+      else if( token.id() == ID::RPAREN )
+      {
+        Expr * fun = exprStack.top();
+
+        state = valueSeen;
+      }
+      break;
+    }
+    case questSeen:
+    {
+        // c ? e1 : e2
+        // Parse e1
+        if(!parseExpr( expr, ET::COLON, token, opStack.size(), exprStack.size() ))
+          TODO;
+        if( token.id() == ID::COLON )
+        {
+          // Push e1 onto stack
+          exprStack.push(*expr);
+
+         // Parse e2
           lex(token, this );  
-	      if(!parseExpr( expr, et, token, opStack.size(), exprStack.size() ))
-	        TODO;
+          if(!parseExpr( expr, et, token, opStack.size(), exprStack.size() ))
+            TODO;
 
-		  // Push e2 onto stack
+          // Push e2 onto stack
           exprStack.push( *expr );
 
-		  // Push back terminating token. It will be retrieved below and
-		  // be the first token of the valueSeen state
-		  lookahead = std::move(token);
+          // Push back terminating token. It will be retrieved below and
+          // be the first token of the valueSeen state
+          lookahead = std::move(token);
 
           // Create c ? e1 : e2 expression
           bool rc = reduce( initOpStack, initExprStack, ID::NIL );
-		  if( !rc )
-		    TODO
-		  state = valueSeen;
-		}
-		else
+          if( !rc )
+            TODO
+          state = valueSeen;
+        }
+        else
           TODO
-		break;
-	}
+        break;
+    }
     }
 
     lex(token, this );  
