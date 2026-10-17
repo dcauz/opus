@@ -1401,7 +1401,7 @@ void lex( Token & tok, Parser * context )
   {
     tok = std::move(context->lookahead);
 	context->lookahead.id( ID::NIL);
-#define DEBUG_YYLEX
+// #define DEBUG_YYLEX
 #ifdef DEBUG_YYLEX
   dumpToken( __FILE__, __LINE__, tok );
 #endif

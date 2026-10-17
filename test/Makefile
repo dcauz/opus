@@ -25,12 +25,10 @@ while.op
 IL_FILES := $(patsubst %.op,%.il,$(TEST_FILES))
 
 test1: literal.il
-
 test2: expr.il
-
 test3: if.il
-
 test4: while.il
+test5: for.il
 
 test: $(IL_FILES)
 

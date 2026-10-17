@@ -39,7 +39,7 @@ PENTER
 		parserError( "catch is not followed by ( character" );
 		return false;
 	}
-
+printf( "%s:%d\n", __FILE__, __LINE__ );
 	lex( lval, this );
 
 	Expr	* expr1  = nullptr;
@@ -47,33 +47,29 @@ PENTER
 	Expr	* expr3  = nullptr;
 	VarDef	* varDef = nullptr;
 
-	ID termToken = ID::NIL;
-	bool	rc = true;
+	bool rc = true;
 
 	// Cases 5-13
 	if( lval.id() != ID::SCOLON )
 	{
-		lookahead = std::move(lval);
+printf( "%s:%d\n", __FILE__, __LINE__ );
 
-		rc = parseVarDefOrExpr( lval, ET::SCOLON_OR_RPAREN, &varDef, &expr1 );
+		rc = parseVarDefOrExpr( lval, ET::SCOLON, &varDef, &expr1 );
 		if( !rc )
 			return false;
 	}
 
 	// Cases 1-12
-	if( termToken == ID::SCOLON )
+	if( lval.id() == ID::SCOLON )
 	{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 		lex( lval, this );
-
-		termToken = ID::NIL;
 
 		// cases 3,4,7,8,11,12
 		if( lval.id() != ID::SCOLON )
 		{
-			lookahead = std::move(lval);
-
-			Token tt;
-			rc = parseExpr( &expr2, ET::SCOLON, tt, 0, 0 );
+printf( "%s:%d\n", __FILE__, __LINE__ );
+			rc = parseExpr( &expr2, ET::SCOLON, lval, 0, 0 );
 
 			if(!rc)
 				return false;
@@ -84,49 +80,56 @@ PENTER
 		// cases  2,4,6,8,10,12
 		if( lval.id() != ID::RPAREN )
 		{
-			Token tt;
-			rc = parseExpr( &expr3, ET::RPAREN, tt, 0, 0 );
+printf( "%s:%d\n", __FILE__, __LINE__ );
+			rc = parseExpr( &expr3, ET::RPAREN, lval, 0, 0 );
 
 			if(!rc)
 				return false;
 
-			if( termToken != ID::RPAREN )
+			if( lval.id() != ID::RPAREN )
 			{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 				parserError( "for statement missing ) character" );
 				return false;
 			}
 		}
 	}
-	else if( termToken == ID::COLON )	// case 13
+	else if( lval.id() == ID::COLON )	// case 13
 	{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 		Expr	* cExpr;
-		Token tt;
-		rc = parseExpr( &cExpr, ET::RPAREN, tt, 0, 0 );
+		lex( lval, this );
+		rc = parseExpr( &cExpr, ET::RPAREN, lval, 0, 0 );
 
 		if(!rc)
 			return false;
-		if( termToken != ID::RPAREN )
+		if( lval.id() != ID::RPAREN )
 		{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 			parserError( "for statement missing ) character" );
 			return false;
 		}
 	}
 	else
 	{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 		parserError( "; or : character separating for clauses" );
 		return false;
 	}
 
+printf( "%s:%d\n", __FILE__, __LINE__ );
 	Statement * statement = nullptr;
 	rc = parseStatement( &statement );
 
 	if(rc)
 	{
+printf( "%s:%d\n", __FILE__, __LINE__ );
 		if( expr1 )
 			*f = new For( 0, 0, expr1, expr2, expr3, statement );
 		else
 			*f = new For( 0, 0, varDef, expr2, expr3, statement );
 	}
+printf( "%s:%d\n", __FILE__, __LINE__ );
 
 	return rc;
 }

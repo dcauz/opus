@@ -14,6 +14,8 @@ PENTER
 	} state = start;
 
     std::string name;
+	bool finalSeen = false;
+	bool refSeen = false;
 
 	while(true)
 	{
@@ -24,6 +26,10 @@ PENTER
 	    if(token.isType())
 		{
 		  state = typeSeen;
+		}
+		else if( token.id() == ID::FINAL )
+		{
+		  finalSeen = true;
 		}
 		else
 		  TODO
@@ -36,6 +42,10 @@ PENTER
 		  name = token.idLexium();
 		  state = nameSeen;
 		}
+		else if( token.id() == ID::BAND )
+		{
+		  refSeen = true;
+		}
 		else
 		  TODO
 	    break;
@@ -46,6 +56,12 @@ PENTER
         {
 		  state = assignSeen;
 		}
+		else if( token.id() == ID::COLON )
+		{
+		   sp<Type> type;
+		   *varDef = new VarDef( token.line(), token.column(), type, name.c_str(), 0 );
+		   return true;
+		}
 		else
 		  TODO
 	    break;
@@ -54,7 +70,6 @@ PENTER
 	  {
 	    Expr * expr;
 
-//	    lex( token, this );
 		if(!parseExpr( &expr, et, token, 0, 0 ))
           TODO
 		else

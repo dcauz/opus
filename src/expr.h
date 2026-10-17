@@ -18,14 +18,12 @@ class Expr
 public:
 	Expr( unsigned short l, unsigned short c ):line_(l), column_(c) 
 	{
-		printf( "%s:%d Expr %p\n", __FILE__, __LINE__, this );
 	}
 
 	virtual const char * id() const = 0;
 
 	virtual ~Expr()
 	{
-		printf( "%s:%d ~Expr %p\n", __FILE__, __LINE__, this );
 	}
 	virtual bool genCode( GenCodeContext & gcc ) const = 0;
 	virtual sp<Type> semCheck( SemCheckContext & scc ) const = 0;

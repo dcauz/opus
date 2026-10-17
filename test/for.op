@@ -1,15 +1,15 @@
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	for( ; ; ) 
 	{
 		if( argc == 1 )
 			break;
 	}
-j
+
 	for( ; ; ) 
 		;
 
-	int32 i = 0;
+	i32 i = 0;
 	for( ; ; ++i ) 
 	{
 		if( i == 10 )
@@ -19,22 +19,6 @@ j
 	for( ; ; ++i ) 
 		if( i == 10 )
 			break;
-
-	for( ; i < 20 ; ) 
-	{
-		puts((i++).toString());
-	}
-
-	for( ; i < 23; ) 
-		puts((i++).toString());
-
-	for( ; i < 26 ; --i )
-	{
-		puts((i++).toString());
-	}
-
-	for( ; i < 36; i += 2 )
-		puts((i++).toString());
 
 	for( i=50 ; ; ) 
 	{
@@ -57,6 +41,7 @@ j
 	{
 		puts( i );	
 	}
+
 	for( i=23 ; i > 20 ; ) 
 		puts( i );	
 
@@ -64,42 +49,70 @@ j
 	{
 		puts( i );	
 	}
+
 	for( i=1 ; i == 1 ; i ^= 2 ) 
 		puts( i );	
 
-	for( int32 j = 1 ; ; ) 
+	for( i32 j = 1 ; ; ) 
 	{
 		puts( j + " " + i );	
 	}
 
-	for( int32 j = 1 ; ; ) 
+	for( i32 j = 1 ; ; ) 
 		puts( j + " " + i );	
 
-	for( int32 j = 1 ; ; j = i+2 ) 
+	for( i32 j = 1 ; ; j = i+2 ) 
 	{
 		puts( j + " " + i );	
 	}
 
-	for( int32 j = 1 ; ; j = i+2 ) 
+	for( i32 j = 1 ; ; j = i+2 ) 
 		puts( j + " " + i );	
 
-	for( int32 j = 1 ; j < i ; ) 
+	for( i32 j = 1 ; j < i ; ) 
 	{
 		puts( j + " " + i );	
 	}
 
-	for( int32 j = 1 ; j < i ; ) 
+	for( i32 j = 1 ; j < i ; ) 
 		puts( j + " " + i );	
 
-	for( int32 j = 1 ; j < i*i ; ++j ) 
+	for( i32 j = 1 ; j < i*i ; ++j ) 
 	{
 		puts( j + " " + i );	
 	}
 
-	for( int32 j = 1 ; j != i ; j-- ) 
+	for( i32 j = 1 ; j != i ; j-- ) 
 	{
 		puts( j + " " + i );	
 	}
+
+    string [] strs = [ "a", "b", "c", "d" ];
+	for( final string & s : strs )
+	{
+	  puts( s );
+	}
+
+	for( final string & s : [ "x", "y", "z" ] )
+	  puts( s );
+
+	for( ; i < 20 ; ) 
+	{
+		puts((i++).toString());
+	}
+
+	for( ; i < 23; ) 
+		puts((i--).toString());
+
+	for( ; i < 26 ; --i )
+	{
+		puts((++i).toString());
+		puts(|i|.toString());
+		puts(i!.toString());
+	}
+
+	for( ; i < 36; i += 2 )
+		puts(--i.toString());
 
 	return 0;
 }

@@ -14,8 +14,10 @@ PENTER
 
 	*statement = nullptr;
 
+printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 	while(!*statement)
 	{
+printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 		Token	val;
 		lex( val, this );
 
@@ -34,6 +36,7 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 		case ID::SCOLON:		// empty
 		{
 			auto empty = new Empty( 0 );
+			rc = true;
 			*statement = empty;
 printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
@@ -315,5 +318,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 		}
 	}
 
+printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 	return rc;
 }

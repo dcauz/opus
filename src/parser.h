@@ -99,11 +99,14 @@ private:
 		COMMA_OR_COLON_OR_RBRACE = 1, // { i1:e1 , ... }
 		COMMA_OR_RBRACK          = 2, // [ e1, ... ]
 		COMMA_OR_RPAREN          = 3, // ( e1, ... )
-		RPAREN                   = 4, // ( e1 )
+									  //
+		COLON	                 = 4, // e1 ? e2 : e3
+									  //
 		ABS                      = 5, // | e |
-		SCOLON                   = 6, // e ;
-		SCOLON_OR_RPAREN         = 7, // ... ; or ... )
-		COLON	                 = 8  // e1 ? e2 : e3
+									  //
+		RPAREN                   = 6, // ( e1 )
+		SCOLON                   = 7, // e ;
+		SCOLON_OR_RPAREN         = 8, // ... ; or ... )
 	};
 
 	void parserError( const char * );

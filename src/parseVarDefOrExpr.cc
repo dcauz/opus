@@ -17,10 +17,10 @@ PENTER
     {
     case start:
     {
-	  if(token.isType())
+	  if(token.isType() || token.id() == ID::FINAL )
       {
 	    VarDef * varDef;
-	    if(!parseVariableDef( token, ET::RPAREN, &varDef ))
+	    if(!parseVariableDef( token, et, &varDef ))
           TODO
 		return true;
 	  }

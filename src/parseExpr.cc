@@ -867,8 +867,8 @@ PENTER
 
   while(true)
   {
-//printf( "\n%s:%d START state %s opS size %d exS size %d et %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et );
-//dumpToken( __FILE__, __LINE__, token );
+printf( "\n%s:%d START state %s opS size %d exS size %d et %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et );
+dumpToken( __FILE__, __LINE__, token );
     switch( state )
     {
     default:
@@ -929,6 +929,13 @@ PENTER
       else if( token.id() == ID::NEW )
       {
         state = newSeen;
+      }
+      else if( token.id() == ID::RPAREN )
+      {
+		if( et != ET::RPAREN && et != ET::COMMA_OR_RPAREN )
+		  TODO
+        *expr = nullptr;
+		return true;
       }
       else
       {
@@ -1092,7 +1099,7 @@ PENTER
     {
       if( token.id() == ID::SCOLON)
       {
-        if( et != ET::SCOLON )
+        if( et != ET::SCOLON && et != ET::SCOLON_OR_RPAREN )
           TODO
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
@@ -1160,6 +1167,33 @@ PENTER
             *expr = new KeyValue( token.line(), token.column(), key, value );
         }
         return true; 
+      }
+      else if( token.id() == ID::LPAREN )
+      {
+	    while(true)
+		{
+          Expr * ex;
+          lex(token, this );  
+          if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+            TODO
+
+          if( token.id() == ID::COMMA )
+  		  {
+            seq.push_back(ex);
+          }
+          else if( token.id() == ID::RPAREN )
+          {
+            Expr * name = exprStack.top();
+		    exprStack.pop();
+
+            exprStack.push(new FuncCall( token.line(), token.column(), name, seq ));
+
+		    state = valueSeen;
+			break;
+          }
+          else
+            TODO
+		}
       }
       else if( token.id() == ID::BNOT )
       {
