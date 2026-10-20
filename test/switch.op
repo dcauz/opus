@@ -1,4 +1,4 @@
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	switch ( argc )
 	{
@@ -6,6 +6,7 @@ int32 main( int32 argc, const string [] argv )
 		puts("0");
 		break;
 	case 1:
+	case 2:
 		puts("1");
 		break;
 	default:
@@ -16,8 +17,10 @@ int32 main( int32 argc, const string [] argv )
 	switch ( int32 i = argc*2+8 )
 	{
 	case 8:
+	{
 		puts("0");
 		break;
+	}
 	case 10:
 		puts("1");
 		break;

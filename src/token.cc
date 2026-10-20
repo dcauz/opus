@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <algorithm>
+#include <sstream>
 
 
 Keyword keyWords[] =
@@ -276,6 +277,7 @@ Token::Token( Token && src ):
 		strncpy( shortLex_, src.shortLex_, sizeof(__int128_t) );
 	src.id_ = ID::NIL;
 }
+
 Token & Token::operator = ( Token && in )
 {
 	if( this != &in )
@@ -330,9 +332,6 @@ Token::~Token()
 		delete lexium_;
 }
 
-#ifdef DEBUG_YYLEX
-
-#include <sstream>
 
 static std::string decimal_string( __int128 v )
 {
@@ -861,5 +860,3 @@ void dumpToken( const char * f, int l, const Token & token )
 	printf( "%s [%s:%d]\n", ss.str().c_str(), f, l );
 	fflush(stdout);
 }
-
-#endif

@@ -1,4 +1,0 @@
-int32 main( int32 argc, const string [] argv )
-{
-	return 0;
-}

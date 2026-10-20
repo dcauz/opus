@@ -540,7 +540,7 @@ static bool isPrefixOp( ID id )
     ID::DEC,      // -> DEC --
     ID::INC,      // -> INC ++
     ID::NOT,      // -> NOT !
-    ID::BOR,      // -> ABS |
+//    ID::BOR,      // -> ABS |
     ID::IS_VOID,  // is_void
     ID::DELETE,   // delete
     ID::SIZEOF,   // sizeof
@@ -558,7 +558,7 @@ static inline void mapPrefixOp( Token & in )
   case ID::MUL:     in.id(ID::DEREF);       break;
   case ID::ADD:     in.id(ID::UNIARY_PLUS); break;
   case ID::SUB:     in.id(ID::UNIARY_MINUS);break;
-  case ID::BOR:     in.id(ID::ABS);         break;
+//  case ID::BOR:     in.id(ID::ABS);         break;
   case ID::DEC:     break;
   case ID::INC:     break;
   case ID::NOT:     break;
@@ -678,45 +678,6 @@ static bool isBinaryOp( ID id )
 
   return binOpIds.find(id) != binOpIds.end();
 }
-/*
-static bool isStartToken( ID id )
-{
-  static std::unordered_set<ID>  startIds
-  {
-    ID::ALIGNOF,
-
-    ID::QUAL,
-    ID::LPAREN,
-    ID::FUN_NAME,
-    ID::FUNCTION_NAME,
-    ID::VARIABLE_NAME,
-    ID::ID,
-    ID::SID,
-    ID::SFUN_NAME,
-    ID::SFUNCTION_NAME,
-    ID::SVARIABLE_NAME,
-    ID::UNKOWN_NAME,
-    ID::NEW,
-    ID::SELECT,
-    ID::SIZEOF,
-    ID::TYPEID,
-    ID::TIME,
-    ID::BSLASH,
-    ID::LBRACE,
-    ID::THROW,
-    ID::ASYNC,
-    ID::DELETE,
-    ID::EVAL,
-    ID::INVALID_NUMBER,
-    ID::INVALID_STRING,
-    ID::CO_AWAIT,
-    ID::IS_VOID,
-    ID::CO_YIELD,
-  };
-
-  return startIds.find(id) != startIds.end();
-}
-*/
 
 inline bool reduceAndPop( Parser * context, Expr ** expr, int initOpStack, int initExprStack )
 {
@@ -922,7 +883,7 @@ dumpToken( __FILE__, __LINE__, token );
         state = lparenSeen;
       }
       // | ... |
-      else if( token.id() == ID::BNOT )
+      else if( token.id() == ID::BOR )
       {
         state = absSeen;
       }
@@ -1087,7 +1048,7 @@ dumpToken( __FILE__, __LINE__, token );
         state = lparenSeen;
       }
       // | ... |
-      else if( token.id() == ID::BNOT )
+      else if( token.id() == ID::BOR )
       {
         state = absSeen;
       }
@@ -1204,9 +1165,30 @@ dumpToken( __FILE__, __LINE__, token );
         opStack.push(token);
         state = arrayIndexSeen;
       }
-      else if( token.id() == ID::BOR && et == ET::ABS )
+      else if( token.id() == ID::BOR )
       {
-        return reduceAndPop( this, expr, initOpStack, initExprStack );
+        if( et == ET::BOR )
+		{
+          bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
+          assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+          return rc;
+		}
+		else
+		{
+          if( static_cast<int>(opStack.size()) > initOpStack )
+          {
+              // decide if current stack state should be evaluated or 
+              // not based on operator precedence and associativity
+              if( shouldEval( opStack.top().id(), token.id() ))
+              {
+                if(!reduce( initOpStack, initExprStack, token.id() ))
+                  TODO
+              }
+          }
+
+          opStack.push(token);
+          state = binarySeen;
+		}
       }
       else if( isBinaryOp( token.id() ) )
       {
@@ -1360,7 +1342,7 @@ dumpToken( __FILE__, __LINE__, token );
     }
     case absSeen:
     {
-      if(!parseExpr( expr, ET::ABS, token, opStack.size(), exprStack.size() ))
+      if(!parseExpr( expr, ET::BOR, token, opStack.size(), exprStack.size() ))
         TODO;
       exprStack.push(*expr);
       state = valueSeen;

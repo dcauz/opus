@@ -102,7 +102,7 @@ private:
 									  //
 		COLON	                 = 4, // e1 ? e2 : e3
 									  //
-		ABS                      = 5, // | e |
+		BOR                      = 5, // | e |
 									  //
 		RPAREN                   = 6, // ( e1 )
 		SCOLON                   = 7, // e ;

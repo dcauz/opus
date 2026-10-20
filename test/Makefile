@@ -1,7 +1,5 @@
 TEST_FILES := \
-literal.op \
 alias.op \
-basicTypes.op \
 collections.op \
 do.op \
 enum.op \
@@ -9,11 +7,9 @@ expr.op \
 for.op \
 function.op \
 if.op \
-Makefile \
-minimal.op \
+literal.op \
 namespace.op \
 object.op \
-operators.op \
 pointers.op \
 pureFun.op \
 select.op \
@@ -22,15 +18,31 @@ try.op \
 type.op \
 while.op
 
+
 IL_FILES := $(patsubst %.op,%.il,$(TEST_FILES))
 
-test1: literal.il
-test2: expr.il
-test3: if.il
-test4: while.il
-test5: for.il
-
 test: $(IL_FILES)
+
+
+aliast:       alias.il
+collectionst: collections.il
+dot:          do.il
+enumt:        enum.il
+exprt:        expr.il
+fort:         for.il
+functiont:    function.il
+ift:          if.il
+literalt:     literal.il
+namespacet:   namespace.il
+object:       object.il
+pointerst:    pointers.il
+purFunt:      pureFun.il
+selectt:      select.il
+switcht:      switch.il
+tryt:         try.il
+typet:        type.il
+whilet:       while.il
+
 
 %.il: %.op
 	../bin/opus -d $<

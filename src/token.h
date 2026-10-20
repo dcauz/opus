@@ -628,7 +628,4 @@ struct Keyword
 extern Keyword keyWords[];
 extern unsigned noOfKeyWords;
 
-#define DEBUG_YYLEX
-#ifdef DEBUG_YYLEX
 void dumpToken( const char *, int, const Token & tok );
-#endif
