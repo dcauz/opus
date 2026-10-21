@@ -1,12 +1,10 @@
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	try 
-	{
 		throw 1;
-	}
-	catch( int32 ex )
+	catch( i32 ex )
 	{
-		puts( "caught int32" );
+		puts( "caught i32" );
 	}
 
 	try 
@@ -16,14 +14,12 @@ int32 main( int32 argc, const string [] argv )
 		else
 			throw 1.1;
 	}
- 	catch( int32 ex )
+ 	catch( i32 ex )
 	{
-		puts( "caught int32" );
+		puts( "caught i32" );
 	}
 	catch( string ex )
-	{
 		puts( "caught string" );
-	}
 	catch( ... )
 	{
 		puts( "caught unknown type" );

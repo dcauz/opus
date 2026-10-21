@@ -23,14 +23,14 @@ PENTER
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
-	int termToken;
+	lex( val, this );
 	bool rc = parseVarDefOrExpr( val, ET::RPAREN, &varDef, &expr );
 
 	if( !rc )
 		return false;
 
 	// ensure terminator is )
-	if( termToken != ')' )
+	if( val.id() != ID::RPAREN )
 	{
 		parserError( "switch clause is not terminated by ) character" );
 		return false;

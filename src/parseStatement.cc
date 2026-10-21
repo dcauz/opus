@@ -14,10 +14,8 @@ PENTER
 
 	*statement = nullptr;
 
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 	while(!*statement)
 	{
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 		Token	val;
 		lex( val, this );
 
@@ -30,7 +28,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			ExprStatement * exprS;
 			rc = parseExprStatement( &exprS, val );
 			*statement = exprS;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::SCOLON:		// empty
@@ -38,7 +35,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			auto empty = new Empty( 0 );
 			rc = true;
 			*statement = empty;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::LBRACE:		// block
@@ -46,7 +42,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Block * block;
 			rc = parseBlock( &block );
 			*statement = block;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::RBRACE:
@@ -150,7 +145,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Executable * ex;
 			rc = parseVarFuncDef( val, &vd, &ex );
 			*statement = ex;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 	
@@ -161,7 +155,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Break * b;
 			rc = parseBreak( &b );
 			*statement = b;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::CASE:		// case
@@ -169,7 +162,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Case * c;
 			rc = parseCase( &c );
 			*statement = c;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::CONTINUE:	// continue
@@ -177,7 +169,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Continue * con;
 			rc = parseContinue( &con );
 			*statement = con;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::DEFAULT:	// default
@@ -185,7 +176,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Default * def;
 			rc = parseDefault( &def );
 			*statement = def;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::DO:		// do ... while 
@@ -193,7 +183,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Do * un;
 			rc = parseDo( &un );
 			*statement = un;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::FOR:		// for
@@ -201,7 +190,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			For * f;
 			rc = parseFor( &f );
 			*statement = f;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::IF:		// if 
@@ -209,7 +197,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			If * i;
 			rc = parseIf( &i );
 			*statement = i;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::NAMESPACE:	// namespace
@@ -217,16 +204,13 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Namespace * ns;
 			rc = parseNamespace( &ns );
 			*statement = ns;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::RETURN:	// return
 		{
-SNAT
 			Return * r;
 			rc = parseReturn( &r );
 			*statement = r;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::SWITCH:	// switch 
@@ -234,7 +218,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Switch * sw;
 			rc = parseSwitch( &sw );
 			*statement = sw;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::TRY:		// try
@@ -242,7 +225,13 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			Try * t;
 			rc = parseTry( &t );
 			*statement = t;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
+			break;
+		}
+		case ID::CATCH:		// catch
+		{
+			CatchBlock * t;
+			rc = parseCatch( &t );
+			*statement = t;
 			break;
 		}
 		case ID::USING:		// using 
@@ -251,7 +240,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			UsingNamespace * uns;
 			rc = parseUsing( &u, &uns );
 			*statement = uns;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::WHILE:		// while 
@@ -259,7 +247,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			While * w;
 			rc = parseWhile( &w );
 			*statement = w;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 	
@@ -270,7 +257,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			ClassType * ct;
 			rc = parseClass( &ct );
 			*statement = ct;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::ENUM:
@@ -278,7 +264,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			EnumType * et;
 			rc = parseEnum( &et );
 			*statement = et;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::TYPE:
@@ -286,7 +271,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			TypeType * tt;
 			rc = parseTypeDef( &tt );
 			*statement = tt;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::UNION:
@@ -294,7 +278,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			UnionType * ut;
 			rc = parseUnion( &ut );
 			*statement = ut;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		case ID::INTERFACE:
@@ -302,7 +285,6 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			InterfaceType * it;
 			rc = parseInterface( &it );
 			*statement = it;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 	
@@ -312,12 +294,10 @@ printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			PureFuncDef * pfd;
 			rc = parsePureFunction( &pfd );
 			*statement = pfd;
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 			break;
 		}
 		}
 	}
 
-printf( "%s:%d st %p\n", __FILE__, __LINE__, *statement ); fflush(stdout);
 	return rc;
 }

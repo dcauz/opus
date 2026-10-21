@@ -390,6 +390,10 @@ void dumpToken( const char * f, int l, const Token & token )
 	default:
 		ss << "unknown " << static_cast<unsigned>(token.id());    
 		break;
+
+	case ID::NIL:           ss << "NIL"; break;
+	case ID::ERROR:         ss << "ERROR"; break;
+
 	case ID::NOT:    		ss << "!";	break;
 	case ID::WEAK:    		ss << "#";	break;
 	case ID::MOD:     		ss << "%";	break;
@@ -738,8 +742,13 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::TYPE_NAME: 	ss << "type-name:" 	<< token.idLexium();break;
 
     case ID::FUN_NAME:
-	case ID::FUNCTION_NAME:	ss << "func-name:" 	<< token.idLexium();break;
+    case ID::SFUN_NAME:
+	case ID::FUNCTION_NAME:	
+	case ID::SFUNCTION_NAME:ss << "func-name:" 	<< token.idLexium();break;
+
+	case ID::SNAMESPACE_NAME:
 	case ID::NAMESPACE_NAME:ss << "ns-name:" 		<< token.idLexium();break;
+	case ID::SVARIABLE_NAME:	
 	case ID::VARIABLE_NAME:	ss << "var-name:"		<< token.idLexium();break;
 	case ID::ID:
 	case ID::SID:				
@@ -792,6 +801,10 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::STRING_LIT:	ss << "str:"  << token.str();break;
 	case ID::SSTRING_LIT:	ss << "sstr:" << token.str();break;
 
+	case ID::MMAP_LIT:		ss << "mmap-literal";        break;
+	case ID::MSET_LIT:		ss << "mset-literal";        break;
+	case ID::SEQ_LIT:		ss << "seq-literal";        break;
+
 	case ID::TIME_LIT:		ss << "time: " 				  ;break;
 	case ID::U32_LIT:		ss << "u32:" << token.u32()  ;break;
 	case ID::U64_LIT:		ss << "u64:" << token.u64() ;break;
@@ -834,6 +847,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::ALIGNAS:		ss << "alignas";	break;
 	case ID::ALIGNOF:		ss << "alignof";	break;
     case ID::DELETE:		ss << "delete";	break;
+    case ID::S_DELETE:		ss << "SQL-delete";	break;
     case ID::EVAL:			ss << "eval";		break;
 	case ID::IN:        	ss << "in" ;		break;
 	case ID::IS_VOID: 		ss << "is_void"; 	break;

@@ -91,7 +91,8 @@ PENTER
 	{
 parseBody:
 		// read block
-TODO
+        dumpToken( __FILE__, __LINE__, lval );
+        TODO
 	}
 	else if( lval.id() == ID::SCOLON )
 	{

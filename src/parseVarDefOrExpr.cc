@@ -21,7 +21,10 @@ PENTER
       {
 	    VarDef * varDef;
 	    if(!parseVariableDef( token, et, &varDef ))
+		{
+		  dumpToken( __FILE__, __LINE__, token );
           TODO
+		}
 		return true;
 	  }
 	  else if(token.isId())
@@ -31,6 +34,7 @@ PENTER
       }
 	  else
       {
+		dumpToken( __FILE__, __LINE__, token );
         TODO
       }
       break;
@@ -41,6 +45,7 @@ PENTER
 	  // has not been added to the symbol table
 	  if(token.isId())
       {
+        dumpToken( __FILE__, __LINE__, token );
         TODO
       }
 	  else
@@ -48,7 +53,10 @@ PENTER
 		lookahead = std::move(token);
 
 	    if(!parseExpr( expr, et, first, 0, 0 ))
+		{
+          dumpToken( __FILE__, __LINE__, token );
           TODO
+		}
 		token = std::move(first);
 		return true;
       }

@@ -96,12 +96,10 @@ enum class ID : unsigned int
 	UPDATE,     // update
 	S_DELETE,   // delete (SQL)
 	ABS,        // |.
-	POST_ABS,   // .|
 	XOR,		// ^
-
-	// 70
 	BXOR_ASS,	 // ^=
 
+	// 70
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
 	RBRACK=93,	// ]
@@ -293,7 +291,6 @@ enum class ID : unsigned int
 	SEQ_LIT,		// [ e1, e2, ... ]
 	MSET_LIT,		// { e1, e2, ... }
 	MMAP_LIT,		// { k1:v1, k2:v2, ... }
-	TUPLE_LIT,		// { id1:v1, id2:v2, ... }
 
 	///////////////////////////////////////
 	// Type constructors

@@ -179,6 +179,7 @@ PENTER
 
 		if( lval.id() == ID::LT )
 		{
+			dumpToken( __FILE__, __LINE__, lval );
 			TODO // check for type parameters
 		}
 		break;
@@ -197,6 +198,7 @@ PENTER
 
 		if( lval.id() == ID::LT )
 		{
+			dumpToken( __FILE__, __LINE__, lval );
 			TODO // ensure type parameters present
 		}
 		else
@@ -217,6 +219,7 @@ PENTER
 		{
 		default:
 			// we are done. Set lookahead to token
+			dumpToken( __FILE__, __LINE__, lval );
 			TODO
 			break;
 
@@ -230,6 +233,7 @@ PENTER
 					collectionPtr = static_cast<Pointer>(lval.id());
 				else
 				{
+			        dumpToken( __FILE__, __LINE__, lval );
 					TODO	// multiple pointer modifiers error
 				}
 			}
@@ -239,6 +243,7 @@ PENTER
 					elementPtr = static_cast<Pointer>(lval.id());
 				else
 				{
+			        dumpToken( __FILE__, __LINE__, lval );
 					TODO	// multiple pointer modifiers error
 				}
 			}
@@ -249,10 +254,11 @@ PENTER
 			Expr * expr;
 			int termToken;
 			Token tt;
-			if( parseExpr( &expr, ET::COMMA_OR_RBRACK, tt, 0, 0 ) && termToken == ']' )
+			if( parseExpr( &expr, ET::COMMA_OR_RBRACK, tt, 0, 0 ) && tt.id() == ID::RBRACK )
 				dims.push_back(up<Expr>(expr));
 			else
 			{
+		        dumpToken( __FILE__, __LINE__, tt );
 				TODO	// get dims
 			}
 			break;

@@ -68,20 +68,27 @@ PENTER
 		{
 		  Block * block;
 		  if(!parseBlock( & block ))
+		  {
+		    dumpToken( __FILE__, __LINE__, lval );
             TODO
+		  }
 
 		  (*i)->addElse(block);
 		  return true;
 		}
 		else if( lval.id() == ID::IF )
 		{
+          dumpToken( __FILE__, __LINE__, lval );
 		  TODO
 		}
 		else
 		{
 		   ExprStatement * expr;
            if(!parseExprStatement( &expr, lval ))
+		   {
+             dumpToken( __FILE__, __LINE__, lval );
 		     TODO
+		   }
 		}
 
 		return true;

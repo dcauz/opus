@@ -32,7 +32,10 @@ PENTER
 		  finalSeen = true;
 		}
 		else
+		{
+		  dumpToken( __FILE__, __LINE__, token );
 		  TODO
+		}
 	    break;
 	  }
 	  case typeSeen:
@@ -47,7 +50,10 @@ PENTER
 		  refSeen = true;
 		}
 		else
+		{
+		  dumpToken( __FILE__, __LINE__, token );
 		  TODO
+		}
 	    break;
 	  }
       case nameSeen:
@@ -56,14 +62,17 @@ PENTER
         {
 		  state = assignSeen;
 		}
-		else if( token.id() == ID::COLON )
+		else if( token.id() == ID::COLON || token.id() == ID::RPAREN )
 		{
 		   sp<Type> type;
 		   *varDef = new VarDef( token.line(), token.column(), type, name.c_str(), 0 );
 		   return true;
 		}
 		else
+		{
+		  dumpToken( __FILE__, __LINE__, token );
 		  TODO
+		}
 	    break;
 	  }
 	  case assignSeen:
@@ -78,6 +87,7 @@ PENTER
 		   *varDef = new VarDef( token.line(), token.column(), type, name.c_str(), 0, expr );
 		   return true;
 		}
+        dumpToken( __FILE__, __LINE__, token );
         TODO
 	    break;
 	  }

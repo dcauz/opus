@@ -4,15 +4,15 @@
 Syntax:
 
 try
-	: TRY block catchBlocks
+	: TRY statement catchBlocks
 
 catchBlocks
     : catchBlocks catchBlock
     | catchBlock
 
 catchBlock
-    : CATCH '(' variableDef ')' block
-    | CATCH '(' DOT_DOT_DOT ')' block
+    : CATCH '(' variableDef ')' statement
+    | CATCH '(' DOT_DOT_DOT ')' statement
 
 */
 bool Parser::parseTry( Try ** t )

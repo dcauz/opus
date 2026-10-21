@@ -24,13 +24,22 @@ PENTER
           *wStat = new While( token.line(), token.column(), vDef, stmt );
       }
       else
+	  {
+	    dumpToken( __FILE__, __LINE__, token );
         TODO
+	  }
     }
     else
+	{
+      dumpToken( __FILE__, __LINE__, token );
       TODO
+	}
   }
   else
+  {
+    dumpToken( __FILE__, __LINE__, token );
     TODO
+  }
 
   return true;
 }

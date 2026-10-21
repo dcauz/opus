@@ -105,11 +105,15 @@ dumpToken( __FILE__, __LINE__, token );
 				modifiers |= static_cast<unsigned int>(token.id());
 			}
 			else
+			{
+                dumpToken( __FILE__, __LINE__, token );
 				TODO
+			}
 			break;
 
 		case modSeen:
 			// modifer or type
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -132,7 +136,10 @@ dumpToken( __FILE__, __LINE__, token );
 				state = ptrSeen;
 			}
 			else
+			{
+                dumpToken( __FILE__, __LINE__, token );
 				TODO
+			}
 			break;
 
 		case ptrSeen:
@@ -142,7 +149,10 @@ dumpToken( __FILE__, __LINE__, token );
 				state = idSeen;
 			}
 			else
+			{
+                dumpToken( __FILE__, __LINE__, token );
 				TODO
+		    }
 			break;
 
 		case arrayOpenSeen:
@@ -152,7 +162,10 @@ dumpToken( __FILE__, __LINE__, token );
 			{
 				// get dims
 				if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, 0, 0 ))
-					TODO
+				{
+                  dumpToken( __FILE__, __LINE__, token );
+				  TODO
+				}
 				state = arrayCloseSeen;
 			}
 			break;
@@ -173,7 +186,10 @@ dumpToken( __FILE__, __LINE__, token );
 			else if( token.id() == ID::LBRACK )
 				state = arrayOpenSeen;
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+              TODO
+			}
 			break;
 
 		case arrayPtrSeen:
@@ -185,14 +201,20 @@ dumpToken( __FILE__, __LINE__, token );
 				state = refSeen;
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case refSeen:
 			if( token.isId() )
 				state = idSeen;
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case idSeen:
@@ -203,7 +225,10 @@ dumpToken( __FILE__, __LINE__, token );
 			else if( token.id() == ID::SCOLON )
 				return true;
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case assSeen:
@@ -211,12 +236,14 @@ dumpToken( __FILE__, __LINE__, token );
  			Expr * expr;
 			if( !parseExpr( &expr, ET::SCOLON, token, 0, 0 ) || token.id() != ID::SCOLON )
 			{
-				TODO
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
 			}
 			return true;
 		}
         case exprSeen:
  			// ;
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -232,7 +259,10 @@ dumpToken( __FILE__, __LINE__, token );
 				pModifiers |= static_cast<unsigned>(token.id());
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case pModSeen:
@@ -247,7 +277,10 @@ dumpToken( __FILE__, __LINE__, token );
 				pModifiers |= static_cast<unsigned>(token.id());
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case pTypeSeen:
@@ -267,11 +300,15 @@ dumpToken( __FILE__, __LINE__, token );
 				pPtr = token.id();
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case pPtrSeen:
 			// lbracket ref id , ) ...
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -282,8 +319,9 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else 
 			{
-				// get dims
-				TODO
+			  // get dims
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
 			}
 			break;
 
@@ -301,16 +339,21 @@ dumpToken( __FILE__, __LINE__, token );
 				paPtr = token.id();
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case pArrayPtrSeen:
 			// ref id , ) ...
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
 		case pRefSeen:
 			// id , ) ...
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -323,21 +366,27 @@ dumpToken( __FILE__, __LINE__, token );
 			else if( token.id() == ID::DOT_DOT_DOT )
 				state = dotDotDotSeen;
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 
 		case pAssSeen:
 			// expr
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
         case pExprSeen:
 			// id , ) ...
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
 		case dotDotDotSeen:
 			// )
+            dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -349,7 +398,10 @@ dumpToken( __FILE__, __LINE__, token );
 				return parseBlock( & body );	
 			}
 			else
-				TODO
+			{
+              dumpToken( __FILE__, __LINE__, token );
+			  TODO
+			}
 			break;
 		}
 

@@ -13,13 +13,14 @@ PENTER
 	// get expr
 	Expr * ex;
 	Token tt;
+
+	lex( tt, this );
 	bool rc = parseExpr( &ex, ET::COLON, tt, 0, 0 );	
-	int termTok = 0;
 
 	if(rc)
 	{
 		// get :
-		if( termTok != ':' )
+		if( tt.id() != ID::COLON )
 		{
 			parserError( ": missing from case statement" );
 			return false;

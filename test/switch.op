@@ -14,7 +14,7 @@ i32 main( i32 argc, final string [] argv )
 		break;
 	}
 
-	switch ( int32 i = argc*2+8 )
+	switch ( i32 i = argc*2+8 )
 	{
 	case 8:
 	{
