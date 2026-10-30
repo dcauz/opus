@@ -1,6 +1,6 @@
 
 #include "opus.h"
-#include "String.h"
+#include "string.h"
 #include <cstring>
 
 

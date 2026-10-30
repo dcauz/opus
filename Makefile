@@ -110,13 +110,13 @@ test literalt exprt ift whilet fort switcht tryt enumt: bin/opus.exe
 
 bin/opus.exe: $(OBJS) | bin
 	rm -f $@
-	g++ -save-temps -std=c++17 -g -Wall -Wextra -o $@ $(OBJS)
+	g++ -std=c++17 -g -Wall -Wextra -o $@ $(OBJS)
 
 obj/%.o: src/%.cc .d/%.d | obj
-	g++ -save-temps -std=c++17 -g -Wall -Wextra -c -o $@ $<
+	g++ -std=c++17 -g -Wall -Wextra -c -o $@ $<
 
 .d/%.d: src/%.cc | .d 
-	g++ -save-temps -std=c++17 -MF"$@" -MG -MM -MP -MT"$@" "$<"
+	g++ -std=c++17 -MF"$@" -MG -MM -MP -MT"$@" "$<"
 
 obj bin .d:
 	mkdir $@
