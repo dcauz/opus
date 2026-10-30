@@ -57,11 +57,10 @@ PENTER
 		// read base types
 		while(true)
 		{
-			ID termToken;
 			unsigned declarators;
 			Type	* type;
 
-			if(!parseType( declarators, &type ) )
+			if(!parseType( lval, declarators, &type ) )
 				return false;
 			else
 			{
@@ -75,11 +74,11 @@ PENTER
 
 					bases->push_back(up<Type>(type));
 
-					if( termToken == ID::COMMA )
+					if( lval.id() == ID::COMMA )
 						continue;
-					else if( termToken == ID::LBRACE )
+					else if( lval.id() == ID::LBRACE )
 						goto parseBody;
-					else if( termToken == ID::SCOLON )
+					else if( lval.id() == ID::SCOLON )
 						goto parseDeclaration;
 					else
 						throw std::runtime_error( "Unexpected token found in union definition");

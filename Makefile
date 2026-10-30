@@ -103,7 +103,7 @@ clean:
 clobber: clean
 	rm -rf bin
 
-test literalt exprt ift whilet fort switcht tryt: bin/opus.exe
+test literalt exprt ift whilet fort switcht tryt enumt: bin/opus.exe
 	cd test; make $@
 
 ########################################

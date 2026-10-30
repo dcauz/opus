@@ -1,22 +1,28 @@
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	enum Enum1
 	{
-		A = 1,
-		B = 2,
-		C = 3,
-		D
-	};
+		a = 1,
+		b = 2,
+		c = 3,
+		d
+	}
 
-	enum Enum1;
-
-	enum Enum2
+	enum Enum2 : f32
 	{
-		X = 1.1,
-		Y = 1.3
-	};
+		x = 1.1,
+		y = 1.3
+	}
 
-	puts( Enum1.A );
+	enum Enum2 : string
+	{
+		x = "x",
+		y = "y" 
+	}
+
+	puts( Enum1.a );
+	puts( Enum2.y );
+	puts( Enum3.y );
 
 	return 0;
 }

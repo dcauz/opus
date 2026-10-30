@@ -157,180 +157,100 @@ private:
 	bool isNeg_;
 };
 
-class Int8Type : public Type
+template <int B> class InType : public Type
 {
 public:
-	Int8Type() {}
+	InType() {}
 
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+    bool eqCompareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool compareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool assignableTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
 
+	int bits() const { return B; }
 };
 
-class Int16Type : public Type
+template <int B> class UnType : public Type
 {
 public:
-	Int16Type() {}
+	UntType() {}
 
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+    bool eqCompareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool compareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool assignableTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
 
+	int bits() const { return B; }
 };
 
-class Int32Type : public Type
+template <int B> class NnType : public Type
 {
 public:
-	Int32Type() {}
+	NnType() {}
 
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+    bool eqCompareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool compareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool assignableTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
 
+	int bits() const { return B; }
 };
 
-class Int64Type : public Type
+template <int B> class ZnType : public Type
 {
 public:
-	Int64Type() {}
+	ZnType() {}
 
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
+    bool eqCompareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool compareTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
+    bool assignableTo( Type * ) const override
+	{
+      TODO
+      return false;
+    }
 
-};
-
-class Uint8Type : public Type
-{
-public:
-	Uint8Type() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint16Type : public Type
-{
-public:
-	Uint16Type() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint32Type : public Type
-{
-public:
-	Uint32Type() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint64Type : public Type
-{
-public:
-	Uint64Type() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Int8CType : public Type
-{
-public:
-	Int8CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Int16CType : public Type
-{
-public:
-	Int16CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Int32CType : public Type
-{
-public:
-	Int32CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Int64CType : public Type
-{
-public:
-	Int64CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint8CType : public Type
-{
-public:
-	Uint8CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint16CType : public Type
-{
-public:
-	Uint16CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint32CType : public Type
-{
-public:
-	Uint32CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
-};
-
-class Uint64CType : public Type
-{
-public:
-	Uint64CType() {}
-
-    bool eqCompareTo( Type * ) const override;
-    bool compareTo( Type * ) const override;
-    bool assignableTo( Type * ) const override;
-
+	int bits() const { return B; }
 };
 
 class IntegerType : public Type
@@ -360,6 +280,3 @@ public:
     bool assignableTo( Type * ) const override;
 
 };
-
-extern sp<IntegerType>	integerType;
-extern sp<NaturalType>	naturalType;

@@ -244,27 +244,23 @@ private:
     Expr * value_;
 };
 
-class EnumType: public TypeDef
+class EnumType : public Definition, public Type
 {
 public:
 	EnumType( 
-		int s, 
-		int e, 
+		int s,
+		int e,
 		const char * n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		std::vector<up<Statement>> * sts = nullptr ):
-			TypeDef(s,e,n,params,bases,new Block(s,e, sts)) 
+		Type * base,
+		std::vector<Statement * > * sts = nullptr ): Definition(s,e), Type(n), base_(base), sts_(sts)
 	{}
 
 	EnumType( 
-		int s, 
-		int e, 
+		int s,
+		int e,
 		const std::string & n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		std::vector<up<Statement>> * sts = nullptr ):
-			TypeDef(s,e,n,params,bases,new Block(s,e, sts)) 
+		Type * base,
+		std::vector<Statement * > * sts = nullptr ): Definition(s,e), Type(n), base_(base), sts_(sts)
 	{}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -273,6 +269,10 @@ public:
 	bool eqCompareTo( Type * ) const final;
 	bool compareTo( Type * ) const final;
 	bool assignableTo( Type * ) const final;
+
+private:
+	Type	* base_;
+	std::vector<Statement * > * sts_;
 };
 
 class TypeType: public TypeDef

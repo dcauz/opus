@@ -30,7 +30,7 @@ arg
 	;
 */
 
-bool Parser::parseArgs( vector<up<Arg>> ** args )
+bool Parser::parseArgs( Token & lval, vector<up<Arg>> ** args )
 {
 PENTER
 	*args = new vector<up<Arg>>();	
@@ -38,12 +38,10 @@ PENTER
 	Type * type;
 	Expr * expr;
 	string argName;
-	ID    termToken;
 
 	while(true)
 	{
 		// check for VA_ARGS
-		Token lval;
 		lex( lval, this );
 
 		if( lval.id() == ID::VA_ARGS )
@@ -55,7 +53,6 @@ PENTER
 			lex( lval, this );
 			if( lval.id() == ID::RPAREN )
 			{
-				termToken = lval.id();
 				return true;
 			}
 			else
@@ -76,20 +73,20 @@ PENTER
 		}
 
 		unsigned declarators;
-		bool rc = parseType( declarators, &type );
+		bool rc = parseType( lval, declarators, &type );
 
-		if( termToken == ID::COMMA )
+		if( lval.id() == ID::COMMA )
 		{
 			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 		}
-		else if( termToken == ID::RPAREN )
+		else if( lval.id() == ID::RPAREN )
 		{
 			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 			break;
 		}
-		else if( termToken == ID::ID )
+		else if( lval.id() == ID::ID )
 		{
 			argName = lval.idLexium();
 
@@ -103,14 +100,14 @@ PENTER
 				if(!rc)
 					return false;
 
-				if( termToken == ID::RPAREN )
+				if( lval.id() == ID::RPAREN )
 				{
 					(*args)->push_back( std::make_unique<Arg>( 0, 0,
 						declarators, type, argName, expr ) );
 					declarators = 0;
 					break;
 				}
-				else if( termToken == ID::COMMA )
+				else if( lval.id() == ID::COMMA )
 				{
 					(*args)->push_back( std::make_unique<Arg>( 0, 0,
 						declarators, type, argName, expr ) );
@@ -122,14 +119,14 @@ PENTER
 					return false;
 				}
 			}
-			else if( termToken == ID::RPAREN )
+			else if( lval.id() == ID::RPAREN )
 			{
 				(*args)->push_back( std::make_unique<Arg>( 0, 0,
 					declarators, type, argName ) );
 				declarators = 0;
 				break;
 			}
-			else if( termToken == ID::COMMA )
+			else if( lval.id() == ID::COMMA )
 			{
 				(*args)->push_back( std::make_unique<Arg>( 0, 0,
 					declarators, type, argName ) );

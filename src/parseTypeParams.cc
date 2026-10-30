@@ -83,15 +83,13 @@ PENTER
             // push it back
             lookahead = std::move(lval);
 
-			ID termToken;
-
 			unsigned declarators;
-			bool rc = parseType( declarators, &type );
+			bool rc = parseType( lval, declarators, &type );
 
 			if(!rc)
 				return false;
 
-			if( termToken == ID::ID )
+			if( lval.id() == ID::ID )
 			{
 				std::string name = lval.idLexium();
 

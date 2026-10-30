@@ -12,35 +12,35 @@ pureFunc
 bool Parser::parsePureFunction( PureFuncDef ** )
 {
 PENTER
-	Type	* type;
-	ID termToken;
+	Type   * type;
+	Token    token;
 	unsigned declarators;
-	bool rc = parseType( declarators, &type );
+
+	bool rc = parseType( token, declarators, &type );
 	if(!rc)
 		return rc;
 
-	if( termToken != ID::ID )
+	if( token.id() != ID::ID )
 	{
 		parserError( "Pure function name is missing" );
 		return false;
 	}
 
-	Token	lval;
-	lex( lval, this );
-	if( lval.id() != ID::LPAREN )
+	lex( token, this );
+	if( token.id() != ID::LPAREN )
 	{
 		parserError( "Pure function missing ( character" );
 		return false;
 	}
 
 	std::vector<up<Arg>> * args;
-	rc = parseArgs( &args );
+	rc = parseArgs( token, &args );
 
-	if( rc && termToken != ID::RPAREN )
+	if( rc && token.id() != ID::RPAREN )
 		parserError( "Pure function missing ) character" );
 
-	lex( lval, this );
-	if( lval.id() != ID::ASSIGN )
+	lex( token, this );
+	if( token.id() != ID::ASSIGN )
 	{
 		parserError( "Pure function missing = character" );
 		return false;
@@ -50,7 +50,7 @@ PENTER
 	Token tt;
 	rc = parseExpr( &expr, ET::SCOLON, tt, 0, 0 );
 
-	if( rc && termToken != ID::SCOLON )
+	if( rc && token.id() != ID::SCOLON )
 		parserError( "Pure function is not terminated by ; character" );
 
 	return rc;

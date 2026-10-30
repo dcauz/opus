@@ -95,28 +95,28 @@ private:
 
 	enum class ET
 	{
-		COMMA_OR_RBRACE          = 0, // { e1 , ... }
-		COMMA_OR_COLON_OR_RBRACE = 1, // { i1:e1 , ... }
-		COMMA_OR_RBRACK          = 2, // [ e1, ... ]
-		COMMA_OR_RPAREN          = 3, // ( e1, ... )
+		COMMA_OR_RBRACE          = 1, // { e1 , ... }
+		COMMA_OR_COLON_OR_RBRACE = 2, // { i1:e1 , ... }
+		COMMA_OR_RBRACK          = 3, // [ e1, ... ]
+		COMMA_OR_RPAREN          = 4, // ( e1, ... )
 									  //
-		COLON	                 = 4, // e1 ? e2 : e3
+		COLON	                 = 5, // e1 ? e2 : e3
 									  //
-		BOR                      = 5, // | e |
+		BOR                      = 6, // | e |
 									  //
-		RPAREN                   = 6, // ( e1 )
-		SCOLON                   = 7, // e ;
-		SCOLON_OR_RPAREN         = 8, // ... ; or ... )
+		RPAREN                   = 7, // ( e1 )
+		SCOLON                   = 8, // e ;
+		SCOLON_OR_RPAREN         = 9, // ... ; or ... )
 	};
 
 	void parserError( const char * );
 
-	bool parseArgs( std::vector<up<Arg>> ** );
+	bool parseArgs( Token &, std::vector<up<Arg>> ** );
 	bool parseExpr( Expr ** expr, ET et, Token &, int, int );
 	bool parseExprTypes( std::vector<up<TypeArg>> & );
 	bool parseSelect( Select ** );
 	bool parseStatement( Statement ** );
-	bool parseType( unsigned &, Type ** );
+	bool parseType( Token &, unsigned &, Type ** );
 	bool parseTypeParams( std::vector<up<TemplateParam>> ** );
 	bool parseVarDefOrExpr( Token & , ET, VarDef ** variableDef, Expr ** initExpr );
 	bool parseVariableDef( Token & token, ET et, VarDef ** variableDef );

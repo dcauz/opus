@@ -11,25 +11,9 @@ using namespace std;
 Syntax:
 
 enum
-	: ENUM NAME typeParams baseType '{' members '}'
-	| ENUM NAME typeParams baseType ';'
-	| ENUM NAME typeParams '{' members '}'
-	| ENUM NAME typeParams ';'
-    | ENUM NAME baseTypes '{' members '}'
-    | ENUM NAME baseTypes ';'
+    | ENUM NAME baseType '{' members '}'
+    | ENUM NAME baseType ';'
     | ENUM NAME '{' members '}'
-    | ENUM NAME ';'
-
-typeParams
-	: '<' typeParamList '>'
-
-typeParamList
-    : typeParamList ',' typeParam
-    | typeParam
-
-typeParam
-    : type NAME
-    | NAME
 
 baseType
     : ':' type
@@ -52,63 +36,59 @@ PENTER
 	Token	lval;
 	lex( lval, this );
 
+	int s = lval.line();
+
+dumpToken( __FILE__, __LINE__, lval );
 	if( !lval.isId() )
 		throw std::runtime_error( "Expected name after enum keyword" );
 
 	std::string name = lval.idLexium();
 
 	lex( lval, this );
+dumpToken( __FILE__, __LINE__, lval );
 
-	vector<up<TemplateParam>> * typeParams = nullptr;
-	if( lval.id() == ID::LT )
-	{
-		// > is eaten
-		if( !parseTypeParams( &typeParams ))
-		{
-			return false;
-		}
-	}
+	Type * base = nullptr;
+	std::vector<Statement *> * sts = nullptr;
 
-	lex( lval, this );
-
-	vector<up<Type>> * bases = nullptr;
-	std::vector<up<Statement>> * sts = nullptr;
-
+	int e;
 	if( lval.id() == ID::COLON )
 	{
 		while(true)
 		{
-			ID termToken;
 			unsigned declarators;
-			Type	* type;
 
-			if(!parseType( declarators, &type ) )
+			if(!parseType( lval, declarators, &base ) )
+			{
+dumpToken( __FILE__, __LINE__, lval );
 				return false;
+			}
 			else
 			{
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 				if( declarators != 0 )
 					throw std::runtime_error( "Base type of enum definition cannot "
 						"contain declarators" );
 				else
 				{
-					if(bases == nullptr )
-						bases = new vector<up<Type>>();
-
-					bases->push_back(up<Type>(type));
-
-					if( termToken == ID::COMMA )
-						continue;
-					else if( termToken == ID::LBRACE )
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
+					if( lval.id() == ID::LBRACE )
 						goto parseBody;
-					else if( termToken == ID::SCOLON )
+					else if( lval.id() == ID::SCOLON )
 						goto parseDeclaration;
 					else
 						throw std::runtime_error( "Unexpected token found in enum definition");
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 				}
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 			}
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 		}
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 	}
-	else if( lval.id() == ID::LBRACE )
+
+printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
+dumpToken( __FILE__, __LINE__, lval );
+	if( lval.id() == ID::LBRACE )
 	{
 parseBody:
 		/****************************
@@ -121,41 +101,48 @@ parseBody:
 		    | NAME '=' expr
 		*/
 
-		while( true );
+		while( true )
 		{
 			lex( lval, this );
+dumpToken( __FILE__, __LINE__, lval );
 			// name
 			if( !lval.isId() )
 				throw std::runtime_error( "Expected name after enum keyword" );
 			string name = lval.idLexium();
 
-			ID termToken;
 			Expr	* expr = nullptr;
-
 			lex( lval, this );
+dumpToken( __FILE__, __LINE__, lval );
 			if( lval.id() == ID::ASSIGN )
 			{
-				Token tt;
-				if( !parseExpr( &expr, ET::COMMA_OR_RBRACE, tt, 0, 0 ) )
+			    lex( lval, this );
+dumpToken( __FILE__, __LINE__, lval );
+				if( !parseExpr( &expr, ET::COMMA_OR_RBRACE, lval, 0, 0 ) )
 					return false;	
-			}
-			else
-				termToken = lval.id();
 
-			
-			if( termToken == ID::COMMA )
+				if( !sts )
+					sts = new std::vector<Statement *>();
+				sts->push_back( new EnumMember(0,0, name, expr ));
+
+				if( lval.id() == ID::RBRACE )
+				{
+				  *et = new EnumType( s, lval.line(), name, base, sts );
+  				  return true;
+				}
+			}
+			else if( lval.id() == ID::COMMA )
 			{
 				if( !sts )
-					sts = new std::vector<up<Statement>>();
-				sts->push_back(make_unique<EnumMember>(0,0, name, expr ));
+					sts = new std::vector<Statement *>();
+				sts->push_back(new EnumMember(0,0, name, expr ));
 			}
-			else if( termToken == ID::RBRACE )
+			else if( lval.id() == ID::RBRACE )
 			{
 				if( !sts )
-					sts = new std::vector<up<Statement>>();
-				sts->push_back(make_unique<EnumMember>(0,0, name, expr ));
+					sts = new std::vector<Statement *>();
+				sts->push_back( new EnumMember(0,0, name, expr ));
 
-				*et = new EnumType( 0, 0, name, typeParams, bases, sts );
+				*et = new EnumType( s, lval.line(), name, base, sts );
 				return true;
 			}
 			else
@@ -165,7 +152,7 @@ parseBody:
 	else if( lval.id() == ID::SCOLON )
 	{
 parseDeclaration:
-		*et = new EnumType( 0, 0, name, typeParams, bases);
+		*et = new EnumType( 0, 0, name, base, nullptr );
 		return true;
 	}
 
