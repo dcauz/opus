@@ -59,9 +59,9 @@ SNAT
 			if( !rc )
 			{
 SNAT
-				parser.program().genCode();
+//				parser.program().genCode();
 SNAT
-				parser.program().outputIL();
+//				parser.program().outputIL();
 SNAT
 			}
 			else

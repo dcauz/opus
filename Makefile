@@ -1,6 +1,6 @@
 
 TARGETS = \
-bin/opus.exe
+bin/opus
 
 SRC =  \
 src/auto.cc \
@@ -103,12 +103,12 @@ clean:
 clobber: clean
 	rm -rf bin
 
-test literalt exprt ift whilet fort switcht tryt enumt: bin/opus.exe
+test literalt exprt ift whilet fort switcht tryt enumt: bin/opus
 	cd test; make $@
 
 ########################################
 
-bin/opus.exe: $(OBJS) | bin
+bin/opus: $(OBJS) | bin
 	rm -f $@
 	g++ -std=c++17 -g -Wall -Wextra -o $@ $(OBJS)
 

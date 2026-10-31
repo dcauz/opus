@@ -184,7 +184,7 @@ public:
 template <int B> class UnType : public Type
 {
 public:
-	UntType() {}
+	UnType() {}
 
     bool eqCompareTo( Type * ) const override
 	{

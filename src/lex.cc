@@ -72,7 +72,6 @@ void isDatetime( Token & tok, Parser * context )
     int hour = D(cp[11])*10 + D(cp[12]);
     int min = D(cp[14])*10 + D(cp[15]);
     int sec = D(cp[17])*10 + D(cp[18]);
-	int next;
     int ms = 0;
 
     if(cp[19] == '.' )
@@ -102,9 +101,6 @@ void isDatetime( Token & tok, Parser * context )
       context->columnNo += 20;
       context->cp += 20;
     }
-
-    if( is1stTokenChar(cp[next]))
-      throw std::runtime_error( "Invalid token" );
 
     tok.set( context->lineNo, context->columnNo, Datetime( y, m, d, hour, min, sec, ms ) );
   }
@@ -229,13 +225,11 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
   // NOT float: int-lit ..
   if( *cp == '.' )
   {
-printf( "%s:%d [%s]\n", __FILE__, __LINE__, cp );
       getIntLitToken( context->lineNo, context->columnNo, v, tok );
 	  context->lookahead.set( context->lineNo, context->columnNo, ID::DOT_DOT );
 
       context->cp += 2;
 	  context->columnNo += 2;
-printf( "%s:%d [%s]\n", __FILE__, __LINE__, context->cp );
 
 	  return true;
   }
@@ -493,7 +487,8 @@ int nextChar( Parser * context )
   }  
   else if( !context->cp )
   {
-getLine:if( fgets( context->line, Parser::MAX_LINE, context->fh ) )
+getLine:
+		if( fgets( context->line, Parser::MAX_LINE, context->fh ) )
     {
       ++context->lineNo;
       context->columnNo = 0;
@@ -509,7 +504,9 @@ getLine:if( fgets( context->line, Parser::MAX_LINE, context->fh ) )
     RET_CHAR(*context->cp++);
   }
   else
+  {
     goto getLine;
+  }
 
   RET_CHAR(0);
 }

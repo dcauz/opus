@@ -154,7 +154,7 @@ void Log::Logger::write( const Msg & m )
 		char buff[MAX_LOG_MSG];
 
 		struct tm t;
-		localtime_s( &t, &m.ts.tv_sec );
+		localtime_r( &m.ts.tv_sec, &t );
 
 		if( parts_ == static_cast<int>(Part::ALL) )
 		{
