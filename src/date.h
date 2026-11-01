@@ -31,6 +31,15 @@ private:
 	unsigned char d_;
 };
 
+class DateType : public Type
+{
+public:
+
+	bool eqCompareTo( Type * ) const override;
+	bool compareTo( Type * ) const override;
+	bool assignableTo( Type * ) const override;
+};
+
 class Year : public Value
 {
 public:

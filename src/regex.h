@@ -43,6 +43,3 @@ public:
     bool compareTo( Type * ) const override;
     bool assignableTo( Type * ) const override;
 };
-
-
-extern sp<RegExpType>	regexpType;

@@ -4,7 +4,6 @@
 #include "value.h"
 
 
-
 class ObjectType: public Type
 {
 public:
@@ -14,7 +13,6 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-
 class Object: public Value
 {
 public:
@@ -22,5 +20,3 @@ public:
 	bool genCode( GenCodeContext & gcc ) const override;
 	sp<Type> semCheck( SemCheckContext & scc ) const override;
 };
-
-extern ObjectType	objectType;

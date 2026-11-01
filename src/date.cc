@@ -19,6 +19,26 @@ sp<Type> Date::semCheck( SemCheckContext & ) const
 
 ///////////////////////////////////////////////////////////
 
+bool DateType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool DateType::compareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool DateType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+///////////////////////////////////////////////////////////
+
 Year::Year( int y ):y_(y)
 {
 }

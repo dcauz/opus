@@ -72,7 +72,3 @@ public:
 private:
 	//Expr * value_;	
 };
-
-
-extern RealType	realType;
-

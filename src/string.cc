@@ -4,8 +4,6 @@
 #include <cstring>
 
 
-StringType	stringType;
-
 ///////////////////////////////////
 
 bool String::genCode( GenCodeContext & ) const
@@ -72,4 +70,3 @@ sp<Type> LTString::semCheck( SemCheckContext & ) const
  TODO // semCheck
 	return errorType;
 }
-

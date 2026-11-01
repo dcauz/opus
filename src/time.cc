@@ -18,6 +18,26 @@ sp<Type> Time::semCheck( SemCheckContext & ) const
 
 ///////////////////////////////////////////////////////////
 
+bool TimeType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool TimeType::compareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool TimeType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+///////////////////////////////////////////////////////////
+
 Hour::Hour( int h ):h_(h)
 {
 }

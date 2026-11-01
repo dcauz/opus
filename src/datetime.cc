@@ -20,3 +20,22 @@ sp<Type> Datetime::semCheck( SemCheckContext & ) const
 	return errorType;
 }
 
+///////////////////////////////////////////////////////////
+
+bool DatetimeType::eqCompareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool DatetimeType::compareTo( Type * ) const
+{
+	TODO
+	return false;
+}
+
+bool DatetimeType::assignableTo( Type * ) const
+{
+	TODO
+	return false;
+}

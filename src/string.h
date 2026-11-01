@@ -42,8 +42,6 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern StringType	stringType;
-
 
 class LString : public Value
 {
@@ -85,8 +83,6 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern LStringType	lstringType;
-
 
 class LTString : public Value
 {
@@ -127,6 +123,3 @@ public:
     bool compareTo( Type * ) const override;
     bool assignableTo( Type * ) const override;
 };
-
-extern LTStringType	ltstringType;
-
