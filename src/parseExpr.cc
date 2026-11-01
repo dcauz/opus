@@ -375,7 +375,7 @@ static Expr * createUniOpExpr( const Token & token, Expr * operand )
   {
     dumpToken( __FILE__, __LINE__, token );
     TODO 
-	return nullptr;
+  return nullptr;
   }
   case ID::DEC:         return new Dec(token.line(), token.column(), operand );
   case ID::INC:         return new Inc(token.line(), token.column(), operand );
@@ -483,7 +483,7 @@ static bool isPrefixOp( ID id )
     ID::IS_VOID,  // is_void
     ID::DELETE,   // delete
     ID::SIZEOF,   // sizeof
-	ID::THROW,	  // throw
+  ID::THROW,    // throw
   };
 
   return prefixOpIds.find(id) != prefixOpIds.end();
@@ -553,7 +553,7 @@ static bool isUniaryOp( ID id )
     ID::IS_VOID,
     ID::DELETE,
     ID::SIZEOF,
-	ID::THROW,
+  ID::THROW,
   };
 
   return uniOpIds.find(id) != uniOpIds.end();
@@ -698,7 +698,7 @@ printExprStack( exprStack );
       }
       else
       {
-	    dumpToken( __FILE__, __LINE__, op );
+      dumpToken( __FILE__, __LINE__, op );
         TODO    
       }
     }
@@ -835,13 +835,13 @@ dumpToken( __FILE__, __LINE__, token );
       }
       else if( token.id() == ID::RPAREN )
       {
-		if( et != ET::RPAREN && et != ET::COMMA_OR_RPAREN )
-		{
+        if( et != ET::RPAREN && et != ET::COMMA_OR_RPAREN )
+        {
           dumpToken( __FILE__, __LINE__, token );
-		  TODO
-		}
+          TODO
+        }
         *expr = nullptr;
-		return true;
+        return true;
       }
       else
       {
@@ -854,42 +854,43 @@ dumpToken( __FILE__, __LINE__, token );
     {
       if( token.id() == ID::LPAREN )
       {
-	    while(true)
-		{
+        while(true)
+        {
           Expr * ex;
           lex(token, this );  
+
           if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
-		  {
+          {
             dumpToken( __FILE__, __LINE__, token );
             TODO
           }
 
           if( token.id() == ID::COMMA )
-  		  {
+          {
             seq.push_back(ex);
           }
           else if( token.id() == ID::RPAREN )
           {
             Expr * name = exprStack.top();
-		    exprStack.pop();
+            exprStack.pop();
 
             exprStack.push(new FuncCall( token.line(), token.column(), name, seq ));
 
-		    state = valueSeen;
-			break;
+            state = valueSeen;
+            break;
           }
           else
-		  {
+          {
             dumpToken( __FILE__, __LINE__, token );
             TODO
-		  }
-		}
+          }
+        }
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
       break;
     }
     case vecBeginSeen:
@@ -897,10 +898,10 @@ dumpToken( __FILE__, __LINE__, token );
       // .. , ... ]
       Expr * ex;
       if(!parseExpr( &ex, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
 
       if( token.id() == ID::COMMA )
         seq.push_back(ex);
@@ -912,10 +913,10 @@ dumpToken( __FILE__, __LINE__, token );
         exprStack.push(vec);
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
       break;
     }
     case assocBeginSeen:
@@ -942,10 +943,10 @@ dumpToken( __FILE__, __LINE__, token );
         exprStack.push(vec);
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
       break;
     }
     case prefixSeen:
@@ -967,10 +968,10 @@ dumpToken( __FILE__, __LINE__, token );
         state = lparenSeen;
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
       break;
     }
     case binarySeen:
@@ -1019,10 +1020,10 @@ dumpToken( __FILE__, __LINE__, token );
         state = absSeen;
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO
-	  }
+    }
       break;
     }
     case valueSeen:
@@ -1030,10 +1031,10 @@ dumpToken( __FILE__, __LINE__, token );
       if( token.id() == ID::SCOLON)
       {
         if( et != ET::SCOLON && et != ET::SCOLON_OR_RPAREN )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1045,10 +1046,10 @@ dumpToken( __FILE__, __LINE__, token );
           ( et != ET::COMMA_OR_RBRACK ) && 
           ( et != ET::COMMA_OR_RPAREN ) && 
           ( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 
@@ -1058,10 +1059,10 @@ dumpToken( __FILE__, __LINE__, token );
       else if( token.id() == ID::RBRACK)
       {
         if( et != ET::COMMA_OR_RBRACK )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1070,20 +1071,20 @@ dumpToken( __FILE__, __LINE__, token );
       else if( token.id() == ID::RPAREN)
       {
         if( et != ET::COMMA_OR_RPAREN && et != ET::RPAREN )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         return reduceAndPop( this, expr, initOpStack, initExprStack );
       }
       else if( token.id() == ID::RBRACE)
       {
         if( et != ET::COMMA_OR_RBRACE && et != ET::COMMA_OR_COLON_OR_RBRACE )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
         assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1092,10 +1093,10 @@ dumpToken( __FILE__, __LINE__, token );
       else if( token.id() == ID::COLON )
       {
         if( et != ET::COLON && et != ET::COMMA_OR_COLON_OR_RBRACE )
-		{
+    {
           dumpToken( __FILE__, __LINE__, token );
           TODO
-		}
+    }
 
         if( et == ET::COLON )
         {
@@ -1109,10 +1110,10 @@ dumpToken( __FILE__, __LINE__, token );
             Expr * value;
             lex(token, this );  
             if(!parseExpr( &value, ET::COMMA_OR_RBRACE, token, opStack.size(), exprStack.size() ))
-		    {
+        {
               dumpToken( __FILE__, __LINE__, token );
               TODO
-	    	}
+        }
 
             Expr * key = exprStack.top();
             exprStack.pop();
@@ -1122,8 +1123,8 @@ dumpToken( __FILE__, __LINE__, token );
       }
       else if( token.id() == ID::LPAREN )
       {
-	    while(true)
-		{
+      while(true)
+    {
           Expr * ex;
           lex(token, this );  
           if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
@@ -1133,25 +1134,25 @@ dumpToken( __FILE__, __LINE__, token );
           }
 
           if( token.id() == ID::COMMA )
-  		  {
+        {
             seq.push_back(ex);
           }
           else if( token.id() == ID::RPAREN )
           {
             Expr * name = exprStack.top();
-		    exprStack.pop();
+        exprStack.pop();
 
             exprStack.push(new FuncCall( token.line(), token.column(), name, seq ));
 
-		    state = valueSeen;
-			break;
+        state = valueSeen;
+      break;
           }
           else
           {
             dumpToken( __FILE__, __LINE__, token );
             TODO
           }
-		}
+    }
       }
       else if( token.id() == ID::BNOT )
       {
@@ -1166,13 +1167,13 @@ dumpToken( __FILE__, __LINE__, token );
       else if( token.id() == ID::BOR )
       {
         if( et == ET::BOR )
-		{
+    {
           bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
           assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
           return rc;
-		}
-		else
-		{
+    }
+    else
+    {
           if( static_cast<int>(opStack.size()) > initOpStack )
           {
               // decide if current stack state should be evaluated or 
@@ -1189,7 +1190,7 @@ dumpToken( __FILE__, __LINE__, token );
 
           opStack.push(token);
           state = binarySeen;
-		}
+    }
       }
       else if( isBinaryOp( token.id() ) )
       {
@@ -1330,10 +1331,10 @@ dumpToken( __FILE__, __LINE__, token );
     {
       Expr * dim;
       if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO;
-	  }
+    }
 
       if( token.id() == ID::COMMA )
       {
@@ -1352,19 +1353,19 @@ dumpToken( __FILE__, __LINE__, token );
         state = valueSeen;
       }
       else
-	  {
+    {
         dumpToken( __FILE__, __LINE__, token );
         TODO;
-	  }
+    }
       break;
     }
     case lparenSeen:
     {
       if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
-	  {
+      {
         dumpToken( __FILE__, __LINE__, token );
         TODO;
-	  }
+      }
 
       exprStack.push(*expr);
 
@@ -1373,10 +1374,10 @@ dumpToken( __FILE__, __LINE__, token );
         dumpToken( __FILE__, __LINE__, token );
         TODO
       }
-	  else if( token.id() == ID::RPAREN )
-	  {
-	    state = valueSeen;
-	  }
+      else if( token.id() == ID::RPAREN )
+      {
+        state = valueSeen;
+      }
       else 
       {
         dumpToken( __FILE__, __LINE__, token );

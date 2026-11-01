@@ -32,7 +32,6 @@ public:
 		selectNests_(0)
 	{
 		fh = fopen( file, "r" );
-
 		charLookahead[0] = -1;
 		charLookahead[1] = -1;
 

@@ -668,6 +668,28 @@ static void eatLineComment( Token & tok, Parser * context )
 	tok.set( context->lineNo, context->columnNo, ID::LINE_COMMENT, lexium);
 }
 
+static void eatBlockComment( Token & tok, Parser * context )
+{
+	int c = nextChar(context);
+  std::string lexium;
+
+  bool astrixSeen = false;
+	while( true )
+	{
+    if( c == '/' && astrixSeen )
+      return;
+    else if( c == '*' )
+      astrixSeen = true;
+    else
+      astrixSeen = false;
+
+		lexium += c;
+    c = nextChar(context);
+	}
+
+	tok.set( context->lineNo, context->columnNo, ID::LINE_COMMENT, lexium);
+}
+
 void nextToken( Token & tok, Parser * context )
 {
   int c = nextChar( context );
@@ -954,6 +976,8 @@ void nextToken( Token & tok, Parser * context )
 
     // /
     // /=  DIV_ASS
+    // //  line comment
+    // /*  block comment
     case '/':
     {
       char n = nextChar( context );
@@ -962,22 +986,23 @@ void nextToken( Token & tok, Parser * context )
         tok.set( context->lineNo, context->columnNo, ID::DIV_ASS );
         return;
       }
-	  else if( n == '/' )
-	  {
-	    eatLineComment( tok, context );
-		return;
-	  }
-	  else if( n == '*' )
-	  {
-	    TODO
-	  }
+	    else if( n == '/' )
+	    {
+  	     eatLineComment( tok, context );
+  		   return;
+  	  }
+	    else if( n == '*' )
+	    {
+  	     eatBlockComment( tok, context );
+  		   return;
+  	  }
       else
       {
         context->charLookahead[0] = n;
         tok.set( context->lineNo, context->columnNo, ID::DIV );
         return;
       }
-	  break;
+  	  break;
     }
 
     // .
