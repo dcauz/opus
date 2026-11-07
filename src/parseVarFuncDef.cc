@@ -2,34 +2,34 @@
 
 #include <iostream>
 
-//  variableDef: modifiers* type optPointer optArrays optPointer optRef id  optInit ;
-//  funcation:   modifiers* type optPointer optArrays optPointer optRef id ( optParams optDotDotDot ) { func-body }
+// variableDef: modifiers* type optPointer optArrays optPointer optRef id optInit ;
+// funcation:	modifiers* type optPointer optArrays optPointer optRef id ( optParams optDotDotDot ) { func-body }
 //
-//  arrays
-//   one or more of
-//   []
-//   [ expr ]
-//   [ expr-list ]
+// arrays
+//	one or more of
+//	[]
+//	[ expr ]
+//	[ expr-list ]
 // 
 // pointer
 // 	one of
-// 	   * ^ #
+// 		* ^ #
 //
 // ref
-// 	   &
+// 		&
 //
 // init
-//     = expr
+//	 = expr
 //
 // params
-//     params , parm
-//     parm
+//	 params , parm
+//	 parm
 //
 // parm
-//     variableDef
+//	 variableDef
 //
 // dotDotDot
-//     ...
+//	 ...
 //
 bool Parser::parseVarFuncDef( Token & token, VarDef **, Executable ** )
 {
@@ -38,35 +38,35 @@ PENTER
 
 	enum State
 	{
-		start           = 0,
+		start					 = 0,
 
-		modSeen         = 1,
-		typeSeen        = 2,
-		ptrSeen         = 3,
-		arrayOpenSeen   = 4,
-		arrayCloseSeen  = 5,
-		arrayPtrSeen    = 6,
-		refSeen         = 7,
-		idSeen          = 8,
-		assSeen         = 9,
-    exprSeen        = 10,
+		modSeen				 = 1,
+		typeSeen				= 2,
+		ptrSeen				 = 3,
+		arrayOpenSeen	 = 4,
+		arrayCloseSeen	= 5,
+		arrayPtrSeen		= 6,
+		refSeen				 = 7,
+		idSeen					= 8,
+		assSeen				 = 9,
+		exprSeen				= 10,
 
-		lParenSeen      = 11,
+		lParenSeen			= 11,
 
-		pModSeen        = 12,
-		pTypeSeen       = 13,
-		pPtrSeen        = 14,
-		pArrayOpenSeen  = 15,
+		pModSeen				= 12,
+		pTypeSeen			 = 13,
+		pPtrSeen				= 14,
+		pArrayOpenSeen	= 15,
 		pArrayCloseSeen = 16,
-		pArrayPtrSeen   = 17,
-		pRefSeen        = 18,
-		pIdSeen         = 19,
-		pAssSeen        = 20,
-    pExprSeen       = 21,
+		pArrayPtrSeen	 = 17,
+		pRefSeen				= 18,
+		pIdSeen				 = 19,
+		pAssSeen				= 20,
+		pExprSeen			 = 21,
 
-		dotDotDotSeen   = 22,
+		dotDotDotSeen	 = 22,
 
-		rParenSeen      = 23,
+		rParenSeen			= 23,
 	} state = start;
 
 	std::string id;
@@ -94,7 +94,7 @@ dumpToken( __FILE__, __LINE__, token );
 		switch(state)
 		{
 		case start:
-      // id may name a type ...
+			// id may name a type ...
 			if( token.isType() || token.isId())
 			{
 				type = std::move(token);
@@ -107,14 +107,14 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-        dumpToken( __FILE__, __LINE__, token );
+				dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
 			break;
 
 		case modSeen:
 			// modifer or type
-      dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -138,7 +138,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-        dumpToken( __FILE__, __LINE__, token );
+				dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
 			break;
@@ -151,9 +151,9 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-                dumpToken( __FILE__, __LINE__, token );
+				dumpToken( __FILE__, __LINE__, token );
 				TODO
-		    }
+				}
 			break;
 
 		case arrayOpenSeen:
@@ -164,8 +164,8 @@ dumpToken( __FILE__, __LINE__, token );
 				// get dims
 				if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, 0, 0 ))
 				{
-                  dumpToken( __FILE__, __LINE__, token );
-				  TODO
+					dumpToken( __FILE__, __LINE__, token );
+					TODO
 				}
 				state = arrayCloseSeen;
 			}
@@ -188,8 +188,8 @@ dumpToken( __FILE__, __LINE__, token );
 				state = arrayOpenSeen;
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-              TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -203,8 +203,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -213,8 +213,8 @@ dumpToken( __FILE__, __LINE__, token );
 				state = idSeen;
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -227,8 +227,8 @@ dumpToken( __FILE__, __LINE__, token );
 				return true;
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -237,14 +237,14 @@ dumpToken( __FILE__, __LINE__, token );
  			Expr * expr;
 			if( !parseExpr( &expr, ET::SCOLON, token, 0, 0 ) || token.id() != ID::SCOLON )
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			return true;
 		}
-        case exprSeen:
+		case exprSeen:
  			// ;
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -261,8 +261,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				// Declaration only
+				return true;
 			}
 			break;
 
@@ -279,8 +279,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -302,14 +302,14 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
 		case pPtrSeen:
 			// lbracket ref id , ) ...
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -320,9 +320,9 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else 
 			{
-			  // get dims
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				// get dims
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
@@ -341,20 +341,20 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
 		case pArrayPtrSeen:
 			// ref id , ) ...
-            dumpToken( __FILE__, __LINE__, token );
+						dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
 		case pRefSeen:
 			// id , ) ...
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -368,26 +368,26 @@ dumpToken( __FILE__, __LINE__, token );
 				state = dotDotDotSeen;
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 
 		case pAssSeen:
 			// expr
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
-        case pExprSeen:
+		case pExprSeen:
 			// id , ) ...
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
 		case dotDotDotSeen:
 			// )
-            dumpToken( __FILE__, __LINE__, token );
+			dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -400,8 +400,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-              dumpToken( __FILE__, __LINE__, token );
-			  TODO
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
 			}
 			break;
 		}

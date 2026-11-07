@@ -1,6 +1,7 @@
 #include "parser.h"
 
-/* template arguments in the instanitiation of a template class/interface/union/relation
+/* template arguments in the instanitiation of a template class/interface/union/relation and the type of 
+ * extend and implement clauses of a definition.
  *
  * templateArgs :
  *     templateArgs , templateArg
@@ -73,8 +74,12 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 		else
 		{
-			dumpToken( __FILE__, __LINE__, token );
-			TODO
+			Expr * expr;
+			if( !parseExpr( &expr, ET::COMMA_OR_GT, token, 0, 0 ))
+			{
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
+			}
 		}
 	}
 }

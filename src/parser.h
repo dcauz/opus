@@ -98,14 +98,15 @@ private:
 		COMMA_OR_COLON_OR_RBRACE = 2, // { i1:e1 , ... }
 		COMMA_OR_RBRACK          = 3, // [ e1, ... ]
 		COMMA_OR_RPAREN          = 4, // ( e1, ... )
-									  //
-		COLON	                 = 5, // e1 ? e2 : e3
-									  //
-		BOR                      = 6, // | e |
-									  //
-		RPAREN                   = 7, // ( e1 )
-		SCOLON                   = 8, // e ;
-		SCOLON_OR_RPAREN         = 9, // ... ; or ... )
+		COMMA_OR_GT              = 5, // < e1, ... >
+
+		COLON	                   = 6, // e1 ? e2 : e3
+
+		BOR                      = 7, // | e |
+
+		RPAREN                   = 8, // ( e1 )
+		SCOLON                   = 9, // e ;
+		SCOLON_OR_RPAREN         = 10,// ... ; or ... )
 	};
 
 	void parserError( const char * );
