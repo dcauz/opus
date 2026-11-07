@@ -17,10 +17,10 @@ class Program
 public:
 	Program( const char * srcFile );
 
-//	void statements( std::vector<up<Statement>> * defs );
+//	void statements( std::vector<Statement *> * defs );
 
-	std::vector<up<Statement>> & statements();
-	std::vector<up<ILentity>>  & ilEntities();
+	std::vector<Statement *> & statements();
+	std::vector<ILentity *>  & ilEntities();
 
 	bool semCheck() const;
 	bool genCode();
@@ -33,10 +33,10 @@ public:
 
 private:
 
-	std::vector<up<Statement>> statements_;
+	std::vector<Statement *> statements_;
 
 	std::string	srcFile_;
 
-	std::vector<up<ILentity>>	ilEntities_;
+	std::vector<ILentity *>	ilEntities_;
 	std::vector<FunctionDeclaration::FuncAttrs>	funcAttrs_;
 };

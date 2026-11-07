@@ -33,7 +33,7 @@ bool Real::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Real::semCheck( SemCheckContext & ) const
+Type * Real::semCheck( SemCheckContext & ) const
 {
  TODO // semCheck
 	return errorType;

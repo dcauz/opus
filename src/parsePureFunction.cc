@@ -33,7 +33,7 @@ PENTER
 		return false;
 	}
 
-	std::vector<up<Arg>> * args;
+	std::vector<Arg *> * args;
 	rc = parseArgs( token, &args );
 
 	if( rc && token.id() != ID::RPAREN )

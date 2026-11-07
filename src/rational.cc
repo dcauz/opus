@@ -47,7 +47,7 @@ TODO // genCode
 	return false;
 }
 
-sp<Type> Rational::semCheck( SemCheckContext & ) const
+Type * Rational::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
 	return errorType;

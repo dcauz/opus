@@ -599,7 +599,7 @@ class ILentity
 public:
 	virtual ~ILentity() {}
 
-	virtual bool output( FILE * fh ) = 0;
+	virtual bool output( FILE * fh ) const = 0;
 
 };
 
@@ -608,7 +608,7 @@ class ModuleLevelInlineAsm : public ILentity
 public:
 	ModuleLevelInlineAsm( const std::string & code ):code_(code) {}
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 	std::string code_;
@@ -622,7 +622,7 @@ public:
 	{
 	}
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 	bool	isTriple_;
@@ -633,7 +633,7 @@ class DepLibrary : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 	void addLib( const std::string & lib )
 	{
@@ -747,7 +747,7 @@ public:
 	{
 	}
 
-	bool output( FILE * fh ) override;
+	bool output( FILE * fh ) const override;
 
 	const FuncAttrs	& funcAttrs() const { return funcAttrs_; }
 
@@ -770,7 +770,7 @@ public:
 	{
 	}
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 	void addBasicBlock( BasicBlock * bb )	{ basicBlocks_.push_back(bb); }
 
@@ -782,7 +782,7 @@ class UnnamedType : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -791,7 +791,7 @@ class NamedType : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -800,7 +800,7 @@ class UnnamedGlobalVariable : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -809,7 +809,7 @@ class NamedGlobalVariable : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -818,7 +818,7 @@ class Comdat : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -827,7 +827,7 @@ class StandaloneMetadata : public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };
@@ -836,7 +836,7 @@ class NamedMetadata: public ILentity
 {
 public:
 
-	bool output( FILE * fh ) final;
+	bool output( FILE * fh ) const final;
 
 private:
 };

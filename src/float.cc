@@ -7,9 +7,9 @@
 #include "real.h"
 
 
-sp<Float32Type>	float32Type(new Float32Type);
-sp<Float64Type>	float64Type(new Float64Type);
-sp<Float80Type>	float80Type(new Float80Type);
+Float32Type	*	float32Type(new Float32Type);
+Float64Type	*	float64Type(new Float64Type);
+Float80Type	*	float80Type(new Float80Type);
 
 ////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ bool Float32::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Float32::semCheck( SemCheckContext & ) const
+Type * Float32::semCheck( SemCheckContext & ) const
 {
 	return float32Type;
 }
@@ -59,7 +59,7 @@ bool Float64::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Float64::semCheck( SemCheckContext & ) const
+Type * Float64::semCheck( SemCheckContext & ) const
 {
 	return float64Type;
 }
@@ -99,7 +99,7 @@ bool Float80::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Float80::semCheck( SemCheckContext & ) const
+Type * Float80::semCheck( SemCheckContext & ) const
 {
 	return float80Type;
 }
@@ -139,7 +139,7 @@ bool Nan::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Nan::semCheck( SemCheckContext & ) const
+Type * Nan::semCheck( SemCheckContext & ) const
 {
 	return float80Type;
 }
@@ -152,7 +152,7 @@ bool Inf::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Inf::semCheck( SemCheckContext & ) const
+Type * Inf::semCheck( SemCheckContext & ) const
 {
 	return float80Type;
 }

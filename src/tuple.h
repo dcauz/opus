@@ -13,15 +13,15 @@
 class Tuple: public Value
 {
 public:
-	Tuple( std::vector<up<std::pair<std::string,up<Value>>>> * );
+	Tuple( std::vector<std::pair<std::string,Value *> *> * );
 	~Tuple();
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 	SymbolTable & symbolTable() { return symbolTable_; }
 
 private:
-	up<std::vector<up<std::pair<std::string,up<Value>>>>> value_;
+	std::vector<std::pair<std::string,Value *> *> * value_;
 	SymbolTable symbolTable_;
 };

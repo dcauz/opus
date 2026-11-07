@@ -16,22 +16,22 @@
 
 /////////////////////////////////////////////////////////////////
 
-sp<Type> Using::semCheck( SemCheckContext & ) const 
+Type * Using::semCheck( SemCheckContext & ) const 
 {
 	return voidType;
 }
 
-sp<Type> UsingNamespace::semCheck( SemCheckContext & ) const 
+Type * UsingNamespace::semCheck( SemCheckContext & ) const 
 {
 	return voidType;
 }
 
-sp<Type> Empty::semCheck( SemCheckContext & ) const 
+Type * Empty::semCheck( SemCheckContext & ) const 
 {
 	return voidType;
 }
 
-sp<Type> AtomicBlock::semCheck( SemCheckContext & scc ) const 
+Type * AtomicBlock::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Atomic);
 
@@ -43,7 +43,7 @@ sp<Type> AtomicBlock::semCheck( SemCheckContext & scc ) const
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == errorType )
+		if( (*i)->semCheck( scc ) == errorType )
 			return errorType;
 		++i;
 	}
@@ -53,7 +53,7 @@ sp<Type> AtomicBlock::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Block::semCheck( SemCheckContext & scc ) const 
+Type * Block::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::None);
 
@@ -65,7 +65,7 @@ sp<Type> Block::semCheck( SemCheckContext & scc ) const
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == errorType )
+		if( (*i)->semCheck( scc ) == errorType )
 			return errorType;
 		++i;
 	}
@@ -75,7 +75,7 @@ sp<Type> Block::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> CatchBlock::semCheck( SemCheckContext & scc ) const 
+Type * CatchBlock::semCheck( SemCheckContext & scc ) const 
 {
 	if( errorType == var_->semCheck( scc ) )
 		return errorType;
@@ -90,7 +90,7 @@ sp<Type> CatchBlock::semCheck( SemCheckContext & scc ) const
 
 	while( i != e )
 	{
-		Statement * s = (*i).get();
+		Statement * s = *i;
 
 		if( s->semCheck( scc ) == errorType )
 			return errorType;
@@ -102,7 +102,7 @@ sp<Type> CatchBlock::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Try::semCheck( SemCheckContext & scc ) const 
+Type * Try::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Try);
 
@@ -114,7 +114,7 @@ sp<Type> Try::semCheck( SemCheckContext & scc ) const
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == errorType )
+		if( (*i)->semCheck( scc ) == errorType )
 			return errorType;
 		++i;
 	}
@@ -126,7 +126,7 @@ sp<Type> Try::semCheck( SemCheckContext & scc ) const
 
 	while( ci != ce )
 	{
-		CatchBlock * cb = (*ci).get();
+		CatchBlock * cb = *ci;
 
 		if( cb->semCheck( scc ) == errorType )
 			return errorType;
@@ -136,25 +136,25 @@ sp<Type> Try::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> EnumMember::semCheck( SemCheckContext & ) const 
+Type * EnumMember::semCheck( SemCheckContext & ) const 
 {
 TODO // semCheck
 	return voidType;
 }
 
-sp<Type> ExprStatement::semCheck( SemCheckContext & scc ) const 
+Type * ExprStatement::semCheck( SemCheckContext & scc ) const 
 {
 	return expr_->semCheck( scc );
 }
 
-sp<Type> Enum::semCheck( SemCheckContext & ) const 
+Type * Enum::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
 /*
-sp<Type> Type::semCheck( SemCheckContext & scc ) const 
+Type * Type::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Class);
 
@@ -169,7 +169,7 @@ sp<Type> Type::semCheck( SemCheckContext & scc ) const
 }
 */
 
-sp<Type> Class::semCheck( SemCheckContext & scc ) const 
+Type * Class::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Interface);
 
@@ -185,7 +185,7 @@ sp<Type> Class::semCheck( SemCheckContext & scc ) const
 
 // Must be contained directly in class, interface or union definition
 //
-sp<Type> Private::semCheck( SemCheckContext & scc ) const 
+Type * Private::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.inTypeDef() )
 	{
@@ -195,7 +195,7 @@ sp<Type> Private::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Namespace::semCheck( SemCheckContext & scc ) const 
+Type * Namespace::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Namespace);
 
@@ -207,7 +207,7 @@ sp<Type> Namespace::semCheck( SemCheckContext & scc ) const
 
 	while( i != e )
 	{
-		if( i->get()->semCheck( scc ) == errorType )
+		if( (*i)->semCheck( scc ) == errorType )
 			return errorType;
 		++i;
 	}
@@ -217,7 +217,7 @@ sp<Type> Namespace::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> OperatorDef::semCheck( SemCheckContext & scc ) const 
+Type * OperatorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Operator);
 
@@ -233,7 +233,7 @@ FunctionDef::~FunctionDef()
 {
 }
 
-sp<Type> FunctionDef::semCheck( SemCheckContext & scc ) const 
+Type * FunctionDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Routine);
 
@@ -245,13 +245,13 @@ sp<Type> FunctionDef::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> PureFuncDef::semCheck( SemCheckContext & ) const 
+Type * PureFuncDef::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> CtorDef::semCheck( SemCheckContext & scc ) const 
+Type * CtorDef::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Ctor);
 
@@ -263,26 +263,26 @@ sp<Type> CtorDef::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> VarDef::semCheck( SemCheckContext & ) const 
+Type * VarDef::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> Alias::semCheck( SemCheckContext & ) const 
+Type * Alias::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> If::semCheck( SemCheckContext & scc ) const 
+Type * If::semCheck( SemCheckContext & scc ) const 
 {
 	if( cond_->semCheck( scc ) != boolType )
 	{
 		return errorType;
 	}
 
-	Block * block = dynamic_cast<Block *>(if_.get());
+	Block * block = dynamic_cast<Block *>(if_);
 	if(block)
 	{
 		scc.pushBlockOwner(BlockOwner::If);
@@ -322,7 +322,7 @@ sp<Type> If::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> For::semCheck( SemCheckContext & scc ) const 
+Type * For::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::For);
 
@@ -335,9 +335,9 @@ sp<Type> For::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> While::semCheck( SemCheckContext & scc ) const 
+Type * While::semCheck( SemCheckContext & scc ) const 
 {
-	Block * block = dynamic_cast<Block *>(statement_.get());
+	Block * block = dynamic_cast<Block *>(statement_);
 
 	if( block )
 	{
@@ -358,7 +358,7 @@ sp<Type> While::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> Do::semCheck( SemCheckContext & scc ) const 
+Type * Do::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Until);
 
@@ -372,7 +372,7 @@ sp<Type> Do::semCheck( SemCheckContext & scc ) const
 	return errorType;
 }
 
-sp<Type> Default::semCheck( SemCheckContext & scc ) const 
+Type * Default::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canDefault() )
 	{
@@ -383,7 +383,7 @@ sp<Type> Default::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Continue::semCheck( SemCheckContext & scc ) const 
+Type * Continue::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canContinue())
 	{
@@ -393,7 +393,7 @@ sp<Type> Continue::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Break::semCheck( SemCheckContext & scc ) const 
+Type * Break::semCheck( SemCheckContext & scc ) const 
 {
 	if( !scc.canBreak())
 	{
@@ -403,19 +403,19 @@ sp<Type> Break::semCheck( SemCheckContext & scc ) const
 	return voidType;
 }
 
-sp<Type> Return::semCheck( SemCheckContext & ) const 
+Type * Return::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> Case::semCheck( SemCheckContext & ) const 
+Type * Case::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> Switch::semCheck( SemCheckContext & scc ) const 
+Type * Switch::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Switch);
 
@@ -546,7 +546,7 @@ bool FunctionDef::genCode( GenCodeContext & ) const
 
 	gcc.addFuncAttrs( fd->funcAttrs() );
 
-	Block * body = dynamic_cast<Block *>(body_.get());
+	Block * body = dynamic_cast<Block *>(body_);
 	assert( body );
 
 	BasicBlock * bb = new BasicBlock();
@@ -556,14 +556,14 @@ bool FunctionDef::genCode( GenCodeContext & ) const
 
 	while( bi != be )
 	{
-		Statement * s = (*bi).get();
+		Statement * s = *bi;
 
 		TODO // genCode
 		++bi;
 	}
 
 
-	gcc.program()->ilEntities().push_back( up<ILentity>(fd) );
+	gcc.program()->ilEntities().push_back( fd );
 */
 	TODO
 	return true;
@@ -720,7 +720,7 @@ bool Arg::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Arg::semCheck( SemCheckContext & ) const
+Type * Arg::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;
@@ -732,7 +732,7 @@ bool TemplateParam::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> TemplateParam::semCheck( SemCheckContext & ) const
+Type * TemplateParam::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;

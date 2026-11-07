@@ -82,7 +82,7 @@ bool Integer::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Integer::semCheck( SemCheckContext & ) const
+Type * Integer::semCheck( SemCheckContext & ) const
 {
 	TODO // semCheck
 	return errorType;
@@ -96,7 +96,7 @@ bool Int8::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Int8::semCheck( SemCheckContext & ) const 
+Type * Int8::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -110,7 +110,7 @@ bool Int16::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Int16::semCheck( SemCheckContext & ) const 
+Type * Int16::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -124,7 +124,7 @@ bool Int32::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Int32::semCheck( SemCheckContext & ) const 
+Type * Int32::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -138,7 +138,7 @@ bool Int64::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Int64::semCheck( SemCheckContext & ) const 
+Type * Int64::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -152,7 +152,7 @@ bool Int128::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Int128::semCheck( SemCheckContext & ) const 
+Type * Int128::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -166,7 +166,7 @@ bool Uint8::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Uint8::semCheck( SemCheckContext & ) const 
+Type * Uint8::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -180,7 +180,7 @@ bool Uint16::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Uint16::semCheck( SemCheckContext & ) const 
+Type * Uint16::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -194,7 +194,7 @@ bool Uint32::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Uint32::semCheck( SemCheckContext & ) const 
+Type * Uint32::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -208,7 +208,7 @@ bool Uint64::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Uint64::semCheck( SemCheckContext & ) const 
+Type * Uint64::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
@@ -222,7 +222,7 @@ bool Uint128::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Uint128::semCheck( SemCheckContext & ) const 
+Type * Uint128::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;

@@ -50,7 +50,7 @@ void writeMessages( void * vp )
 			
 			while( li != le )
 			{
-				li->get()->write( *i );
+				(*li)->write( *i );
 				++li;
 			}
 
@@ -111,12 +111,12 @@ void Log::addLogger( const char * fileName, Log::Level levelFilter, Log::Part pa
 	if( fh == nullptr )
 		std::cerr << "Unable to open log file " << fileName << std::endl;
 	else
-		loggers_.push_back(up<Logger>(new Logger( fh, (int)levelFilter, (int)parts, true )));
+		loggers_.push_back(new Logger( fh, (int)levelFilter, (int)parts, true ));
 }
 
 void Log::addLogger( FILE * fh, Log::Level levelFilter, Log::Part parts )
 {
-	loggers_.push_back(up<Logger>(new Logger( fh, (int)levelFilter, (int)parts, false )));
+	loggers_.push_back(new Logger( fh, (int)levelFilter, (int)parts, false ));
 }
 
 namespace

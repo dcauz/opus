@@ -23,7 +23,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 private:
 	unsigned short y_;
@@ -46,7 +46,7 @@ public:
 	Year( int y );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 	int toInt() const { return y_; }
 
@@ -60,7 +60,7 @@ public:
 	Month( int m );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+    Type * semCheck( SemCheckContext & scc ) const;
 
 	int toInt() const { return m_; }
 
@@ -74,7 +74,7 @@ public:
 	Day( int d );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 	int toInt() const { return d_; }
 

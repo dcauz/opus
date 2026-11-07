@@ -111,9 +111,9 @@ private:
 
 	void parserError( const char * );
 
-	bool parseArgs( Token &, std::vector<up<Arg>> ** );
+	bool parseArgs( Token &, std::vector<Arg *> ** );
 	bool parseExpr( Expr ** expr, ET et, Token &, int, int );
-	bool parseExprTypes( std::vector<up<TypeArg>> & );
+	bool parseExprTypes( std::vector<TypeArg *> & );
 	bool parseSelect( Select ** );
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );

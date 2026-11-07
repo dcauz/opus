@@ -17,12 +17,12 @@ public:
 class Set: public Value
 {
 public:
-	Set( std::vector<up<Value>> * );
+	Set( std::vector<Value *> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<std::vector<up<Value>>> values_;
-	sp<SetType> type_;
+	std::vector<Value *> * values_;
+	SetType * type_;
 };

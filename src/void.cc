@@ -3,7 +3,7 @@
 #include "void.h"
 
 
-sp<VoidType> voidType( new VoidType );
+VoidType * voidType( new VoidType );
 
 //////////////////////////////////////////////////
 
@@ -14,7 +14,7 @@ bool Null::genCode( GenCodeContext & ) const
 	return true;
 }
 
-sp<Type> Null::semCheck( SemCheckContext & ) const
+Type * Null::semCheck( SemCheckContext & ) const
 {
 	return voidType;
 }

@@ -2,7 +2,7 @@
 #include "multiset.h"
 
 
-MultiMap::MultiMap( std::vector<up<Value>> * v ):values_(v)
+MultiMap::MultiMap( std::vector<Value *> * v ):values_(v)
 {
 }
 
@@ -12,7 +12,7 @@ TODO // genCode
 	return false;
 }
 
-sp<Type> MultiMap::semCheck( SemCheckContext & ) const
+Type * MultiMap::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
 	return nullptr;
@@ -21,7 +21,7 @@ TODO // semCheck
 bool MultiMapType::eqCompareTo( Type * t ) const
 {
 	MultiMapType * st = dynamic_cast<MultiMapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -30,13 +30,13 @@ bool MultiMapType::eqCompareTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->eqCompareTo( ele.get() );
+	return ele_->eqCompareTo( ele );
 }
 
 bool MultiMapType::compareTo( Type * t )  const
 {
 	MultiMapType * st = dynamic_cast<MultiMapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -45,13 +45,13 @@ bool MultiMapType::compareTo( Type * t )  const
 	else
 		return false;
 
-	return ele_->compareTo( ele.get() );
+	return ele_->compareTo( ele );
 }
 
 bool MultiMapType::assignableTo( Type * t ) const
 {
 	MultiMapType * st = dynamic_cast<MultiMapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -60,5 +60,5 @@ bool MultiMapType::assignableTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->assignableTo( ele.get() );
+	return ele_->assignableTo( ele );
 }

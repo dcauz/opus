@@ -17,12 +17,12 @@ public:
 class MultiMap: public Value
 {
 public:
-	MultiMap( std::vector<up<Value>> * );
+	MultiMap( std::vector<Value *> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<std::vector<up<Value>>> values_;
-	sp<MultiMapType> type_;
+	std::vector<Value *> * values_;
+	MultiMapType * type_;
 };

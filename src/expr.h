@@ -26,7 +26,7 @@ public:
 	{
 	}
 	virtual bool genCode( GenCodeContext & gcc ) const = 0;
-	virtual sp<Type> semCheck( SemCheckContext & scc ) const = 0;
+	virtual Type * semCheck( SemCheckContext & scc ) const = 0;
 
 private:
 	unsigned short line_;
@@ -41,7 +41,7 @@ public:
 	const char * id() const final { return "UnknownRef"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 	const std::string & name() const { return name_; }
 
@@ -59,7 +59,7 @@ public:
 	const char * id() const final { return "Literal"; }
 
 	bool genCode( GenCodeContext & gcc ) const final       { return value_.genCode(gcc); }
-	sp<Type> semCheck( SemCheckContext & scc ) const final { return value_.semCheck(scc); }
+	Type * semCheck( SemCheckContext & scc ) const final { return value_.semCheck(scc); }
 protected:
 	V value_;
 };
@@ -73,7 +73,7 @@ public:
 	const char * id() const final { return "Integer"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;      
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 protected:
 	Integer * value_;
 };
@@ -84,7 +84,7 @@ public:
 	Uniary( unsigned short l, unsigned short c, Expr * o ):Expr(l,c), operand_(o) {}
 
 protected:
-	up<Expr> operand_;
+	Expr * operand_;
 };
 
 class Binary: public Expr
@@ -93,8 +93,8 @@ public:
 	Binary( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Expr(l,c), left_(lf), right_(r) {}
 
 protected:
-	up<Expr> left_;
-	up<Expr> right_;
+	Expr * left_;
+	Expr * right_;
 };
 
 class Trinary: public Expr
@@ -104,9 +104,9 @@ public:
 		Expr(l,cl), operand1_(a), operand2_(b), operand3_(c) {}
 
 protected:
-	up<Expr> operand1_;
-	up<Expr> operand2_;
-	up<Expr> operand3_;
+	Expr * operand1_;
+	Expr * operand2_;
+	Expr * operand3_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ public:
 	const char * id() const final { return "FuncCall"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	Expr * name_;
@@ -138,7 +138,7 @@ public:
 	const char * id() const final { return "CtorCall"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	std::string name_;
@@ -155,10 +155,10 @@ public:
 	const char * id() const final { return "IsVoid"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr> arg_;
+	Expr * arg_;
 };
 
 // id
@@ -170,7 +170,7 @@ public:
 	const char * id() const final { return "Name"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	std::string	name_;
@@ -186,12 +186,12 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	bool isDot_;
-	up<Expr> first_;
-	up<Expr> second_;
+	Expr * first_;
+	Expr * second_;
 };
 */
 /////////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ public:
 	const char * id() const final { return "KeyValue"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr << expr
@@ -216,7 +216,7 @@ public:
 	const char * id() const final { return "ShiftL"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr >> expr
@@ -228,7 +228,7 @@ public:
 	const char * id() const final { return "ShiftR"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [.] expr
@@ -240,7 +240,7 @@ public:
 	const char * id() const final { return "DotProd"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [*] expr
@@ -252,7 +252,7 @@ public:
 	const char * id() const final { return "CrossProd"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [/] expr
@@ -264,7 +264,7 @@ public:
 	const char * id() const final { return "MDiv"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [**] expr
@@ -276,7 +276,7 @@ public:
 	const char * id() const final { return "MPow"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr = expr
@@ -288,7 +288,7 @@ public:
 	const char * id() const final { return "Assign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ** expr
@@ -300,7 +300,7 @@ public:
 	const char * id() const final { return "Exponent"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr .. expr
@@ -312,7 +312,7 @@ public:
 	const char * id() const final { return "Range"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr + expr
@@ -324,7 +324,7 @@ public:
 	const char * id() const final { return "Add"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr - expr
@@ -336,7 +336,7 @@ public:
 	const char * id() const final { return "Sub"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr * expr
@@ -348,7 +348,7 @@ public:
 	const char * id() const final { return "Mul"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr / expr
@@ -360,7 +360,7 @@ public:
 	const char * id() const final { return "Div"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr % expr
@@ -372,7 +372,7 @@ public:
 	const char * id() const final { return "Mod"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr != expr
@@ -384,7 +384,7 @@ public:
 	const char * id() const final { return "NotEq"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr == expr
@@ -396,7 +396,7 @@ public:
 	const char * id() const final { return "Eq"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr <=> expr
@@ -408,7 +408,7 @@ public:
 	const char * id() const final { return "SpaceShip"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr >= expr
@@ -420,7 +420,7 @@ public:
 	const char * id() const final { return "GE"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr > expr
@@ -432,7 +432,7 @@ public:
 	const char * id() const final { return "GT"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr <= expr
@@ -444,7 +444,7 @@ public:
 	const char * id() const final { return "LE"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr < expr
@@ -456,7 +456,7 @@ public:
 	const char * id() const final { return "LT"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr . expr
@@ -468,7 +468,7 @@ public:
 	const char * id() const final { return "Dot"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr .* expr
@@ -480,7 +480,7 @@ public:
 	const char * id() const final { return "DotMem"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr -> expr
@@ -492,7 +492,7 @@ public:
 	const char * id() const final { return "Ptr"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ->* expr
@@ -504,7 +504,7 @@ public:
 	const char * id() const final { return "PtrMem"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [ expr ]
@@ -516,7 +516,7 @@ public:
 	const char * id() const final { return "ArrayMem"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr += expr
@@ -528,7 +528,7 @@ public:
 	const char * id() const final { return "AddAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr -= expr
@@ -540,7 +540,7 @@ public:
 	const char * id() const final { return "SubAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr *= expr
@@ -552,7 +552,7 @@ public:
 	const char * id() const final { return "MulAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr /= expr
@@ -564,7 +564,7 @@ public:
 	const char * id() const final { return "DivAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr %= expr
@@ -576,7 +576,7 @@ public:
 	const char * id() const final { return "ModAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr &= expr
@@ -588,7 +588,7 @@ public:
 	const char * id() const final { return "AndAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr &&= expr
@@ -600,7 +600,7 @@ public:
 	const char * id() const final { return "BAndAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr |= expr
@@ -612,7 +612,7 @@ public:
 	const char * id() const final { return "OrAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ||= expr
@@ -624,7 +624,7 @@ public:
 	const char * id() const final { return "BOrAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ^^= expr
@@ -636,7 +636,7 @@ public:
 	const char * id() const final { return "XorAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ^= expr
@@ -648,7 +648,7 @@ public:
 	const char * id() const final { return "BXorAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr := expr
@@ -660,7 +660,7 @@ public:
 	const char * id() const final { return "ParamAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ~= expr
@@ -672,7 +672,7 @@ public:
 	const char * id() const final { return "BNotAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr **= expr
@@ -684,7 +684,7 @@ public:
 	const char * id() const final { return "PowAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr <<= expr
@@ -696,7 +696,7 @@ public:
 	const char * id() const final { return "SLftAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr >>= expr
@@ -708,7 +708,7 @@ public:
 	const char * id() const final { return "SRghtAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [.]= expr
@@ -720,7 +720,7 @@ public:
 	const char * id() const final { return "DPrdAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [*]= expr
@@ -732,7 +732,7 @@ public:
 	const char * id() const final { return "XPrdAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [/]= expr
@@ -744,7 +744,7 @@ public:
 	const char * id() const final { return "MDivAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr [**]= expr
@@ -756,7 +756,7 @@ public:
 	const char * id() const final { return "MPowAssign"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr || expr
@@ -768,7 +768,7 @@ public:
 	const char * id() const final { return "Or"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr | expr
@@ -780,7 +780,7 @@ public:
 	const char * id() const final { return "Lor"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ^^ expr
@@ -792,7 +792,7 @@ public:
 	const char * id() const final { return "Xor"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ^ expr
@@ -804,7 +804,7 @@ public:
 	const char * id() const final { return "BXor"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr && expr
@@ -816,7 +816,7 @@ public:
 	const char * id() const final { return "And"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr & expr
@@ -828,7 +828,7 @@ public:
 	const char * id() const final { return "Land"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 /*
 class Union: public Binary
@@ -837,7 +837,7 @@ public:
 	Union( Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Intersect: public Binary
@@ -846,7 +846,7 @@ public:
 	Intersect( Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 */
 // expr in expr
@@ -858,7 +858,7 @@ public:
 	const char * id() const final { return "In"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // apply expr expr
@@ -870,7 +870,7 @@ public:
 	const char * id() const final { return "Apply"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // filter expr expr
@@ -882,7 +882,7 @@ public:
 	const char * id() const final { return "Filter"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 /*
@@ -895,7 +895,7 @@ public:
 	const char * id() const final { return "Order"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 */
 
@@ -908,7 +908,7 @@ public:
 	const char * id() const final { return "Reduce"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Where : public Binary
@@ -919,7 +919,7 @@ public:
 	const char * id() const final { return "Where"; }
 	
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Index : public Expr
@@ -936,7 +936,7 @@ public:
 	const char * id() const final { return "Index"; }
 	
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	Expr * arr_;
@@ -953,7 +953,7 @@ public:
 	const char * id() const final { return "UniDer"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 //  ^expr
@@ -965,7 +965,7 @@ public:
 	const char * id() const final { return "ShrDer"; }
 	
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 */
 
@@ -978,7 +978,7 @@ public:
 	const char * id() const final { return "Abs"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // eval expr
@@ -990,7 +990,7 @@ public:
 	const char * id() const final { return "Eval"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // async expr
@@ -1002,7 +1002,7 @@ public:
 	const char * id() const final { return "Async"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // lazy expr
@@ -1014,7 +1014,7 @@ public:
 	const char * id() const final { return "Lazy"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // co_await expr
@@ -1026,7 +1026,7 @@ public:
 	const char * id() const final { return "Co_await"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // co_yield expr
@@ -1038,7 +1038,7 @@ public:
 	const char * id() const final { return "Co_yield"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // sizeof expr
@@ -1050,7 +1050,7 @@ public:
 	const char * id() const final { return "Sizeof"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // alignof expr
@@ -1062,7 +1062,7 @@ public:
 	const char * id() const final { return "Alignof"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // alignas expr
@@ -1074,7 +1074,7 @@ public:
 	const char * id() const final { return "Alignas"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // new type ...
@@ -1086,7 +1086,7 @@ public:
 	const char * id() const final { return "New"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // ++ expr
@@ -1098,7 +1098,7 @@ public:
 	const char * id() const final { return "Inc"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr !
@@ -1110,7 +1110,7 @@ public:
 	const char * id() const final { return "Factorial"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // delete expr
@@ -1122,7 +1122,7 @@ public:
 	const char * id() const final { return "Delete"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // -- expr
@@ -1134,7 +1134,7 @@ public:
 	const char * id() const final { return "Dec"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr ++
@@ -1146,7 +1146,7 @@ public:
 	const char * id() const final { return "PostInc"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // expr --
@@ -1158,7 +1158,7 @@ public:
 	const char * id() const final { return "PostDec"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // ~ expr
@@ -1170,7 +1170,7 @@ public:
 	const char * id() const final { return "Lnot"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // ! expr
@@ -1182,7 +1182,7 @@ public:
 	const char * id() const final { return "Not"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // ~ expr
@@ -1194,7 +1194,7 @@ public:
 	const char * id() const final { return "BNot"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // - expr
@@ -1206,7 +1206,7 @@ public:
 	const char * id() const final { return "Minus"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // + expr
@@ -1218,7 +1218,7 @@ public:
 	const char * id() const final { return "Plus"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // * expr
@@ -1230,7 +1230,7 @@ public:
 	const char * id() const final { return "Deref"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 // throw expr
@@ -1242,39 +1242,39 @@ public:
 	const char * id() const final { return "Throw"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Distinct: public Expr
 {
 public:
 	Distinct( unsigned short l, unsigned short c, Expr * e = nullptr ):Expr(l,c), expr_(e) {}
-	Distinct( unsigned short l, unsigned short c, std::vector<up<Expr>> * el ): Expr(l,c), exprList_(el) {}
+	Distinct( unsigned short l, unsigned short c, std::vector<Expr *> * el ): Expr(l,c), exprList_(el) {}
 
 	const char * id() const final { return "Distinct"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr> expr_;
-	up<std::vector<up<Expr>>> exprList_;
+	Expr * expr_;
+	std::vector<Expr *> * exprList_;
 };
 
 class OrderBy: public Expr
 {
 public:
 	OrderBy( unsigned short l, unsigned short c, Expr * e = nullptr ): Expr(l,c), expr_(e) {}
-	OrderBy( unsigned short l, unsigned short c, std::vector<up<Expr>> * el ):Expr(l,c), exprList_(el) {}
+	OrderBy( unsigned short l, unsigned short c, std::vector<Expr *> * el ):Expr(l,c), exprList_(el) {}
 
 	const char * id() const final { return "OrderBy"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr> expr_;
-	up<std::vector<up<Expr>>> exprList_;
+	Expr * expr_;
+	std::vector<Expr *> * exprList_;
 };
 
 // expr ? expr : expr
@@ -1286,7 +1286,7 @@ public:
 	const char * id() const final { return "Conditional"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Join: public Trinary
@@ -1297,7 +1297,7 @@ public:
 	const char * id() const final { return "Join"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class LeftJoin: public Trinary
@@ -1308,7 +1308,7 @@ public:
 	const char * id() const final { return "LeftJoin"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class RightJoin: public Trinary
@@ -1319,7 +1319,7 @@ public:
 	const char * id() const final { return "RightJoin"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class OuterJoin: public Trinary
@@ -1330,7 +1330,7 @@ public:
 	const char * id() const final { return "OuterJoin"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
 class Top
@@ -1341,7 +1341,7 @@ public:
 	{}
 
 private:
-	up<Expr> expr_;
+	Expr * expr_;
 	bool	percent_;
 	bool	ties_;
 	unsigned short line_;
@@ -1354,13 +1354,16 @@ public:
 	Column( unsigned short l, unsigned short c, Expr * e = nullptr, const char * n = nullptr ):line_(l), column_(c)
 	{
 		if(e)
-			expr_.reset(e);
+		{
+			delete expr_;
+			expr_ = e;
+		}
 		if(n)
 			name_ = n;
 	}
 
 private:
-	up<Expr> expr_;
+	Expr * expr_;
 	std::string name_;
 	unsigned short line_;
 	unsigned short column_;
@@ -1374,7 +1377,7 @@ public:
 private:
 	unsigned short line_;
 	unsigned short column_;
-	up<Expr> expr_;
+	Expr * expr_;
 };
 
 class Having
@@ -1385,7 +1388,7 @@ public:
 private:
 	unsigned short line_;
 	unsigned short column_;
-	up<Expr> expr_;
+	Expr * expr_;
 };
 
 class Select: public Expr
@@ -1394,7 +1397,7 @@ public:
 	Select( unsigned short l, unsigned short c, 
 		int dist, 
 		Top * top, 
-		std::vector<up<Column>> * cols, 
+		std::vector<Column *> * cols, 
 		std::vector<std::string> * tables, 
 		Where   * where, 
 		GroupBy * groupBy, 
@@ -1403,17 +1406,17 @@ public:
 	const char * id() const final { return "Select"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	int distinct_;
 
-	up<Top> top_;
-	up<std::vector<up<Column>>> cols_; 
-	up<std::vector<std::string>> tables_; 
-	up<Where>	where_;
-	up<GroupBy>groupBy_;
-	up<Having>	having_;
+	Top * top_;
+	std::vector<Column *>		* cols_; 
+	std::vector<std::string>* tables_; 
+	Where		* where_;
+	GroupBy	* groupBy_;
+	Having	* having_;
 };
 
 class As : public Expr
@@ -1424,25 +1427,25 @@ public:
 	const char * id() const final { return "As"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<Expr>	expr_;
+	Expr *	expr_;
 	std::string	name_;
 };
 
 class ListLit : public Expr
 {
 public:
-	ListLit ( unsigned short l, unsigned short c, std::vector<up<Expr>> * vals ) : Expr(l,c), vals_(vals) {}
+	ListLit ( unsigned short l, unsigned short c, std::vector<Expr *> * vals ) : Expr(l,c), vals_(vals) {}
 
 	const char * id() const final { return "ListLit"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
-	up<std::vector<up<Expr>>> vals_;
+	std::vector<Expr *>	* vals_;
 };
 
 // \( args ) statement
@@ -1454,5 +1457,5 @@ public:
 	const char * id() const final { return "Lambda"; }
 
 	bool genCode( GenCodeContext & gcc ) const final;
-	sp<Type> semCheck( SemCheckContext & scc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
 };

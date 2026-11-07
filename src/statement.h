@@ -21,7 +21,7 @@ public:
 	virtual ~Statement() {}
 
 	virtual bool genCode( GenCodeContext & ) const = 0;
-	virtual sp<Type> semCheck( SemCheckContext & )  const= 0;
+	virtual Type * semCheck( SemCheckContext & )  const= 0;
 	
 protected:
 	int	startLine_;
@@ -36,7 +36,7 @@ public:
 	Using( int s, int e, std::vector<std::string> && n ):Statement(s,e), name_(n) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::vector<std::string> name_;
@@ -48,7 +48,7 @@ public:
 	UsingNamespace( int s, int e, std::vector<std::string> && n ):Statement(s,e), name_(n) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	std::vector<std::string> name_;
@@ -60,7 +60,7 @@ public:
 	Empty( int s):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Block: public Statement
@@ -69,17 +69,17 @@ public:
 	Block( 
 		int s, 
 		int e, 
-		std::vector<up<Statement>> * sts = nullptr ):
+		std::vector<Statement *> * sts = nullptr ):
 		Statement(s,e), statements_(sts) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
-	std::vector<up<Statement>>::iterator begin() { return statements_->begin();}
-	std::vector<up<Statement>>::iterator end()   { return statements_->end(); }
+	std::vector<Statement *>::iterator begin() { return statements_->begin();}
+	std::vector<Statement *>::iterator end()   { return statements_->end(); }
 
 private:
-	up<std::vector<up<Statement>>> statements_;
+	std::vector<Statement *> * statements_;
 };
 
 class AtomicBlock: public Statement
@@ -92,10 +92,10 @@ public:
 		Statement(s,e), block_(static_cast<Block *>(st)) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Block> block_;
+	Block * block_;
 };
 
 class ExprStatement : public Statement
@@ -104,10 +104,10 @@ public:
 	ExprStatement( int s, int e, Expr * ex ):Statement(s,e), expr_(ex) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Expr> expr_;
+	Expr * expr_;
 };
 
 class Definition: public Statement
@@ -126,7 +126,7 @@ public:
 	Private( int s, int e ):Definition(s,e) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Namespace: public Definition, public Symbol
@@ -140,10 +140,10 @@ public:
 	{ }
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Block> block_;
+	Block * block_;
 };
 
 class TemplateParam;
@@ -199,24 +199,24 @@ public:
 	TypeArg( Expr * expr ):expr_(expr) {}
 
 private:
-	up<Type>	type_;
-	up<Expr>	expr_;
+	Type * type_;
+	Expr *	expr_;
 };
 
 class TypeInstance : public Definition, public Type
 {
 public:
 	TypeInstance( int s, int e, Type * base, unsigned declarators, 
-		std::vector<up<TypeArg>> & typeArgs, 
-		std::vector<up<Expr>> & dims,
+		std::vector<TypeArg *> & typeArgs, 
+		std::vector<Expr *> & dims,
 		Pointer	typePtr,
 		Pointer	elePtr );
 
 private:
 	Type * baseType_;
 	unsigned declarators_;
-	std::vector<up<TypeArg>> typeArgs_;
-	std::vector<up<Expr>> dims_;
+	std::vector<TypeArg *> typeArgs_;
+	std::vector<Expr *> dims_;
 	Pointer	typePtr_;
 	Pointer	elePtr_;
 };
@@ -238,7 +238,7 @@ public:
     }
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
     Expr * value_;
@@ -264,7 +264,7 @@ public:
 	{}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	bool eqCompareTo( Type * ) const final;
 	bool compareTo( Type * ) const final;
@@ -290,7 +290,7 @@ public:
 	{}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	bool eqCompareTo( Type * ) const final;
 	bool compareTo( Type * ) const final;
@@ -310,7 +310,7 @@ class VarDef: public Definition, public Variable
 {
 public:
 	VarDef( int s, int e, 
-		sp<Type>     t, 
+		Type *     t, 
 		const char * n, 
 		int          pt=0,
 		Expr       * iv =nullptr ): 
@@ -323,12 +323,12 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
-	sp<Type> type() const { return type_; }
+	Type * type() const { return type_; }
 
 private:
-  sp<Type>    type_;
+  Type *    type_;
   std::string from_;
   int         ptrType_;
   Expr      * init_;
@@ -347,12 +347,12 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	unsigned decl_;
-	sp<Type> type_;
-	up<Expr> default_;
+	Type   * type_;
+	Expr   * default_;
 };
 
 class TemplateParam: public Variable
@@ -366,14 +366,14 @@ public:
 		line_(s), Variable(n), type_(t) {}
 
 	bool genCode( GenCodeContext & ) const;
-	sp<Type> semCheck( SemCheckContext & ) const;
+	Type * semCheck( SemCheckContext & ) const;
 
-	Type	* type() { return type_.get(); }
+	Type	* type() { return type_; }
 
 private:
 	int	line_;
 
-	up<Type>	type_;
+	Type * type_;
 };
 
 class TemplateArg
@@ -392,7 +392,7 @@ public:
 	Executable( int s, int e, Statement * st ) : Definition(s,e), body_(st) {}
 
 private:
-	up<Statement> body_;
+	Statement * body_;
 };
 
 // Definition or declaration
@@ -405,7 +405,7 @@ public:
 		int dec,
 		Type * t, 
 		const char * n, 
-		std::vector<up<Arg>> * args, 
+		std::vector<Arg *> * args, 
 		Statement * bl = nullptr ):
 			Executable(s,e,bl),
 			FunctionType(dec, n, t, args )
@@ -414,7 +414,7 @@ public:
 	~FunctionDef();
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class PureFuncDef: public Executable, public FunctionType
@@ -425,7 +425,7 @@ public:
 		int e, 
 		Type * t, 
 		const char * n, 
-		std::vector<up<Arg>> * args, 
+		std::vector<Arg *> * args, 
 		Expr * ex = nullptr ):
 			Executable(s,e,new ExprStatement(s,e, ex)),
 			FunctionType(0, n, t, args )
@@ -433,7 +433,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class OperatorDef: public Executable, public FunctionType
@@ -444,7 +444,7 @@ public:
 		int e, 
 		Type * t, 
 		ID n, 
-		std::vector<up<Arg>> * args, 
+		std::vector<Arg *> * args, 
 		Statement * bl = nullptr ):
 			Executable(s,e,static_cast<Block *>(bl)),
 			FunctionType(0, opName(n), t, args )
@@ -452,7 +452,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 	const char * opName( ID );
@@ -465,7 +465,7 @@ public:
 		int s, 
 		int e, 
 		const char * n, 
-		std::vector<up<Arg>> * args, 
+		std::vector<Arg *> * args, 
 		Statement * bl = nullptr ):
 		Executable(s,e,static_cast<Block *>(bl)),
 		FunctionType(0, n, nullptr, args )
@@ -473,7 +473,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Alias: public Definition, public Symbol
@@ -483,10 +483,10 @@ public:
 	Alias( int s, int e, const std::string & n, Type * t ): Definition(s,e), Symbol(n), type_(t) {} 
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-   sp<Type> type_;
+   Type * type_;
 };
 
 class Import: public Statement
@@ -527,13 +527,13 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	void addElse( Statement * s ) { else_ = s; }
 private:
-   up<Expr> cond_;
-   up<VarDef> variable_;
-   up<Statement> if_;
+   Expr      * cond_;
+   VarDef    * variable_;
+   Statement * if_;
    Statement * else_;
 };
 
@@ -559,15 +559,15 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 
-     up<Expr> init_;
-   up<VarDef> variable_;
-     up<Expr> cond_;
-     up<Expr> incr_;
-up<Statement> statement_;
+	Expr			* init_;
+	VarDef		* variable_;
+	Expr			* cond_;
+	Expr			* incr_;
+	Statement	* statement_;
 };
 
 class Default: public Statement
@@ -576,7 +576,7 @@ public:
 	Default( int s, int e ):Statement(s,e) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Continue: public Statement
@@ -585,7 +585,7 @@ public:
 	Continue( int s ):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Break: public Statement
@@ -594,7 +594,7 @@ public:
 	Break( int s ):Statement(s,s) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 };
 
 class Return: public Statement
@@ -603,10 +603,10 @@ public:
 	Return( int s, int e, Expr * v ):Statement(s,e), value_(v) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Expr> value_;
+	Expr * value_;
 };
 
 class Assert: public Statement
@@ -617,10 +617,10 @@ public:
 	}
 	
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Expr> expr_;
+	Expr * expr_;
 };
 
 
@@ -632,10 +632,10 @@ public:
 	}
 	
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Expr> expr_;
+	Expr * expr_;
 };
 
 class Switch: public Statement
@@ -651,12 +651,12 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-     up<Expr> cond_;
-   up<VarDef> varDef_;
-up<Statement> statement_;
+	Expr 			* cond_;
+	VarDef		* varDef_;
+	Statement	* statement_;
 };
 
 class CatchBlock: public Statement
@@ -669,11 +669,11 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	up<Statement> var_;
-	    up<Block> block_;
+	Statement	* var_;
+	Block			* block_;
 };
 
 class Try: public Statement
@@ -681,17 +681,17 @@ class Try: public Statement
 public:
 	Try(int e, int s, 
 		Statement * sl, 
-		std::vector<up<CatchBlock>> * cbs = nullptr ):
+		std::vector<CatchBlock *> * cbs = nullptr ):
 	Statement(e,s), block_(static_cast<Block *>(sl)), catchBlocks_(cbs) {}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 	void addCatchBlock( CatchBlock * );
 
 private:
-	                      up<Block> block_;
-	up<std::vector<up<CatchBlock>>>	catchBlocks_;
+	Block	* block_;
+	std::vector<CatchBlock * > *	catchBlocks_;
 };
 
 class While: public Statement
@@ -711,13 +711,13 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 
-	     up<Expr> cond_;
-	   up<VarDef> variable_;
-	up<Statement> statement_;
+	Expr			* cond_;
+	VarDef		* variable_;
+	Statement	* statement_;
 };
 
 class Do: public Statement
@@ -731,10 +731,10 @@ public:
 	}
 
 	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
 
 private:
 
-	up<Expr>      cond_;
-	up<Statement> statement_;
+	Expr	* cond_;
+	Statement	* statement_;
 };

@@ -18,7 +18,7 @@ bool Complex::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Complex::semCheck( SemCheckContext & ) const
+Type * Complex::semCheck( SemCheckContext & ) const
 {
 	TODO // semCheck
 	return errorType;

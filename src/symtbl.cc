@@ -75,15 +75,15 @@ Symbol * SymbolTable::find( const std::string & n )
 //printf( "%s:%d st %p find [%s]\n", __FILE__, __LINE__, this, n.c_str() ); fflush(stdout);
 	auto it = types_.find(n);
 	if( it != types_.end())
-		return it->second.get();
+		return it->second;
 
 	auto iv = variables_.find(n);
 	if( iv != variables_.end())
-		return iv->second.get();
+		return iv->second;
 
 	auto ift = functions_.find(n);
 	if( ift != functions_.end())
-		return ift->second.get();
+		return ift->second;
 
 	auto ia = alias_.find(n);
 	if( ia != alias_.end())
@@ -107,19 +107,19 @@ Type * SymbolTable::findType( const char * n )
 {
 	auto it = types_.find(n);
 
-	return ( it != types_.end())? it->second.get():nullptr;
+	return ( it != types_.end())? it->second:nullptr;
 }
 
 Variable * SymbolTable::findVariable( const char * n )
 {
 	auto iv = variables_.find(n);
-	return ( iv != variables_.end())?iv->second.get():nullptr;
+	return ( iv != variables_.end())?iv->second:nullptr;
 }
 
 FunctionType * SymbolTable::findFunction( const char * n )
 {
 	auto ift = functions_.find(n);
-	return ( ift != functions_.end())?ift->second.get():nullptr;
+	return ( ift != functions_.end())?ift->second:nullptr;
 }
 
 Alias * SymbolTable::findAlias( const char * n )

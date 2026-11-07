@@ -10,7 +10,7 @@ public:
 	Float32( float f ): value_(f) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	float value_;
@@ -22,7 +22,7 @@ public:
 	Float64( double d ): value_(d) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	double value_;
@@ -34,7 +34,7 @@ public:
 	Float80( __float80 d ): value_(d) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	__float80 value_;
@@ -45,7 +45,7 @@ class Nan : public Value
 public:
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 };
 
 class Inf : public Value
@@ -53,7 +53,7 @@ class Inf : public Value
 public:
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern sp<Float32Type> float32Type;
+extern Float32Type * float32Type;
 
 class Float64Type: public Type
 {
@@ -78,7 +78,7 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern sp<Float64Type> float64Type;
+extern Float64Type * float64Type;
 
 class Float80Type: public Type
 {
@@ -89,7 +89,7 @@ public:
     bool assignableTo( Type * ) const override;
 };
 
-extern sp<Float80Type> float80Type;
+extern Float80Type * float80Type;
 
 // TODO: Float128
 // TODO: Float256

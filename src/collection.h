@@ -9,8 +9,8 @@ class CollectionType: public Type
 public:
 	CollectionType( Type * ele ):ele_(ele) {}
 
-	sp<Type> ele() const { return ele_; }
+	Type * ele() const { return ele_; }
 
 protected:
-	sp<Type> ele_;
+	Type * ele_;
 };

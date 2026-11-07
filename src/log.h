@@ -91,13 +91,13 @@ public:
 	void stop() 			{ stop_ = true; }
 	bool stopped() const 	{ return stop_; }
 
-	std::vector<up<Logger>> & loggers() 	{ return loggers_; }
+	std::vector<Logger *> & loggers() 	{ return loggers_; }
 	std::vector<Logger::Msg> & messages()	{ return messages_; }
 
 
 private:
 
-	std::vector<up<Logger>> loggers_;
+	std::vector<Logger *> loggers_;
 	std::vector<Logger::Msg> messages_;
 
 	std::mutex 				mutex_;

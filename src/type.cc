@@ -2,7 +2,7 @@
 #include "statement.h"
 
 
-sp<ErrorType>	errorType(new ErrorType);
+ErrorType *	errorType(new ErrorType);
 
 bool Nullable::eqCompareTo( Type * ) const
 {	
@@ -59,7 +59,7 @@ FunctionType::FunctionType(
 	int , 
 	const char * n,
 	Type * rt, 
-	std::vector<up<Arg>> * args ): Type(n), return_(rt), args_(args)
+	std::vector<Arg *> * args ): Type(n), return_(rt), args_(args)
 {
 }
 

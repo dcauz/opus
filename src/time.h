@@ -23,7 +23,7 @@ public:
 	}
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 private:
 	unsigned char h_;
@@ -48,7 +48,7 @@ public:
 	Hour( int h );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 	int toInt() const { return h_; }
 
@@ -62,7 +62,7 @@ public:
 	Minute( int m );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 	int toInt() const { return m_; }
 
@@ -76,7 +76,7 @@ public:
 	Second( double s );
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+	Type * semCheck( SemCheckContext & scc ) const;
 
 	double toDouble() const { return s_; }
 

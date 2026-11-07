@@ -17,7 +17,7 @@ public:
 	~Int8() {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	signed char	data_;
@@ -30,7 +30,7 @@ public:
 	~Uint8() {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	unsigned char	data_;
@@ -43,7 +43,7 @@ public:
 	~Int16() {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	short	data_;
@@ -56,7 +56,7 @@ public:
 	~Uint16() {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	unsigned short	data_;
@@ -68,7 +68,7 @@ public:
 	Int32( int i ): data_(i) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	int	data_;
@@ -80,7 +80,7 @@ public:
 	Uint32( int i ): data_(i) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	unsigned int	data_;
@@ -92,7 +92,7 @@ public:
 	Int64( long long ll ): data_(ll) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 private:
 	long long	data_;
 };
@@ -103,7 +103,7 @@ public:
 	Uint64( long long ll ): data_(ll) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 private:
 	unsigned long long	data_;
 };
@@ -114,7 +114,7 @@ public:
 	Int128( __int128_t l ): data_(l) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 private:
 	__int128_t data_;
 };
@@ -125,7 +125,7 @@ public:
 	Uint128( __uint128_t l ): data_(l) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 private:
 	__uint128_t data_;
 };
@@ -147,7 +147,7 @@ public:
 	~Integer();
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 	void addChunk( const char * start, const char * end );
 

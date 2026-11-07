@@ -10,7 +10,7 @@ public:
 	Char( char c ): c_(c) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
 	char c_;

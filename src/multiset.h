@@ -17,12 +17,12 @@ public:
 class Multiset: public Value
 {
 public:
-	Multiset( std::vector<up<Value>> * );
+	Multiset( std::vector<Value * > * );
 
     bool genCode( GenCodeContext & gcc ) const override;
-    sp<Type> semCheck( SemCheckContext & scc ) const override;
+    Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<std::vector<up<Value>>> values_;
-	sp<MultisetType>	type_;
+	std::vector<Value *> * values_;
+	MultisetType *	type_;
 };

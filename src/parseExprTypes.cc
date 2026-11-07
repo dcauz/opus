@@ -1,7 +1,7 @@
 #include "parser.h"
 
 
-bool Parser::parseExprTypes ( std::vector<up<TypeArg>> & )
+bool Parser::parseExprTypes ( std::vector<TypeArg *> & )
 {
 PENTER
 	TODO

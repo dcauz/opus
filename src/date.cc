@@ -11,7 +11,7 @@ bool Date::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Date::semCheck( SemCheckContext & ) const
+Type * Date::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -49,7 +49,7 @@ bool Year::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Year::semCheck( SemCheckContext & ) const
+Type * Year::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -67,7 +67,7 @@ bool Month::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Month::semCheck( SemCheckContext & ) const
+Type * Month::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -85,7 +85,7 @@ bool Day::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Day::semCheck( SemCheckContext & ) const
+Type * Day::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;

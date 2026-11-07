@@ -48,7 +48,7 @@ public:
 	bool assignableTo( Type * ) const override;
 };
 
-extern sp<UnknownType> unknownType;
+extern UnknownType * unknownType;
 
 class ErrorType: public Type
 {
@@ -59,14 +59,14 @@ public:
 	bool assignableTo( Type * ) const override;
 };
 
-extern sp<ErrorType> errorType;
+extern ErrorType * errorType;
 
 class Arg;
 
 class FunctionType : public Type
 {
 public:
-	FunctionType( int decls, const char * name, Type * rt, std::vector<up<Arg>> * args );
+	FunctionType( int decls, const char * name, Type * rt, std::vector<Arg *> * args );
 	~FunctionType();
 
 	bool eqCompareTo( Type * ) const final;
@@ -74,6 +74,6 @@ public:
 	bool assignableTo( Type * ) const final;
 
 private:
-	up<Type> return_;
-	up<std::vector<up<Arg>>> args_;
+	Type * return_;
+	std::vector<Arg *> * args_;
 };

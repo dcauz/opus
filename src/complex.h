@@ -15,11 +15,11 @@ public:
 	Complex(Value * r, Value * i );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<Value> re_;
-	up<Value> im_;
+	Value	* re_;
+	Value	* im_;
 };
 
 class ComplexType: public Type
@@ -33,5 +33,5 @@ public:
     bool assignableTo( Type * ) const override;
 
 private:
-	up<Type>	base_;
+	Type	*	base_;
 };

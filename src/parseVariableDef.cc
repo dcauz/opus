@@ -64,7 +64,7 @@ PENTER
 		}
 		else if( token.id() == ID::COLON || token.id() == ID::RPAREN )
 		{
-		   sp<Type> type;
+		   Type * type;
 		   *varDef = new VarDef( token.line(), token.column(), type, name.c_str(), 0 );
 		   return true;
 		}
@@ -83,7 +83,7 @@ PENTER
           TODO
 		else
 		{
-		   sp<Type> type;
+		   Type * type;
 		   *varDef = new VarDef( token.line(), token.column(), type, name.c_str(), 0, expr );
 		   return true;
 		}

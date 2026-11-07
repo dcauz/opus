@@ -17,12 +17,12 @@ public:
 class Map: public Value
 {
 public:
-	Map( std::vector<up<Value>> * );
+	Map( std::vector<Value *> * );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<std::vector<up<Value>>> values_;
-	sp<MapType> type_;
+	std::vector<Value *> * values_;
+	MapType	* type_;
 };

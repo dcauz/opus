@@ -12,7 +12,7 @@ bool String::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> String::semCheck( SemCheckContext & ) const
+Type * String::semCheck( SemCheckContext & ) const
 {
  TODO // semCheck
 	return errorType;
@@ -47,7 +47,7 @@ bool LString::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> LString::semCheck( SemCheckContext & ) const
+Type * LString::semCheck( SemCheckContext & ) const
 {
  TODO // semCheck
 	return errorType;
@@ -65,7 +65,7 @@ bool LTString::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> LTString::semCheck( SemCheckContext & ) const
+Type * LTString::semCheck( SemCheckContext & ) const
 {
  TODO // semCheck
 	return errorType;

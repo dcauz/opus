@@ -11,7 +11,7 @@ public:
     RegExp( const char * cp ): value_(cp) {}
 
     bool genCode( GenCodeContext & gcc ) const override;
-    sp<Type> semCheck( SemCheckContext & scc ) const override;
+    Type * semCheck( SemCheckContext & scc ) const override;
 
     friend bool operator < ( const RegExp &, const RegExp & );
     friend bool operator > ( const RegExp &, const RegExp & );

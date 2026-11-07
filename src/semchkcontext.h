@@ -48,16 +48,16 @@ public:
 
 	bool inTypeDef() const;
 
-	SymbolTable * topSymTbl() { return symtbl_.get(); }
+	SymbolTable * topSymTbl() { return symtbl_; }
 
-	void pushSwitchCondType( sp<Type> ct ){ switchCondType_.push(ct); }
-	void popSwitchCondType()			  { switchCondType_.pop(); }
-	const sp<Type> switchCondType() const { return switchCondType_.top(); }
+	void pushSwitchCondType( Type * ct ){ switchCondType_.push(ct); }
+	void popSwitchCondType()			  		{ switchCondType_.pop(); }
+	const Type * switchCondType() const { return switchCondType_.top(); }
 
 private:
 
 	std::vector<BlockOwner> blockOwners_;
 
-	up<SymbolTable> symtbl_;
-	std::stack<sp<Type>> switchCondType_;
+	SymbolTable * symtbl_;
+	std::stack<Type * > switchCondType_;
 };

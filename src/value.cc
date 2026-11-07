@@ -8,7 +8,7 @@ bool FunctionRef::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> FunctionRef::semCheck( SemCheckContext & ) const
+Type * FunctionRef::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;
@@ -22,7 +22,7 @@ bool VariableRef::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> VariableRef::semCheck( SemCheckContext & ) const
+Type * VariableRef::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;
@@ -44,7 +44,7 @@ bool Vector::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Vector::semCheck( SemCheckContext & ) const
+Type * Vector::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;
@@ -66,7 +66,7 @@ bool MSet::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> MSet::semCheck( SemCheckContext & ) const
+Type * MSet::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;

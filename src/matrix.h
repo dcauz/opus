@@ -30,9 +30,9 @@ class Matrix: public Value
 public:
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	sp<MatrixType> type_;
+	MatrixType * type_;
 };
 

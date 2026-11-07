@@ -9,27 +9,25 @@
 Program * program;
 
 
-/*void Program::statements( std::vector<up<Statement>> * defs ) 
+/*void Program::statements( std::vector<Statement *> * defs ) 
 { 
 	statements_ = *defs; 
 }
 */
-std::vector<up<Statement>> & Program::statements() 
+std::vector<Statement *> & Program::statements() 
 { 
 	return statements_; 
 }
 
-std::vector<up<ILentity>>   & Program::ilEntities()  
+std::vector<ILentity *>   & Program::ilEntities()  
 { 
 	return ilEntities_; 
 }
 
 Program::Program( const char * srcFile ):srcFile_(srcFile)
 {
-	ilEntities_.push_back( up<ILentity>(new TargetDefinition( false, 
-		"e-m:e-i64:64-f80:128-n8:16:32:64-S128")));
-	ilEntities_.push_back( up<ILentity>(new TargetDefinition( true, 
-		"x86_64-pc-linux-gnu")));
+	ilEntities_.push_back( new TargetDefinition( false, "e-m:e-i64:64-f80:128-n8:16:32:64-S128" ));
+	ilEntities_.push_back( new TargetDefinition( true, "x86_64-pc-linux-gnu" ));
 }
 
 bool Program::semCheck() const
@@ -41,9 +39,9 @@ bool Program::semCheck() const
 
 	while( i != e )
 	{
-		Statement * def = i->get();
+		Statement * def = *i;
 
-		sp<Type> type = def->semCheck( context );
+		Type * type = def->semCheck( context );
 		if( type == errorType )
 			return false;
 
@@ -62,7 +60,7 @@ bool Program::genCode()
 
 	while( i != e )
 	{
-		up<Statement>& def = *i;
+		Statement * def = *i;
 
 		def->genCode( context );
 
@@ -92,7 +90,7 @@ bool Program::outputIL() const
 
 	while( i != e )
 	{
-		const up<ILentity> & entity = *i;
+		const ILentity * entity = *i;
 
 		entity->output( fh );
 

@@ -33,7 +33,7 @@ bool RegExp::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> RegExp::semCheck( SemCheckContext & ) const
+Type * RegExp::semCheck( SemCheckContext & ) const
 {
 	TODO
 	 return errorType;

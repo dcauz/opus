@@ -14,7 +14,7 @@ bool Datetime::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Datetime::semCheck( SemCheckContext & ) const
+Type * Datetime::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;

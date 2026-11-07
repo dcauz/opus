@@ -24,7 +24,7 @@ PENTER
 
     bool rc = true;
 
-	vector<up<Statement>> * statements = new vector<up<Statement>>();
+	vector<Statement *> * statements = new vector<Statement *>();
 
     while(rc)
     {
@@ -38,7 +38,7 @@ PENTER
 			if( statement == nullptr )
 				break;
 
-			statements->push_back(up<Statement>(statement));
+			statements->push_back(statement);
 		}	
 	}
 

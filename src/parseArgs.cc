@@ -30,10 +30,10 @@ arg
 	;
 */
 
-bool Parser::parseArgs( Token & lval, vector<up<Arg>> ** args )
+bool Parser::parseArgs( Token & lval, vector<Arg *> ** args )
 {
 PENTER
-	*args = new vector<up<Arg>>();	
+	*args = new vector<Arg *>();	
 
 	Type * type;
 	Expr * expr;
@@ -77,12 +77,12 @@ PENTER
 
 		if( lval.id() == ID::COMMA )
 		{
-			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
+			(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 		}
 		else if( lval.id() == ID::RPAREN )
 		{
-			(*args)->push_back( std::make_unique<Arg>( 0, 0, declarators, type, argName ) );
+			(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
 			declarators = 0;
 			break;
 		}
@@ -102,15 +102,13 @@ PENTER
 
 				if( lval.id() == ID::RPAREN )
 				{
-					(*args)->push_back( std::make_unique<Arg>( 0, 0,
-						declarators, type, argName, expr ) );
+					(*args)->push_back( new Arg( 0, 0, declarators, type, argName, expr ) );
 					declarators = 0;
 					break;
 				}
 				else if( lval.id() == ID::COMMA )
 				{
-					(*args)->push_back( std::make_unique<Arg>( 0, 0,
-						declarators, type, argName, expr ) );
+					(*args)->push_back( new Arg( 0, 0, declarators, type, argName, expr ) );
 					declarators = 0;
 				}
 				else
@@ -121,14 +119,13 @@ PENTER
 			}
 			else if( lval.id() == ID::RPAREN )
 			{
-				(*args)->push_back( std::make_unique<Arg>( 0, 0,
-					declarators, type, argName ) );
+				(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
 				declarators = 0;
 				break;
 			}
 			else if( lval.id() == ID::COMMA )
 			{
-				(*args)->push_back( std::make_unique<Arg>( 0, 0,
+				(*args)->push_back( new Arg( 0, 0,
 					declarators, type, argName ) );
 				declarators = 0;
 			}

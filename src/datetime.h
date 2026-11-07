@@ -17,7 +17,7 @@ public:
 	{ }
 
 	bool genCode( GenCodeContext & gcc ) const;
-    sp<Type> semCheck( SemCheckContext & scc ) const;
+  Type * semCheck( SemCheckContext & scc ) const;
 
 private:
 
@@ -33,5 +33,3 @@ public:
 	bool compareTo( Type * ) const override;
 	bool assignableTo( Type * ) const override;
 };
-
-

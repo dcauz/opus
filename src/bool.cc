@@ -3,7 +3,7 @@
 #include "bool.h"
 
 
-sp<BoolType> boolType(new BoolType);
+BoolType * boolType(new BoolType);
 
 //////////////////////////////////////////
 
@@ -13,7 +13,7 @@ bool Bool::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Bool::semCheck( SemCheckContext & ) const
+Type * Bool::semCheck( SemCheckContext & ) const
 {
 	return boolType;
 }

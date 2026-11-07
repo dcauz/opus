@@ -10,7 +10,7 @@ public:
 	String( const char * cp ): value_(cp) {}
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 	friend bool operator < ( const String &, const String & );
 	friend bool operator > ( const String &, const String & );
@@ -50,7 +50,7 @@ public:
 	virtual ~LString() { delete value_; }
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 	friend bool operator < ( const LString &, const LString & );
 	friend bool operator > ( const LString &, const LString & );
@@ -91,7 +91,7 @@ public:
 	~LTString() = default;
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 	friend bool operator < ( const LTString &, const LTString & );
 	friend bool operator > ( const LTString &, const LTString & );

@@ -477,13 +477,13 @@ Intrinsic intrinsic [] =
 // { Iglobal_ctors,						General,		"llvm.global.ctors" },
 // { Iglobal_dtors,						General,		"llvm.global.dtors" },
 
-bool ModuleLevelInlineAsm::output( FILE * )
+bool ModuleLevelInlineAsm::output( FILE * ) const
 {
 	TODO // il
 	return false;
 }
 
-bool TargetDefinition::output( FILE * fh )
+bool TargetDefinition::output( FILE * fh ) const
 {
 	fprintf( fh, "target %s = \"%s\"\n",
 		isTriple_?"triple":"datalayout", definition_.c_str() );
@@ -491,19 +491,19 @@ bool TargetDefinition::output( FILE * fh )
 	return true;
 }
 
-bool DepLibrary::output( FILE * )
+bool DepLibrary::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool FunctionDeclaration::output( FILE * )
+bool FunctionDeclaration::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool FunctionDefinition::output( FILE * fh )
+bool FunctionDefinition::output( FILE * fh ) const
 {
 	fprintf( fh, "\ndefine @%s() #%d\n{\n",
 		name_.c_str(), funcAttrsOrdinal_ );
@@ -513,43 +513,43 @@ bool FunctionDefinition::output( FILE * fh )
 	return true;
 }
 
-bool UnnamedType::output( FILE * )
+bool UnnamedType::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool NamedType::output( FILE * )
+bool NamedType::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool UnnamedGlobalVariable::output( FILE * )
+bool UnnamedGlobalVariable::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool NamedGlobalVariable::output( FILE * )
+bool NamedGlobalVariable::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool Comdat::output( FILE * )
+bool Comdat::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool StandaloneMetadata::output( FILE * )
+bool StandaloneMetadata::output( FILE * ) const
 {
 TODO // il
 	return false;
 }
 
-bool NamedMetadata::output( FILE * )
+bool NamedMetadata::output( FILE * ) const
 {
 TODO // il
 	return false;

@@ -75,9 +75,9 @@ private:
 
 	SymbolTable	* parent_;
 	
-	std::map<std::string, up<Type>> 		types_;
-	std::map<std::string, up<Variable>>		variables_;
-	std::map<std::string, up<FunctionType>>	functions_;	
+	std::map<std::string, Type *> 		types_;
+	std::map<std::string, Variable *>	variables_;
+	std::map<std::string, FunctionType *>	functions_;	
 	std::map<std::string, Alias *>			alias_;
 	std::map<std::string, Namespace *>		namespaces_;
 	std::map<std::string, EnumMember *>		enumMembers_;

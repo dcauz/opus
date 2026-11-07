@@ -2,7 +2,7 @@
 #include "multiset.h"
 
 
-Map::Map( std::vector<up<Value>> * v ):values_(v)
+Map::Map( std::vector<Value *> * v ):values_(v)
 {
 }
 
@@ -12,7 +12,7 @@ TODO // genCode
 	return false;
 }
 
-sp<Type> Map::semCheck( SemCheckContext & ) const
+Type * Map::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
 	return nullptr;
@@ -21,7 +21,7 @@ TODO // semCheck
 bool MapType::eqCompareTo( Type * t ) const
 {
 	MapType * st = dynamic_cast<MapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -30,13 +30,13 @@ bool MapType::eqCompareTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->eqCompareTo( ele.get() );
+	return ele_->eqCompareTo( ele );
 }
 
 bool MapType::compareTo( Type * t )  const
 {
 	MapType * st = dynamic_cast<MapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -45,13 +45,13 @@ bool MapType::compareTo( Type * t )  const
 	else
 		return false;
 
-	return ele_->compareTo( ele.get() );
+	return ele_->compareTo( ele );
 }
 
 bool MapType::assignableTo( Type * t ) const
 {
 	MapType * st = dynamic_cast<MapType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -60,5 +60,5 @@ bool MapType::assignableTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->assignableTo( ele.get() );
+	return ele_->assignableTo( ele );
 }

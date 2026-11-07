@@ -10,7 +10,7 @@ bool Time::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Time::semCheck( SemCheckContext & ) const
+Type * Time::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -48,7 +48,7 @@ bool Hour::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Hour::semCheck( SemCheckContext & ) const
+Type * Hour::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -66,7 +66,7 @@ bool Minute::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Minute::semCheck( SemCheckContext & ) const
+Type * Minute::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
@@ -84,9 +84,8 @@ bool Second::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> Second::semCheck( SemCheckContext & ) const
+Type * Second::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return errorType;
 }
-

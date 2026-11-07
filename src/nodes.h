@@ -12,7 +12,7 @@ class Node
 public:
 	typedef std::vector<std::pair<std::string, std::string> > Attributes;
 
-	Node( Attributes * att, std::vector<up<Node>> * children ):attributes_(att), children_(children)
+	Node( Attributes * att, std::vector<Node *> * children ):attributes_(att), children_(children)
 	{
 	}
 	
@@ -24,8 +24,8 @@ public:
 
 protected:
 	
-	up<Attributes> attributes_;
-	up<std::vector<up<Node>>> children_;
+	Attributes * attributes_;
+	std::vector<Node *> * children_;
 };
 
 class TEXT: public Node
@@ -44,7 +44,7 @@ private:
 class A:public Node
 {
 public:
-	A( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	A( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -52,7 +52,7 @@ public:
 class Abbr:public Node
 {
 public:
-	Abbr( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Abbr( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -60,7 +60,7 @@ public:
 class Address:public Node
 {
 public:
-	Address( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Address( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -68,7 +68,7 @@ public:
 class Area:public Node
 {
 public:
-	Area( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Area( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -76,7 +76,7 @@ public:
 class Article:public Node
 {
 public:
-	Article( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Article( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -84,7 +84,7 @@ public:
 class Aside:public Node
 {
 public:
-	Aside( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Aside( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -92,7 +92,7 @@ public:
 class Audio:public Node
 {
 public:
-	Audio( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Audio( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -100,7 +100,7 @@ public:
 class Base:public Node
 {
 public:
-	Base( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Base( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -108,7 +108,7 @@ public:
 class B:public Node
 {
 public:
-	B( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	B( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -116,7 +116,7 @@ public:
 class Bdi:public Node
 {
 public:
-	Bdi( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Bdi( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -124,7 +124,7 @@ public:
 class Bdo:public Node
 {
 public:
-	Bdo( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Bdo( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -132,7 +132,7 @@ public:
 class Blockquote:public Node
 {
 public:
-	Blockquote( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Blockquote( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -140,7 +140,7 @@ public:
 class Body:public Node
 {
 public:
-	Body( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Body( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -148,7 +148,7 @@ public:
 class Br:public Node
 {
 public:
-	Br( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Br( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -156,7 +156,7 @@ public:
 class Button:public Node
 {
 public:
-	Button( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Button( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -164,7 +164,7 @@ public:
 class Canvas:public Node
 {
 public:
-	Canvas( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Canvas( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -172,7 +172,7 @@ public:
 class Caption:public Node
 {
 public:
-	Caption( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Caption( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -180,7 +180,7 @@ public:
 class Cite:public Node
 {
 public:
-	Cite( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Cite( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -188,7 +188,7 @@ public:
 class Code:public Node
 {
 public:
-	Code( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Code( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -196,7 +196,7 @@ public:
 class Col:public Node
 {
 public:
-	Col( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Col( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -204,7 +204,7 @@ public:
 class Colgroup:public Node
 {
 public:
-	Colgroup( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Colgroup( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -212,7 +212,7 @@ public:
 class Data:public Node
 {
 public:
-	Data( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Data( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -220,7 +220,7 @@ public:
 class Datalist:public Node
 {
 public:
-	Datalist( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Datalist( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -228,7 +228,7 @@ public:
 class Dd:public Node
 {
 public:
-	Dd( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Dd( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -236,7 +236,7 @@ public:
 class Del:public Node
 {
 public:
-	Del( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Del( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -244,7 +244,7 @@ public:
 class Dfn:public Node
 {
 public:
-	Dfn( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Dfn( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -252,7 +252,7 @@ public:
 class divN:public Node
 {
 public:
-	divN( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	divN( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -260,7 +260,7 @@ public:
 class Dl:public Node
 {
 public:
-	Dl( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Dl( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -268,7 +268,7 @@ public:
 class Doctype:public Node
 {
 public:
-	Doctype( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Doctype( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -276,7 +276,7 @@ public:
 class Dt:public Node
 {
 public:
-	Dt( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Dt( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -284,7 +284,7 @@ public:
 class Embed:public Node
 {
 public:
-	Embed( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Embed( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -292,7 +292,7 @@ public:
 class Em:public Node
 {
 public:
-	Em( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Em( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -300,7 +300,7 @@ public:
 class Fieldset:public Node
 {
 public:
-	Fieldset( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Fieldset( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -308,7 +308,7 @@ public:
 class Figcaption:public Node
 {
 public:
-	Figcaption( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Figcaption( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -316,7 +316,7 @@ public:
 class Figure:public Node
 {
 public:
-	Figure( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Figure( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -324,7 +324,7 @@ public:
 class Footer:public Node
 {
 public:
-	Footer( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Footer( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -332,7 +332,7 @@ public:
 class Form:public Node
 {
 public:
-	Form( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Form( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -340,7 +340,7 @@ public:
 class H1:public Node
 {
 public:
-	H1( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H1( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -348,7 +348,7 @@ public:
 class H2:public Node
 {
 public:
-	H2( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H2( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -356,7 +356,7 @@ public:
 class H3:public Node
 {
 public:
-	H3( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H3( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -364,7 +364,7 @@ public:
 class H4:public Node
 {
 public:
-	H4( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H4( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -372,7 +372,7 @@ public:
 class H5:public Node
 {
 public:
-	H5( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H5( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -380,7 +380,7 @@ public:
 class H6:public Node
 {
 public:
-	H6( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	H6( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -388,7 +388,7 @@ public:
 class Header:public Node
 {
 public:
-	Header( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Header( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -396,7 +396,7 @@ public:
 class Head:public Node
 {
 public:
-	Head( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Head( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -404,7 +404,7 @@ public:
 class Hr:public Node
 {
 public:
-	Hr( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Hr( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -412,7 +412,7 @@ public:
 class Html:public Node
 {
 public:
-	Html( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Html( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -420,7 +420,7 @@ public:
 class Iframe:public Node
 {
 public:
-	Iframe( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Iframe( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -428,7 +428,7 @@ public:
 class I:public Node
 {
 public:
-	I( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	I( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -436,7 +436,7 @@ public:
 class Img:public Node
 {
 public:
-	Img( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Img( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -444,7 +444,7 @@ public:
 class Input:public Node
 {
 public:
-	Input( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Input( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -452,7 +452,7 @@ public:
 class Ins:public Node
 {
 public:
-	Ins( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Ins( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -460,7 +460,7 @@ public:
 class Kbd:public Node
 {
 public:
-	Kbd( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Kbd( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -468,7 +468,7 @@ public:
 class Keygen:public Node
 {
 public:
-	Keygen( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Keygen( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -476,7 +476,7 @@ public:
 class Label:public Node
 {
 public:
-	Label( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Label( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -484,7 +484,7 @@ public:
 class Legend:public Node
 {
 public:
-	Legend( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Legend( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -492,7 +492,7 @@ public:
 class Li:public Node
 {
 public:
-	Li( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Li( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -500,7 +500,7 @@ public:
 class Link:public Node
 {
 public:
-	Link( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Link( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -508,7 +508,7 @@ public:
 class Main:public Node
 {
 public:
-	Main( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Main( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -516,7 +516,7 @@ public:
 class Map:public Node
 {
 public:
-	Map( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Map( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -524,7 +524,7 @@ public:
 class Mark:public Node
 {
 public:
-	Mark( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Mark( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -532,7 +532,7 @@ public:
 class Math:public Node
 {
 public:
-	Math( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Math( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -540,7 +540,7 @@ public:
 class Meta:public Node
 {
 public:
-	Meta( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Meta( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -548,7 +548,7 @@ public:
 class Meter:public Node
 {
 public:
-	Meter( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Meter( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -556,7 +556,7 @@ public:
 class Nav:public Node
 {
 public:
-	Nav( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Nav( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -564,7 +564,7 @@ public:
 class Noscript:public Node
 {
 public:
-	Noscript( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Noscript( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -572,7 +572,7 @@ public:
 class Object:public Node
 {
 public:
-	Object( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Object( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -580,7 +580,7 @@ public:
 class Ol:public Node
 {
 public:
-	Ol( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Ol( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -588,7 +588,7 @@ public:
 class Optgroup:public Node
 {
 public:
-	Optgroup( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Optgroup( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -596,7 +596,7 @@ public:
 class Option:public Node
 {
 public:
-	Option( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Option( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -604,7 +604,7 @@ public:
 class Output:public Node
 {
 public:
-	Output( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Output( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -612,7 +612,7 @@ public:
 class Param:public Node
 {
 public:
-	Param( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Param( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -620,7 +620,7 @@ public:
 class P:public Node
 {
 public:
-	P( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	P( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -628,7 +628,7 @@ public:
 class Pre:public Node
 {
 public:
-	Pre( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Pre( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -636,7 +636,7 @@ public:
 class Progress:public Node
 {
 public:
-	Progress( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Progress( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -644,7 +644,7 @@ public:
 class Q:public Node
 {
 public:
-	Q( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Q( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -652,7 +652,7 @@ public:
 class Rb:public Node
 {
 public:
-	Rb( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Rb( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -660,7 +660,7 @@ public:
 class Rp:public Node
 {
 public:
-	Rp( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Rp( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -668,7 +668,7 @@ public:
 class Rtc:public Node
 {
 public:
-	Rtc( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Rtc( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -676,7 +676,7 @@ public:
 class Rt:public Node
 {
 public:
-	Rt( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Rt( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -684,7 +684,7 @@ public:
 class Ruby:public Node
 {
 public:
-	Ruby( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Ruby( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -692,7 +692,7 @@ public:
 class Samp:public Node
 {
 public:
-	Samp( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Samp( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -700,7 +700,7 @@ public:
 class Script:public Node
 {
 public:
-	Script( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Script( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -708,7 +708,7 @@ public:
 class Section:public Node
 {
 public:
-	Section( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Section( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -716,7 +716,7 @@ public:
 class Select:public Node
 {
 public:
-	Select( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Select( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -724,7 +724,7 @@ public:
 class Small:public Node
 {
 public:
-	Small( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Small( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -732,7 +732,7 @@ public:
 class Source:public Node
 {
 public:
-	Source( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Source( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -740,7 +740,7 @@ public:
 class Span:public Node
 {
 public:
-	Span( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Span( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -748,7 +748,7 @@ public:
 class S:public Node
 {
 public:
-	S( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	S( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -756,7 +756,7 @@ public:
 class Strong:public Node
 {
 public:
-	Strong( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Strong( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -764,7 +764,7 @@ public:
 class Style:public Node
 {
 public:
-	Style( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Style( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -772,7 +772,7 @@ public:
 class sub:public Node
 {
 public:
-	sub( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	sub( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -780,7 +780,7 @@ public:
 class Sup:public Node
 {
 public:
-	Sup( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Sup( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -788,7 +788,7 @@ public:
 class Svg:public Node
 {
 public:
-	Svg( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Svg( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -796,7 +796,7 @@ public:
 class Table:public Node
 {
 public:
-	Table( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Table( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -804,7 +804,7 @@ public:
 class Tbody:public Node
 {
 public:
-	Tbody( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Tbody( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -812,7 +812,7 @@ public:
 class Td:public Node
 {
 public:
-	Td( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Td( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -820,7 +820,7 @@ public:
 class Template:public Node
 {
 public:
-	Template( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Template( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -828,7 +828,7 @@ public:
 class Textarea:public Node
 {
 public:
-	Textarea( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Textarea( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -836,7 +836,7 @@ public:
 class Text:public Node
 {
 public:
-	Text( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Text( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -844,7 +844,7 @@ public:
 class Tfoot:public Node
 {
 public:
-	Tfoot( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Tfoot( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -852,7 +852,7 @@ public:
 class Thread:public Node
 {
 public:
-	Thread( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Thread( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -860,7 +860,7 @@ public:
 class Th:public Node
 {
 public:
-	Th( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Th( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -868,7 +868,7 @@ public:
 class TimeNode:public Node
 {
 public:
-	TimeNode( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	TimeNode( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -876,7 +876,7 @@ public:
 class Title:public Node
 {
 public:
-	Title( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Title( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -884,7 +884,7 @@ public:
 class Track:public Node
 {
 public:
-	Track( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Track( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -892,7 +892,7 @@ public:
 class Tr:public Node
 {
 public:
-	Tr( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Tr( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -900,7 +900,7 @@ public:
 class Ul:public Node
 {
 public:
-	Ul( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Ul( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -908,7 +908,7 @@ public:
 class U:public Node
 {
 public:
-	U( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	U( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -916,7 +916,7 @@ public:
 class Var:public Node
 {
 public:
-	Var( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Var( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -924,7 +924,7 @@ public:
 class Video:public Node
 {
 public:
-	Video( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Video( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };
@@ -932,7 +932,7 @@ public:
 class Wbr:public Node
 {
 public:
-	Wbr( Attributes * att, std::vector<up<Node>> * children ):Node(att, children) {}
+	Wbr( Attributes * att, std::vector<Node *> * children ):Node(att, children) {}
 
 	virtual bool verify( Node * parent ) const;
 };

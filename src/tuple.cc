@@ -1,7 +1,7 @@
 #include "tuple.h"
 
 
-Tuple::Tuple( std::vector<up<std::pair<std::string,up<Value>>>> * t ):
+Tuple::Tuple( std::vector<std::pair<std::string,Value *> *> * t ):
 	value_(t)
 {
 }
@@ -16,7 +16,7 @@ TODO // genCode
 	return false;
 }
 
-sp<Type> Tuple::semCheck( SemCheckContext & ) const
+Type * Tuple::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
 	return errorType;

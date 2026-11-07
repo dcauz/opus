@@ -12,7 +12,7 @@ public:
 	virtual ~Value() {}
 
     virtual bool genCode( GenCodeContext & gcc ) const = 0;
-    virtual sp<Type> semCheck( SemCheckContext & scc ) const = 0;
+    virtual Type * semCheck( SemCheckContext & scc ) const = 0;
 };
 
 class FunctionType;
@@ -24,7 +24,7 @@ public:
 	FunctionRef( FunctionType * ft ): ftype_(ft) {}
 
     bool genCode( GenCodeContext & gcc ) const final;
-    sp<Type> semCheck( SemCheckContext & scc ) const final;
+    Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	FunctionType	* ftype_;
@@ -40,7 +40,7 @@ public:
 	VariableRef( Variable * v ): variable_(v) {}
 
     bool genCode( GenCodeContext & gcc ) const final;
-    sp<Type> semCheck( SemCheckContext & scc ) const final;
+    Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	Variable	* variable_;
@@ -56,7 +56,7 @@ public:
 	~Vector();
 
     virtual bool genCode( GenCodeContext & gcc ) const final;
-    virtual sp<Type> semCheck( SemCheckContext & scc ) const final;
+    virtual Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	std::vector<Expr * > values_;
@@ -69,7 +69,7 @@ public:
 	~MSet();
 
     virtual bool genCode( GenCodeContext & gcc ) const final;
-    virtual sp<Type> semCheck( SemCheckContext & scc ) const final;
+    virtual Type * semCheck( SemCheckContext & scc ) const final;
 
 private:
 	std::vector<Expr * > values_;

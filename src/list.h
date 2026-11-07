@@ -16,7 +16,7 @@ public:
     bool compareTo( Type * ) const override;
     bool assignableTo( Type * ) const override;
 
-	sp<Type> ele() const { return ele_; }
+	Type * ele() const { return ele_; }
 
 private:
 	bool	isD_;
@@ -25,12 +25,12 @@ private:
 class List: public Value
 {
 public:
-	List( Type *, std::vector<up<Value>> * = nullptr );
+	List( Type *, std::vector<Value *> * = nullptr );
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 
 private:
-	up<std::list<up<Value>>> values_;
-	sp<ListType>	type_;
+	std::list<Value *> * values_;
+	ListType	*	type_;
 };

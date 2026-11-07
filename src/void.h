@@ -9,7 +9,7 @@ class Null: public Value
 public:
 
 	bool genCode( GenCodeContext & gcc ) const override;
-	sp<Type> semCheck( SemCheckContext & scc ) const override;
+	Type * semCheck( SemCheckContext & scc ) const override;
 };
 
 class VoidType: public Type
@@ -22,4 +22,4 @@ public:
 };
 
 
-extern sp<VoidType>	voidType;
+extern VoidType *	voidType;

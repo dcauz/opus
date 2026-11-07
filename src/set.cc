@@ -2,7 +2,7 @@
 #include "multiset.h"
 
 
-Set::Set( std::vector<up<Value>> * v ):values_(v)
+Set::Set( std::vector<Value *> * v ):values_(v)
 {
 }
 
@@ -12,7 +12,7 @@ TODO // genCode
 	return false;
 }
 
-sp<Type> Set::semCheck( SemCheckContext & ) const
+Type * Set::semCheck( SemCheckContext & ) const
 {
 TODO // semCheck
 	return nullptr;
@@ -21,7 +21,7 @@ TODO // semCheck
 bool SetType::eqCompareTo( Type * t ) const
 {
 	SetType * st = dynamic_cast<SetType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -30,13 +30,13 @@ bool SetType::eqCompareTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->eqCompareTo( ele.get() );
+	return ele_->eqCompareTo( ele );
 }
 
 bool SetType::compareTo( Type * t )  const
 {
 	SetType * st = dynamic_cast<SetType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -45,13 +45,13 @@ bool SetType::compareTo( Type * t )  const
 	else
 		return false;
 
-	return ele_->compareTo( ele.get() );
+	return ele_->compareTo( ele );
 }
 
 bool SetType::assignableTo( Type * t ) const
 {
 	SetType * st = dynamic_cast<SetType *>(t);
-	sp<Type> ele;
+	Type * ele;
 	
 	if( st != nullptr )
 		ele = st->ele();
@@ -60,5 +60,5 @@ bool SetType::assignableTo( Type * t ) const
 	else
 		return false;
 
-	return ele_->assignableTo( ele.get() );
+	return ele_->assignableTo( ele );
 }

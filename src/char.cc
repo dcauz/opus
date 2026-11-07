@@ -10,7 +10,7 @@ bool Char::genCode( GenCodeContext & ) const
     return false;
 }
 
-sp<Type> Char::semCheck( SemCheckContext & ) const
+Type * Char::semCheck( SemCheckContext & ) const
 {
  TODO // semCheck
     return errorType;

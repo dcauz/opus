@@ -20,7 +20,7 @@ bool ListType::assignableTo( Type * ) const
 }
 
 
-List::List( Type *, std::vector<up<Value>> * )
+List::List( Type *, std::vector<Value *> * )
 {
 	TODO
 }
@@ -31,7 +31,7 @@ bool List::genCode( GenCodeContext & ) const
 	return false;
 }
 
-sp<Type> List::semCheck( SemCheckContext & ) const
+Type * List::semCheck( SemCheckContext & ) const
 {
 	TODO
 	return nullptr;
