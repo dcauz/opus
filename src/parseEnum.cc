@@ -27,7 +27,7 @@ member
     | NAME '=' expr
 */
 
-bool Parser::parseEnum( EnumType ** et )
+bool Parser::parseEnum( Enum ** et )
 {	
 PENTER
 	// Note that ENUM was already read
@@ -126,7 +126,7 @@ dumpToken( __FILE__, __LINE__, lval );
 
 				if( lval.id() == ID::RBRACE )
 				{
-				  *et = new EnumType( s, lval.line(), name, base, sts );
+				  *et = new Enum( s, lval.line(), name, base, sts );
   				  return true;
 				}
 			}
@@ -142,7 +142,7 @@ dumpToken( __FILE__, __LINE__, lval );
 					sts = new std::vector<Statement *>();
 				sts->push_back( new EnumMember(0,0, name, expr ));
 
-				*et = new EnumType( s, lval.line(), name, base, sts );
+				*et = new Enum( s, lval.line(), name, base, sts );
 				return true;
 			}
 			else
@@ -152,7 +152,7 @@ dumpToken( __FILE__, __LINE__, lval );
 	else if( lval.id() == ID::SCOLON )
 	{
 parseDeclaration:
-		*et = new EnumType( 0, 0, name, base, nullptr );
+		*et = new Enum( 0, 0, name, base, nullptr );
 		return true;
 	}
 

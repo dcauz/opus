@@ -1,13 +1,11 @@
-int32 foo ( int32 );
 
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
 	foo( argc );
 	return 0;
 }
 
-inline int32 foo ( int32 a, inline float64 d, const float32 f )
+inline i32 foo ( i32 a, inline f64 d, final f32 f )
 {
 	puts( a.toString() );
 }
-

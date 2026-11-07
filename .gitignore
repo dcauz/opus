@@ -15,3 +15,4 @@ opus.vcxproj.filters
 .d
 bin
 elf/instPro.cpp
+.*.sw?

@@ -1,24 +1,19 @@
-int32 main( int32 argc, const string [] argv )
+
+i32 main( i32 argc, final string [] argv )
 {
-	select(argc)
-	{
-	case 0..10:
-		puts(argc);
-		break;
-	default:
-		puts("default");
-		break;
+  relation Acct
+  {
+		string name;
+		string address;
+		i32		 account; 
+  };
+  
+	Acct	a;
+	
+	Acct na = select name, address from a;
 
-	};
+	Acct da = select * from a where name ~ "D*";
 
-	select(argv[0])
-	{
-	default:
-		puts( "unknown" );
-		break;
-	case "opus":
-		puts( argv[0] );
-		break;
-	};
+
 	return 0;
 }

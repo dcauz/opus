@@ -49,7 +49,7 @@ PENTER
 		refSeen         = 7,
 		idSeen          = 8,
 		assSeen         = 9,
-        exprSeen        = 10,
+    exprSeen        = 10,
 
 		lParenSeen      = 11,
 
@@ -62,7 +62,7 @@ PENTER
 		pRefSeen        = 18,
 		pIdSeen         = 19,
 		pAssSeen        = 20,
-        pExprSeen       = 21,
+    pExprSeen       = 21,
 
 		dotDotDotSeen   = 22,
 
@@ -94,7 +94,8 @@ dumpToken( __FILE__, __LINE__, token );
 		switch(state)
 		{
 		case start:
-			if( token.isType() )
+      // id may name a type ...
+			if( token.isType() || token.isId())
 			{
 				type = std::move(token);
 				state = typeSeen;
@@ -106,14 +107,14 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-                dumpToken( __FILE__, __LINE__, token );
+        dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
 			break;
 
 		case modSeen:
 			// modifer or type
-            dumpToken( __FILE__, __LINE__, token );
+      dumpToken( __FILE__, __LINE__, token );
 			TODO
 			break;
 
@@ -137,7 +138,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else
 			{
-                dumpToken( __FILE__, __LINE__, token );
+        dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
 			break;

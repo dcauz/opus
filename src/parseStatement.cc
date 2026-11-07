@@ -26,6 +26,31 @@ PENTER
 		default:
 		{
 			ExprStatement * exprS;
+
+			if( val.isId())
+			{
+				Token next;
+				lex( next, this );
+
+				// The first token may be a type name, so treat
+				// statement as a declaration
+				if( next.isId())
+				{
+					VarDef * vd;
+					Executable * ex;
+				  lookahead = std::move(next);
+					rc = parseVarFuncDef( val, &vd, &ex );
+					*statement = ex;
+				}
+				else
+				{
+				  lookahead = std::move(next);
+					rc = parseExprStatement( &exprS, val );
+					*statement = exprS;
+				}
+				break;
+			}
+			
 			rc = parseExprStatement( &exprS, val );
 			*statement = exprS;
 			break;
@@ -254,36 +279,31 @@ PENTER
 		//
 		case ID::CLASS:
 		{
-			ClassType * ct;
+			Class * ct;
 			rc = parseClass( &ct );
 			*statement = ct;
 			break;
 		}
 		case ID::ENUM:
 		{
-			EnumType * et;
+			Enum * et;
 			rc = parseEnum( &et );
 			*statement = et;
 			break;
 		}
-		case ID::TYPE:
-		{
-			TypeType * tt;
-			rc = parseTypeDef( &tt );
-			*statement = tt;
-			break;
-		}
 		case ID::UNION:
 		{
-			UnionType * ut;
-			rc = parseUnion( &ut );
+			Class * ut;
+			rc = parseClass( &ut );
+			ut->ctype( Class::isUnion );
 			*statement = ut;
 			break;
 		}
 		case ID::INTERFACE:
 		{
-			InterfaceType * it;
-			rc = parseInterface( &it );
+			Class * it;
+			rc = parseClass( &it );
+			it->ctype( Class::isInterface );
 			*statement = it;
 			break;
 		}

@@ -559,6 +559,37 @@ struct Token
 
 	bool isId() const			{ return id_ == ID::ID || id_ == ID::SID; }
 
+	bool is_as() const     		{ return id_ == ID::SID && strncmp( shortLex_, "as", 2 ) == 0; }
+	bool is_asc() const				{ return id_ == ID::SID && strncmp( shortLex_, "asc", 3 ) == 0; }
+	bool is_by() const				{ return id_ == ID::SID && strncmp( shortLex_, "by", 2 ) == 0; }
+	bool is_closure() const		{ return id_ == ID::SID && strncmp( shortLex_, "closure", 7 ) == 0; }
+	bool is_distinct() const	{ return id_ == ID::SID && strncmp( shortLex_, "distinct", 8 ) == 0; }
+	bool is_dsc() const				{ return id_ == ID::SID && strncmp( shortLex_, "dsc", 3 ) == 0; }
+	bool is_extend() const 		{ return id_ == ID::SID && strncmp( shortLex_, "extend", 6 ) == 0; }
+	bool is_foreign() const		{ return id_ == ID::SID && strncmp( shortLex_, "foreign", 7 ) == 0; }
+	bool is_from() const			{ return id_ == ID::SID && strncmp( shortLex_, "from", 4 ) == 0; }
+	bool is_group() const			{ return id_ == ID::SID && strncmp( shortLex_, "group", 5 ) == 0; }
+	bool is_having() const		{ return id_ == ID::SID && strncmp( shortLex_, "having", 6 ) == 0; }
+	bool is_implement() const	{ return id_ == ID::SID && strncmp( shortLex_, "implement", 9 ) == 0; }
+	bool is_implicit() const	{ return id_ == ID::SID && strncmp( shortLex_, "implicit", 8 ) == 0; }
+	bool is_index() const			{ return id_ == ID::SID && strncmp( shortLex_, "index", 5 ) == 0; }
+	bool is_into() const			{ return id_ == ID::SID && strncmp( shortLex_, "into", 4 ) == 0; }
+	bool is_join() const			{ return id_ == ID::SID && strncmp( shortLex_, "join", 4 ) == 0; }
+	bool is_key() const				{ return id_ == ID::SID && strncmp( shortLex_, "key", 3 ) == 0; }
+	bool is_left() const			{ return id_ == ID::SID && strncmp( shortLex_, "left", 4 ) == 0; }
+	bool is_noexcept() const	{ return id_ == ID::SID && strncmp( shortLex_, "noexcept", 8 ) == 0; }
+	bool is_order() const			{ return id_ == ID::SID && strncmp( shortLex_, "order", 5 ) == 0; }
+	bool is_outer() const			{ return id_ == ID::SID && strncmp( shortLex_, "outer", 5 ) == 0; }
+	bool is_override() const	{ return id_ == ID::SID && strncmp( shortLex_, "override", 8 ) == 0; }
+	bool is_percent() const		{ return id_ == ID::SID && strncmp( shortLex_, "percent", 7 ) == 0; }
+	bool is_right() const			{ return id_ == ID::SID && strncmp( shortLex_, "right", 5 ) == 0; }
+	bool is_ties() const			{ return id_ == ID::SID && strncmp( shortLex_, "ties", 4 ) == 0; }
+	bool is_top() const				{ return id_ == ID::SID && strncmp( shortLex_, "top", 3 ) == 0; }
+	bool is_unique() const		{ return id_ == ID::SID && strncmp( shortLex_, "unique", 6 ) == 0; }
+	bool is_values() const		{ return id_ == ID::SID && strncmp( shortLex_, "values", 6 ) == 0; }
+	bool is_where() const			{ return id_ == ID::SID && strncmp( shortLex_, "where", 5 ) == 0; }
+	bool is_with() const			{ return id_ == ID::SID && strncmp( shortLex_, "with", 4 ) == 0; }
+
 	const char * idLexium() const	{ return id_ == ID::ID ? lexium_->c_str() : shortLex_; }
 	const char * str() const		{ return isLongString() ? lexium_->c_str() : shortLex_; }
 	size_t str_size() const		    { return isLongString() ? lexium_->size() : strlen(shortLex_); }

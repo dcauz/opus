@@ -20,7 +20,7 @@ void SymbolTable::addType( Type * t )
 {
 	if( t->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, t->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, t->name().c_str() );
 		types_.insert( make_pair( t->name(), t ));
 	}
 }
@@ -29,7 +29,7 @@ void SymbolTable::addVariable( Variable * v )
 {
 	if( v->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, v->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, v->name().c_str() );
 		variables_.insert( make_pair( v->name(), v ));
 	}
 }
@@ -38,7 +38,7 @@ void SymbolTable::addFunction( FunctionType  * ft )
 {
 	if( ft->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, ft->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, ft->name().c_str() );
 		functions_.insert( make_pair( ft->name(), ft ));
 	}
 }
@@ -47,7 +47,7 @@ void SymbolTable::addAlias( Alias * a )
 {
 	if( a->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, a->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, a->name().c_str() );
 		alias_.insert( make_pair( a->name(), a ));
 	}
 }
@@ -56,7 +56,7 @@ void SymbolTable::addNamespace( Namespace * ns )
 {
 	if( ns->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, ns->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, ns->name().c_str() );
 		namespaces_.insert( make_pair( ns->name(), ns ));
 	}
 }
@@ -65,14 +65,14 @@ void SymbolTable::addEnumMember( EnumMember * em )
 {
 	if( em->name().length() > 0 )
 	{
-printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, em->name().c_str() );
+//printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, em->name().c_str() );
 		enumMembers_.insert( make_pair( em->name(), em ));
 	}
 }
 
 Symbol * SymbolTable::find( const std::string & n )
 {
-printf( "%s:%d st %p find [%s]\n", __FILE__, __LINE__, this, n.c_str() ); fflush(stdout);
+//printf( "%s:%d st %p find [%s]\n", __FILE__, __LINE__, this, n.c_str() ); fflush(stdout);
 	auto it = types_.find(n);
 	if( it != types_.end())
 		return it->second.get();

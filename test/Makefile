@@ -23,25 +23,28 @@ IL_FILES := $(patsubst %.op,%.il,$(TEST_FILES))
 
 test: $(IL_FILES)
 
+literalt:     literal.il
+exprt:        expr.il
+ift:          if.il
+whilet:       while.il
+fort:         for.il
+switcht:      switch.il
+tryt:         try.il
+enumt:        enum.il
+dot:          do.il
+objectt:      object.il
+classt:				class.il
+
+functiont:    function.il
+
 
 aliast:       alias.il
 collectionst: collections.il
-dot:          do.il
-enumt:        enum.il
-exprt:        expr.il
-fort:         for.il
-functiont:    function.il
-ift:          if.il
-literalt:     literal.il
 namespacet:   namespace.il
-object:       object.il
 pointerst:    pointers.il
 purFunt:      pureFun.il
 selectt:      select.il
-switcht:      switch.il
-tryt:         try.il
 typet:        type.il
-whilet:       while.il
 
 
 %.il: %.op

@@ -20,7 +20,7 @@ union
 using namespace	std;
 
 
-bool Parser::parseUnion( UnionType ** ut )
+bool Parser::parseUnion( Union ** ut )
 {
 PENTER
 	// UNION token was already read
@@ -37,7 +37,7 @@ PENTER
 	lex( lval, this );
 
 	// read type params
-	vector<up<TemplateParam>> * typeParams = nullptr;
+	vector<TemplateParam *> * typeParams = nullptr;
 	if( lval.id() == ID::LT )
 	{
 		// > is eaten
@@ -49,7 +49,7 @@ PENTER
 
 	lex( lval, this );
 
-	vector<up<Type>> * bases = nullptr;
+	vector<Type *> * bases = nullptr;
 //	vector<up<Statement>> * sts = nullptr;
 
 	if( lval.id() == ID::COLON )
@@ -70,9 +70,9 @@ PENTER
 				else
 				{
 					if(bases == nullptr )
-						bases = new vector<up<Type>>();
+						bases = new vector<Type *>();
 
-					bases->push_back(up<Type>(type));
+					bases->push_back(type);
 
 					if( lval.id() == ID::COMMA )
 						continue;
@@ -96,7 +96,7 @@ parseBody:
 	else if( lval.id() == ID::SCOLON )
 	{
 parseDeclaration:
-		*ut = new UnionType( 0, 0, lval.idLexium(), typeParams, bases);
+		*ut = new Union( 0, 0, lval.idLexium(), typeParams, bases);
 		return true;
 	}
 

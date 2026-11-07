@@ -116,7 +116,8 @@ private:
 	bool parseSelect( Select ** );
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );
-	bool parseTypeParams( std::vector<up<TemplateParam>> ** );
+	bool parseTypeArgs( std::vector<TemplateArg *> **, bool );
+	bool parseTypeParams( std::vector<TemplateParam *> ** );
 	bool parseVarDefOrExpr( Token & , ET, VarDef ** variableDef, Expr ** initExpr );
 	bool parseVariableDef( Token & token, ET et, VarDef ** variableDef );
 
@@ -125,22 +126,19 @@ private:
 	bool parseBreak( Break ** );
 	bool parseCase( Case ** );
 	bool parseCatch( CatchBlock ** );
-	bool parseClass( ClassType ** );
+	bool parseClass( Class ** );
 	bool parseContinue( Continue ** );
 	bool parseDefault( Default ** );
 	bool parseDo( Do ** );
-	bool parseEnum( EnumType **);
+	bool parseEnum( Enum **);
 	bool parseExprStatement( ExprStatement **, Token & );
 	bool parseFor( For ** );
 	bool parseIf( If ** );
-	bool parseInterface( InterfaceType ** );
 	bool parseNamespace( Namespace ** );
 	bool parsePureFunction( PureFuncDef ** );
 	bool parseReturn(  Return ** );
 	bool parseSwitch( Switch ** );
 	bool parseTry( Try ** );
-	bool parseTypeDef( TypeType ** );
-	bool parseUnion( UnionType ** );
 	bool parseUsing( Using **, UsingNamespace ** );
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );

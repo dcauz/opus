@@ -44,7 +44,8 @@ constVariable
 	: variable with const declarator
 
 */
-bool Parser::parseInterface( InterfaceType ** )
+
+bool Parser::parseInterface( Interface ** )
 {
 PENTER
 	TODO

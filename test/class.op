@@ -1,0 +1,48 @@
+class B
+{
+	string name;
+	i32 value;
+}
+
+class D extend B
+{
+	string address;
+}
+
+class T<type X, type Y>	
+{
+	X	x;
+	Y	y;
+}
+
+class U extend T<i32,f64>, D
+{
+	U	u;
+}
+
+interface I< type S >
+{
+	S value();
+}
+
+interface J <i64 v>
+{
+	i32 sum();
+	final u64	CONST = v;
+}
+
+class F1 extend U implement I<i32>, J<10*20>
+{
+	string whatever;
+}
+
+class F2 implement I<i32>, J<10*20>
+{
+	string whatever;
+}
+
+class F3 implement I<i32>, J<10*20> extend U 
+{
+	string whatever;
+}
+

@@ -154,9 +154,9 @@ public:
 	TypeDef(int s, 
 			int e, 
 			const char * name,
-			std::vector<up<TemplateParam>>   * params, 
-			std::vector<up<Type>>   * bases,
-			Statement * st = nullptr ): 
+			std::vector<TemplateParam *>   * params, 
+			std::vector<Type *>   * bases,
+			Block * st = nullptr ): 
 		Definition(s,e), 
 		Type(name),
 		params_(params),
@@ -167,9 +167,9 @@ public:
 	TypeDef(int s, 
 			int e, 
 			const std::string & name,
-			std::vector<up<TemplateParam>>   * params, 
-			std::vector<up<Type>>   * bases,
-			Statement * st = nullptr ): 
+			std::vector<TemplateParam *>   * params, 
+			std::vector<Type *>   * bases,
+			Block * st = nullptr ): 
 		Definition(s,e), 
 		Type(name),
 		params_(params),
@@ -178,9 +178,9 @@ public:
 	{}
 
 private:
-	up<std::vector<up<TemplateParam>>>	params_;
-	up<std::vector<up<Type>>>	bases_;
-	up<Statement>				body_;
+	std::vector<TemplateParam *>* params_;
+	std::vector<Type *>	* bases_;
+	Block       *	body_;
 };
 
 enum Pointer
@@ -244,10 +244,10 @@ private:
     Expr * value_;
 };
 
-class EnumType : public Definition, public Type
+class Enum : public Definition, public Type
 {
 public:
-	EnumType( 
+	Enum( 
 		int s,
 		int e,
 		const char * n, 
@@ -255,7 +255,7 @@ public:
 		std::vector<Statement * > * sts = nullptr ): Definition(s,e), Type(n), base_(base), sts_(sts)
 	{}
 
-	EnumType( 
+	Enum( 
 		int s,
 		int e,
 		const std::string & n, 
@@ -275,17 +275,18 @@ private:
 	std::vector<Statement * > * sts_;
 };
 
-class TypeType: public TypeDef
+class Class: public TypeDef
 {
 public:
-	TypeType( 
+	Class( 
 		int s, 
 		int e, 
-		const char * n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		Statement * mbrs = nullptr ):
-			TypeDef(s,e,n,params,bases,mbrs) 
+		const std::string & n, 
+		std::vector<TemplateParam *>   * params, 
+		std::vector<Type *>   * bases,
+		Block * mbrs = nullptr ):
+			TypeDef(s,e,n,params,bases, mbrs),
+			ctype_(isClass)
 	{}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -294,69 +295,15 @@ public:
 	bool eqCompareTo( Type * ) const final;
 	bool compareTo( Type * ) const final;
 	bool assignableTo( Type * ) const final;
-};
 
-class ClassType: public TypeDef
-{
-public:
-	ClassType( 
-		int s, 
-		int e, 
-		const char * n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		Statement * mbrs = nullptr ):
-			TypeDef(s,e,n,params,bases, mbrs)
-	{}
+	enum CType	{ isClass, isInterface, isUnion };
 
-	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	CType	ctype() const				{ return ctype_; }
+	void 	ctype( CType ct ) 	{ ctype_ = ct; }
 
-	bool eqCompareTo( Type * ) const final;
-	bool compareTo( Type * ) const final;
-	bool assignableTo( Type * ) const final;
-};
-
-class InterfaceType: public TypeDef
-{
-public:
-	InterfaceType( 
-		int s, 
-		int e, 
-		const char * n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		Statement * mbrs = nullptr ):
-			TypeDef(s,e,n,params,bases, mbrs)
-	{}
-
-	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
-
-	bool eqCompareTo( Type * ) const final;
-	bool compareTo( Type * ) const final;
-	bool assignableTo( Type * ) const final;
-};
-
-class UnionType: public TypeDef
-{
-public:
-	UnionType( 
-		int s, 
-		int e, 
-		const char * n, 
-		std::vector<up<TemplateParam>>   * params, 
-		std::vector<up<Type>>   * bases,
-		Statement * mbrs = nullptr ):
-			TypeDef(s,e,n,params, bases,mbrs)
-	{}
-
-	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
-
-	bool eqCompareTo( Type * ) const final;
-	bool compareTo( Type * ) const final;
-	bool assignableTo( Type * ) const final;
+private:
+	
+	CType	ctype_;
 };
 
 class VarDef: public Definition, public Variable
@@ -408,23 +355,35 @@ private:
 	up<Expr> default_;
 };
 
-class TemplateParam: public Definition, public Variable
+class TemplateParam: public Variable
 {
 public:
-	TemplateParam( int s, int e, const char * n): Definition(s,e), Variable(n) {}
-	TemplateParam( int s, int e, const std::string & n): Definition(s,e), Variable(n) {}
-	TemplateParam( int s, int e, Type * t, const char * n): 
-		Definition(s,e), Variable(n), type_(t) {}
-	TemplateParam( int s, int e, Type * t, const std::string & n): 
-		Definition(s,e), Variable(n), type_(t) {}
+	TemplateParam( int s, const char * n): line_(s), Variable(n) {}
+	TemplateParam( int s, const std::string & n): line_(s), Variable(n) {}
+	TemplateParam( int s, Type * t, const char * n): 
+		line_(s), Variable(n), type_(t) {}
+	TemplateParam( int s, Type * t, const std::string & n): 
+		line_(s), Variable(n), type_(t) {}
 
-	bool genCode( GenCodeContext & ) const final;
-	sp<Type> semCheck( SemCheckContext & ) const final;
+	bool genCode( GenCodeContext & ) const;
+	sp<Type> semCheck( SemCheckContext & ) const;
 
 	Type	* type() { return type_.get(); }
 
 private:
+	int	line_;
+
 	up<Type>	type_;
+};
+
+class TemplateArg
+{
+public:
+	TemplateArg( int s, const std::string & name, std::vector<TemplateArg *> * args = nullptr );
+	TemplateArg( int s, Expr * e );
+
+private:
+
 };
 
 class Executable: public Definition

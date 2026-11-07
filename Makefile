@@ -6,7 +6,6 @@ SRC =  \
 src/auto.cc \
 src/bool.cc \
 src/char.cc \
-src/class.cc \
 src/complex.cc \
 src/date.cc \
 src/datetime.cc \
@@ -20,7 +19,6 @@ src/gencodecontext.cc \
 src/heap.cc \
 src/il.cc \
 src/integer.cc \
-src/interface.cc \
 src/lex.cc \
 src/list.cc \
 src/log.cc \
@@ -51,18 +49,16 @@ src/parseExprStatement.cc \
 src/parseExprTypes.cc \
 src/parseFor.cc \
 src/parseIf.cc \
-src/parseInterface.cc \
 src/parseNamespace.cc \
 src/parsePureFunction.cc \
 src/parseReturn.cc \
 src/parseSelect.cc \
 src/parseStatement.cc \
 src/parseSwitch.cc \
+src/parseTypeArgs.cc \
 src/parseTypeParams.cc \
 src/parseTry.cc \
 src/parseType.cc \
-src/parseTypeDef.cc \
-src/parseUnion.cc \
 src/parseUsing.cc \
 src/parseVarDefOrExpr.cc \
 src/parseVarFuncDef.cc \
@@ -84,7 +80,6 @@ src/time.cc \
 src/token.cc \
 src/tuple.cc \
 src/type.cc \
-src/union.cc \
 src/value.cc \
 src/void.cc 
 
@@ -103,9 +98,24 @@ clean:
 clobber: clean
 	rm -rf bin
 
-test: literalt exprt ift whilet fort switcht tryt enumt
+TESTS := \
+literalt \
+exprt \
+ift \
+whilet \
+fort \
+switcht \
+tryt \
+enumt \
+dot \
+objectt \
+functiont \
+classt \
+selectt
 
-literalt exprt ift whilet fort switcht tryt enumt: bin/opus
+test: $(TESTS)
+
+$(TESTS) : bin/opus
 	cd test; make $@
 
 ########################################

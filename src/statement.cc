@@ -147,13 +147,14 @@ sp<Type> ExprStatement::semCheck( SemCheckContext & scc ) const
 	return expr_->semCheck( scc );
 }
 
-sp<Type> EnumType::semCheck( SemCheckContext & ) const 
+sp<Type> Enum::semCheck( SemCheckContext & ) const 
 {
 	TODO // semCheck
 	return errorType;
 }
 
-sp<Type> TypeType::semCheck( SemCheckContext & scc ) const 
+/*
+sp<Type> Type::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Class);
 
@@ -166,22 +167,9 @@ sp<Type> TypeType::semCheck( SemCheckContext & scc ) const
 
 	return errorType;
 }
+*/
 
-sp<Type> InterfaceType::semCheck( SemCheckContext & scc ) const 
-{
-	scc.pushBlockOwner(BlockOwner::Interface);
-
-	if( scc.validBlockNesting() )
-		return errorType;
-
-	TODO // semCheck
-
-	scc.popBlockOwner();
-
-	return errorType;
-}
-
-sp<Type> ClassType::semCheck( SemCheckContext & scc ) const 
+sp<Type> Class::semCheck( SemCheckContext & scc ) const 
 {
 	scc.pushBlockOwner(BlockOwner::Interface);
 
@@ -226,18 +214,6 @@ sp<Type> Namespace::semCheck( SemCheckContext & scc ) const
 
 	scc.popBlockOwner();
 
-	return errorType;
-}
-
-sp<Type> UnionType::semCheck( SemCheckContext & scc ) const 
-{
-	scc.pushBlockOwner(BlockOwner::Union);
-
-	if( scc.validBlockNesting() )
-		return errorType;
-
-	TODO // semCheck
-	scc.popBlockOwner();
 	return errorType;
 }
 
@@ -525,7 +501,7 @@ bool ExprStatement::genCode( GenCodeContext & ) const
 	return false;
 }
 
-bool EnumType::genCode( GenCodeContext & ) const 
+bool Enum::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -543,25 +519,15 @@ bool Namespace::genCode( GenCodeContext & ) const
 	return false;
 }
 
-bool TypeType::genCode( GenCodeContext & ) const 
+/*
+bool Type::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
 }
+*/
 
-bool ClassType::genCode( GenCodeContext & ) const 
-{
-	TODO // genCode
-	return false;
-}
-
-bool InterfaceType::genCode( GenCodeContext & ) const 
-{
-	TODO // genCode
-	return false;
-}
-
-bool UnionType::genCode( GenCodeContext & ) const 
+bool Class::genCode( GenCodeContext & ) const 
 {
 	TODO // genCode
 	return false;
@@ -694,91 +660,55 @@ bool EnumMember::genCode( GenCodeContext & ) const
 	return false;
 }
 
-bool UnionType::eqCompareTo(Type*) const
+bool Class::eqCompareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool UnionType::compareTo(Type*) const
+bool Class::compareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool UnionType::assignableTo(Type*) const
+bool Class::assignableTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool InterfaceType::eqCompareTo(Type*) const
+bool Type::eqCompareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool ClassType::eqCompareTo(Type*) const
+bool Type::compareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool InterfaceType::compareTo(Type*) const
+bool Type::assignableTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool ClassType::compareTo(Type*) const
+bool Enum::eqCompareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool InterfaceType::assignableTo(Type*) const
+bool Enum::compareTo(Type*) const
 {
 	TODO
 	return false;
 }
 
-bool ClassType::assignableTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool TypeType::eqCompareTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool TypeType::compareTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool TypeType::assignableTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool EnumType::eqCompareTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool EnumType::compareTo(Type*) const
-{
-	TODO
-	return false;
-}
-
-bool EnumType::assignableTo(Type*) const
+bool Enum::assignableTo(Type*) const
 {
 	TODO
 	return false;

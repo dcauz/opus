@@ -15,34 +15,57 @@ Keyword keyWords[] =
 	{ ID::_PHI,         "_phi" },
 	{ ID::_PI,          "_pi" },
 
+	{ ID::ALIGNAS,      "alignas" },
+	{ ID::ALIGNOF,      "alignof" },
+	{ ID::ASSERT,       "assert" },
+	{ ID::ASYNC,        "async" },
+	{ ID::ATOMIC,       "atomic" },
 	{ ID::AUTO,         "auto" },
+
 	{ ID::BOOL,         "bool" },
+	{ ID::BREAK,        "break" },
+
 	{ ID::C,            "C" },
+	{ ID::CASE,         "case" },
+	{ ID::CATCH,        "catch" },
 	{ ID::CHAR,         "char" },
+	{ ID::CLASS,        "class" },
+	{ ID::CO_AWAIT,     "co_await" },
+	{ ID::CO_RETURN,    "co_return" },
+	{ ID::CO_YIELD,     "co_yield" },
+	{ ID::CONTINUE,     "continue" },
+
 	{ ID::DATE,         "date" },
 	{ ID::DATETIME,     "datetime" },
+	{ ID::DEFAULT,      "default" },
+	{ ID::DELETE,       "delete" },
 	{ ID::DLIST,        "dlist" },
+	{ ID::DO,           "do" },
 	{ ID::DQUEUE,       "dqueue" },
 	{ ID::DURATION,     "duration" },
+
+	{ ID::ELSE,         "else" },
+	{ ID::ENUM,         "enum" },
+	{ ID::EVAL,         "eval" },
+
 	{ ID::F32,          "f32" },
 	{ ID::F64,          "f64" },
 	{ ID::F80,          "f80" },
 	{ ID::FALSE,        "false" },
+	{ ID::FINAL,        "final" },
+	{ ID::FOR,          "for" },
+	{ ID::FUN,          "fun" },
+
 	{ ID::GRAPH,        "graph" },
+
 	{ ID::HEAP,         "heap" },
+
 	{ ID::I0,           "i0" },
 	{ ID::I1,           "i1" },
-	{ ID::I2,           "i2" },
-	{ ID::I3,           "i3" },
-	{ ID::I4,           "i4" },
-	{ ID::I5,           "i5" },
-	{ ID::I6,           "i6" },
-	{ ID::I7,           "i7" },
-	{ ID::I8,           "i8" },
-	{ ID::I9,           "i9" },
 	{ ID::I10,          "i10" },
 	{ ID::I11,          "i11" },
 	{ ID::I12,          "i12" },
+	{ ID::I128,         "i128" },
 	{ ID::I13,          "i13" },
 	{ ID::I14,          "i14" },
 	{ ID::I15,          "i15" },
@@ -50,6 +73,7 @@ Keyword keyWords[] =
 	{ ID::I17,          "i17" },
 	{ ID::I18,          "i18" },
 	{ ID::I19,          "i19" },
+	{ ID::I2,           "i2" },
 	{ ID::I20,          "i20" },
 	{ ID::I21,          "i21" },
 	{ ID::I22,          "i22" },
@@ -60,32 +84,41 @@ Keyword keyWords[] =
 	{ ID::I27,          "i27" },
 	{ ID::I28,          "i28" },
 	{ ID::I29,          "i29" },
+	{ ID::I3,           "i3" },
 	{ ID::I30,          "i30" },
 	{ ID::I31,          "i31" },
 	{ ID::I32,          "i32" },
+	{ ID::I4,           "i4" },
+	{ ID::I5,           "i5" },
+	{ ID::I6,           "i6" },
 	{ ID::I64,          "i64" },
-	{ ID::I128,         "i128" },
+	{ ID::I7,           "i7" },
+	{ ID::I8,           "i8" },
+	{ ID::I9,           "i9" },
+	{ ID::IF,           "if" },
+	{ ID::IMPORT,       "import" },
+	{ ID::INLINE,       "inline" },
+	{ ID::INSERT,       "insert" },
+	{ ID::INTERFACE,    "interface" },
+	{ ID::IS_VOID,      "is_void" },
+
 	{ ID::LIST,         "list" },
 	{ ID::LSTRING,      "lstring" },
 	{ ID::LTSTRING,     "ltstring" },
+
 	{ ID::MAP,          "map" },
 	{ ID::MMAP,         "mmap" },
 	{ ID::MSET,         "mset" },
+	{ ID::MUTABLE,      "mutable" },
 	{ ID::MUTEX,        "mutex" },
+
 	{ ID::N,            "N" },
 	{ ID::N0,           "n0" },
 	{ ID::N1,           "n1" },
-	{ ID::N2,           "n2" },
-	{ ID::N3,           "n3" },
-	{ ID::N4,           "n4" },
-	{ ID::N5,           "n5" },
-	{ ID::N6,           "n6" },
-	{ ID::N7,           "n7" },
-	{ ID::N8,           "n8" },
-	{ ID::N9,           "n9" },
 	{ ID::N10,          "n10" },
 	{ ID::N11,          "n11" },
 	{ ID::N12,          "n12" },
+	{ ID::N128,         "n128" },
 	{ ID::N13,          "n13" },
 	{ ID::N14,          "n14" },
 	{ ID::N15,          "n15" },
@@ -93,6 +126,7 @@ Keyword keyWords[] =
 	{ ID::N17,          "n17" },
 	{ ID::N18,          "n18" },
 	{ ID::N19,          "n19" },
+	{ ID::N2,           "n2" },
 	{ ID::N20,          "n20" },
 	{ ID::N21,          "n21" },
 	{ ID::N22,          "n22" },
@@ -103,33 +137,57 @@ Keyword keyWords[] =
 	{ ID::N27,          "n27" },
 	{ ID::N28,          "n28" },
 	{ ID::N29,          "n29" },
+	{ ID::N3,           "n3" },
 	{ ID::N30,          "n30" },
 	{ ID::N31,          "n31" },
 	{ ID::N32,          "n32" },
+	{ ID::N4,           "n4" },
+	{ ID::N5,           "n5" },
+	{ ID::N6,           "n6" },
 	{ ID::N64,          "n64" },
-	{ ID::N128,         "n128" },
+	{ ID::N7,           "n7" },
+	{ ID::N8,           "n8" },
+	{ ID::N9,           "n9" },
+	{ ID::NAMESPACE,    "namespace" },
+	{ ID::NEW,          "new" },
+
 	{ ID::OBJECT,       "object" },
+
+	{ ID::PRIVATE,      "private" },
+	{ ID::PUBLIC,       "public" },
+	{ ID::PURE,         "pure" },
+
 	{ ID::Q,            "Q" },
 	{ ID::QUEUE,        "queue" },
+
 	{ ID::R,            "R" },
 	{ ID::REGEXP,       "regexp" },
+	{ ID::RELATION,     "relation" },
+	{ ID::RETURN,       "return" },
+
 	{ ID::SEMAPHORE,    "semaphore" },
+	{ ID::SELECT,       "select" },
+	{ ID::SET,          "set" },
+	{ ID::SIZEOF,       "sizeof" },
 	{ ID::STACK,        "stack" },
 	{ ID::STRING,       "string" },
+	{ ID::SWITCH,       "switch" },
+
+	{ ID::THIS,         "this" },
+	{ ID::THREAD_LOCAL, "thread_local" },
+	{ ID::THROW,        "throw" },
+	{ ID::TIME,         "time" },
 	{ ID::TRUE,         "true" },
+	{ ID::TRY,          "try" },
+	{ ID::TYPE,         "type" },
+	{ ID::TYPEID,       "typeid" },
+
 	{ ID::U0,           "u0" },
 	{ ID::U1,           "u1" },
-	{ ID::U2,           "u2" },
-	{ ID::U3,           "u3" },
-	{ ID::U4,           "u4" },
-	{ ID::U5,           "u5" },
-	{ ID::U6,           "u6" },
-	{ ID::U7,           "u7" },
-	{ ID::U8,           "u8" },
-	{ ID::U9,           "u9" },
 	{ ID::U10,          "u10" },
 	{ ID::U11,          "u11" },
 	{ ID::U12,          "u12" },
+	{ ID::U128,         "u128" },
 	{ ID::U13,          "u13" },
 	{ ID::U14,          "u14" },
 	{ ID::U15,          "u15" },
@@ -137,6 +195,7 @@ Keyword keyWords[] =
 	{ ID::U17,          "u17" },
 	{ ID::U18,          "u18" },
 	{ ID::U19,          "u19" },
+	{ ID::U2,           "u2" },
 	{ ID::U20,          "u20" },
 	{ ID::U21,          "u21" },
 	{ ID::U22,          "u22" },
@@ -147,27 +206,33 @@ Keyword keyWords[] =
 	{ ID::U27,          "u27" },
 	{ ID::U28,          "u28" },
 	{ ID::U29,          "u29" },
+	{ ID::U3,           "u3" },
 	{ ID::U30,          "u30" },
 	{ ID::U31,          "u31" },
 	{ ID::U32,          "u32" },
+	{ ID::U4,           "u4" },
+	{ ID::U5,           "u5" },
+	{ ID::U6,           "u6" },
 	{ ID::U64,          "u64" },
-	{ ID::U128,         "u128" },
-	{ ID::SET,          "set" },
+	{ ID::U7,           "u7" },
+	{ ID::U8,           "u8" },
+	{ ID::U9,           "u9" },
+	{ ID::UNION,        "union" },
+	{ ID::UPDATE,       "update" },
+	{ ID::USING,        "using" },
+
+	{ ID::VA_ARGS,      "va_args" },
 	{ ID::VOID,         "void" },
+
+	{ ID::WHILE,        "while" },
+
 	{ ID::Z,            "Z" },
 	{ ID::Z0,           "z0" },
 	{ ID::Z1,           "z1" },
-	{ ID::Z2,           "z2" },
-	{ ID::Z3,           "z3" },
-	{ ID::Z4,           "z4" },
-	{ ID::Z5,           "z5" },
-	{ ID::Z6,           "z6" },
-	{ ID::Z7,           "z7" },
-	{ ID::Z8,           "z8" },
-	{ ID::Z9,           "z9" },
 	{ ID::Z10,          "z10" },
 	{ ID::Z11,          "z11" },
 	{ ID::Z12,          "z12" },
+	{ ID::Z128,         "z128" },
 	{ ID::Z13,          "z13" },
 	{ ID::Z14,          "z14" },
 	{ ID::Z15,          "z15" },
@@ -175,6 +240,7 @@ Keyword keyWords[] =
 	{ ID::Z17,          "z17" },
 	{ ID::Z18,          "z18" },
 	{ ID::Z19,          "z19" },
+	{ ID::Z2,           "z2" },
 	{ ID::Z20,          "z20" },
 	{ ID::Z21,          "z21" },
 	{ ID::Z22,          "z22" },
@@ -185,61 +251,17 @@ Keyword keyWords[] =
 	{ ID::Z27,          "z27" },
 	{ ID::Z28,          "z28" },
 	{ ID::Z29,          "z29" },
+	{ ID::Z3,           "z3" },
 	{ ID::Z30,          "z30" },
 	{ ID::Z31,          "z31" },
 	{ ID::Z32,          "z32" },
+	{ ID::Z4,           "z4" },
+	{ ID::Z5,           "z5" },
+	{ ID::Z6,           "z6" },
 	{ ID::Z64,          "z64" },
-	{ ID::Z128,         "z128" },
-	{ ID::ATOMIC,       "atomic" },
-	{ ID::FINAL,        "final" },
-	{ ID::INLINE,       "inline" },
-	{ ID::MUTABLE,      "mutable" },
-	{ ID::PRIVATE,      "private" },
-	{ ID::PUBLIC,       "public" },
-	{ ID::PURE,         "pure" },
-	{ ID::THREAD_LOCAL, "thread_local" },
-	{ ID::CLASS,        "class" },
-	{ ID::ENUM,         "enum" },
-	{ ID::FUN,          "fun" },
-	{ ID::INTERFACE,    "interface" },
-	{ ID::RELATION,     "relation" },
-	{ ID::UNION,        "union" },
-	{ ID::ASSERT,       "assert" },
-	{ ID::BREAK,        "break" },
-	{ ID::CASE,         "case" },
-	{ ID::CATCH,        "catch" },
-	{ ID::CO_AWAIT,     "co_await" },
-	{ ID::CONTINUE,     "continue" },
-	{ ID::CO_RETURN,    "co_return" },
-	{ ID::CO_YIELD,     "co_yield" },
-	{ ID::DEFAULT,      "default" },
-	{ ID::DO,           "do" },
-	{ ID::ELSE,         "else" },
-	{ ID::FOR,          "for" },
-	{ ID::IF,           "if" },
-	{ ID::IMPORT,       "import" },
-	{ ID::NAMESPACE,    "namespace" },
-	{ ID::RETURN,       "return" },
-	{ ID::SWITCH,       "switch" },
-	{ ID::THROW,        "throw" },
-	{ ID::TRY,          "try" },
-	{ ID::WHILE,        "while" },
-	{ ID::ASYNC,        "async" },
-	{ ID::ALIGNAS,      "alignas" },
-	{ ID::ALIGNOF,      "alignof" },
-	{ ID::DELETE,       "delete" },
-	{ ID::EVAL,         "eval" },
-	{ ID::IS_VOID,      "is_void" },
-	{ ID::INSERT,       "insert" },
-	{ ID::NEW,          "new" },
-	{ ID::SELECT,       "select" },
-	{ ID::SIZEOF,       "sizeof" },
-	{ ID::TYPEID,       "typeid" },
-	{ ID::UPDATE,       "update" },
-	{ ID::TIME,         "time" },
-	{ ID::TYPE,         "type" },
-	{ ID::USING,        "using" },
-	{ ID::VA_ARGS,      "va_args" },
+	{ ID::Z7,           "z7" },
+	{ ID::Z8,           "z8" },
+	{ ID::Z9,           "z9" },
 };
 
 unsigned noOfKeyWords = sizeof(keyWords)/sizeof(Keyword);
@@ -427,13 +449,13 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::ADD_ASS: 		ss << "+=";	break;
 	case ID::AND:			ss << "&&";   	break;
 	case ID::AND_ASS:		ss << "&&=";  	break;
-    case ID::CRS_PROD:		ss << "[*]";	break;
+  case ID::CRS_PROD:		ss << "[*]";	break;
 	case ID::DEC: 			ss << "--";   	break;
 	case ID::DIV_ASS: 		ss << "/=";   	break;
 	case ID::DOT_ASK: 		ss << ".*";	break;
 	case ID::DOT_DOT: 		ss << "..";	break;
 	case ID::DOT_DOT_DOT:	ss << "...";	break;
-    case ID::DOT_PROD:  	ss << "[.]" ;	break;
+  case ID::DOT_PROD:  	ss << "[.]" ;	break;
 	case ID::EQ: 			ss << "==";	break;
 	case ID::EXP: 			ss << "**";	break;
 	case ID::EXP_ASS:   	ss << "**=";	break;
@@ -441,28 +463,28 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::GE: 			ss << ">=";	break;
 	case ID::INC: 			ss << "++";	break;
 	case ID::LE: 			ss << "<=";	break;
-    case ID::M_DIV:      	ss << "[/]";	break;
+  case ID::M_DIV:      	ss << "[/]";	break;
 	case ID::MOD_ASS: 		ss << "%=";	break;
 	case ID::MUL_ASS: 		ss << "*=";	break;
-    case ID::M_EXP:      	ss << "[**]";	break;
-    case ID::MPTR:       	ss << "->*";	break;
+  case ID::M_EXP:      	ss << "[**]";	break;
+  case ID::MPTR:       	ss << "->*";	break;
 	case ID::NE: 			ss << "!=";	break;
 	case ID::OR: 			ss << "||";	break;
 	case ID::BOR_ASS: 		ss << "|=";	break;
 	case ID::OR_ASS: 		ss << "||=";	break;
-    case ID::PARAM_ASS:  	ss << ":=";	break;
+  case ID::PARAM_ASS:  	ss << ":=";	break;
 	case ID::POST_DEC: 		ss << ".--";	break;
 	case ID::POST_INC:		ss << ".++";	break;
-    case ID::PTR:        	ss << "->";	break;
+  case ID::PTR:        	ss << "->";	break;
 	case ID::DEREF:      	ss << "*.";	break;
-    case ID::QUAL:       	ss << "::";	break;
+  case ID::QUAL:       	ss << "::";	break;
 	case ID::SLFT:			ss << "<<";	break;
 	case ID::SLFT_ASS:		ss << "<<=";	break;
 	case ID::SRGHT:			ss << ">>";	break;
 	case ID::SRGHT_ASS:		ss << ">>=";	break;
-    case ID::SS:         	ss << "<=>";	break;
+  case ID::SS:         	ss << "<=>";	break;
 	case ID::SUB_ASS: 		ss << "-=";	break;
-    case ID::BNOT_ASS:    	ss << "~=";	break;
+  case ID::BNOT_ASS:    	ss << "~=";	break;
 	case ID::UNIARY_MINUS:	ss << "-.";	break;
 	case ID::UNIARY_PLUS:	ss << "+.";	break;
 	case ID::BXOR_ASS:		ss << "^=";	break;
@@ -487,8 +509,8 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::F64:   		ss << "f64";	break;
 	case ID::F80:   		ss << "f80";	break;
 
-    case ID::GRAPH:			ss << "graph";		break;
-    case ID::HEAP:			ss << "heap";		break;
+  case ID::GRAPH:			ss << "graph";		break;
+  case ID::HEAP:			ss << "heap";		break;
 
 	case ID::I0:			ss << "i0"; 	    break;
 	case ID::I1:			ss << "i1"; 	    break;
@@ -532,8 +554,8 @@ void dumpToken( const char * f, int l, const Token & token )
 
 	case ID::LIST:     	 	ss << "list";		break;
 
-    case ID::LSTRING:		ss << "lstring";	break;
-    case ID::LTSTRING:		ss << "ltstring";	break;
+  case ID::LSTRING:		ss << "lstring";	break;
+  case ID::LTSTRING:		ss << "ltstring";	break;
 
 	case ID::MAP:			ss << "map";		break;
 	case ID::MMAP:			ss << "mmap";		break;
@@ -590,7 +612,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::R:        	 	ss <<  "R";		break;
 	case ID::REGEXP:    	ss <<  "regexp";	break;
 
-    case ID::SEMAPHORE:		ss << "semaphore";	break;
+  case ID::SEMAPHORE:		ss << "semaphore";	break;
 	case ID::STACK:			ss << "stack"; 	break;
 	case ID::STRING:		ss << "string";	break;
 
@@ -687,7 +709,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::MUTABLE:   	ss <<  "mutable";	break;
 	case ID::PRIVATE:		ss << "private";	break;
 	case ID::PUBLIC:		ss << "public";	break;
-    case ID::PURE:
+  case ID::PURE:
 	case ID::THREAD_LOCAL:	ss << "thread_local"; break;
 
 	case ID::AS:        	ss << "as";		break;
@@ -695,9 +717,9 @@ void dumpToken( const char * f, int l, const Token & token )
 
 	case ID::BY:        	ss << "by";		break;
 
-    case ID::CLOSURE:		ss << "closure";	break;
+  case ID::CLOSURE:		ss << "closure";	break;
 
-    case ID::DISTINCT: 		ss << "distinct";	break;
+  case ID::DISTINCT: 		ss << "distinct";	break;
 	case ID::DSC:			ss << "dsc";		break;
 
 	case ID::FOREIGN:		ss << "foreign";	break;
@@ -716,19 +738,19 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::ORDER:			ss << "order";		break;
 	case ID::OUTER:			ss << "outer";		break;
 
-    case ID::PERCENT:   	ss << "percent";	break;
+  case ID::PERCENT:   	ss << "percent";	break;
 
 	case ID::RIGHT:     	ss <<  "right";	break;
 
-    case ID::TIES: 			ss << "ties";		break;
-    case ID::TOP:  			ss << "top";		break;
+  case ID::TIES: 			ss << "ties";		break;
+  case ID::TOP:  			ss << "top";		break;
 
-    case ID::UNIQUE:		ss << "unique";	break;
+  case ID::UNIQUE:		ss << "unique";	break;
 
-    case ID::VALUES:   		ss << "values";	break;
+  case ID::VALUES:   		ss << "values";	break;
 
 	case ID::WHERE:			ss << "where";		break;
-    case ID::WITH:       
+  case ID::WITH:       
 	case ID::FINAL_FUNC:	ss << "final-func";break;
 	case ID::IMPLICIT:		ss << "implicit";	break;
 	case ID::OVERRIDE:		ss << "override";	break;
@@ -741,8 +763,8 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::UNION_NAME:	ss << "union-name:" 	<< token.idLexium();break;
 	case ID::TYPE_NAME: 	ss << "type-name:" 	<< token.idLexium();break;
 
-    case ID::FUN_NAME:
-    case ID::SFUN_NAME:
+  case ID::FUN_NAME:
+  case ID::SFUN_NAME:
 	case ID::FUNCTION_NAME:	
 	case ID::SFUNCTION_NAME:ss << "func-name:" 	<< token.idLexium();break;
 
