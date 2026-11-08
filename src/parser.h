@@ -137,6 +137,7 @@ private:
 	bool parseIf( If ** );
 	bool parseNamespace( Namespace ** );
 	bool parsePureFunction( PureFuncDef ** );
+	bool parseRelation(  Relation ** );
 	bool parseReturn(  Return ** );
 	bool parseSwitch( Switch ** );
 	bool parseTry( Try ** );

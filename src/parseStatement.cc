@@ -307,6 +307,13 @@ PENTER
 			*statement = it;
 			break;
 		}
+		case ID::RELATION:
+		{
+			Relation * rel;
+			rc = parseRelation( &rel );
+			*statement = rel;
+			break;
+		}
 	
 		// pure function definitions
 		case ID::FUN:		// fun

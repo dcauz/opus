@@ -1,19 +1,25 @@
 
 i32 main( i32 argc, final string [] argv )
 {
-  relation Acct
+	class acct_h
   {
 		string name;
-		string address;
+		string? sin;
+		string? address;
 		i32		 account; 
-  };
+  }
+
+  relation acct = header acct_h
+									primary key name dsc, address asc
+									foreign key name = other.name
+									unique sin
+									unique account
+									save by column
+									source "/home/dcauz/opus/db/acct";
   
-	Acct	a;
-	
-	Acct na = select name, address from a;
+	mset<acct_h> na = select name, address from acct;
 
-	Acct da = select * from a where name ~ "D*";
-
+	set<acct_h> da = select distinct * from acct where name ~ "D*";
 
 	return 0;
 }

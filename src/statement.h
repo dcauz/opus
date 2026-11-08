@@ -306,6 +306,30 @@ private:
 	CType	ctype_;
 };
 
+class Relation: public TypeDef
+{
+public:
+	Relation( 
+		int s, 
+		int e, 
+		const std::string & n, 
+		std::vector<TemplateParam *>   * params, 
+		std::vector<Type *>   * bases,
+		Block * mbrs = nullptr ):
+			TypeDef(s,e,n,params,bases, mbrs)
+	{}
+
+	bool genCode( GenCodeContext & ) const final;
+	Type * semCheck( SemCheckContext & ) const final;
+
+	bool eqCompareTo( Type * ) const final;
+	bool compareTo( Type * ) const final;
+	bool assignableTo( Type * ) const final;
+
+private:
+	
+};
+
 class VarDef: public Definition, public Variable
 {
 public:

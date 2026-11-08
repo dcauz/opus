@@ -51,6 +51,7 @@ src/parseFor.cc \
 src/parseIf.cc \
 src/parseNamespace.cc \
 src/parsePureFunction.cc \
+src/parseRelation.cc \
 src/parseReturn.cc \
 src/parseSelect.cc \
 src/parseStatement.cc \

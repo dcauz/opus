@@ -1,0 +1,12 @@
+form Main
+{
+	h1 "hello world"
+	table
+	{
+	tr { th "Key" th "value" }
+	tr { td "aaa" td "two" }
+	tr { td "xxx" td "two" }
+	tr { td "yyy" td "two" }
+	tr { td "zzz" td "two" }
+	}
+}
