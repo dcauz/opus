@@ -52,7 +52,7 @@ PENTER
 	if( lval.id() != ID::SCOLON )
 	{
 
-		rc = parseVarDefOrExpr( lval, ET::SCOLON, &varDef, &expr1 );
+		rc = parseVarDefOrExpr( lval, ETC::SCOLON, &varDef, &expr1 );
 		if( !rc )
 			return false;
 	}
@@ -65,7 +65,7 @@ PENTER
 		// cases 3,4,7,8,11,12
 		if( lval.id() != ID::SCOLON )
 		{
-			rc = parseExpr( &expr2, ET::SCOLON, lval, 0, 0 );
+			rc = parseExpr( &expr2, ETC::SCOLON, STR::NOT_IN_SELECT, lval, 0, 0 );
 
 			if(!rc)
 				return false;
@@ -76,7 +76,7 @@ PENTER
 		// cases  2,4,6,8,10,12
 		if( lval.id() != ID::RPAREN )
 		{
-			rc = parseExpr( &expr3, ET::RPAREN, lval, 0, 0 );
+			rc = parseExpr( &expr3, ETC::RPAREN, STR::NOT_IN_SELECT, lval, 0, 0 );
 
 			if(!rc)
 				return false;
@@ -92,7 +92,7 @@ PENTER
 	{
 		Expr	* cExpr;
 		lex( lval, this );
-		rc = parseExpr( &cExpr, ET::RPAREN, lval, 0, 0 );
+		rc = parseExpr( &cExpr, ETC::RPAREN, STR::NOT_IN_SELECT, lval, 0, 0 );
 
 		if(!rc)
 			return false;

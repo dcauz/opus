@@ -20,7 +20,7 @@ PENTER
 	else
 	{
 		Expr * ex;
-		bool rc = parseExpr( &ex, ET::SCOLON, lval, 0, 0 );
+		bool rc = parseExpr( &ex, ETC::SCOLON, STR::NOT_IN_SELECT, lval, 0, 0 );
 
 		if( rc )
 		{

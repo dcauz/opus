@@ -399,6 +399,18 @@ public:
 	Type * semCheck( SemCheckContext & scc ) const final;
 };
 
+// expr ~ expr
+class RegExpMatch: public Binary
+{
+public:
+	RegExpMatch( unsigned short l, unsigned short c, Expr * lf, Expr * r ):Binary(l,c,lf,r) {}
+
+	const char * id() const final { return "Eq"; }
+
+	bool genCode( GenCodeContext & gcc ) const final;
+	Type * semCheck( SemCheckContext & scc ) const final;
+};
+
 // expr <=> expr
 class SpaceShip: public Binary
 {
@@ -1399,9 +1411,9 @@ public:
 		Top * top, 
 		std::vector<Column *> * cols, 
 		std::vector<std::string> * tables, 
-		Where   * where, 
-		GroupBy * groupBy, 
-		Having  * having );
+		Where   * where   = nullptr, 
+		GroupBy * groupBy = nullptr, 
+		Having  * having  = nullptr );
 
 	const char * id() const final { return "Select"; }
 

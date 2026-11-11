@@ -53,7 +53,7 @@ enum class ID : unsigned int
 
 	// 30
 	QUAL,		 		// ::
-  DEREF,			// * .
+	DEREF,			// * .
 	SLFT,				// <<
 	NOT   =33,	// !
 	SRGHT,		 	// >>
@@ -100,15 +100,17 @@ enum class ID : unsigned int
 	BXOR_ASS,	 	// ^=
 
 	// 70
+	BNOT  =70,	// ~
+
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
 	RBRACK=93,	// ]
-	BXOR   =94,	// ^^
+	BXOR  =94,	// ^^
 
 	LBRACE=123,	// {
 	BOR   =124,	// |
 	RBRACE=125,	// }
-	BNOT  =126,	// ~
+  RE_MATCH=126,// ~
 
 	///////////////////////////////////////
 	// Built in type names
@@ -174,38 +176,10 @@ enum class ID : unsigned int
 	BUILT_IN_TYPES_LAST,
 
 	///////////////////////////////////////
-	// SQL expression keywords
-	///////////////////////////////////////
-
-	AS,			// as
-	ASC,		// asc
-	BY,			// by
-	CLOSURE,
-	DISTINCT,	// distinct
-	DSC,  		// dsc
-	FOREIGN,	// foreign
-	FROM,			// from
-	GROUP,		// group
-	HAVING,		// having
-	INTO,			// into
-	JOIN,			// join
-	LEFT,			// left
-	ORDER,		// order
-	OUTER,		// outer
-	PERCENT,	// percent
-	RIGHT,		// right
-	TIES,			// ties
-	TOP,			// top
-	UNIQUE,		// unique
-	VALUES,		// values
-	WHERE,		// where
-	WITH,			// with
-
-	///////////////////////////////////////
 	// Function signature keywords
 	///////////////////////////////////////
 
-    FINAL_FUNC, // final
+	FINAL_FUNC, // final
 	IMPLICIT,	// implicit
 	OVERRIDE,	// override
 	NOEXCEPT,	// noexcept
@@ -255,42 +229,42 @@ enum class ID : unsigned int
 	CHAR_LIT,		// 'x'
 					//
 	DATETIME_LIT,	// d"YYYY-MM-DD:HH:MM:SS[:sssssssss]"
-	TIME_LIT,       // t"HH:MM:SS:sssssssss"
-	DATE_LIT,		// d"YYYY-MM-DD"
-    YEARS_LIT,      // 111Y
+	TIME_LIT,     // t"HH:MM:SS:sssssssss"
+	DATE_LIT,			// d"YYYY-MM-DD"
+	YEARS_LIT,    // 111Y
 	MONTHS_LIT,		// 10M
-	DAYS_LIT,       // 111D
-	HOURS_LIT,      // 111h
-	MINS_LIT,       // 111m
-	SECS_LIT,       // 111.123s
+	DAYS_LIT,     // 111D
+	HOURS_LIT,    // 111h
+	MINS_LIT,     // 111m
+	SECS_LIT,     // 111.123s
 
 	F32_LIT,
 	F64_LIT,
 	F80_LIT,
 
-	I32_LIT,        // 1111i32 or i
-	I64_LIT,        // 1111i64
-	I128_LIT,       // 1111i128
+	I32_LIT,      // 1111i32 or i
+	I64_LIT,      // 1111i64
+	I128_LIT,     // 1111i128
 
-	U32_LIT,        // 111u32 or u		or 01234567				octal
-	U64_LIT,        // 111u64
-	U128_LIT,       // 1111u128
+	U32_LIT,      // 111u32 or u		or 01234567				octal
+	U64_LIT,      // 111u64
+	U128_LIT,     // 1111u128
 
-	N_LIT,          // 1212N
+	N_LIT,        // 1212N
 
-	LSTRING_LIT,    // l"sss"
-	LTSTRING_LIT,   // L"aaa"
-	LSSTRING_LIT,   // l"sss"
-	LTSSTRING_LIT,  // L"aaa"
-	STRING_LIT,     // "ssss"
-	SSTRING_LIT,    // "ssss"
+	LSTRING_LIT,  // l"sss"
+	LTSTRING_LIT, // L"aaa"
+	LSSTRING_LIT, // l"sss"
+	LTSSTRING_LIT,// L"aaa"
+	STRING_LIT,   // "ssss"
+	SSTRING_LIT,  // "ssss"
 
-	REGEXP_LIT,     // r"s*"
-	SREGEXP_LIT,    // r"s*"
+	REGEXP_LIT,   // r"s*"
+	SREGEXP_LIT,  // r"s*"
 
-	SEQ_LIT,		// [ e1, e2, ... ]
-	MSET_LIT,		// { e1, e2, ... }
-	MMAP_LIT,		// { k1:v1, k2:v2, ... }
+	SEQ_LIT,			// [ e1, e2, ... ]
+	MSET_LIT,			// { e1, e2, ... }
+	MMAP_LIT,			// { k1:v1, k2:v2, ... }
 
 	///////////////////////////////////////
 	// Type constructors
@@ -570,19 +544,26 @@ struct Token
 	bool is_distinct() const	{ return id_ == ID::SID && strncmp( shortLex_, "distinct",8 ) == 0; }
 	bool is_dsc() const				{ return id_ == ID::SID && strncmp( shortLex_, "dsc", 		3 ) == 0; }
 	bool is_extend() const 		{ return id_ == ID::SID && strncmp( shortLex_, "extend", 	6 ) == 0; }
+	bool is_fetch() const			{ return id_ == ID::SID && strncmp( shortLex_, "fetch", 	5 ) == 0; }
+	bool is_first() const			{ return id_ == ID::SID && strncmp( shortLex_, "first", 	5 ) == 0; }
 	bool is_foreign() const		{ return id_ == ID::SID && strncmp( shortLex_, "foreign", 7 ) == 0; }
 	bool is_from() const			{ return id_ == ID::SID && strncmp( shortLex_, "from", 		4 ) == 0; }
+	bool is_full() const			{ return id_ == ID::SID && strncmp( shortLex_, "full", 		4 ) == 0; }
 	bool is_group() const			{ return id_ == ID::SID && strncmp( shortLex_, "group", 	5 ) == 0; }
 	bool is_having() const		{ return id_ == ID::SID && strncmp( shortLex_, "having", 	6 ) == 0; }
 	bool is_header() const		{ return id_ == ID::SID && strncmp( shortLex_, "header", 	6 ) == 0; }
 	bool is_implement() const	{ return id_ == ID::SID && strncmp( shortLex_, "implement",9 ) == 0; }
 	bool is_implicit() const	{ return id_ == ID::SID && strncmp( shortLex_, "implicit",8 ) == 0; }
 	bool is_index() const			{ return id_ == ID::SID && strncmp( shortLex_, "index", 	5 ) == 0; }
+	bool is_inner() const			{ return id_ == ID::SID && strncmp( shortLex_, "inner", 	5 ) == 0; }
 	bool is_into() const			{ return id_ == ID::SID && strncmp( shortLex_, "into", 		4 ) == 0; }
 	bool is_join() const			{ return id_ == ID::SID && strncmp( shortLex_, "join", 		4 ) == 0; }
 	bool is_key() const				{ return id_ == ID::SID && strncmp( shortLex_, "key", 		3 ) == 0; }
 	bool is_left() const			{ return id_ == ID::SID && strncmp( shortLex_, "left", 		4 ) == 0; }
 	bool is_noexcept() const	{ return id_ == ID::SID && strncmp( shortLex_, "noexcept",8 ) == 0; }
+	bool is_offset() const		{ return id_ == ID::SID && strncmp( shortLex_, "offset",	6 ) == 0; }
+	bool is_on() const				{ return id_ == ID::SID && strncmp( shortLex_, "on", 			2 ) == 0; }
+	bool is_only() const			{ return id_ == ID::SID && strncmp( shortLex_, "only", 		4 ) == 0; }
 	bool is_order() const			{ return id_ == ID::SID && strncmp( shortLex_, "order", 	5 ) == 0; }
 	bool is_outer() const			{ return id_ == ID::SID && strncmp( shortLex_, "outer", 	5 ) == 0; }
 	bool is_override() const	{ return id_ == ID::SID && strncmp( shortLex_, "override",8 ) == 0; }
@@ -590,6 +571,7 @@ struct Token
 	bool is_primary() const		{ return id_ == ID::SID && strncmp( shortLex_, "primary", 7 ) == 0; }
 	bool is_right() const			{ return id_ == ID::SID && strncmp( shortLex_, "right", 	5 ) == 0; }
 	bool is_row() const				{ return id_ == ID::SID && strncmp( shortLex_, "row", 		3 ) == 0; }
+	bool is_rows() const			{ return id_ == ID::SID && strncmp( shortLex_, "rows", 		4 ) == 0; }
 	bool is_ties() const			{ return id_ == ID::SID && strncmp( shortLex_, "ties", 		4 ) == 0; }
 	bool is_save() const			{ return id_ == ID::SID && strncmp( shortLex_, "save", 		4 ) == 0; }
 	bool is_source() const		{ return id_ == ID::SID && strncmp( shortLex_, "source", 	6 ) == 0; }

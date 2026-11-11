@@ -136,6 +136,15 @@ dumpToken( __FILE__, __LINE__, token );
 				ptr = token.id();
 				state = ptrSeen;
 			}
+			else if( token.id() == ID::LT )
+			{
+				std::vector<TemplateArg *>	* args;
+				if(!parseTypeArgs( &args, true ))
+				{
+					dumpToken( __FILE__, __LINE__, token );
+					TODO
+				}
+			}
 			else
 			{
 				dumpToken( __FILE__, __LINE__, token );
@@ -162,7 +171,7 @@ dumpToken( __FILE__, __LINE__, token );
 			else
 			{
 				// get dims
-				if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, 0, 0 ))
+				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACK, STR::NOT_IN_SELECT, token, 0, 0 ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -235,7 +244,7 @@ dumpToken( __FILE__, __LINE__, token );
 		case assSeen:
 		{
  			Expr * expr;
-			if( !parseExpr( &expr, ET::SCOLON, token, 0, 0 ) || token.id() != ID::SCOLON )
+			if( !parseExpr( &expr, ETC::SCOLON, STR::NOT_IN_SELECT, token, 0, 0 ) || token.id() != ID::SCOLON )
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO

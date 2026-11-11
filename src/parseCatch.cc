@@ -27,7 +27,7 @@ PENTER
 	VarDef	* varDef = nullptr;
 	if( lval.id() != ID::DOT_DOT_DOT )
 	{
-		bool rc = parseVariableDef( lval, ET::RPAREN, &varDef );
+		bool rc = parseVariableDef( lval, ETC::RPAREN, &varDef );
 		if(!rc)
 			return false;
 		if(lval.id() != ID::RPAREN)

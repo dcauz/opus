@@ -2,7 +2,7 @@
 #include "lex.h"
 
 
-bool Parser::parseVariableDef( Token & token, ET et, VarDef ** varDef )
+bool Parser::parseVariableDef( Token & token, ETC et, VarDef ** varDef )
 {
 PENTER
 	enum State
@@ -79,7 +79,7 @@ PENTER
 	  {
 	    Expr * expr;
 
-		if(!parseExpr( &expr, et, token, 0, 0 ))
+		if(!parseExpr( &expr, et, STR::NOT_IN_SELECT, token, 0, 0 ))
           TODO
 		else
 		{

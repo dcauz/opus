@@ -775,7 +775,7 @@ void nextToken( Token & tok, Parser * context )
       }
     }
 
-    // ~   BNOT
+    // ~   BNOT (aka RE_MATCH)
     // ~=  BNOT_ASS
     case '~': 
     {
@@ -788,7 +788,7 @@ void nextToken( Token & tok, Parser * context )
       else
       {
         context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::BNOT );
+        tok.set( context->lineNo, context->columnNo, ID::RE_MATCH );
         return;
       }
     }
@@ -1300,43 +1300,6 @@ void nextToken( Token & tok, Parser * context )
           tok.set( context->lineNo, context->columnNo, keyWords[i].id );
           if( tok.id() == ID::SELECT )
             context->inSelect = true;
-          return;
-        }
-      }
-
-      if( context->inSelect )
-      {
-        static const std::map<std::string, ID > sqlReservedWords =
-        {
-          { "as",    ID::AS },
-          { "asc",  ID::ASC },
-          { "by",    ID::BY },
-          { "closure",ID::CLOSURE },
-          { "distinct",ID::DISTINCT },
-          { "dsc",  ID::DSC },
-          { "foreign",ID::FOREIGN },
-          { "from",   ID::FROM },
-          { "group",   ID::GROUP },
-          { "having", ID::HAVING },
-          { "into",   ID::INTO },
-          { "join",   ID::JOIN },
-          { "left",   ID::LEFT },
-          { "order",   ID::ORDER },
-          { "outer",   ID::OUTER },
-          { "percent",ID::PERCENT },
-          { "right",   ID::RIGHT },
-          { "ties",   ID::TIES },
-          { "top",   ID::TOP },
-          { "unique", ID::UNIQUE },
-          { "values", ID::VALUES },
-          { "where",   ID::WHERE },
-          { "with",   ID::WITH },
-        };
-
-        auto it = sqlReservedWords.find( lexium );
-        if( it != sqlReservedWords.end() )
-        {
-          tok.set( context->lineNo, context->columnNo, it->second );
           return;
         }
       }

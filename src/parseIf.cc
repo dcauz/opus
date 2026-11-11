@@ -32,7 +32,7 @@ PENTER
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
-	bool rc = parseVarDefOrExpr( lval, ET::RPAREN, &varDef, &expr );
+	bool rc = parseVarDefOrExpr( lval, ETC::RPAREN, &varDef, &expr );
 	if( !rc )
 	{
 		return false;

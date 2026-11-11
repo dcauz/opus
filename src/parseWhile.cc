@@ -13,7 +13,7 @@ PENTER
     Expr  * expr = nullptr;
 
     lex( token, this );
-    if( parseVarDefOrExpr( token, ET::RPAREN, &vDef, &expr ))
+    if( parseVarDefOrExpr( token, ETC::RPAREN, &vDef, &expr ))
     {
 	  Statement * stmt;
 	  if(parseStatement( &stmt ))

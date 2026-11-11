@@ -95,7 +95,7 @@ PENTER
 			if( lval.id() == ID::ASSIGN )
 			{
 				Token tt;
-				rc = parseExpr( &expr, ET::COMMA_OR_RPAREN, tt, 0, 0 );
+				rc = parseExpr( &expr, ETC::COMMA_OR_RPAREN, STR::NOT_IN_SELECT, tt, 0, 0 );
 
 				if(!rc)
 					return false;

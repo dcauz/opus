@@ -412,6 +412,12 @@ Type * Eq::semCheck( SemCheckContext & ) const
   return errorType;
 }
 
+Type * RegExpMatch::semCheck( SemCheckContext & ) const 
+{
+  TODO // semCheck
+  return errorType;
+}
+
 Type * GreaterEq::semCheck( SemCheckContext & ) const 
 {
   TODO // semCheck
@@ -852,6 +858,12 @@ bool NotEq::genCode( GenCodeContext & ) const
 }
 
 bool Eq::genCode( GenCodeContext & ) const 
+{
+  TODO // genCode
+  return false;
+}
+
+bool RegExpMatch::genCode( GenCodeContext & ) const 
 {
   TODO // genCode
   return false;

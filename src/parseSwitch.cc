@@ -24,7 +24,7 @@ PENTER
 	VarDef * varDef;
 	Expr * expr;
 	lex( val, this );
-	bool rc = parseVarDefOrExpr( val, ET::RPAREN, &varDef, &expr );
+	bool rc = parseVarDefOrExpr( val, ETC::RPAREN, &varDef, &expr );
 
 	if( !rc )
 		return false;

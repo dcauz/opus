@@ -85,15 +85,10 @@ public:
 
 	Token lookahead;
 
-private:
-	Program		program_;
-	SymbolTable	globalSymTbl_;
-
-	unsigned	declarators_;
-	int		selectNests_;
-
-	enum class ET
+	// Expression terminating characters
+	enum class ETC
 	{
+		COMMA                    = 0, // e1 , e2 , ...
 		COMMA_OR_RBRACE          = 1, // { e1 , ... }
 		COMMA_OR_COLON_OR_RBRACE = 2, // { i1:e1 , ... }
 		COMMA_OR_RBRACK          = 3, // [ e1, ... ]
@@ -109,18 +104,46 @@ private:
 		SCOLON_OR_RPAREN         = 10,// ... ; or ... )
 	};
 
+	// Select expression terminating reserved words
+	enum class STR
+	{
+		NOT_IN_SELECT                         = 1,
+		FROM																	= 2,
+		WHERE_GROUP_HAVING_ORDER_OFFSET_FETCH = 3,
+		GROUP_HAVING_ORDER_OFFSET_FETCH       = 4,
+		HAVING_ORDER_OFFSET_FETCH             = 5,
+		ORDER_OFFSET_FETCH                    = 6,
+		OFFSET_FETCH                          = 7,
+		FETCH                                 = 8,
+	};
+
+private:
+	Program		program_;
+	SymbolTable	globalSymTbl_;
+
+	unsigned	declarators_;
+	int		selectNests_;
+
 	void parserError( const char * );
 
 	bool parseArgs( Token &, std::vector<Arg *> ** );
-	bool parseExpr( Expr ** expr, ET et, Token &, int, int );
+	bool parseExpr( Expr ** expr, ETC et, STR set, Token &, int, int );
 	bool parseExprTypes( std::vector<TypeArg *> & );
-	bool parseSelect( Select ** );
+	bool parseSelect( Select **, ETC et );
+	bool parseIdMapping( std::map<std::string,std::string> & mapping );
+	bool parseColumnList( Token & token, Select * select );
+	bool parseTableId( Token & token, Select * select, bool onTerm );
+	bool parseGroup_columns( Token & token, Select * select );
+	bool parseGroupFilterCondition( Token & token, Select * select );
+	bool parseSortColumns( Token & token, Select * select );
+	bool parseGroupColumns( Token & token, Select * select );
+
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );
 	bool parseTypeArgs( std::vector<TemplateArg *> **, bool );
 	bool parseTypeParams( std::vector<TemplateParam *> ** );
-	bool parseVarDefOrExpr( Token & , ET, VarDef ** variableDef, Expr ** initExpr );
-	bool parseVariableDef( Token & token, ET et, VarDef ** variableDef );
+	bool parseVarDefOrExpr( Token & , ETC, VarDef ** variableDef, Expr ** initExpr );
+	bool parseVariableDef( Token & token, ETC et, VarDef ** variableDef );
 
 	bool parseAlias( Alias ** );
 	bool parseBlock( Block ** );

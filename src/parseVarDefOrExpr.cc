@@ -1,6 +1,6 @@
 #include "parser.h"
 
-bool Parser::parseVarDefOrExpr( Token & token, ET et, VarDef ** varDef, Expr ** expr )
+bool Parser::parseVarDefOrExpr( Token & token, ETC et, VarDef ** varDef, Expr ** expr )
 {
 PENTER
 
@@ -52,7 +52,7 @@ PENTER
       {
 		lookahead = std::move(token);
 
-	    if(!parseExpr( expr, et, first, 0, 0 ))
+	    if(!parseExpr( expr, et, STR::NOT_IN_SELECT, first, 0, 0 ))
 		{
           dumpToken( __FILE__, __LINE__, token );
           TODO

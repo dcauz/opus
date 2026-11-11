@@ -137,6 +137,9 @@ i32 main( i32 argc, final string [] argv )
 	x = (y > 0) ? a + 2: *ip;
 	x = (y > 0) ? a + 2: 5 * *ip;
 
+	regex re = r"a*b";
+	bool ree = "aaaaab" ~ re;
+
 	return 0;
 }
 

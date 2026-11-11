@@ -413,10 +413,10 @@ void dumpToken( const char * f, int l, const Token & token )
 		ss << "unknown " << static_cast<unsigned>(token.id());    
 		break;
 
-	case ID::NIL:           ss << "NIL"; break;
-	case ID::ERROR:         ss << "ERROR"; break;
+	case ID::NIL:         ss << "NIL"; break;
+	case ID::ERROR:       ss << "ERROR"; break;
 
-	case ID::NOT:    		ss << "!";	break;
+	case ID::NOT:    			ss << "!";	break;
 	case ID::WEAK:    		ss << "#";	break;
 	case ID::MOD:     		ss << "%";	break;
 	case ID::BAND:    		ss << "&";	break;
@@ -440,59 +440,60 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::RBRACK:  		ss << "]";	break;
 	case ID::BXOR:     		ss << "^";	break;
 	case ID::XOR:     		ss << "^^";	break;
-	case ID::LBRACE: 		ss << "{";	break;
-	case ID::BOR:    		ss << "|";	break;
-	case ID::ABS:           ss << "abs";break;
-	case ID::RBRACE: 		ss << "}";	break;
-	case ID::BNOT:   		ss << "~";	break;
+	case ID::LBRACE: 			ss << "{";	break;
+	case ID::BOR:    			ss << "|";	break;
+	case ID::ABS:         ss << "abs";break;
+	case ID::RBRACE: 			ss << "}";	break;
+	case ID::BNOT:   			ss << "~ .";	break;
 
 	case ID::ADD_ASS: 		ss << "+=";	break;
-	case ID::AND:			ss << "&&";   	break;
-	case ID::AND_ASS:		ss << "&&=";  	break;
+	case ID::AND:					ss << "&&";   	break;
+	case ID::AND_ASS:			ss << "&&=";  	break;
   case ID::CRS_PROD:		ss << "[*]";	break;
-	case ID::DEC: 			ss << "--";   	break;
+	case ID::DEC: 				ss << "--";   	break;
 	case ID::DIV_ASS: 		ss << "/=";   	break;
 	case ID::DOT_ASK: 		ss << ".*";	break;
 	case ID::DOT_DOT: 		ss << "..";	break;
 	case ID::DOT_DOT_DOT:	ss << "...";	break;
   case ID::DOT_PROD:  	ss << "[.]" ;	break;
-	case ID::EQ: 			ss << "==";	break;
-	case ID::EXP: 			ss << "**";	break;
+	case ID::EQ: 					ss << "==";	break;
+	case ID::RE_MATCH: 		ss << "~";	break;
+	case ID::EXP: 				ss << "**";	break;
 	case ID::EXP_ASS:   	ss << "**=";	break;
 	case ID::FACTORIAL: 	ss << ".!";	break;
-	case ID::GE: 			ss << ">=";	break;
-	case ID::INC: 			ss << "++";	break;
-	case ID::LE: 			ss << "<=";	break;
+	case ID::GE: 					ss << ">=";	break;
+	case ID::INC: 				ss << "++";	break;
+	case ID::LE: 					ss << "<=";	break;
   case ID::M_DIV:      	ss << "[/]";	break;
 	case ID::MOD_ASS: 		ss << "%=";	break;
 	case ID::MUL_ASS: 		ss << "*=";	break;
   case ID::M_EXP:      	ss << "[**]";	break;
   case ID::MPTR:       	ss << "->*";	break;
-	case ID::NE: 			ss << "!=";	break;
-	case ID::OR: 			ss << "||";	break;
+	case ID::NE: 					ss << "!=";	break;
+	case ID::OR: 					ss << "||";	break;
 	case ID::BOR_ASS: 		ss << "|=";	break;
-	case ID::OR_ASS: 		ss << "||=";	break;
+	case ID::OR_ASS: 			ss << "||=";	break;
   case ID::PARAM_ASS:  	ss << ":=";	break;
 	case ID::POST_DEC: 		ss << ".--";	break;
 	case ID::POST_INC:		ss << ".++";	break;
   case ID::PTR:        	ss << "->";	break;
 	case ID::DEREF:      	ss << "*.";	break;
   case ID::QUAL:       	ss << "::";	break;
-	case ID::SLFT:			ss << "<<";	break;
+	case ID::SLFT:				ss << "<<";	break;
 	case ID::SLFT_ASS:		ss << "<<=";	break;
-	case ID::SRGHT:			ss << ">>";	break;
+	case ID::SRGHT:				ss << ">>";	break;
 	case ID::SRGHT_ASS:		ss << ">>=";	break;
   case ID::SS:         	ss << "<=>";	break;
 	case ID::SUB_ASS: 		ss << "-=";	break;
-  case ID::BNOT_ASS:    	ss << "~=";	break;
-	case ID::UNIARY_MINUS:	ss << "-.";	break;
+  case ID::BNOT_ASS:   	ss << "~=";	break;
+	case ID::UNIARY_MINUS:ss << "-.";	break;
 	case ID::UNIARY_PLUS:	ss << "+.";	break;
 	case ID::BXOR_ASS:		ss << "^=";	break;
-	case ID::XOR_ASS:		ss << "^^=";	break;
+	case ID::XOR_ASS:			ss << "^^=";	break;
 
-	case ID::AUTO:			ss << "auto";		break;
+	case ID::AUTO:				ss << "auto";		break;
 
-	case ID::BOOL:			ss << "bool";		break;
+	case ID::BOOL:				ss << "bool";		break;
 
 	case ID::C:        		ss << "C" ;		break;
 
@@ -505,23 +506,23 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::DQUEUE:    	ss << "dqueue" ;	break;
 	case ID::DURATION:  	ss << "duration" ;	break;
 
-	case ID::F32:   		ss << "f32";	break;
-	case ID::F64:   		ss << "f64";	break;
-	case ID::F80:   		ss << "f80";	break;
+	case ID::F32:   			ss << "f32";	break;
+	case ID::F64:   			ss << "f64";	break;
+	case ID::F80:   			ss << "f80";	break;
 
-  case ID::GRAPH:			ss << "graph";		break;
-  case ID::HEAP:			ss << "heap";		break;
+  case ID::GRAPH:				ss << "graph";		break;
+  case ID::HEAP:				ss << "heap";		break;
 
-	case ID::I0:			ss << "i0"; 	    break;
-	case ID::I1:			ss << "i1"; 	    break;
-	case ID::I2:			ss << "i2"; 	    break;
-	case ID::I3:			ss << "i3"; 	    break;
-	case ID::I4:			ss << "i4"; 	    break;
-	case ID::I5:			ss << "i5"; 	    break;
-	case ID::I6:			ss << "i6"; 	    break;
-	case ID::I7:			ss << "i7"; 	    break;
-	case ID::I8:			ss << "i8"; 	    break;
-	case ID::I9:			ss << "i9"; 	    break;
+	case ID::I0:					ss << "i0"; 	    break;
+	case ID::I1:					ss << "i1"; 	    break;
+	case ID::I2:					ss << "i2"; 	    break;
+	case ID::I3:					ss << "i3"; 	    break;
+	case ID::I4:					ss << "i4"; 	    break;
+	case ID::I5:					ss << "i5"; 	    break;
+	case ID::I6:					ss << "i6"; 	    break;
+	case ID::I7:					ss << "i7"; 	    break;
+	case ID::I8:					ss << "i8"; 	    break;
+	case ID::I9:					ss << "i9"; 	    break;
 
 	case ID::I10:			ss << "i10"; 	    break;
 	case ID::I11:			ss << "i11"; 	    break;
@@ -712,45 +713,6 @@ void dumpToken( const char * f, int l, const Token & token )
   case ID::PURE:
 	case ID::THREAD_LOCAL:	ss << "thread_local"; break;
 
-	case ID::AS:        	ss << "as";		break;
-	case ID::ASC:       	ss << "asc";		break;
-
-	case ID::BY:        	ss << "by";		break;
-
-  case ID::CLOSURE:		ss << "closure";	break;
-
-  case ID::DISTINCT: 		ss << "distinct";	break;
-	case ID::DSC:			ss << "dsc";		break;
-
-	case ID::FOREIGN:		ss << "foreign";	break;
-	case ID::FROM:			ss << "from";		break;
-
-	case ID::GROUP:			ss << "group";		break;
-
-	case ID::HAVING:		ss << "having";	break;
-
-	case ID::INTO:			ss << "into"  ;	break;      
-
-	case ID::JOIN:      	ss << "join";		break;
-
-	case ID::LEFT:      	ss << "left";		break;
-
-	case ID::ORDER:			ss << "order";		break;
-	case ID::OUTER:			ss << "outer";		break;
-
-  case ID::PERCENT:   	ss << "percent";	break;
-
-	case ID::RIGHT:     	ss <<  "right";	break;
-
-  case ID::TIES: 			ss << "ties";		break;
-  case ID::TOP:  			ss << "top";		break;
-
-  case ID::UNIQUE:		ss << "unique";	break;
-
-  case ID::VALUES:   		ss << "values";	break;
-
-	case ID::WHERE:			ss << "where";		break;
-  case ID::WITH:       
 	case ID::FINAL_FUNC:	ss << "final-func";break;
 	case ID::IMPLICIT:		ss << "implicit";	break;
 	case ID::OVERRIDE:		ss << "override";	break;

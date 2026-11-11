@@ -1,4 +1,3 @@
-
 #include "parser.h"
 #include "float.h"
 #include "complex.h"
@@ -85,7 +84,8 @@ static std::map<ID, Operator> ops =
 	{ ID::GE,          {Assoc::NON,   9 }}, // >=    Greater than or equal to
 
 	{ ID::EQ,          {Assoc::LEFT,  10}}, // ==    Equal to
-	{ ID::NE,          {Assoc::RIGHT, 10}}, // !=    Not equal to
+	{ ID::NE,          {Assoc::LEFT,  10}}, // !=    Not equal to
+	{ ID::RE_MATCH,    {Assoc::NON,   10}}, // ~     regexp match
 
 	{ ID::BAND,        {Assoc::LEFT,  11}}, // &     Binary and
 
@@ -427,6 +427,7 @@ static Expr * createBinOpExpr( const Token & token, Expr * left, Expr * right )
 	case ID::DOT_PROD:  return new DotProd( token.line(), token.column(), left, right );
 
 	case ID::EQ:        return new Eq( token.line(), token.column(), left, right );
+	case ID::RE_MATCH:  return new RegExpMatch( token.line(), token.column(), left, right );
 	case ID::EXP:       return new Exponent( token.line(), token.column(), left, right );
 	case ID::EXP_ASS:   return new PowAssign( token.line(), token.column(), left, right );
 
@@ -498,10 +499,10 @@ static inline void mapPrefixOp( Token & in )
 	case ID::MUL:     in.id(ID::DEREF);       break;
 	case ID::ADD:     in.id(ID::UNIARY_PLUS); break;
 	case ID::SUB:     in.id(ID::UNIARY_MINUS);break;
+	case ID::RE_MATCH:in.id(ID::BNOT);        break;
 	case ID::DEC:     break;
 	case ID::INC:     break;
 	case ID::NOT:     break;
-	case ID::BNOT:    break;
 	case ID::IS_VOID: break;
 	case ID::DELETE:  break;
 	case ID::SIZEOF:  break;
@@ -572,7 +573,6 @@ static bool isBinaryOp( ID id )
 		ID::DOT_DOT,
 		ID::LT,
 		ID::GT,
-		ID::BNOT,
 		ID::XOR,
 		ID::BXOR,
 		ID::BAND,
@@ -601,6 +601,7 @@ static bool isBinaryOp( ID id )
 		ID::GE,
 		ID::SS,
 		ID::EQ,
+		ID::RE_MATCH,
 		ID::NE,
 		ID::SS,
 		ID::AND,
@@ -634,8 +635,8 @@ inline bool reduceAndPop( Parser * context, Expr ** expr, int initOpStack, int i
 bool Parser::reduce( int initOpStack, int initExprStack, ID next )
 {
 //PENTER
-printOpStack( opStack );
-printExprStack( exprStack );
+//printOpStack( opStack );
+//printExprStack( exprStack );
 	while((int)opStack.size() > initOpStack )
 	{
 		const Token op = opStack.top();
@@ -752,6 +753,37 @@ static const char * st2str( State s )
 	}
 }
 
+inline bool isTerminatingReservedWord(  const std::string & lex, Parser::STR str )
+{
+	if( str == Parser::STR::NOT_IN_SELECT )
+		return false;
+
+	if( lex == "from" && str == Parser::STR::FROM )
+		return true;
+	if( lex == "fetch" )
+		return true;
+	if( str == Parser::STR::FETCH )
+		return false;
+	if( lex == "offset" )
+		return true;
+	if( str == Parser::STR::OFFSET_FETCH )
+		return false;
+	if( lex == "order" )
+		return true;
+	if( str == Parser::STR::ORDER_OFFSET_FETCH )
+		return false;
+	if( lex == "having" )
+		return true;
+	if( str == Parser::STR::HAVING_ORDER_OFFSET_FETCH )
+		return false;
+	if( lex == "group" )
+		return true;
+	if( str == Parser::STR::GROUP_HAVING_ORDER_OFFSET_FETCH )
+		return false;
+
+	return lex == "where";	
+}
+
 // Expression terminators:
 //
 // { => , }
@@ -760,7 +792,7 @@ static const char * st2str( State s )
 // | => |
 // otherwise  ;
 // 
-bool Parser::parseExpr( Expr ** expr, ET et, Token & token, int initOpStack, int initExprStack )
+bool Parser::parseExpr( Expr ** expr, ETC et, STR str, Token & token, int initOpStack, int initExprStack )
 {
 PENTER
 	std::vector<Expr *>  seq;
@@ -769,8 +801,8 @@ PENTER
 
 	while(true)
 	{
-printf( "\n%s:%d START state %s opS size %d exS size %d et %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et );
-dumpToken( __FILE__, __LINE__, token );
+//printf( "\n%s:%d START state %s opS size %d exS size %d et %d str %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et, (int)str );
+//dumpToken( __FILE__, __LINE__, token );
 		switch( state )
 		{
 		default:
@@ -793,6 +825,20 @@ dumpToken( __FILE__, __LINE__, token );
 				Expr * name = new Name( token.line(), token.column(),  token.str() );
 				exprStack.push(name);
 				state = valueSeen;
+			}
+			else if( token.id() == ID::SELECT )
+			{
+				Select * select;
+				if(!parseSelect( &select, et ))
+				{
+					dumpToken( __FILE__, __LINE__, token );
+					TODO
+				}
+				else
+				{
+					exprStack.push(select);
+					state = valueSeen;
+				}
 			}
 			else if( token.id() == ID::FUNCTION_NAME )
 			{
@@ -835,7 +881,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RPAREN )
 			{
-				if( et != ET::RPAREN && et != ET::COMMA_OR_RPAREN )
+				if( et != ETC::RPAREN && et != ETC::COMMA_OR_RPAREN )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -859,7 +905,7 @@ dumpToken( __FILE__, __LINE__, token );
 					Expr * ex;
 					lex(token, this );  
 
-					if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -897,7 +943,7 @@ dumpToken( __FILE__, __LINE__, token );
 		{
 			// .. , ... ]
 			Expr * ex;
-			if(!parseExpr( &ex, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( &ex, ETC::COMMA_OR_RBRACK, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
@@ -923,7 +969,7 @@ dumpToken( __FILE__, __LINE__, token );
 		{
 			// .. , ... }
 			Expr * ex;
-			if( !parseExpr( &ex, ET::COMMA_OR_COLON_OR_RBRACE, token, opStack.size(), exprStack.size() ) )
+			if( !parseExpr( &ex, ETC::COMMA_OR_COLON_OR_RBRACE, str, token, opStack.size(), exprStack.size() ) )
 			{
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return false;
@@ -1028,9 +1074,15 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 		case valueSeen:
 		{
-			if( token.id() == ID::SCOLON)
+			if( token.isId() && isTerminatingReservedWord(  token.idLexium(), str ))
 			{
-				if( et != ET::SCOLON && et != ET::SCOLON_OR_RPAREN )
+				bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
+				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
+				return rc;
+			}
+			else if( token.id() == ID::SCOLON)
+			{
+				if( et != ETC::SCOLON && et != ETC::SCOLON_OR_RPAREN )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1042,10 +1094,11 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::COMMA)
 			{
-				if( et != ET::COMMA_OR_RBRACE && 
-					( et != ET::COMMA_OR_RBRACK ) && 
-					( et != ET::COMMA_OR_RPAREN ) && 
-					( et != ET::COMMA_OR_COLON_OR_RBRACE ) )
+				if( ( et != ETC::COMMA ) &&
+						( et != ETC::COMMA_OR_RBRACE ) && 
+						( et != ETC::COMMA_OR_RBRACK ) && 
+						( et != ETC::COMMA_OR_RPAREN ) && 
+						( et != ETC::COMMA_OR_COLON_OR_RBRACE ) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1058,7 +1111,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RBRACK)
 			{
-				if( et != ET::COMMA_OR_RBRACK )
+				if( et != ETC::COMMA_OR_RBRACK )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1070,7 +1123,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RPAREN)
 			{
-				if( et != ET::COMMA_OR_RPAREN && et != ET::RPAREN )
+				if( et != ETC::COMMA_OR_RPAREN && et != ETC::RPAREN )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1080,7 +1133,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RBRACE)
 			{
-				if( et != ET::COMMA_OR_RBRACE && et != ET::COMMA_OR_COLON_OR_RBRACE )
+				if( et != ETC::COMMA_OR_RBRACE && et != ETC::COMMA_OR_COLON_OR_RBRACE )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1092,13 +1145,13 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::COLON )
 			{
-				if( et != ET::COLON && et != ET::COMMA_OR_COLON_OR_RBRACE )
+				if( et != ETC::COLON && et != ETC::COMMA_OR_COLON_OR_RBRACE )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
 				}
 
-				if( et == ET::COLON )
+				if( et == ETC::COLON )
 				{
 					bool rc = reduce( initOpStack, initExprStack, ID::COLON );
 					*expr = exprStack.top();
@@ -1109,7 +1162,7 @@ dumpToken( __FILE__, __LINE__, token );
 				{
 					Expr * value;
 					lex(token, this );  
-					if(!parseExpr( &value, ET::COMMA_OR_RBRACE, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &value, ETC::COMMA_OR_RBRACE, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -1127,7 +1180,7 @@ dumpToken( __FILE__, __LINE__, token );
 				{
 					Expr * ex;
 					lex(token, this );  
-					if(!parseExpr( &ex, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -1153,11 +1206,6 @@ dumpToken( __FILE__, __LINE__, token );
 					}
 				}
 			}
-			else if( token.id() == ID::BNOT )
-			{
-				dumpToken( __FILE__, __LINE__, token );
-				TODO
-			}
 			else if( token.id() == ID::LBRACK)
 			{
 				opStack.push(token);
@@ -1165,7 +1213,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::BOR )
 			{
-				if( et == ET::BOR )
+				if( et == ETC::BOR )
 				{
 					bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 					assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1194,7 +1242,7 @@ dumpToken( __FILE__, __LINE__, token );
 			else if( isBinaryOp( token.id() ) )
 			{
 				// This is a special case of an expression in a template arg
-				if( token.id() == ID::GT && et == ET::COMMA_OR_GT )
+				if( token.id() == ID::GT && et == ETC::COMMA_OR_GT )
 				{
 					if(!reduce( initOpStack, initExprStack, token.id() ))
 					{
@@ -1253,7 +1301,7 @@ dumpToken( __FILE__, __LINE__, token );
 		{
 			if( token.id() == ID::SCOLON)
 			{
-				if( et != ET::SCOLON )
+				if( et != ETC::SCOLON )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1265,7 +1313,10 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::COMMA)
 			{
-				if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+				if( ( et != ETC::COMMA ) && 
+						( et != ETC::COMMA_OR_RBRACE ) && 
+						( et != ETC::COMMA_OR_RBRACK ) && 
+						( et != ETC::COMMA_OR_RPAREN ) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1277,7 +1328,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RBRACK)
 			{
-				if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+				if( et != ETC::COMMA_OR_RBRACE && ( et != ETC::COMMA_OR_RBRACK ) && ( et != ETC::COMMA_OR_RPAREN ) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1289,7 +1340,7 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::RBRACE)
 			{
-				if( et != ET::COMMA_OR_RBRACE && ( et != ET::COMMA_OR_RBRACK ) && ( et != ET::COMMA_OR_RPAREN ) )
+				if( et != ETC::COMMA_OR_RBRACE && ( et != ETC::COMMA_OR_RBRACK ) && ( et != ETC::COMMA_OR_RPAREN ) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1316,7 +1367,6 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( isBinaryOp( token.id() ) )
 			{
-printf( "%s:%d\n", __FILE__, __LINE__ );
 				bool rc = reduce( initOpStack, initExprStack, token.id() );
 				if(!rc)
 				{
@@ -1341,7 +1391,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 		case arrayIndexSeen:
 		{
 			Expr * dim;
-			if(!parseExpr( &dim, ET::COMMA_OR_RBRACK, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( &dim, ETC::COMMA_OR_RBRACK, str, token, opStack.size(), exprStack.size() ))
 		{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO;
@@ -1372,7 +1422,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 		}
 		case lparenSeen:
 		{
-			if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( expr, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO;
@@ -1398,7 +1448,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 		}
 		case absSeen:
 		{
-			if(!parseExpr( expr, ET::BOR, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( expr, ETC::BOR, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
@@ -1445,7 +1495,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
-			else if(!parseExpr( expr, ET::COMMA_OR_RPAREN, token, opStack.size(), exprStack.size() ))
+			else if(!parseExpr( expr, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
@@ -1468,7 +1518,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 		{
 				// c ? e1 : e2
 				// Parse e1
-				if(!parseExpr( expr, ET::COLON, token, opStack.size(), exprStack.size() ))
+				if(!parseExpr( expr, ETC::COLON, str, token, opStack.size(), exprStack.size() ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1481,7 +1531,7 @@ printf( "%s:%d\n", __FILE__, __LINE__ );
 
 				 // Parse e2
 					lex(token, this );  
-					if(!parseExpr( expr, et, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( expr, et, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO

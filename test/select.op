@@ -19,7 +19,7 @@ i32 main( i32 argc, final string [] argv )
   
 	mset<acct_h> na = select name, address from acct;
 
-	set<acct_h> da = select distinct * from acct where name ~ "D*";
+	set<acct_h> da = select distinct * from acct where name ~ r"D*";
 
 	return 0;
 }

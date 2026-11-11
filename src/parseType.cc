@@ -363,7 +363,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		{
 			Expr * expr;
 			Token tt;
-			if( parseExpr( &expr, ET::COMMA_OR_RBRACK, tt, 0, 0 ) && tt.id() == ID::RBRACK )
+			if( parseExpr( &expr, ETC::COMMA_OR_RBRACK, STR::NOT_IN_SELECT, tt, 0, 0 ) && tt.id() == ID::RBRACK )
 				dims.push_back(up<Expr>(expr));
 			else
 			{

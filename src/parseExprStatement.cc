@@ -17,7 +17,7 @@ PENTER
 		lex( tok, this );
 
 	Expr * ex;
-	bool rc = parseExpr( &ex, ET::SCOLON, tok, 0, 0 );
+	bool rc = parseExpr( &ex, ETC::SCOLON, STR::NOT_IN_SELECT, tok, 0, 0 );
 
 	if( rc )
 	{
