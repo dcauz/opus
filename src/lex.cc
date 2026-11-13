@@ -729,7 +729,7 @@ void nextToken( Token & tok, Parser * context )
       tok.set( context->lineNo, context->columnNo, ID::RBRACE );
       return;
     case ']':
-      tok.set( context->lineNo, context->columnNo, ID::RBRACK );
+      tok.set( context->lineNo, context->columnNo, ID::RBRACKET );
       return;
     case '#':
       tok.set( context->lineNo, context->columnNo, ID::WEAK );

@@ -104,7 +104,7 @@ enum class ID : unsigned int
 
 	LBRACK=91,	// [
 	BSLASH=92,	// back slash
-	RBRACK=93,	// ]
+	RBRACKET=93,// ]
 	BXOR  =94,	// ^^
 
 	LBRACE=123,	// {

@@ -19,7 +19,13 @@ i32 main( i32 argc, final string [] argv )
   
 	mset<acct_h> na = select name, address from acct;
 
-	set<acct_h> da = select distinct * from acct where name ~ r"D*";
+	set<acct_h> da = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
 
 	return 0;
 }

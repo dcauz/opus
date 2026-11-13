@@ -166,12 +166,12 @@ dumpToken( __FILE__, __LINE__, token );
 			break;
 
 		case arrayOpenSeen:
-			if( token.id() == ID::RBRACK )
+			if( token.id() == ID::RBRACKET )
 				state = arrayCloseSeen;
 			else
 			{
 				// get dims
-				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACK, STR::NOT_IN_SELECT, token, 0, 0 ))
+				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, STR::NOT_IN_SELECT, token, 0, 0 ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -323,7 +323,7 @@ dumpToken( __FILE__, __LINE__, token );
 			break;
 
 		case pArrayOpenSeen:
-			if( token.id() == ID::RBRACK )
+			if( token.id() == ID::RBRACKET )
 			{
 				state = pArrayCloseSeen;
 			}

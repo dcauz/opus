@@ -35,7 +35,7 @@ static std::map<ID, Operator> ops =
 	{ ID::LPAREN,      {Assoc::NON,   1 }}, // (     Parenthesis / ctor / function call
 	{ ID::RPAREN,      {Assoc::NON,   1 }}, // )     Parenthesis
 	{ ID::LBRACK,      {Assoc::NON,   1 }}, // [     Array index
-	{ ID::RBRACK,      {Assoc::NON,   1 }}, // ]     Array index
+	{ ID::RBRACKET,    {Assoc::NON,   1 }}, // ]     Array index
 	{ ID::ABS,         {Assoc::NON,   1 }}, // |..|                                          //
 	{ ID::FACTORIAL,   {Assoc::NON,   1 }}, // . !     Factorial (post)
 	{ ID::POST_INC,    {Assoc::NON,   1 }}, // . ++    Post increment
@@ -477,14 +477,14 @@ static bool isPrefixOp( ID id )
 		ID::MUL,      // -> DEREF         *
 		ID::ADD,      // -> UNIARY_PLUS     +
 		ID::SUB,      // -> UNIARY_MINUS -
-		ID::BNOT,     // -> BNOT ~
+		ID::RE_MATCH, // -> BNOT ~
 		ID::DEC,      // -> DEC --
 		ID::INC,      // -> INC ++
 		ID::NOT,      // -> NOT !
 		ID::IS_VOID,  // is_void
 		ID::DELETE,   // delete
 		ID::SIZEOF,   // sizeof
-	ID::THROW,    // throw
+		ID::THROW,   	// throw
 	};
 
 	return prefixOpIds.find(id) != prefixOpIds.end();
@@ -753,35 +753,44 @@ static const char * st2str( State s )
 	}
 }
 
-inline bool isTerminatingReservedWord(  const std::string & lex, Parser::STR str )
+inline bool isTerminatingReservedWord(  const char * lex, Parser::STR str )
 {
 	if( str == Parser::STR::NOT_IN_SELECT )
 		return false;
 
-	if( lex == "from" && str == Parser::STR::FROM )
+	if( strncmp( lex, "from", 4 ) == 0 && str == Parser::STR::FROM )
 		return true;
-	if( lex == "fetch" )
+
+	if( strncmp( lex, "fetch", 5 ) == 0 )
 		return true;
 	if( str == Parser::STR::FETCH )
 		return false;
-	if( lex == "offset" )
+
+	if( strncmp( lex, "offset", 6 ) == 0 )
 		return true;
+
 	if( str == Parser::STR::OFFSET_FETCH )
 		return false;
-	if( lex == "order" )
+
+	if( strncmp( lex, "order", 5 ) == 0 )
 		return true;
+
 	if( str == Parser::STR::ORDER_OFFSET_FETCH )
 		return false;
-	if( lex == "having" )
+
+	if( strncmp( lex, "having", 6 ) == 0 )
 		return true;
+
 	if( str == Parser::STR::HAVING_ORDER_OFFSET_FETCH )
 		return false;
-	if( lex == "group" )
+
+	if( strncmp( lex, "group", 5 ) == 0 )
 		return true;
+
 	if( str == Parser::STR::GROUP_HAVING_ORDER_OFFSET_FETCH )
 		return false;
 
-	return lex == "where";	
+	return strncmp( lex, "where", 5 ) == 0;	
 }
 
 // Expression terminators:
@@ -943,7 +952,7 @@ PENTER
 		{
 			// .. , ... ]
 			Expr * ex;
-			if(!parseExpr( &ex, ETC::COMMA_OR_RBRACK, str, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( &ex, ETC::COMMA_OR_RBRACKET, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
@@ -952,7 +961,7 @@ PENTER
 			if( token.id() == ID::COMMA )
 				seq.push_back(ex);
 			// ]
-			else if( token.id() == ID::RBRACK )
+			else if( token.id() == ID::RBRACKET )
 			{
 				state = valueSeen;
 				Expr * vec = createLiteral(token, seq, ID::SEQ_LIT );
@@ -1074,6 +1083,7 @@ PENTER
 		}
 		case valueSeen:
 		{
+SNAT
 			if( token.isId() && isTerminatingReservedWord(  token.idLexium(), str ))
 			{
 				bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
@@ -1082,7 +1092,7 @@ PENTER
 			}
 			else if( token.id() == ID::SCOLON)
 			{
-				if( et != ETC::SCOLON && et != ETC::SCOLON_OR_RPAREN )
+				if( et != ETC::SCOLON && et != ETC::COMMA_OR_SCOLON && et != ETC::SCOLON_OR_RPAREN )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1095,8 +1105,9 @@ PENTER
 			else if( token.id() == ID::COMMA)
 			{
 				if( ( et != ETC::COMMA ) &&
+						( et != ETC::COMMA_OR_SCOLON ) && 
 						( et != ETC::COMMA_OR_RBRACE ) && 
-						( et != ETC::COMMA_OR_RBRACK ) && 
+						( et != ETC::COMMA_OR_RBRACKET ) && 
 						( et != ETC::COMMA_OR_RPAREN ) && 
 						( et != ETC::COMMA_OR_COLON_OR_RBRACE ) )
 				{
@@ -1109,9 +1120,9 @@ PENTER
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return rc;
 			}
-			else if( token.id() == ID::RBRACK)
+			else if( token.id() == ID::RBRACKET)
 			{
-				if( et != ETC::COMMA_OR_RBRACK )
+				if( et != ETC::COMMA_OR_RBRACKET )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1301,7 +1312,7 @@ PENTER
 		{
 			if( token.id() == ID::SCOLON)
 			{
-				if( et != ETC::SCOLON )
+				if( et != ETC::SCOLON && et != ETC::COMMA_OR_SCOLON && et != ETC::SCOLON_OR_RPAREN )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1314,8 +1325,9 @@ PENTER
 			else if( token.id() == ID::COMMA)
 			{
 				if( ( et != ETC::COMMA ) && 
+						( et != ETC::COMMA_OR_SCOLON ) && 
 						( et != ETC::COMMA_OR_RBRACE ) && 
-						( et != ETC::COMMA_OR_RBRACK ) && 
+						( et != ETC::COMMA_OR_RBRACKET ) && 
 						( et != ETC::COMMA_OR_RPAREN ) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1326,9 +1338,9 @@ PENTER
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return rc;
 			}
-			else if( token.id() == ID::RBRACK)
+			else if( token.id() == ID::RBRACKET )
 			{
-				if( et != ETC::COMMA_OR_RBRACE && ( et != ETC::COMMA_OR_RBRACK ) && ( et != ETC::COMMA_OR_RPAREN ) )
+				if( et != ETC::COMMA_OR_RBRACKET )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1340,7 +1352,7 @@ PENTER
 			}
 			else if( token.id() == ID::RBRACE)
 			{
-				if( et != ETC::COMMA_OR_RBRACE && ( et != ETC::COMMA_OR_RBRACK ) && ( et != ETC::COMMA_OR_RPAREN ) )
+				if( et != ETC::COMMA_OR_RBRACE )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1391,17 +1403,17 @@ PENTER
 		case arrayIndexSeen:
 		{
 			Expr * dim;
-			if(!parseExpr( &dim, ETC::COMMA_OR_RBRACK, str, token, opStack.size(), exprStack.size() ))
-		{
+			if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, str, token, opStack.size(), exprStack.size() ))
+			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO;
-		}
+			}
 
 			if( token.id() == ID::COMMA )
 			{
 				seq.push_back(dim);
 			}
-			else if( token.id() == ID::RBRACK )
+			else if( token.id() == ID::RBRACKET )
 			{
 
 				Expr * arr = exprStack.top();

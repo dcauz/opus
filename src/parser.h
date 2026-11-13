@@ -88,20 +88,23 @@ public:
 	// Expression terminating characters
 	enum class ETC
 	{
-		COMMA                    = 0, // e1 , e2 , ...
-		COMMA_OR_RBRACE          = 1, // { e1 , ... }
-		COMMA_OR_COLON_OR_RBRACE = 2, // { i1:e1 , ... }
-		COMMA_OR_RBRACK          = 3, // [ e1, ... ]
-		COMMA_OR_RPAREN          = 4, // ( e1, ... )
-		COMMA_OR_GT              = 5, // < e1, ... >
+		COMMA		= 1,		// e1 , e2 , ...
+		COLON		= 2,		// e1 ? e2 : e3
+		RPAREN	= 4,		// ( e1 )
+		SCOLON	= 8,		// e ;
+		RBRACE	= 16,		// }
+		RBRACKET= 32,		// ]
+		BOR			= 64,		// | e |
+		GT			= 128,	// >
 
-		COLON	                   = 6, // e1 ? e2 : e3
+		COMMA_OR_COLON_OR_RBRACE = COMMA | COLON | RBRACE,
+		COMMA_OR_GT              = COMMA | GT,
+		COMMA_OR_RBRACE          = COMMA | RBRACE,
+		COMMA_OR_RBRACKET        = COMMA | RBRACKET,
+		COMMA_OR_RPAREN          = COMMA | RPAREN,
+		COMMA_OR_SCOLON          = COMMA | SCOLON,
 
-		BOR                      = 7, // | e |
-
-		RPAREN                   = 8, // ( e1 )
-		SCOLON                   = 9, // e ;
-		SCOLON_OR_RPAREN         = 10,// ... ; or ... )
+		SCOLON_OR_RPAREN         = SCOLON | RPAREN,
 	};
 
 	// Select expression terminating reserved words
@@ -133,10 +136,8 @@ private:
 	bool parseIdMapping( std::map<std::string,std::string> & mapping );
 	bool parseColumnList( Token & token, Select * select );
 	bool parseTableId( Token & token, Select * select, bool onTerm );
-	bool parseGroup_columns( Token & token, Select * select );
-	bool parseGroupFilterCondition( Token & token, Select * select );
-	bool parseSortColumns( Token & token, Select * select );
-	bool parseGroupColumns( Token & token, Select * select );
+	bool parseGroupByColumns( Token & token, ETC, Select * select );
+	bool parseSortByColumns( Token & token, Select * select );
 
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );
