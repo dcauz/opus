@@ -17,9 +17,401 @@ i32 main( i32 argc, final string [] argv )
 									save by column
 									source "/home/dcauz/opus/db/acct";
   
+	// w g h o of fe
+	// 1 2 4 8 16 32
+	//
+	// 0 0 0 0 0  0  0
+	// 0 0 0 0 0  1	 1
+	// 0 0 0 0 1  0	 1
+	// 0 0 0 0 1  1	 3
+	// 0 0 0 1 0  0	 4
+	// 0 0 0 1 0  1	 5
+	// 0 0 0 1 1  1	 7
+	// 0 0 1 1 1  1	 15
+	// 0 1 1 1 1  1	 31
+	// 1 0 0 0 0  0	 32
+	// 1 1 0 0 0  0	 48
+	// 1 1 1 0 0  0	 56
+	// 1 1 1 l 0  0	 60
+	// 1 1 1 1 1  0	 62
+	// 1 1 1 1 1  1	 63
+
+	// 0
 	mset<acct_h> na = select name, address from acct;
 
-	set<acct_h> da = select distinct * from acct 
+	// 1
+	set<acct_h> da1 = select distinct * from acct 
+										where name ~ r"D*";
+
+	// 2
+	set<acct_h> da2 = select distinct * from acct 
+										group by sin, address;
+
+	// 3
+	set<acct_h> da3 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address;
+
+	// 4
+	set<acct_h> da4 = select distinct * from acct 
+										having sum(account) > 1000000;
+
+	// 5
+	set<acct_h> da5 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000;
+
+	// 6
+	set<acct_h> da6 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000;
+
+	// 7
+	set<acct_h> da7 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000;
+
+	// 8
+	set<acct_h> da8 = select distinct * from acct 
+										order by name dsc, sin asc;
+
+	// 9
+	set<acct_h> da9 = select distinct * from acct 
+										where name ~ r"D*"
+										order by name dsc, sin asc;
+
+	// 10
+	set<acct_h> da10 = select distinct * from acct 
+										group by sin, address
+										order by name dsc, sin asc;
+
+	// 11
+	set<acct_h> da11 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										order by name dsc, sin asc;
+
+	// 12
+	set<acct_h> da12 = select distinct * from acct 
+										having sum(account) > 1000000
+										order by name dsc, sin asc;
+
+	// 13
+	set<acct_h> da13 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										order by name dsc, sin asc;
+
+	// 14
+	set<acct_h> da14 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc;
+
+	// 15
+	set<acct_h> da15 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc;
+
+	// 16
+	mset<acct_h> na16 = select name, address from acct
+										offset 100 rows;
+
+	// 17
+	set<acct_h> da17 = select distinct * from acct 
+										where name ~ r"D*"
+										offset 100 rows;
+
+	// 18
+	set<acct_h> da18 = select distinct * from acct 
+										group by sin, address;
+										offset 100 rows;
+
+	// 19
+	set<acct_h> da19 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										offset 100 rows;
+
+	// 20
+	set<acct_h> da20 = select distinct * from acct 
+										having sum(account) > 1000000
+										offset 100 rows;
+
+	// 21
+	set<acct_h> da21 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										offset 100 rows;
+
+	// 22
+	set<acct_h> da22 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										offset 100 rows;
+
+	// 23
+	set<acct_h> da23 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										offset 100 rows;
+
+	// 24
+	set<acct_h> da24 = select distinct * from acct 
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 25
+	set<acct_h> da25 = select distinct * from acct 
+										where name ~ r"D*"
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 26
+	set<acct_h> da26 = select distinct * from acct 
+										group by sin, address
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 27
+	set<acct_h> da27 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 28
+	set<acct_h> da28 = select distinct * from acct 
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 29
+	set<acct_h> da29 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 30
+	set<acct_h> da30 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 31
+	set<acct_h> da31 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 32
+	mset<acct_h> na32 = select name, address from acct
+										fetch first 100 rows only;
+
+	// 33
+	set<acct_h> da33 = select distinct * from acct 
+										where name ~ r"D*"
+										fetch first 100 rows only;
+
+	// 34
+	set<acct_h> da34 = select distinct * from acct 
+										group by sin, address
+										fetch first 100 rows only;
+
+	// 35
+	set<acct_h> da35 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										fetch first 100 rows only;
+
+	// 36
+	set<acct_h> da36 = select distinct * from acct 
+										having sum(account) > 1000000
+										fetch first 100 rows only;
+
+	// 37
+	set<acct_h> da37 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										fetch first 100 rows only;
+
+	// 38
+	set<acct_h> da38 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										fetch first 100 rows only;
+
+	// 39
+	set<acct_h> da39 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										fetch first 100 rows only;
+
+	// 40
+	set<acct_h> da40 = select distinct * from acct 
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 41
+	set<acct_h> da41 = select distinct * from acct 
+										where name ~ r"D*"
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 42
+	set<acct_h> da42 = select distinct * from acct 
+										group by sin, address
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 43
+	set<acct_h> da43 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 44
+	set<acct_h> da44 = select distinct * from acct 
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 45
+	set<acct_h> da45 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 46
+	set<acct_h> da46 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 47
+	set<acct_h> da47 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										fetch first 100 rows only;
+
+	// 48
+	mset<acct_h> na48 = select name, address from acct
+										offset 100 rows;
+										fetch first 100 rows only;
+
+	// 49
+	set<acct_h> da49 = select distinct * from acct 
+										where name ~ r"D*"
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 50
+	set<acct_h> da50 = select distinct * from acct 
+										group by sin, address;
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 51
+	set<acct_h> da51 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 52
+	set<acct_h> da52 = select distinct * from acct 
+										having sum(account) > 1000000
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 53
+	set<acct_h> da53 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 54
+	set<acct_h> da54 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 55
+	set<acct_h> da55 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										having sum(account) > 1000000
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 56
+	set<acct_h> da56 = select distinct * from acct 
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 57
+	set<acct_h> da57 = select distinct * from acct 
+										where name ~ r"D*"
+										order by name dsc, sin asc
+										offset 100 rows;
+
+	// 58
+	set<acct_h> da58 = select distinct * from acct 
+										group by sin, address
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 59
+	set<acct_h> da59 = select distinct * from acct 
+										where name ~ r"D*"
+										group by sin, address
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 60
+	set<acct_h> da60 = select distinct * from acct 
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 61
+	set<acct_h> da61 = select distinct * from acct 
+										where name ~ r"D*"
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 62
+	set<acct_h> da62 = select distinct * from acct 
+										group by sin, address
+										having sum(account) > 1000000
+										order by name dsc, sin asc
+										offset 100 rows
+										fetch first 100 rows only;
+
+	// 63
+	set<acct_h> da63 = select distinct * from acct 
 										where name ~ r"D*"
 										group by sin, address
 										having sum(account) > 1000000
@@ -29,3 +421,4 @@ i32 main( i32 argc, final string [] argv )
 
 	return 0;
 }
+

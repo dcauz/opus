@@ -137,7 +137,7 @@ private:
 	bool parseColumnList( Token & token, Select * select );
 	bool parseTableId( Token & token, Select * select, bool onTerm );
 	bool parseGroupByColumns( Token & token, ETC, Select * select );
-	bool parseSortByColumns( Token & token, Select * select );
+	bool parseSortByColumns( Token & token, ETC, Select * select );
 
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );

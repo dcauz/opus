@@ -246,7 +246,7 @@ TODO // table alias
 // 		name asc
 // 		name dsc
 // 
-bool Parser::parseSortByColumns( Token & token, Select * select )
+bool Parser::parseSortByColumns( Token & token, ETC et, Select * select )
 {
 PENTER
 	TODO
@@ -389,7 +389,10 @@ PENTER
 
 	if( token.is_order())
 	{
+		if( ! parseSortByColumns( token, et, *select ))
+		{
 			TODO // get sort by columns
+		}
 	}
 
 	if( token.is_offset())
