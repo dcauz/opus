@@ -319,8 +319,8 @@ dumpToken( __FILE__, __LINE__, lval );
 		}
 	}
 
-	Pointer	collectionPtr = NONE;
-	Pointer	elementPtr = NONE;
+	Pointer	collectionPtr = Pointer::NONE;
+	Pointer	elementPtr = Pointer::NONE;
 
 	// Get modifiers and dims
 	while(true)
@@ -339,7 +339,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::WEAK:
 			if(dims.size() == 0 )
 			{
-				if( collectionPtr == NONE )
+				if( collectionPtr == Pointer::NONE )
 					collectionPtr = static_cast<Pointer>(lval.id());
 				else
 				{
@@ -349,7 +349,7 @@ dumpToken( __FILE__, __LINE__, lval );
 			}
 			else
 			{
-				if( elementPtr == NONE )
+				if( elementPtr == Pointer::NONE )
 					elementPtr = static_cast<Pointer>(lval.id());
 				else
 				{
@@ -363,7 +363,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		{
 			Expr * expr;
 			Token tt;
-			if( parseExpr( &expr, ETC::COMMA_OR_RBRACKET, STR::NOT_IN_SELECT, tt, 0, 0 ) && tt.id() == ID::RBRACKET )
+			if( parseExpr( &expr, ETC::COMMA_OR_RBRACKET, STR::NONE, tt, 0, 0 ) && tt.id() == ID::RBRACKET )
 				dims.push_back(up<Expr>(expr));
 			else
 			{

@@ -171,7 +171,7 @@ dumpToken( __FILE__, __LINE__, token );
 			else
 			{
 				// get dims
-				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, STR::NOT_IN_SELECT, token, 0, 0 ))
+				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, STR::NONE, token, 0, 0 ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -244,7 +244,7 @@ dumpToken( __FILE__, __LINE__, token );
 		case assSeen:
 		{
  			Expr * expr;
-			if( !parseExpr( &expr, ETC::SCOLON, STR::NOT_IN_SELECT, token, 0, 0 ) || token.id() != ID::SCOLON )
+			if( !parseExpr( &expr, ETC::SCOLON, STR::NONE, token, 0, 0 ) || token.id() != ID::SCOLON )
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO

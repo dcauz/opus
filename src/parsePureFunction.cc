@@ -48,7 +48,7 @@ PENTER
 
 	Expr * expr;
 	Token tt;
-	rc = parseExpr( &expr, ETC::SCOLON, STR::NOT_IN_SELECT, tt, 0, 0 );
+	rc = parseExpr( &expr, ETC::SCOLON, STR::NONE, tt, 0, 0 );
 
 	if( rc && token.id() != ID::SCOLON )
 		parserError( "Pure function is not terminated by ; character" );

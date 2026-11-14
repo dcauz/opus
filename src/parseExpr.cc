@@ -753,46 +753,6 @@ static const char * st2str( State s )
 	}
 }
 
-inline bool isTerminatingReservedWord(  const char * lex, Parser::STR str )
-{
-	if( str == Parser::STR::NOT_IN_SELECT )
-		return false;
-
-	if( strncmp( lex, "from", 4 ) == 0 && str == Parser::STR::FROM )
-		return true;
-
-	if( strncmp( lex, "fetch", 5 ) == 0 )
-		return true;
-	if( str == Parser::STR::FETCH )
-		return false;
-
-	if( strncmp( lex, "offset", 6 ) == 0 )
-		return true;
-
-	if( str == Parser::STR::OFFSET_FETCH )
-		return false;
-
-	if( strncmp( lex, "order", 5 ) == 0 )
-		return true;
-
-	if( str == Parser::STR::ORDER_OFFSET_FETCH )
-		return false;
-
-	if( strncmp( lex, "having", 6 ) == 0 )
-		return true;
-
-	if( str == Parser::STR::HAVING_ORDER_OFFSET_FETCH )
-		return false;
-
-	if( strncmp( lex, "group", 5 ) == 0 )
-		return true;
-
-	if( str == Parser::STR::GROUP_HAVING_ORDER_OFFSET_FETCH )
-		return false;
-
-	return strncmp( lex, "where", 5 ) == 0;	
-}
-
 // Expression terminators:
 //
 // { => , }
@@ -890,7 +850,7 @@ PENTER
 			}
 			else if( token.id() == ID::RPAREN )
 			{
-				if( et != ETC::RPAREN && et != ETC::COMMA_OR_RPAREN )
+				if( notIn(ETC::RPAREN, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1084,7 +1044,7 @@ PENTER
 		case valueSeen:
 		{
 SNAT
-			if( token.isId() && isTerminatingReservedWord(  token.idLexium(), str ))
+			if( token.isId() && isTerminateWord(  token.idLexium(), str ))
 			{
 				bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1092,7 +1052,7 @@ SNAT
 			}
 			else if( token.id() == ID::SCOLON)
 			{
-				if( et != ETC::SCOLON && et != ETC::COMMA_OR_SCOLON && et != ETC::SCOLON_OR_RPAREN )
+				if( notIn(ETC::SCOLON, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1104,12 +1064,7 @@ SNAT
 			}
 			else if( token.id() == ID::COMMA)
 			{
-				if( ( et != ETC::COMMA ) &&
-						( et != ETC::COMMA_OR_SCOLON ) && 
-						( et != ETC::COMMA_OR_RBRACE ) && 
-						( et != ETC::COMMA_OR_RBRACKET ) && 
-						( et != ETC::COMMA_OR_RPAREN ) && 
-						( et != ETC::COMMA_OR_COLON_OR_RBRACE ) )
+				if( notIn(ETC::COMMA, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1122,7 +1077,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACKET)
 			{
-				if( et != ETC::COMMA_OR_RBRACKET )
+				if( notIn( ETC::RBRACKET, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1134,7 +1089,7 @@ SNAT
 			}
 			else if( token.id() == ID::RPAREN)
 			{
-				if( et != ETC::COMMA_OR_RPAREN && et != ETC::RPAREN )
+				if( notIn(ETC::RPAREN, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1144,7 +1099,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACE)
 			{
-				if( et != ETC::COMMA_OR_RBRACE && et != ETC::COMMA_OR_COLON_OR_RBRACE )
+				if( notIn(ETC::RBRACE, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1156,13 +1111,7 @@ SNAT
 			}
 			else if( token.id() == ID::COLON )
 			{
-				if( et != ETC::COLON && et != ETC::COMMA_OR_COLON_OR_RBRACE )
-				{
-					dumpToken( __FILE__, __LINE__, token );
-					TODO
-				}
-
-				if( et == ETC::COLON )
+				if( !notIn(ETC::COLON, et) )
 				{
 					bool rc = reduce( initOpStack, initExprStack, ID::COLON );
 					*expr = exprStack.top();
@@ -1224,7 +1173,7 @@ SNAT
 			}
 			else if( token.id() == ID::BOR )
 			{
-				if( et == ETC::BOR )
+				if( !notIn(ETC::BOR, et) )
 				{
 					bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 					assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
@@ -1253,7 +1202,7 @@ SNAT
 			else if( isBinaryOp( token.id() ) )
 			{
 				// This is a special case of an expression in a template arg
-				if( token.id() == ID::GT && et == ETC::COMMA_OR_GT )
+				if( token.id() == ID::GT && !notIn(ETC::GT, et) )
 				{
 					if(!reduce( initOpStack, initExprStack, token.id() ))
 					{
@@ -1312,7 +1261,7 @@ SNAT
 		{
 			if( token.id() == ID::SCOLON)
 			{
-				if( et != ETC::SCOLON && et != ETC::COMMA_OR_SCOLON && et != ETC::SCOLON_OR_RPAREN )
+				if( notIn(ETC::SCOLON, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1324,11 +1273,7 @@ SNAT
 			}
 			else if( token.id() == ID::COMMA)
 			{
-				if( ( et != ETC::COMMA ) && 
-						( et != ETC::COMMA_OR_SCOLON ) && 
-						( et != ETC::COMMA_OR_RBRACE ) && 
-						( et != ETC::COMMA_OR_RBRACKET ) && 
-						( et != ETC::COMMA_OR_RPAREN ) )
+				if( notIn( ETC::COMMA, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1340,7 +1285,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACKET )
 			{
-				if( et != ETC::COMMA_OR_RBRACKET )
+				if( notIn(ETC::RBRACKET,et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -1352,7 +1297,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACE)
 			{
-				if( et != ETC::COMMA_OR_RBRACE )
+				if( notIn( ETC::RBRACE, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO

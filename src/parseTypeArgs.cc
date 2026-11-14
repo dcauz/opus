@@ -75,7 +75,7 @@ dumpToken( __FILE__, __LINE__, token );
 		else
 		{
 			Expr * expr;
-			if( !parseExpr( &expr, ETC::COMMA_OR_GT, STR::NOT_IN_SELECT, token, 0, 0 ))
+			if( !parseExpr( &expr, ETC::COMMA_OR_GT, STR::NONE, token, 0, 0 ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO

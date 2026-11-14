@@ -183,13 +183,13 @@ private:
 	Block       *	body_;
 };
 
-enum Pointer
+enum class Pointer
 {
-	NONE		= 0,
+	NONE				= 0,
 	OPTIONAL    = '?',
 	UNIQUE_PTR	= '&',
 	SHARED_PTR	= '*',
-	WEAK_PTR	= '#'
+	WEAK_PTR		= '#'
 };
 
 class TypeArg

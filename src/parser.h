@@ -97,27 +97,40 @@ public:
 		BOR			= 64,		// | e |
 		GT			= 128,	// >
 
-		COMMA_OR_COLON_OR_RBRACE = COMMA | COLON | RBRACE,
-		COMMA_OR_GT              = COMMA | GT,
-		COMMA_OR_RBRACE          = COMMA | RBRACE,
-		COMMA_OR_RBRACKET        = COMMA | RBRACKET,
-		COMMA_OR_RPAREN          = COMMA | RPAREN,
-		COMMA_OR_SCOLON          = COMMA | SCOLON,
+		COMMA_OR_RPAREN   			= COMMA | RPAREN,
+		COMMA_OR_RBRACE   			= COMMA | RBRACE,
+		COMMA_OR_SCOLON   			= COMMA | SCOLON,
+		COMMA_OR_RBRACKET 			= COMMA | RBRACKET,
+		COMMA_OR_GT       			= COMMA | GT,
+		COMMA_OR_COLON_OR_RBRACE= COMMA | COLON | RBRACE,
 
-		SCOLON_OR_RPAREN         = SCOLON | RPAREN,
+		SCOLON_OR_RPAREN				= SCOLON | RPAREN,
 	};
 
 	// Select expression terminating reserved words
 	enum class STR
 	{
-		NOT_IN_SELECT                         = 1,
-		FROM																	= 2,
-		WHERE_GROUP_HAVING_ORDER_OFFSET_FETCH = 3,
-		GROUP_HAVING_ORDER_OFFSET_FETCH       = 4,
-		HAVING_ORDER_OFFSET_FETCH             = 5,
-		ORDER_OFFSET_FETCH                    = 6,
-		OFFSET_FETCH                          = 7,
-		FETCH                                 = 8,
+		NONE		= 0,
+
+		FROM		= 1,
+		WHERE		= 2,
+		GROUP		= 4,
+		HAVING	= 8,
+		ORDER		= 16,
+		OFFSET	= 32,
+		FETCH  	= 64,
+		ASC			= 128,
+		DSC			= 256,
+		ROWS		= 512,
+
+		ORDER_OFFSET_FETCH	=	ORDER | OFFSET | FETCH,
+		ORDER_FETCH					=	ORDER | OFFSET | FETCH,
+		GROUP_HAVING_ORDER_OFFSET_FETCH
+												= GROUP | HAVING | ORDER | OFFSET | FETCH,
+		HAVING_ORDER_OFFSET_FETCH
+												= HAVING | ORDER | OFFSET | FETCH,
+		OFFSET_FETCH_ASC_DSC=	OFFSET | FETCH | ASC | DSC,
+		OFFSET_FETCH				=	OFFSET | FETCH,
 	};
 
 private:
@@ -135,7 +148,7 @@ private:
 	bool parseSelect( Select **, ETC et );
 	bool parseIdMapping( std::map<std::string,std::string> & mapping );
 	bool parseColumnList( Token & token, Select * select );
-	bool parseTableId( Token & token, Select * select, bool onTerm );
+	bool parseTableId( Token & token, ETC, Select * select, bool onTerm );
 	bool parseGroupByColumns( Token & token, ETC, Select * select );
 	bool parseSortByColumns( Token & token, ETC, Select * select );
 
@@ -168,4 +181,8 @@ private:
 	bool parseUsing( Using **, UsingNamespace ** );
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );
+
+	static bool isTerminateChar( ID, ETC );
+	static bool isTerminateWord( const char *, STR );
+	inline bool notIn( ETC e, ETC s ) { return ((int)e & (int)s) == 0; }
 };

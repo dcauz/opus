@@ -52,7 +52,7 @@ PENTER
       {
 		lookahead = std::move(token);
 
-	    if(!parseExpr( expr, et, STR::NOT_IN_SELECT, first, 0, 0 ))
+	    if(!parseExpr( expr, et, STR::NONE, first, 0, 0 ))
 		{
           dumpToken( __FILE__, __LINE__, token );
           TODO

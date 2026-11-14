@@ -7,16 +7,17 @@ using namespace	std;
 /**
 Syntax:
 
+  [USING reserved-word-mappings] 
 	SELECT 
   [DISTINCT] column_list
-	FROM table-expr {[INNER | LEFT | RIGHT | FULL] JOIN table-expr ON join_condition}
-	WHERE filter_condition
+	FROM table-expr 
+	{[INNER | LEFT | RIGHT | FULL] JOIN table-expr ON join_condition}
+	[WHERE filter_condition]
 	[GROUP BY group_columns]
 	[HAVING group_filter_condition]
 	[ORDER BY sort_columns]
 	[OFFSET skip_rows ROWS]
 	[FETCH FIRST limit_rows ROWS ONLY]
-  [USING reserved-word-mappings] 
 
 column_list
     *
@@ -180,7 +181,7 @@ PENTER
 //	table-name alias-name
 //  ( select-expr ) as name
 //
-bool Parser::parseTableId( Token & token, Select * select, bool onTerminated )
+bool Parser::parseTableId( Token & token, ETC et, Select * select, bool onTerminated )
 {
 PENTER
 	lex( token, this );
@@ -211,26 +212,28 @@ PENTER
 							( strncmp( lex, "full", 4 ) == 0 ) ||
 							( strncmp( lex, "join", 4 ) == 0 ))
 			{
+dumpToken( __FILE__, __LINE__, token );
 TODO // handle join clause
 				return true;
 			}
-			else if( strncmp( lex, "where", 6 ) == 0 )
-				return true;
-			else
-			{
-TODO // table alias
-				return true;
-			}
-		}
-		else 
 			return true;
+		} 
+		else if( isTerminateChar( token.id(), et ))
+			return true;
+		else
+		{
+dumpToken( __FILE__, __LINE__, token );
+			TODO
+		}
 	}
 	else if( token.id() == ID::LPAREN )
 	{
+dumpToken( __FILE__, __LINE__, token );
 		TODO
 	}
 	else
 	{
+dumpToken( __FILE__, __LINE__, token );
 		TODO
 	}
 
@@ -249,7 +252,73 @@ TODO // table alias
 bool Parser::parseSortByColumns( Token & token, ETC et, Select * select )
 {
 PENTER
-	TODO
+
+	ETC etc = (ETC)((int)et | (int)ETC::COMMA);
+
+	STR str = STR::OFFSET_FETCH_ASC_DSC;
+
+	// eat optional 'by' keyword
+	lex( token, this );
+	if( token.is_by() )
+		lex( token, this );
+
+	while(true)
+	{
+		Expr * expr;
+		if(!parseExpr( &expr, etc, str, token, 0, 0 ))
+		{
+dumpToken( __FILE__, __LINE__, token );
+			TODO
+		}
+		else
+		{
+			if( token.isId())
+			{
+				const char * lexium = token.idLexium();
+				if( strncmp( lexium, "asc", 3 ) == 0 )
+				{
+					// todo
+
+					lex( token, this );
+					if( token.id() == ID::COMMA )
+					{
+						lex( token, this );
+						continue;
+					}
+
+					if( isTerminateChar( token.id(), etc ) || 
+						(token.isId() && isTerminateWord( token.idLexium(), STR::OFFSET_FETCH )))
+						return true;
+				}
+				else if( strncmp( lexium, "dsc", 3 ) == 0 )
+				{
+					// todo
+
+					lex( token, this );
+					if( token.id() == ID::COMMA )
+					{
+						lex( token, this );
+						continue;
+					}
+
+					if( isTerminateChar( token.id(), etc ) || 
+						(token.isId() && isTerminateWord( token.idLexium(), STR::OFFSET_FETCH )))
+						return true;
+				}
+				else	// lexium == OFFSET or FETCH
+					return true;
+			}
+			// else, terminated by deliminating character
+			else if( token.id() == ID::COMMA )
+			{
+				lex( token, this );
+				// todo
+			}
+			else
+				return true;
+		}
+	}
+
 	return false;
 }
 
@@ -260,21 +329,21 @@ PENTER
 bool Parser::parseGroupByColumns( Token & token, ETC et, Select * select )
 {
 PENTER
-dumpToken( __FILE__, __LINE__, token );
+
+	ETC etc = (ETC)((int)et | (int)ETC::COMMA);
+
 	while( true )
 	{
 		lex( token, this );
-dumpToken( __FILE__, __LINE__, token );
 
 		Expr * expr;
-		ETC etc = (ETC)((int)et | (int)ETC::COMMA);
 		if(!parseExpr( &expr, etc, STR::HAVING_ORDER_OFFSET_FETCH, token, 0, 0))
 		{
+dumpToken( __FILE__, __LINE__, token );
 			TODO
 		}
 		else
 		{
-dumpToken( __FILE__, __LINE__, token );
 			if( token.id() == ID::COMMA )
 			{
 // todo
@@ -300,15 +369,7 @@ PENTER
 	*select = new Select( token.line(), token.column(), 0, nullptr, nullptr, nullptr );
 
 	map<string,string>	idMapping;
-	if(token.id() == ID::USING )
-	{
-		if(!parseIdMapping( idMapping ))
-		{
-			TODO
-			return false;
-		}
-	}
-	else if( token.is_distinct() )
+	if( token.is_distinct() )
 	{
 		isDistinct = true;
 		lex( token, this );
@@ -322,7 +383,7 @@ PENTER
 
 	if( token.is_from() )
 	{
-		if(!parseTableId( token, *select, false ))
+		if(!parseTableId( token, et, *select, false ))
 		{
 			TODO
 			return false;
@@ -338,7 +399,7 @@ PENTER
 				 token.is_right() || token.is_full() || 
 				 token.is_join() )
 	{
-		if( !parseTableId( token, *select, true ))
+		if( !parseTableId( token, et, *select, true ))
 		{
 			TODO
 		}
@@ -397,12 +458,46 @@ PENTER
 
 	if( token.is_offset())
 	{
-			TODO // get expr
+		// OFFSET skip_rows ROWS
+		lex( token, this );
+
+		Expr * expr;
+		if(!parseExpr( &expr, et, STR::ROWS, token, 0, 0))
+		{
+			TODO
+			return false;
+		}
+
+		// todo
+
+		lex( token, this );
 	}
 
 	if(token.is_fetch())
 	{
-			TODO // get expr
+		// FETCH FIRST limit_rows ROWS ONLY
+		lex( token, this );
+		if( !token.is_first() )
+		{
+			TODO
+		}
+	
+		lex( token, this );
+		Expr * expr;
+		if(!parseExpr( &expr, et, STR::ROWS, token, 0, 0))
+		{
+			TODO
+			return false;
+		}
+
+		lex( token, this );
+		if( !token.is_only())
+		{
+			TODO
+		}
+		// todo
+
+		lex( token, this );
 	}
 
 	// Push the terminating token back onto the stack

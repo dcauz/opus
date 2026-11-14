@@ -127,7 +127,7 @@ i32 main( i32 argc, final string [] argv )
 
 	// 18
 	set<acct_h> da18 = select distinct * from acct 
-										group by sin, address;
+										group by sin, address
 										offset 100 rows;
 
 	// 19
@@ -310,7 +310,7 @@ i32 main( i32 argc, final string [] argv )
 
 	// 48
 	mset<acct_h> na48 = select name, address from acct
-										offset 100 rows;
+										offset 100 rows
 										fetch first 100 rows only;
 
 	// 49
@@ -321,7 +321,7 @@ i32 main( i32 argc, final string [] argv )
 
 	// 50
 	set<acct_h> da50 = select distinct * from acct 
-										group by sin, address;
+										group by sin, address
 										offset 100 rows
 										fetch first 100 rows only;
 

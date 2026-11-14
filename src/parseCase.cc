@@ -15,7 +15,7 @@ PENTER
 	Token tt;
 
 	lex( tt, this );
-	bool rc = parseExpr( &ex, ETC::COLON, STR::NOT_IN_SELECT, tt, 0, 0 );	
+	bool rc = parseExpr( &ex, ETC::COLON, STR::NONE, tt, 0, 0 );	
 
 	if(rc)
 	{

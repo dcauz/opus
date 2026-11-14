@@ -79,7 +79,7 @@ PENTER
 	  {
 	    Expr * expr;
 
-		if(!parseExpr( &expr, et, STR::NOT_IN_SELECT, token, 0, 0 ))
+		if(!parseExpr( &expr, et, STR::NONE, token, 0, 0 ))
           TODO
 		else
 		{

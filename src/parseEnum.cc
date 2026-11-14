@@ -117,7 +117,7 @@ dumpToken( __FILE__, __LINE__, lval );
 			{
 			    lex( lval, this );
 dumpToken( __FILE__, __LINE__, lval );
-				if( !parseExpr( &expr, ETC::COMMA_OR_RBRACE, STR::NOT_IN_SELECT, lval, 0, 0 ) )
+				if( !parseExpr( &expr, ETC::COMMA_OR_RBRACE, STR::NONE, lval, 0, 0 ) )
 					return false;	
 
 				if( !sts )

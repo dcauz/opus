@@ -39,7 +39,7 @@ PENTER
 		// get expr
 		Expr * ex;
 		lex( lval, this );
-		rc = parseExpr( &ex, ETC::RPAREN, STR::NOT_IN_SELECT, lval, 0, 0 );
+		rc = parseExpr( &ex, ETC::RPAREN, STR::NONE, lval, 0, 0 );
 
 		if( rc )
 		{
