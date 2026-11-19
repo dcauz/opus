@@ -42,7 +42,7 @@ PENTER
 	while(true)
 	{
 		// check for VA_ARGS
-		lex( lval, this );
+		lex( lval );
 
 		if( lval.id() == ID::VA_ARGS )
 		{
@@ -50,7 +50,7 @@ PENTER
 			(*args)->push_back(nullptr);
 
 			// It must be immediately followed by )
-			lex( lval, this );
+			lex( lval );
 			if( lval.id() == ID::RPAREN )
 			{
 				return true;
@@ -69,7 +69,7 @@ PENTER
 		else
 		{
 			// push it back
-			lookahead = std::move(lval);
+			pushLookahead(lval);
 		}
 
 		unsigned declarators;
@@ -91,7 +91,7 @@ PENTER
 			argName = lval.idLexium();
 
 			// if new token is =, get initializer
-			lex( lval, this );
+			lex( lval );
 			if( lval.id() == ID::ASSIGN )
 			{
 				Token tt;

@@ -19,7 +19,7 @@ bool Parser::parseAlias( Alias ** alias )
 PENTER
 	Token	lval1;
 
-	lex( lval1, this );
+	lex( lval1 );
 
 	if( lval1.isId() )
 	{
@@ -28,7 +28,7 @@ PENTER
 	}
 
 	Token	lval2;
-	lex( lval2, this );
+	lex( lval2 );
 
 	if( lval2.id() != ID::ASSIGN )
 	{

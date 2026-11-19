@@ -52,7 +52,7 @@ enum class ID : unsigned int
 	PTR,		 		// ->
 
 	// 30
-	QUAL,		 		// ::
+	SS,			 		// <=>
 	DEREF,			// * .
 	SLFT,				// <<
 	NOT   =33,	// !
@@ -61,7 +61,6 @@ enum class ID : unsigned int
 	SRGHT_ASS,	// >>=
 	MOD   =37,	// %
 	BAND  =38,	// &
-	SS,			 		// <=>
 
 	// 40
 	LPAREN=40,	// (
@@ -193,6 +192,7 @@ enum class ID : unsigned int
 	CLASS_NAME,
 	ENUM_NAME,
 	INTERFACE_NAME, 
+	MODULE_NAME,
 	RELATION_NAME,
 	UNION_NAME,
 	TYPE_NAME,	// using typeName = ...
@@ -201,16 +201,14 @@ enum class ID : unsigned int
 
 	FUN_NAME,
 	FUNCTION_NAME,
-	NAMESPACE_NAME,
 	VARIABLE_NAME,
 	ID,
 	SFUN_NAME,
 	SFUNCTION_NAME,
-	SNAMESPACE_NAME,
 	SVARIABLE_NAME,
 	SID,
 
-	UNKOWN_NAME,
+	UNKNOWN_NAME,
 
 	///////////////////////////////////////
 	// LITERALS and constants
@@ -226,8 +224,8 @@ enum class ID : unsigned int
 	TRUE,		
 	THIS,
 
-	CHAR_LIT,		// 'x'
-					//
+	CHAR_LIT,			// 'x'
+
 	DATETIME_LIT,	// d"YYYY-MM-DD:HH:MM:SS[:sssssssss]"
 	TIME_LIT,     // t"HH:MM:SS:sssssssss"
 	DATE_LIT,			// d"YYYY-MM-DD"
@@ -281,8 +279,6 @@ enum class ID : unsigned int
 	///////////////////////////////////////
 	EXTEND,
 	IMPLEMENT,
-	INDEX,
-	KEY,
 
 	///////////////////////////////////////
 	// Flow control
@@ -301,7 +297,6 @@ enum class ID : unsigned int
 	FOR, 
 	IF, 
 	IMPORT,
-	NAMESPACE,
 	RETURN,
 	SWITCH,
 	THROW,
@@ -325,7 +320,6 @@ enum class ID : unsigned int
 
 	TYPE,
 
-	USING,
 	VA_ARGS,
 
 	// error tokens
@@ -333,8 +327,8 @@ enum class ID : unsigned int
 	INVALID_STRING,
 	ERROR,
 
-	LINE_COMMENT,
-	MULTI_LINE_COMMENT,
+	L_COMMENT,
+	ML_COMMENT,
 
 	///////////////////////////////////////
 	// Type modifiers
@@ -357,6 +351,11 @@ enum class ID : unsigned int
 struct Token
 {
 	Token() :id_(ID::NIL) {}
+	Token( unsigned short l, unsigned short c, ID id ):
+		line_(l),
+		column_(c),
+		id_(id)
+	{}
 
 	Token(const Token & );
 

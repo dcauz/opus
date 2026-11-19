@@ -1,38 +1,78 @@
 
-bool cmp( int32 a, int32 b )
+bool cmp( i32 a, i32 b )
 {
 	return b < a;
 }
 
-int32 main( int32 argc, const string [] argv )
+i32 main( i32 argc, final string [] argv )
 {
-	int32 [3,3]		matrix;
-	int32 [3][3]	vecOfVec;
-	set<int32>		setI;
-	mset<int32>		msetI;
-	list<int32>		listI;
-	stack<int32>	stackI;
-	queue<int32>	queueI;
-	pqueue<int32> *	pqueueI = pqueue<int32>(cmp);
-	dqueue<int32> &	dqueueI = dqueue<int32>();
+	i32 [3,3]		matrix;
 
-	setI.insert(1);
-	setI.insert(1);
+	matrix[0,1] = 1;
 
-	msetI.insert(1);
-	msetI.insert(1);
+	////////////////////////////////
+	i32 [3][3]	vecOfVec;
+
+	vecOfVec[0][1] = 1;
+
+	////////////////////////////////
+	set<i32>		setI;
+
+	setI.add(1);
+	setI.add(1);
+
+	////////////////////////////////
+	mset<i32>		msetI;
+
+	msetI.add(1);
+	msetI.add(1);
+
+	////////////////////////////////
+	map<string,string>	mapping;
+
+	mapping.add( "a", "b" );
+	mapping.add( "a", "b" );
+
+	////////////////////////////////
+	mmap<string,string>	mmapping;
+
+	mmapping.add( "a", "b" );
+	mmapping.add( "a", "b" );
+
+	////////////////////////////////
+	list<i32>		listI;
 
 	listI.append(1);
-	listI.prepend(1);
+	listI.append(2);
+
+	////////////////////////////////
+	dlist<i32>	dlistI;
+
+	dlistI.prepend(1);
+	dlistI.prepend(2);
+	dlistI.prepend(4);
+	dlistI.prepend(4);
+
+	////////////////////////////////
+	stack<i32>	stackI;
 
 	stackI.push(1);
 	auto s = stackI.top();
 	stackI.pop();
 
+	////////////////////////////////
+	queue<i32>	queueI;
+
 	queueI.push(1);
 	
-	pqueueI.push(1);
+	////////////////////////////////
+	pqueue<i32> * pqueueI = new pqueue<i32>(cmp);
 
+	pqueueI->push(1);
+
+	////////////////////////////////
+	dqueue<i32> dqueueI;
+	
 	dqueueI.push(1);
 
 	return 0;

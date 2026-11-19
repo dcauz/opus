@@ -17,3 +17,13 @@ inline void throwNotImpl( const char * f, int l )
 
 #define SNAT printf( "%s:%d %s\n", __FILE__, __LINE__, __func__ );
 #define TODO do { printf( "TODO:%s:%d\n", __FILE__, __LINE__ ); fflush(stdout); throwNotImpl( __FILE__, __LINE__ ); } while(false);
+
+struct Ptrace
+{
+	Ptrace( const char * f ):f_(f)  { printf( "ENTER:[ %s\n", f_ ); fflush(stdout); }
+	~Ptrace( )            { printf( "EXIT:] %s\n", f_ ); fflush(stdout); }
+
+	const char * f_;
+};
+
+#define PENTER  Ptrace  _(__PRETTY_FUNCTION__);

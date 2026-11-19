@@ -49,7 +49,6 @@ src/parseExprStatement.cc \
 src/parseExprTypes.cc \
 src/parseFor.cc \
 src/parseIf.cc \
-src/parseNamespace.cc \
 src/parsePureFunction.cc \
 src/parseRelation.cc \
 src/parseReturn.cc \
@@ -60,7 +59,6 @@ src/parseTypeArgs.cc \
 src/parseTypeParams.cc \
 src/parseTry.cc \
 src/parseType.cc \
-src/parseUsing.cc \
 src/parseVarDefOrExpr.cc \
 src/parseVarFuncDef.cc \
 src/parseVariableDef.cc \
@@ -112,7 +110,8 @@ dot \
 objectt \
 functiont \
 classt \
-selectt
+selectt \
+collectionst
 
 test: $(TESTS)
 

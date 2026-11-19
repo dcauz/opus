@@ -33,17 +33,13 @@ tryt:         try.il
 enumt:        enum.il
 dot:          do.il
 objectt:      object.il
-classt:				class.il
-
 functiont:    function.il
-
-
-aliast:       alias.il
+classt:				class.il
+selectt:      select.il
 collectionst: collections.il
-namespacet:   namespace.il
+
 pointerst:    pointers.il
 purFunt:      pureFun.il
-selectt:      select.il
 typet:        type.il
 
 

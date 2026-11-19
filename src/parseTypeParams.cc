@@ -47,7 +47,7 @@ PENTER
 		Type	* type;
 
 		Token token;
-		lex( token, this );
+		lex( token );
 dumpToken( __FILE__, __LINE__, token );
 		if( token.isId() )
 		{
@@ -55,7 +55,7 @@ dumpToken( __FILE__, __LINE__, token );
 
 			// TODO: Check to see if it is a type-name
 			
-			lex( token, this );
+			lex( token );
 dumpToken( __FILE__, __LINE__, token );
 
 			// If two names, assume the first one is a type name with a forward
@@ -66,7 +66,7 @@ dumpToken( __FILE__, __LINE__, token );
 
 				// TODO: set type
 
-				lex( token, this );
+				lex( token );
 dumpToken( __FILE__, __LINE__, token );
 
 				(*typeParams)->push_back( new TemplateParam( 0, type, name2 ));
@@ -79,7 +79,7 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 		else if( token.isType() )
 		{
-			lex( token, this );
+			lex( token );
 dumpToken( __FILE__, __LINE__, token );
 
 			if( token.isId() )
@@ -96,7 +96,7 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 		else if( token.id() == ID::TYPE )
 		{
-			lex( token, this );
+			lex( token );
 dumpToken( __FILE__, __LINE__, token );
 
 			if( token.isId() )
@@ -122,22 +122,22 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 		else if( token.id() == ID::SCOLON ) // ;
 		{
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.id() == ID::LBRACE )
 		{
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.is_extend() ) // extend
 		{
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.is_implement() ) // implement
 		{
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else

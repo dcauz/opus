@@ -21,7 +21,6 @@ enum class BlockOwner
 	For        = 1 << 5,
 	If         = 1 << 6,
 	Interface  = 1 << 7,
-	Namespace  = 1 << 8,
 	Operator   = 1 << 9,
 	Routine    = 1 << 10,
 	Switch     = 1 << 11,

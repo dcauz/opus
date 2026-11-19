@@ -21,7 +21,6 @@ bool SemCheckContext::canBreak() const
 		( bo == BlockOwner::Ctor ) ||
 		( bo == BlockOwner::Dtor ) ||
 		( bo == BlockOwner::Union ) ||
-		( bo == BlockOwner::Namespace ) ||
 		( bo == BlockOwner::Operator ) ||
 		( bo == BlockOwner::Routine ) ||
 		( bo == BlockOwner::Interface ))
@@ -66,7 +65,6 @@ bool SemCheckContext::canContinue() const
 		( bo == BlockOwner::Ctor ) ||
 		( bo == BlockOwner::Dtor ) ||
 		( bo == BlockOwner::Union ) ||
-		( bo == BlockOwner::Namespace ) ||
 		( bo == BlockOwner::Operator ) ||
 		( bo == BlockOwner::Routine ) ||
 		( bo == BlockOwner::Interface ))
@@ -81,7 +79,7 @@ bool SemCheckContext::canContinue() const
 }
 
 // A Routine, Operator, Dtor or Ctor must be seen before 
-// Namespace, Class, Union, Interface
+// Class, Union, Interface
 //
 bool SemCheckContext::canReturn() const
 {
@@ -95,8 +93,7 @@ bool SemCheckContext::canReturn() const
 		( bo == BlockOwner::Dtor ))
 			return false;
 
-		if(( bo == BlockOwner::Namespace ) || 
-		   ( bo == BlockOwner::Class ) || 
+		if(( bo == BlockOwner::Class ) || 
 		   ( bo == BlockOwner::Union ) )
 			return true;
 	}
@@ -131,25 +128,23 @@ bool SemCheckContext::canCase() const
 //	Global namespace	No		None
 //
 //	atomic     			No		ALL - Global
-//	block				No		ALL - Global
+//	block						No		ALL - Global
 //	ctor       			No		Class
 //	do         			No		ALL - Global
 //	dtor       			No		Class
 //	enum   	   			Yes		ALL
 //	for        			No		ALL - Global
 //	function   			No		ALL
-//	if - else			No		ALL - Global
+//	if - else				No		ALL - Global
 //	interface  			Yes		ALL
-//	namespace 			Yes		Global namespace
-//								Namespace
 //	operator   			No		ALL
 //	pure function		No		ALL
-//	select				No		ALL
+//	select					No		ALL
 //	switch     			No		ALL - Global
 //	try - catch			No		ALL - Global
 //	type   	   			Yes		ALL
 //	union  	   			Yes		ALL
-//	where				No		ALL
+//	where						No		ALL
 //	while      			No		ALL - Global
 
 bool SemCheckContext::validBlockNesting() const
@@ -159,9 +154,7 @@ bool SemCheckContext::validBlockNesting() const
 	if(top == 0 )
 		return true;
 
-	--top;	// 0 based index
-
-	BlockOwner bo = blockOwners_[top];
+	BlockOwner bo = blockOwners_[top-1];
 
 	if( (bo == BlockOwner::None) || (bo == BlockOwner::Atomic) || 
 	(bo == BlockOwner::Try) || (bo == BlockOwner::Catch) ||
@@ -173,13 +166,19 @@ bool SemCheckContext::validBlockNesting() const
 	// Blocks nested within the root
 	if( top == 1 )
 	{
-		if( (bo == BlockOwner::Namespace) || (bo == BlockOwner::Class) ||
-			(bo == BlockOwner::Union) || (bo == BlockOwner::Interface) ||
-			(bo == BlockOwner::Routine) || (bo == BlockOwner::None) ||
-			(bo == BlockOwner::Atomic) || (bo == BlockOwner::Try ) ||
-			(bo == BlockOwner::Catch) || (bo == BlockOwner::If) ||
-			(bo == BlockOwner::Else) || (bo == BlockOwner::For) ||
-			(bo == BlockOwner::Switch) || (bo == BlockOwner::Until) ||
+		if((bo == BlockOwner::Class) ||
+			(bo == BlockOwner::Union) || 
+			(bo == BlockOwner::Interface) ||
+			(bo == BlockOwner::Routine) || 
+			(bo == BlockOwner::None) ||
+			(bo == BlockOwner::Atomic) || 
+			(bo == BlockOwner::Try ) ||
+			(bo == BlockOwner::Catch) || 
+			(bo == BlockOwner::If) ||
+			(bo == BlockOwner::Else) || 
+			(bo == BlockOwner::For) ||
+			(bo == BlockOwner::Switch) || 
+			(bo == BlockOwner::Until) ||
 			(bo == BlockOwner::While))
 			return true;
 	}
@@ -202,25 +201,18 @@ bool SemCheckContext::validBlockNesting() const
 				// TODO
 				return false;
 
-		case BlockOwner::Namespace:
-			if(ebo == BlockOwner::Namespace)
-				return true;
-			break;
 		case BlockOwner::Class:
-			if((ebo == BlockOwner::Namespace) ||
-			   (ebo == BlockOwner::Class) ||
+			if((ebo == BlockOwner::Class) ||
 			   (ebo == BlockOwner::Union))
 				return true;
 			break;
 		case BlockOwner::Union:
-			if((ebo == BlockOwner::Namespace) ||
-			   (ebo == BlockOwner::Class) ||
+			if((ebo == BlockOwner::Class) ||
 			   (ebo == BlockOwner::Union))
 				return true;
 			break;
 		case BlockOwner::Interface:
-			if((ebo == BlockOwner::Namespace) ||
-			   (ebo == BlockOwner::Interface) ||
+			if((ebo == BlockOwner::Interface) ||
 			   (ebo == BlockOwner::Class))
 				return true;
 			break;
@@ -230,7 +222,7 @@ bool SemCheckContext::validBlockNesting() const
 				return true;
 			break;
 		case BlockOwner::Routine:
-			if((ebo == BlockOwner::Namespace) || (ebo == BlockOwner::Class))
+			if(ebo == BlockOwner::Class)
 				return true;
 			break;
 		case BlockOwner::Dtor:
@@ -244,5 +236,6 @@ bool SemCheckContext::validBlockNesting() const
 		}
 		return true;
 	}
+
 	return false;
 }

@@ -29,8 +29,6 @@ static std::map<ID, Operator> ops =
 {
 	{ ID::NIL,      {Assoc::NON,  100 }},
 
-	{ ID::QUAL,     {Assoc::LEFT, 0 }}, // ::    Namespace qualifier
-
 	{ ID::ALIGNOF,     {Assoc::NON,   1 }}, // alignof   Align of a type.
 	{ ID::LPAREN,      {Assoc::NON,   1 }}, // (     Parenthesis / ctor / function call
 	{ ID::RPAREN,      {Assoc::NON,   1 }}, // )     Parenthesis
@@ -614,7 +612,6 @@ static bool isBinaryOp( ID id )
 		ID::M_DIV,
 		ID::M_EXP,
 		ID::IN,
-		ID::QUAL,
 	};
 
 	return binOpIds.find(id) != binOpIds.end();
@@ -770,8 +767,8 @@ PENTER
 
 	while(true)
 	{
-//printf( "\n%s:%d START state %s opS size %d exS size %d et %d str %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et, (int)str );
-//dumpToken( __FILE__, __LINE__, token );
+printf( "\n%s:%d START state %s opS size %d exS size %d et %d str %d\n", __FILE__, __LINE__, st2str(state), (int)opStack.size(), (int)exprStack.size(), (int)et, (int)str );
+dumpToken( __FILE__, __LINE__, token );
 		switch( state )
 		{
 		default:
@@ -784,6 +781,7 @@ PENTER
 			// 1212 or true, etc
 			if( isLiteral( token.id() ))
 			{
+SNAT
 				Expr * lit = createLiteral( token );
 				exprStack.push(lit);
 				state = valueSeen;
@@ -791,12 +789,14 @@ PENTER
 			// id
 			else if( token.isId() )
 			{
+SNAT
 				Expr * name = new Name( token.line(), token.column(),  token.str() );
 				exprStack.push(name);
 				state = valueSeen;
 			}
 			else if( token.id() == ID::SELECT )
 			{
+SNAT
 				Select * select;
 				if(!parseSelect( &select, et ))
 				{
@@ -811,6 +811,7 @@ PENTER
 			}
 			else if( token.id() == ID::FUNCTION_NAME )
 			{
+SNAT
 				Expr * name = new Name( token.line(), token.column(),  token.str() );
 				exprStack.push(name);
 				state = funcNameSeen;
@@ -818,6 +819,7 @@ PENTER
 			// ++ . or -- . , etc
 			else if( isPrefixOp( token.id() ))
 			{
+SNAT
 				mapPrefixOp( token );
 				opStack.push(token);
 				state = prefixSeen;
@@ -825,23 +827,27 @@ PENTER
 			// [ ... ]
 			else if( token.id() == ID::LBRACK )
 			{
+SNAT
 				// Vector literal
 				state = vecBeginSeen;
 			}
 			// { ... }
 			else if( token.id() == ID::LBRACE )
 			{
+SNAT
 				// Associative collection literal
 				state = assocBeginSeen;
 			}
 			// ( ... )
 			else if (token.id() == ID::LPAREN )
 			{
+SNAT
 				state = lparenSeen;
 			}
 			// | ... |
 			else if( token.id() == ID::BOR )
 			{
+SNAT
 				state = absSeen;
 			}
 			else if( token.id() == ID::NEW )
@@ -850,6 +856,7 @@ PENTER
 			}
 			else if( token.id() == ID::RPAREN )
 			{
+SNAT
 				if( notIn(ETC::RPAREN, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -872,7 +879,7 @@ PENTER
 				while(true)
 				{
 					Expr * ex;
-					lex(token, this );  
+					lex(token );  
 
 					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
@@ -938,7 +945,7 @@ PENTER
 		{
 			// .. , ... }
 			Expr * ex;
-			if( !parseExpr( &ex, ETC::COMMA_OR_COLON_OR_RBRACE, str, token, opStack.size(), exprStack.size() ) )
+			if( !parseExpr( &ex, ETC::COMMA_OR_RBRACE, str, token, opStack.size(), exprStack.size() ) )
 			{
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return false;
@@ -1046,12 +1053,14 @@ PENTER
 SNAT
 			if( token.isId() && isTerminateWord(  token.idLexium(), str ))
 			{
+SNAT
 				bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return rc;
 			}
 			else if( token.id() == ID::SCOLON)
 			{
+SNAT
 				if( notIn(ETC::SCOLON, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1064,6 +1073,7 @@ SNAT
 			}
 			else if( token.id() == ID::COMMA)
 			{
+SNAT
 				if( notIn(ETC::COMMA, et) )
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1077,6 +1087,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACKET)
 			{
+SNAT
 				if( notIn( ETC::RBRACKET, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1089,6 +1100,7 @@ SNAT
 			}
 			else if( token.id() == ID::RPAREN)
 			{
+SNAT
 				if( notIn(ETC::RPAREN, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1099,6 +1111,7 @@ SNAT
 			}
 			else if( token.id() == ID::RBRACE)
 			{
+SNAT
 				if( notIn(ETC::RBRACE, et ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1111,6 +1124,7 @@ SNAT
 			}
 			else if( token.id() == ID::COLON )
 			{
+SNAT
 				if( !notIn(ETC::COLON, et) )
 				{
 					bool rc = reduce( initOpStack, initExprStack, ID::COLON );
@@ -1121,7 +1135,7 @@ SNAT
 				else
 				{
 					Expr * value;
-					lex(token, this );  
+					lex(token );  
 					if(!parseExpr( &value, ETC::COMMA_OR_RBRACE, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
@@ -1136,10 +1150,11 @@ SNAT
 			}
 			else if( token.id() == ID::LPAREN )
 			{
+SNAT
 				while(true)
 				{
 					Expr * ex;
-					lex(token, this );  
+					lex(token );  
 					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
@@ -1168,11 +1183,13 @@ SNAT
 			}
 			else if( token.id() == ID::LBRACK)
 			{
+SNAT
 				opStack.push(token);
 				state = arrayIndexSeen;
 			}
 			else if( token.id() == ID::BOR )
 			{
+SNAT
 				if( !notIn(ETC::BOR, et) )
 				{
 					bool rc = reduceAndPop( this, expr, initOpStack, initExprStack );
@@ -1201,6 +1218,7 @@ SNAT
 			}
 			else if( isBinaryOp( token.id() ) )
 			{
+SNAT
 				// This is a special case of an expression in a template arg
 				if( token.id() == ID::GT && !notIn(ETC::GT, et) )
 				{
@@ -1231,6 +1249,7 @@ SNAT
 			}
 			else if( isPostOp( token.id() ))
 			{
+SNAT
 				mapPostOp( token );
 				
 				if(!reduce( initOpStack, initExprStack, token.id()))
@@ -1241,6 +1260,7 @@ SNAT
 			}
 			else if( token.id() == ID::QUEST )
 			{
+SNAT
 				if(!reduce( initOpStack, initExprStack, ID::QUEST ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1252,6 +1272,7 @@ SNAT
 			}
 			else
 			{
+SNAT
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
@@ -1487,7 +1508,7 @@ SNAT
 					exprStack.push(*expr);
 
 				 // Parse e2
-					lex(token, this );  
+					lex(token );  
 					if(!parseExpr( expr, et, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
@@ -1499,7 +1520,7 @@ SNAT
 
 					// Push back terminating token. It will be retrieved below and
 					// be the first token of the valueSeen state
-					lookahead = std::move(token);
+					pushLookahead(token);
 
 					// Create c ? e1 : e2 expression
 					bool rc = reduce( initOpStack, initExprStack, ID::NIL );
@@ -1520,7 +1541,7 @@ SNAT
 		}
 		}
 
-		lex(token, this );  
+		lex(token );  
 	}
 
 	assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );

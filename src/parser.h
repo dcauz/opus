@@ -5,18 +5,9 @@
 #include "token.h"
 #include "lex.h"
 
-
 #include <stack>
+#include <queue>
 
-struct Ptrace
-{
-Ptrace( const char * f ):f_(f)	{ printf( "ENTER:[ %s\n", f_ ); fflush(stdout); }
-~Ptrace( )						{ printf( "EXIT:] %s\n", f_ ); fflush(stdout); }
-
-const char * f_;
-};
-
-#define PENTER	Ptrace	_(__func__);
 
 class Parser
 {
@@ -43,7 +34,9 @@ public:
 		fclose( fh );
 	}
 
-	bool parse();
+	void parse();
+
+	void lex( Token & );
 
 	bool reduce( int, int, ID );
 
@@ -83,8 +76,17 @@ public:
 	std::stack<Token>		opStack;
 	std::stack<Expr *>		exprStack;
 
-	Token lookahead;
+	void pushLookahead( Token & tok )	
+	{ 
+dumpToken( __FILE__, __LINE__, tok );
+		lookahead.push(tok); 
+	}
 
+	void emplaceLookahead( unsigned short l, unsigned short c, ID id )
+	{
+		lookahead.emplace( l, c, id );
+	}
+	
 	// Expression terminating characters
 	enum class ETC
 	{
@@ -134,6 +136,8 @@ public:
 	};
 
 private:
+	std::queue<Token> lookahead;
+
 	Program		program_;
 	SymbolTable	globalSymTbl_;
 
@@ -172,15 +176,31 @@ private:
 	bool parseExprStatement( ExprStatement **, Token & );
 	bool parseFor( For ** );
 	bool parseIf( If ** );
-	bool parseNamespace( Namespace ** );
 	bool parsePureFunction( PureFuncDef ** );
 	bool parseRelation(  Relation ** );
 	bool parseReturn(  Return ** );
 	bool parseSwitch( Switch ** );
 	bool parseTry( Try ** );
-	bool parseUsing( Using **, UsingNamespace ** );
 	bool parseVarFuncDef( Token & token, VarDef ** variableDef, Executable ** );
 	bool parseWhile( While ** );
+
+	void nextToken( Token & tok );
+	bool isFloat( __uint128_t v, Token & tok );
+	bool isNumber( char c, Token & tok );
+	bool isInteger( Token & tok );
+	void isDatetime(Token & tok );
+	void isTime( Token & tok );
+	bool isRegexp( Token & tok );
+
+	enum Stype
+	{
+  	NULL_TERM,
+  	LEN_PRE,
+  	LEN_PRE_NULL_TERM,
+  	REG_EXP
+	};
+	void isString( Token & tok, Stype stype );
+
 
 	static bool isTerminateChar( ID, ETC );
 	static bool isTerminateWord( const char *, STR );

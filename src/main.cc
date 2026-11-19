@@ -46,22 +46,19 @@ usage:	std::cerr << "usage: " << argv[0] << " [-d|-p] program-files" << std::end
 			Parser	parser(argv[i]);
 			parser.populateGlobalSymTbl();
 
-			int rc = parser.parse();
+			parser.parse();
 
 			if( parseOnly )
-				return rc;
+				return 0;
 
-			if( !rc )
+			if(!parser.program().semCheck())
 			{
+				std::cerr << "semantic check failed" << std::endl;
+//				return 3;
+			}
 // TODO
-//				parser.program().genCode();
-//				parser.program().outputIL();
-			}
-			else
-			{
-				std::cerr << "compilation failed" << std::endl;
-				return 2;
-			}
+//			parser.program().genCode();
+//			parser.program().outputIL();
 		}
 	}
 	catch( const std::string & msg )

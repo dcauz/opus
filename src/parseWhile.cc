@@ -6,13 +6,13 @@ PENTER
 
   Token token;
 
-  lex( token, this );
+  lex( token );
   if( token.id() == ID::LPAREN )
   {
     VarDef * vDef = nullptr;
     Expr  * expr = nullptr;
 
-    lex( token, this );
+    lex( token );
     if( parseVarDefOrExpr( token, ETC::RPAREN, &vDef, &expr ))
     {
 	  Statement * stmt;

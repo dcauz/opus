@@ -20,14 +20,14 @@ bool Parser::parseIf( If ** i )
 {
 PENTER
 	Token	lval;
-	lex( lval, this );
+	lex( lval );
 	if( lval.id() != ID::LPAREN )
 	{
 		parserError( "catch is not followed by ( character" );
 		return false;
 	}
 
-	lex( lval, this );
+	lex( lval );
 
 	// Get expr or varDef
 	VarDef * varDef;
@@ -53,7 +53,7 @@ PENTER
 		return false;
 	}
 	
-    lex( lval, this );
+    lex( lval );
 
 	if( expr )
  	  *i = new If( 0, 0, expr, istatement );
@@ -62,7 +62,7 @@ PENTER
 
 	if( lval.id() == ID::ELSE )
 	{
-	    lex( lval, this );
+	    lex( lval );
 
 		if( lval.id() == ID::LBRACE )
 		{
@@ -95,7 +95,7 @@ PENTER
 	}
 	else
 	{
-	  lookahead = std::move(lval);
+	  pushLookahead(lval);
 	  return true;
 	}
 }

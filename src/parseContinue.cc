@@ -11,7 +11,7 @@ bool Parser::parseContinue( Continue ** con )
 {
 PENTER
 	Token	lval;
-	lex( lval, this );
+	lex( lval );
 
 	if( lval.id() != ID::SCOLON )
 	{

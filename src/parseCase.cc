@@ -14,7 +14,7 @@ PENTER
 	Expr * ex;
 	Token tt;
 
-	lex( tt, this );
+	lex( tt );
 	bool rc = parseExpr( &ex, ETC::COLON, STR::NONE, tt, 0, 0 );	
 
 	if(rc)

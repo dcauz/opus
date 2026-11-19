@@ -19,15 +19,15 @@ PENTER
 		std::vector<std::string>	names;
 
 		Token token;
-		lex( token, context );
+		context->lex( token );
 
 		while( token.isId() && notRelKeyWord( token.idLexium()))
 		{
 			names.emplace_back( token.idLexium());
-			lex( token, context );
+			context->lex( token );
 			if( token.id() != ID::COMMA )
 			{
-				context->lookahead = std::move(token);
+				context->pushLookahead(token);
 				break;
 			}
 		}
@@ -49,19 +49,19 @@ bool Parser::parseRelation( Relation ** relation )
 {
 PENTER
 		Token token;
-		lex( token, this );
+		lex( token );
 
 		if( token.isId() )
 		{
 			std::string name =  token.idLexium();
 			std::string hname;
 			
-			lex( token, this );
+			lex( token );
 			if( token.id() == ID::ASSIGN )
 			{
 				while(true)
 				{
-					lex( token, this );
+					lex( token );
 
 					if( token.id() == ID::SCOLON )
 					{
@@ -70,7 +70,7 @@ PENTER
 
 					if(token.is_header())
 					{
-						lex( token, this );
+						lex( token );
 						if( token.isId())
 						{
 							hname = token.idLexium();
@@ -83,7 +83,7 @@ PENTER
 					}
 					else if( token.is_primary() )
 					{
-						lex( token, this );
+						lex( token );
 						if( token.is_key())
 						{
 								std::vector<std::string>	names = getNameList( this );
@@ -97,7 +97,7 @@ PENTER
 					}
 					else if( token.is_foreign())
 					{
-						lex( token, this );
+						lex( token );
 						if( token.is_key() )
 						{
 							std::vector<std::string>	names = getNameList( this );
@@ -114,9 +114,9 @@ PENTER
 					}
 					else if( token.is_save() )
 					{
-						lex( token, this );
+						lex( token );
 						if( token.is_by())
-							lex( token, this );
+							lex( token );
 
 						if( token.is_row() )
 						{
@@ -133,7 +133,7 @@ PENTER
 					else if( token.is_source() )
 					{
 						std::string source;
-						lex( token, this );
+						lex( token );
 						if( token.isString() )
 							source = token.str();
 						else	

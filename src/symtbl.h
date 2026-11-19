@@ -7,12 +7,12 @@
 #include "symbol.h"
 
 
-class Type;			// builtin types, UDT (type, interface, union, enum)
-class Variable;		// variables, arguments, template parameters
+class Type;					// builtin types, UDT (type, interface, union, enum)
+class Variable;			// variables, arguments, template parameters
 class FunctionType;	// functions, pure functions, operators, ctors, dtors
-class Alias;		// alias type, alias func type
-class Namespace;	// namespace
-class EnumMember;	// enum member
+class Alias;				// alias type, alias func type
+class Module;				// module
+class EnumMember;		// enum member
 
 ///////////////////////////////////////////////////////
 //
@@ -20,10 +20,10 @@ class EnumMember;	// enum member
 //
 //  Construct           Named   Parent Constructs
 //  ---------------------------------------------------
-//  Global namespace    No      None
+//  Global module				No      None
 //
 //  atomic              No      ALL - Global
-//	block				No		ALL - Global
+//	block								No			ALL - Global
 //  ctor                No      Class
 //  do                  No      ALL - Global
 //  dtor                No      Class
@@ -33,7 +33,6 @@ class EnumMember;	// enum member
 //  if - else           No      ALL - Global
 //  interface           Yes     ALL
 //  namespace           Yes     Global namespace
-//                              Namespace
 //  operator            No      ALL
 //  pure function       No      ALL
 //  select              No      ALL
@@ -41,7 +40,7 @@ class EnumMember;	// enum member
 //  try - catch         No      ALL - Global
 //  type                Yes     ALL
 //  union               Yes     ALL
-//	where				No		ALL
+//	where								No			ALL
 //  while               No      ALL - Global
 
 class SymbolTable
@@ -57,7 +56,7 @@ printf( "%s:%d this %p parent %p\n", __FILE__, __LINE__, this, p ); fflush(stdou
 	void	addVariable( Variable * );
 	void	addFunction( FunctionType  * );
 	void	addAlias( Alias * );
-	void	addNamespace( Namespace * );
+	void	addModule( Module * );
 	void	addEnumMember( EnumMember * );
 
 	Symbol	* find( const std::string & );
@@ -66,7 +65,7 @@ printf( "%s:%d this %p parent %p\n", __FILE__, __LINE__, this, p ); fflush(stdou
 	Variable	* findVariable( const char * );
 	FunctionType* findFunction( const char * );
 	Alias		* findAlias( const char * );
-	Namespace	* findNamespace( const char * );
+	Module	* findModule( const char * );
 	EnumMember	* findEnumMember( const char * );
 
 	SymbolTable	* parent()	{ return parent_; }
@@ -79,8 +78,8 @@ private:
 	std::map<std::string, Variable *>	variables_;
 	std::map<std::string, FunctionType *>	functions_;	
 	std::map<std::string, Alias *>			alias_;
-	std::map<std::string, Namespace *>		namespaces_;
+	std::map<std::string, Module *>		modules_;
 	std::map<std::string, EnumMember *>		enumMembers_;
 
-	std::string	scopeName_;	// namespace / type name
+	std::string	scopeName_;	// module / type name
 };

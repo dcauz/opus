@@ -93,7 +93,7 @@ PENTER
 	  }
 	  }
 
-	  lex( token, this );
+	  lex( token );
 	}
 
 	return false;

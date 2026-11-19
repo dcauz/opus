@@ -9,7 +9,7 @@ SymbolTable::~SymbolTable()
 	for( auto & p : alias_ )
 		delete p.second;
 
-    for( auto & p : namespaces_ )
+    for( auto & p : modules_ )
 		delete p.second;
 	
     for( auto & p : enumMembers_ )
@@ -52,12 +52,12 @@ void SymbolTable::addAlias( Alias * a )
 	}
 }
 
-void SymbolTable::addNamespace( Namespace * ns )
+void SymbolTable::addModule( Module * ns )
 {
 	if( ns->name().length() > 0 )
 	{
 //printf( "%s:%d symtbl %p: add %s\n", __FILE__, __LINE__, this, ns->name().c_str() );
-		namespaces_.insert( make_pair( ns->name(), ns ));
+		modules_.insert( make_pair( ns->name(), ns ));
 	}
 }
 
@@ -89,8 +89,8 @@ Symbol * SymbolTable::find( const std::string & n )
 	if( ia != alias_.end())
 		return ia->second;
 
-	auto na = namespaces_.find(n);
-	if( na != namespaces_.end())
+	auto na = modules_.find(n);
+	if( na != modules_.end())
 		return na->second;
 
 	auto em = enumMembers_.find(n);
@@ -129,11 +129,11 @@ Alias * SymbolTable::findAlias( const char * n )
 	return ( ia != alias_.end())? ia->second: nullptr;
 }
 
-Namespace * SymbolTable::findNamespace( const char * n )
+Module * SymbolTable::findModule( const char * n )
 {
-	auto in = namespaces_.find(n);
+	auto in = modules_.find(n);
 	
-	return ( in != namespaces_.end())? in->second: nullptr;
+	return ( in != modules_.end())? in->second: nullptr;
 }
 
 EnumMember * SymbolTable::findEnumMember( const char * n )

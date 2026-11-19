@@ -12,7 +12,7 @@ bool Parser::parseSwitch( Switch ** sw )
 {
 PENTER
 	Token val;
-	lex( val, this );
+	lex( val );
 
 	if( val.id() != ID::LPAREN )
 	{
@@ -23,7 +23,7 @@ PENTER
 	// Get expr or varDef
 	VarDef * varDef;
 	Expr * expr;
-	lex( val, this );
+	lex( val );
 	bool rc = parseVarDefOrExpr( val, ETC::RPAREN, &varDef, &expr );
 
 	if( !rc )

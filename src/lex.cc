@@ -18,9 +18,6 @@
 #include <inttypes.h>
 
 
-namespace
-{
-
 inline bool is1stTokenChar( char c )
 {
   return  (c == '"') ||
@@ -45,9 +42,9 @@ DATETIME_LIT
       0123456789012345678 9
   d"yyyy-mm-dd hh:mm:ss[.d*]"
 */
-void isDatetime( Token & tok, Parser * context )
+void Parser::isDatetime( Token & tok )
 {
-  size_t len = strlen(context->cp);
+  size_t len = strlen(this->cp);
 
   if( len < 11 )
   {
@@ -55,7 +52,7 @@ void isDatetime( Token & tok, Parser * context )
     return;
   }
 
-  char * start = context->cp;
+  char * start = this->cp;
   char * cp = start;
 
   if( len >= 20 &&
@@ -90,19 +87,19 @@ void isDatetime( Token & tok, Parser * context )
         if( cp[n] != '"' )
           throw std::runtime_error( "Invalid token" );
 
-        context->columnNo += n+1;
-        context->cp += n+1;
+        columnNo += n+1;
+        this->cp += n+1;
       }
       else
         throw std::runtime_error( "Invalid token" );
     }
     else if( cp[19] == '"' )
     {
-      context->columnNo += 20;
-      context->cp += 20;
+      columnNo += 20;
+      this->cp += 20;
     }
 
-    tok.set( context->lineNo, context->columnNo, Datetime( y, m, d, hour, min, sec, ms ) );
+    tok.set( lineNo, columnNo, Datetime( y, m, d, hour, min, sec, ms ) );
   }
   else if( isdigit(cp[0]) && isdigit(cp[1]) && isdigit(cp[2]) && isdigit(cp[3]) &&  // YYYY
     isdigit(cp[5]) && isdigit(cp[6]) &&                        // MM
@@ -113,10 +110,10 @@ void isDatetime( Token & tok, Parser * context )
     int m = D(cp[5])*10 + D(cp[6]);
     int d = D(cp[8])*10 + D(cp[9]);
 
-    context->columnNo += 11;
-    context->cp += 11;
+    columnNo += 11;
+    this->cp += 11;
 
-    tok.set( context->lineNo, context->columnNo, Date( y, m, d ) );
+    tok.set( lineNo, columnNo, Date( y, m, d ) );
   }
 }
 
@@ -127,9 +124,9 @@ TIME_LIT
   t"hh:mm:ss.dddddd"
   t"hh:mm:ss.ddddddddd"
 */
-void isTime( Token & tok, Parser * context )
+void Parser::isTime( Token & tok )
 {
-  char * start = context->cp;
+  char * start = this->cp;
   char * cp = start;
 
   size_t len = strlen(cp);
@@ -152,10 +149,10 @@ void isTime( Token & tok, Parser * context )
       if( cp[n] != '"' )
         throw std::runtime_error( "Invalid token" );
 
-      context->columnNo += n+1;
-      context->cp += n+1;
+      columnNo += n+1;
+      this->cp += n+1;
 
-      tok.set( context->lineNo, context->columnNo, 
+      tok.set( lineNo, columnNo, 
         Time(   D(cp[0])*10+D(cp[1]), 
             D(cp[3])*10+D(cp[4]),
             D(cp[6])*10+D(cp[7]), 
@@ -163,22 +160,22 @@ void isTime( Token & tok, Parser * context )
     }
     else if( cp[8] == '"' )
     {
-      tok.set( context->lineNo, context->columnNo,
+      tok.set( lineNo, columnNo,
         Time(  D(cp[0])*10+D(cp[1]), 
             D(cp[3])*10+D(cp[4]),
             D(cp[6])*10+D(cp[7]), 0 ) );
 
-      context->columnNo += 9;
-      context->cp += 9;
+      columnNo += 9;
+      this->cp += 9;
     }  
     else
       throw std::runtime_error( "Invalid token" );
   }
 }
 
-static bool isInteger( Parser * context, Token & tok )
+bool Parser::isInteger( Token & tok )
 {
-  char * start = context->cp;
+  char * start = this->cp;
   char * cp = start;
 
   while(isdigit(*cp))
@@ -186,10 +183,10 @@ static bool isInteger( Parser * context, Token & tok )
 
   Integer * out = new Integer(start,cp);
 
-  tok.set( context->lineNo, context->columnNo, out );
+  tok.set( lineNo, columnNo, out );
 
-  context->cp += cp-start;
-  context->columnNo+= cp-start;
+  this->cp += cp-start;
+  columnNo+= cp-start;
 
   return true;
 }
@@ -210,9 +207,9 @@ static void getIntLitToken( unsigned short l, unsigned short c, __uint128_t v, T
     tok.set( l, c, static_cast<__uint128_t>(v));
 }
 
-static bool isFloat( Parser * context, __uint128_t v, Token & tok )
+bool Parser::isFloat( __uint128_t v, Token & tok )
 {
-  char * start = context->cp;
+  char * start = this->cp;
   char * cp = start;
 
   assert( *cp == '.' );
@@ -225,11 +222,11 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
   // NOT float: int-lit ..
   if( *cp == '.' )
   {
-      getIntLitToken( context->lineNo, context->columnNo, v, tok );
-	  context->lookahead.set( context->lineNo, context->columnNo, ID::DOT_DOT );
+    getIntLitToken( lineNo, columnNo, v, tok );
+	  emplaceLookahead( lineNo, columnNo, ID::DOT_DOT );
 
-      context->cp += 2;
-	  context->columnNo += 2;
+    this->cp += 2;
+	  columnNo += 2;
 
 	  return true;
   }
@@ -261,11 +258,11 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
     if( t != 0 )
       throw std::runtime_error( "Invalid token" );
 
-    tok.set( context->lineNo, context->columnNo, Second(secs) );
+    tok.set( lineNo, columnNo, Second(secs) );
 
     ++cp;
-    context->cp += cp-start;
-    context->columnNo+= cp-start;
+    this->cp += cp-start;
+    columnNo+= cp-start;
   }
   else
   {
@@ -273,29 +270,29 @@ static bool isFloat( Parser * context, __uint128_t v, Token & tok )
     if( t == 'f' )
     {
       double d = strtod( start, &end );
-      tok.set( context->lineNo, context->columnNo, static_cast<float>(d));
+      tok.set( lineNo, columnNo, static_cast<float>(d));
     }
     else if( t == 'e' )
     {
       double d = strtod( start, &end );
-      tok.set( context->lineNo, context->columnNo, d );
+      tok.set( lineNo, columnNo, d );
     }
     else
     {
       __float80 val = strtold(start, &end);
-      tok.set( context->lineNo, context->columnNo, val );
+      tok.set( lineNo, columnNo, val );
     }
 
-    context->cp += cp-start;
-    context->columnNo+= cp-start;
+    this->cp += cp-start;
+    columnNo+= cp-start;
   }
 
   return !isTokenChar(*cp);
 }
 
-static bool isNumber( Parser * context, char c, Token & tok )
+bool Parser::isNumber( char c, Token & tok )
 {
-  char * start = context->cp;
+  char * start = this->cp;
   char * cp = start;
 
   __uint128_t  v = 0;
@@ -303,7 +300,7 @@ static bool isNumber( Parser * context, char c, Token & tok )
   if( c == '0' )
   {
     if( *cp == '.' )
-      return isFloat( context, 0, tok );
+      return isFloat( 0, tok );
 
     if((*cp == 'x' ) || (*cp == 'X' ))   // hexidecimal
     {
@@ -375,7 +372,7 @@ static bool isNumber( Parser * context, char c, Token & tok )
       if( v > ( std::numeric_limits<__uint128_t>::max() - d )/10)
       {
           // Too big. It is an integer
-          return isInteger( context, tok );
+          return isInteger( tok );
       }
 
       v = v*10 + d;
@@ -385,61 +382,61 @@ static bool isNumber( Parser * context, char c, Token & tok )
 
     if( *cp == '.' )
     {
-      context->columnNo += cp - context->cp;
-      context->cp = cp;
-      return isFloat( context, v, tok );
+      columnNo += cp - this->cp;
+      this->cp = cp;
+      return isFloat( v, tok );
     }
     else if( *cp == 'Y' )
     {
-      tok.set( context->lineNo, context->columnNo, Year(v) );
+      tok.set( lineNo, columnNo, Year(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
     else if( *cp == 'M' )
     {
-      tok.set( context->lineNo, context->columnNo, Month(v) );
+      tok.set( lineNo, columnNo, Month(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
     else if( *cp == 'D' )
     {
-      tok.set( context->lineNo, context->columnNo, Day(v) );
+      tok.set( lineNo, columnNo, Day(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
     else if( *cp == 'h' )
     {
-      tok.set( context->lineNo, context->columnNo, Hour(v) );
+      tok.set( lineNo, columnNo, Hour(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
     else if( *cp == 'm' )
     {
-      tok.set( context->lineNo, context->columnNo, Minute(v) );
+      tok.set( lineNo, columnNo, Minute(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
     else if( *cp == 's' )
     {
-      tok.set( context->lineNo, context->columnNo, Second(v) );
+      tok.set( lineNo, columnNo, Second(v) );
 
-      context->cp += cp-start+1;
-      context->columnNo+= cp-start+1;
+      this->cp += cp-start+1;
+      columnNo+= cp-start+1;
 
       return true;
     }
@@ -448,10 +445,10 @@ static bool isNumber( Parser * context, char c, Token & tok )
   }
 
 isInt:
-  getIntLitToken( context->lineNo, context->columnNo, v, tok );
+  getIntLitToken( lineNo, columnNo, v, tok );
 
   // Update cp past end of token
-  context->cp = cp;
+  this->cp = cp;
 
   return !isTokenChar(*cp);
 }
@@ -553,19 +550,11 @@ bool escapeChar( char c, char & out )
   return true;
 }
 
-enum Stype
-{
-  NULL_TERM,
-  LEN_PRE,
-  LEN_PRE_NULL_TERM,
-  REG_EXP
-};
-
-static void isString( Parser * context, Token & tok, Stype stype )
+void Parser::isString( Token & tok, Stype stype )
 {
   bool escaped = false;
   
-  int c = nextChar( context );
+  int c = nextChar( this );
   std::string lexium;
   lexium = c;
   int loc = 0;
@@ -592,30 +581,30 @@ static void isString( Parser * context, Token & tok, Stype stype )
       if( stype == NULL_TERM )
       {
         if( lexium.size() < 16 )
-          tok.set( context->lineNo, context->columnNo, ID::SSTRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::SSTRING_LIT, lexium );
         else
-          tok.set( context->lineNo, context->columnNo, ID::STRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::STRING_LIT, lexium );
       }
       else if( stype == LEN_PRE )
       {
         if( lexium.size() < 16 )
-          tok.set( context->lineNo, context->columnNo, ID::LSSTRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::LSSTRING_LIT, lexium );
         else
-          tok.set( context->lineNo, context->columnNo, ID::LSTRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::LSTRING_LIT, lexium );
       }
       else if( stype == LEN_PRE_NULL_TERM )
       {
         if( lexium.size() < 16 )
-          tok.set( context->lineNo, context->columnNo, ID::LTSSTRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::LTSSTRING_LIT, lexium );
         else
-          tok.set( context->lineNo, context->columnNo, ID::LTSTRING_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::LTSTRING_LIT, lexium );
       }
       else // REG_EXP
       {
         if( lexium.size() < 16 )
-          tok.set( context->lineNo, context->columnNo, ID::SREGEXP_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::SREGEXP_LIT, lexium );
         else
-          tok.set( context->lineNo, context->columnNo, ID::REGEXP_LIT, lexium );
+          tok.set( lineNo, columnNo, ID::REGEXP_LIT, lexium );
       }
 
       return;
@@ -626,10 +615,10 @@ static void isString( Parser * context, Token & tok, Stype stype )
       ++loc;
     }
 
-    c = nextChar( context );
+    c = nextChar( this );
   }
       
-  tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
+  tok.set( lineNo, columnNo, ID::INVALID_STRING, lexium );
 }
 
 /*
@@ -637,9 +626,9 @@ REGEX_LIT
   ' 'r
   " "r
 */
-bool isRegexp( Parser * context, Token & )
+bool Parser::isRegexp( Token & )
 {
-  int c = nextChar( context );
+  int c = nextChar( this );
 
   if( c == 'r' )
   {
@@ -649,7 +638,7 @@ bool isRegexp( Parser * context, Token & )
   }
   else
   {
-    context->charLookahead[0] = c;
+    charLookahead[0] = c;
     return false;
   }
 }
@@ -665,7 +654,7 @@ static void eatLineComment( Token & tok, Parser * context )
 	    c = nextChar(context);
 	}
 
-	tok.set( context->lineNo, context->columnNo, ID::LINE_COMMENT, lexium);
+	tok.set( context->lineNo, context->columnNo, ID::L_COMMENT, lexium);
 }
 
 static void eatBlockComment( Token & tok, Parser * context )
@@ -687,14 +676,14 @@ static void eatBlockComment( Token & tok, Parser * context )
     c = nextChar(context);
 	}
 
-	tok.set( context->lineNo, context->columnNo, ID::LINE_COMMENT, lexium);
+	tok.set( context->lineNo, context->columnNo, ID::L_COMMENT, lexium);
 }
 
-void nextToken( Token & tok, Parser * context )
+void Parser::nextToken( Token & tok )
 {
-  int c = nextChar( context );
+  int c = nextChar( this );
   while( c && isspace(c) )
-    c = nextChar( context );
+    c = nextChar( this );
 
   if( c == 0 )
     return;
@@ -704,35 +693,35 @@ void nextToken( Token & tok, Parser * context )
     switch(c)
     {
     case ';':
-      context->inSelect = false;
-      tok.set( context->lineNo, context->columnNo, ID::SCOLON );
+      inSelect = false;
+      tok.set( lineNo, columnNo, ID::SCOLON );
       return;
     case ':':
-      tok.set( context->lineNo, context->columnNo, ID::COLON );
+      tok.set( lineNo, columnNo, ID::COLON );
       return;
     case ',':
-      tok.set( context->lineNo, context->columnNo, ID::COMMA );
+      tok.set( lineNo, columnNo, ID::COMMA );
       return;
     case '?':
-      tok.set( context->lineNo, context->columnNo, ID::QUEST );
+      tok.set( lineNo, columnNo, ID::QUEST );
       return;
     case '(': 
-      tok.set( context->lineNo, context->columnNo, ID::LPAREN );
+      tok.set( lineNo, columnNo, ID::LPAREN );
       return;
     case ')':
-      tok.set( context->lineNo, context->columnNo, ID::RPAREN );
+      tok.set( lineNo, columnNo, ID::RPAREN );
       return;
     case '{': 
-      tok.set( context->lineNo, context->columnNo, ID::LBRACE );
+      tok.set( lineNo, columnNo, ID::LBRACE );
       return;
     case '}':
-      tok.set( context->lineNo, context->columnNo, ID::RBRACE );
+      tok.set( lineNo, columnNo, ID::RBRACE );
       return;
     case ']':
-      tok.set( context->lineNo, context->columnNo, ID::RBRACKET );
+      tok.set( lineNo, columnNo, ID::RBRACKET );
       return;
     case '#':
-      tok.set( context->lineNo, context->columnNo, ID::WEAK );
+      tok.set( lineNo, columnNo, ID::WEAK );
       return;
     }
 
@@ -743,16 +732,16 @@ void nextToken( Token & tok, Parser * context )
     // !=  NE
     case '!':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::NE );
+        tok.set( lineNo, columnNo, ID::NE );
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::NOT );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::NOT );
         return;
       }
     }
@@ -761,16 +750,16 @@ void nextToken( Token & tok, Parser * context )
     // %=  MOD_ASS
     case '%':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::MOD_ASS );
+        tok.set( lineNo, columnNo, ID::MOD_ASS );
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::MOD );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::MOD );
         return;
       }
     }
@@ -779,16 +768,16 @@ void nextToken( Token & tok, Parser * context )
     // ~=  BNOT_ASS
     case '~': 
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::BNOT_ASS );
+        tok.set( lineNo, columnNo, ID::BNOT_ASS );
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::RE_MATCH );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::RE_MATCH );
         return;
       }
     }
@@ -799,94 +788,94 @@ void nextToken( Token & tok, Parser * context )
     // &&=  AND
     case '&':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::BAND_ASS );
+        tok.set( lineNo, columnNo, ID::BAND_ASS );
         return;
       }
       else if( n == '&')
       {
-        char n2 = nextChar(context );
+        char n2 = nextChar( this );
 		if( n2 == '=' )
-          tok.set( context->lineNo, context->columnNo, ID::AND_ASS );
+          tok.set( lineNo, columnNo, ID::AND_ASS );
 		else
 		{
-          tok.set( context->lineNo, context->columnNo, ID::AND );
-          context->charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::AND );
+          charLookahead[0] = n2;
 		}
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::BAND );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::BAND );
         return;
       }
     }
 
     case '[':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '*')
       {
-        char n2 = nextChar(context );
+        char n2 = nextChar( this );
 		if( n2 == ']' )
-			tok.set( context->lineNo, context->columnNo, ID::CRS_PROD );
+			tok.set( lineNo, columnNo, ID::CRS_PROD );
 		else if( n2 == '*' )
 		{
-          char n3 = nextChar(context );
+          char n3 = nextChar( this );
 		  if( n3 == ']' )
 		  {
-			tok.set( context->lineNo, context->columnNo, ID::M_EXP );
+			tok.set( lineNo, columnNo, ID::M_EXP );
 		  }
 		  else
 		  {
-            context->charLookahead[0] = n;
-            context->charLookahead[1] = n2;
-            context->charLookahead[2] = n3;
-            tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+            charLookahead[0] = n;
+            charLookahead[1] = n2;
+            charLookahead[2] = n3;
+            tok.set( lineNo, columnNo, ID::LBRACK );
 		  }
 		}
 		else
 		{
-          context->charLookahead[0] = n;
-          context->charLookahead[1] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+          charLookahead[0] = n;
+          charLookahead[1] = n2;
+          tok.set( lineNo, columnNo, ID::LBRACK );
 		}
       }
       else if( n == '.' )
       {
-        char n2 = nextChar(context );
+        char n2 = nextChar( this );
 
 		if( n2 == ']' )
 		{
-			tok.set( context->lineNo, context->columnNo, ID::DOT_PROD );
+			tok.set( lineNo, columnNo, ID::DOT_PROD );
 		}
 		else
 		{
-          context->charLookahead[0] = n;
-          context->charLookahead[1] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+          charLookahead[0] = n;
+          charLookahead[1] = n2;
+          tok.set( lineNo, columnNo, ID::LBRACK );
 		}
       }
       else if( n == '/' )
       {
-        char n2 = nextChar(context );
+        char n2 = nextChar( this );
 
 		if( n2 == ']' )
-			tok.set( context->lineNo, context->columnNo, ID::M_DIV );
+			tok.set( lineNo, columnNo, ID::M_DIV );
 		else
 		{
-          context->charLookahead[0] = n;
-          context->charLookahead[1] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+          charLookahead[0] = n;
+          charLookahead[1] = n2;
+          tok.set( lineNo, columnNo, ID::LBRACK );
 		}
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::LBRACK );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::LBRACK );
       }
 
       return;
@@ -894,31 +883,31 @@ void nextToken( Token & tok, Parser * context )
 
     case '*':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::MUL_ASS );
+        tok.set( lineNo, columnNo, ID::MUL_ASS );
         return;
       }
       else if( n == '*')
       {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
 
         if( n2 == '=' )
         {
-          tok.set( context->lineNo, context->columnNo, ID::EXP_ASS );
+          tok.set( lineNo, columnNo, ID::EXP_ASS );
         }
         else
         {
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::EXP );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::EXP );
         }
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::MUL );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::MUL );
         return;
       }
     }
@@ -929,21 +918,21 @@ void nextToken( Token & tok, Parser * context )
     // ++  INC
     case '+':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::ADD_ASS );
+        tok.set( lineNo, columnNo, ID::ADD_ASS );
         return;
       }
       else if( n == '+' )
       {
-        tok.set( context->lineNo, context->columnNo, ID::INC );
+        tok.set( lineNo, columnNo, ID::INC );
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::ADD );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::ADD );
         return;
       }
     }
@@ -955,21 +944,21 @@ void nextToken( Token & tok, Parser * context )
     // .-- POST_DEC
     case '-':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::SUB_ASS );
+        tok.set( lineNo, columnNo, ID::SUB_ASS );
         return;
       }
       else if( n == '-' )
       {
-        tok.set( context->lineNo, context->columnNo, ID::DEC );
+        tok.set( lineNo, columnNo, ID::DEC );
         return;
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::SUB );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::SUB );
         return;
       }
     }
@@ -980,26 +969,26 @@ void nextToken( Token & tok, Parser * context )
     // /*  block comment
     case '/':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
       {
-        tok.set( context->lineNo, context->columnNo, ID::DIV_ASS );
+        tok.set( lineNo, columnNo, ID::DIV_ASS );
         return;
       }
 	    else if( n == '/' )
 	    {
-  	     eatLineComment( tok, context );
+  	     eatLineComment( tok, this );
   		   return;
   	  }
 	    else if( n == '*' )
 	    {
-  	     eatBlockComment( tok, context );
+  	     eatBlockComment( tok, this );
   		   return;
   	  }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::DIV );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::DIV );
         return;
       }
   	  break;
@@ -1010,23 +999,23 @@ void nextToken( Token & tok, Parser * context )
     // ... DOT_DOT_DOT
     case '.':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '.')
       {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
         
         if(n2 == '.')
-          tok.set( context->lineNo, context->columnNo, ID::DOT_DOT_DOT );
+          tok.set( lineNo, columnNo, ID::DOT_DOT_DOT );
         else
         {
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::DOT_DOT );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::DOT_DOT );
         }
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::DOT );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::DOT );
       }
       return;
     }
@@ -1035,13 +1024,13 @@ void nextToken( Token & tok, Parser * context )
     // ==  EQ
     case '=':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
-        tok.set( context->lineNo, context->columnNo, ID::EQ );
+        tok.set( lineNo, columnNo, ID::EQ );
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::ASSIGN );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::ASSIGN );
       }
       return;
     }
@@ -1052,35 +1041,35 @@ void nextToken( Token & tok, Parser * context )
     // <<=  SL_ASS
     case '<':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
 	  {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
 
 		if( n2 == '>' )
-          tok.set( context->lineNo, context->columnNo, ID::SS );
+          tok.set( lineNo, columnNo, ID::SS );
 		else
 		{
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::LE );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::LE );
 		}
 	  }
       else if( n == '<')
       {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
 
         if( n2 == '=' )
-          tok.set( context->lineNo, context->columnNo, ID::SLFT_ASS );
+          tok.set( lineNo, columnNo, ID::SLFT_ASS );
         else
         {
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::SLFT );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::SLFT );
         }
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::LT );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::LT );
       }
       return;
     }
@@ -1091,25 +1080,25 @@ void nextToken( Token & tok, Parser * context )
     // >>=  SR_ASS
     case '>':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
-        tok.set( context->lineNo, context->columnNo, ID::GE );
+        tok.set( lineNo, columnNo, ID::GE );
       else if( n == '>')
       {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
 
         if( n2 == '=' )
-          tok.set( context->lineNo, context->columnNo, ID::SRGHT_ASS );
+          tok.set( lineNo, columnNo, ID::SRGHT_ASS );
         else
         {
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::SRGHT );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::SRGHT );
         }
       }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::GT );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::GT );
       }
       return;
     }
@@ -1120,24 +1109,24 @@ void nextToken( Token & tok, Parser * context )
     // ^^=  BXOR_ASS
     case '^':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
-        tok.set( context->lineNo, context->columnNo, ID::BXOR_ASS );
+        tok.set( lineNo, columnNo, ID::BXOR_ASS );
 	  else if( n == '^' )
 	  {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
 		if( n2 == '=' )
-          tok.set( context->lineNo, context->columnNo, ID::XOR_ASS );
+          tok.set( lineNo, columnNo, ID::XOR_ASS );
 		else
 		{
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::XOR );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::XOR );
 		}
 	  }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::BXOR );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::BXOR );
       }
       return;
     }
@@ -1148,24 +1137,24 @@ void nextToken( Token & tok, Parser * context )
     // ||= OR_ASS
     case '|':
     {
-      char n = nextChar( context );
+      char n = nextChar( this );
       if( n == '=')
-        tok.set( context->lineNo, context->columnNo, ID::BOR_ASS );
+        tok.set( lineNo, columnNo, ID::BOR_ASS );
       else if( n == '|')
 	  {
-        char n2 = nextChar( context );
+        char n2 = nextChar( this );
         if( n2 == '=' )	
-          tok.set( context->lineNo, context->columnNo, ID::OR_ASS );
+          tok.set( lineNo, columnNo, ID::OR_ASS );
         else
 		{
-          context->charLookahead[0] = n2;
-          tok.set( context->lineNo, context->columnNo, ID::OR );
+          charLookahead[0] = n2;
+          tok.set( lineNo, columnNo, ID::OR );
 		}
 	  }
       else
       {
-        context->charLookahead[0] = n;
-        tok.set( context->lineNo, context->columnNo, ID::BOR );
+        charLookahead[0] = n;
+        tok.set( lineNo, columnNo, ID::BOR );
       }
       return;
     }
@@ -1173,7 +1162,7 @@ void nextToken( Token & tok, Parser * context )
 
     if( isdigit(c))
     {
-      if( isNumber( context, c, tok ) )
+      if( isNumber( c, tok ) )
         return;
   
       int loc = 0;
@@ -1183,10 +1172,10 @@ void nextToken( Token & tok, Parser * context )
       {
         lexium += c;
         ++loc;
-        c = nextChar( context );
+        c = nextChar( this );
       } while( c && !isspace(c) );
 
-      tok.set( context->lineNo, context->columnNo, ID::INVALID_NUMBER, lexium );
+      tok.set( lineNo, columnNo, ID::INVALID_NUMBER, lexium );
       return;
     }
     else if( c == '_' )
@@ -1196,55 +1185,55 @@ void nextToken( Token & tok, Parser * context )
       lexium = c;
       ++loc;
   
-      c = nextChar( context );
+      c = nextChar( this );
       while( c == '_' || isalnum(c))
       {
         lexium += c;
         ++loc;
-        c = nextChar( context );
+        c = nextChar( this );
       }
-      context->charLookahead[0] = c;
+      charLookahead[0] = c;
   
       if( lexium == "_e" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_E );
+        tok.set( lineNo, columnNo, ID::_E );
         return;
       }
       else if( lexium == "_gamma" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_GAMMA );
+        tok.set( lineNo, columnNo, ID::_GAMMA );
         return;
       }
       else if( lexium == "_i" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_I );
+        tok.set( lineNo, columnNo, ID::_I );
         return;
       }
       else if( lexium == "_inf" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_INF );
+        tok.set( lineNo, columnNo, ID::_INF );
         return;
       }
       else if( lexium == "_nan" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_NAN );
+        tok.set( lineNo, columnNo, ID::_NAN );
         return;
       }
       else if( lexium == "_phi" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_PHI );
+        tok.set( lineNo, columnNo, ID::_PHI );
         return;
       }
       else if( lexium == "_pi" )
       {
-        tok.set( context->lineNo, context->columnNo, ID::_PI );
+        tok.set( lineNo, columnNo, ID::_PI );
         return;
       }
 
       if( lexium.size() < 16 )
-        tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
+        tok.set( lineNo, columnNo, ID::SID, lexium );
       else
-        tok.set( context->lineNo, context->columnNo, ID::ID, lexium );
+        tok.set( lineNo, columnNo, ID::ID, lexium );
 
       return;
     }
@@ -1257,31 +1246,31 @@ void nextToken( Token & tok, Parser * context )
       ++loc;
   
       char firstChar = c;
-      c = nextChar( context );
+      c = nextChar( this );
   
       if( firstChar == 'l' && c == '"' )
       {
-        isString( context, tok, LEN_PRE );
+        isString( tok, LEN_PRE );
         return;
       }
       else if( firstChar == 'L' && c == '"' )
       {
-        isString( context, tok, LEN_PRE_NULL_TERM );
+        isString( tok, LEN_PRE_NULL_TERM );
         return;
       }
       else if( firstChar == 'r' && c == '"' )
       {
-        isString( context, tok, REG_EXP );
+        isString( tok, REG_EXP );
         return;
       }
       else if( firstChar == 'd' && c == '"' )
       {
-        isDatetime( tok, context );
+        isDatetime( tok );
         return;
       }
       else if( firstChar == 't' && c == '"' )
       {
-        isTime( tok, context );
+        isTime( tok );
         return;
       }
 
@@ -1289,25 +1278,25 @@ void nextToken( Token & tok, Parser * context )
       {
         lexium += c;
         ++loc;
-        c = nextChar( context );
+        c = nextChar( this );
       }
-      context->charLookahead[0] = c;
+      charLookahead[0] = c;
   
       for (unsigned int i = 0; i < noOfKeyWords; ++i )
       {
         if( lexium == keyWords[i].lexium )
         {
-          tok.set( context->lineNo, context->columnNo, keyWords[i].id );
+          tok.set( lineNo, columnNo, keyWords[i].id );
           if( tok.id() == ID::SELECT )
-            context->inSelect = true;
+            inSelect = true;
           return;
         }
       }
 
       if( lexium.size() < 16 )
-        tok.set( context->lineNo, context->columnNo, ID::SID, lexium );
+        tok.set( lineNo, columnNo, ID::SID, lexium );
       else
-        tok.set( context->lineNo, context->columnNo, ID::ID, lexium );
+        tok.set( lineNo, columnNo, ID::ID, lexium );
 
       return;
     }
@@ -1316,7 +1305,7 @@ void nextToken( Token & tok, Parser * context )
     {
       bool escaped = false;
   
-      c = nextChar( context );
+      c = nextChar( this );
 
       std::string lexium;
       lexium = c;
@@ -1344,12 +1333,12 @@ void nextToken( Token & tok, Parser * context )
         }
         else if( c == '\'' )
         {
-          if( isRegexp( context, tok ) )
+          if( isRegexp( tok ) )
             return;
           if( lexium.size() < 16 )
-            tok.set( context->lineNo, context->columnNo,  ID::CHAR_LIT, lexium );
+            tok.set( lineNo, columnNo,  ID::CHAR_LIT, lexium );
           else
-            tok.set( context->lineNo, context->columnNo,  ID::CHAR_LIT, lexium );
+            tok.set( lineNo, columnNo,  ID::CHAR_LIT, lexium );
           return;
         }
         else
@@ -1358,34 +1347,28 @@ void nextToken( Token & tok, Parser * context )
           ++loc;
         }
 
-        c = nextChar( context );
+        c = nextChar( this );
       }
       
-      tok.set( context->lineNo, context->columnNo, ID::INVALID_STRING, lexium );
+      tok.set( lineNo, columnNo, ID::INVALID_STRING, lexium );
       return ;
     }
     //  STRING_LIT
     else if( c == '"' )
     {
-      isString( context, tok, NULL_TERM );
+      isString( tok, NULL_TERM );
       return;
     }
   }
 }
 
-};
-
-void lexPushBack( Token & tok, Parser * context )
+void Parser::lex( Token & tok )
 {
-  context->lookahead = std::move(tok);
-}
-
-void lex( Token & tok, Parser * context )
-{
-  if( context->lookahead.id() != ID::NIL )
+  if( !lookahead.empty() )
   {
-    tok = std::move(context->lookahead);
-	context->lookahead.id( ID::NIL);
+    tok = std::move(lookahead.front());
+		lookahead.pop();
+
 // #define DEBUG_YYLEX
 #ifdef DEBUG_YYLEX
   dumpToken( __FILE__, __LINE__, tok );
@@ -1395,22 +1378,22 @@ void lex( Token & tok, Parser * context )
 
   do
   {
-    nextToken( tok, context );
-  } while( tok.id() == ID::LINE_COMMENT || tok.id() == ID::MULTI_LINE_COMMENT );
+    nextToken( tok );
+  } while( tok.id() == ID::L_COMMENT || tok.id() == ID::ML_COMMENT );
 
   if( tok.id() == ID::TYPE || tok.id() == ID::ENUM || tok.id() == ID::INTERFACE || tok.id() == ID::UNION )
-    context->typeSeen = true;
+    typeSeen = true;
 
-  if( context->typeSeen && tok.isId() )
+  if( typeSeen && tok.isId() )
   {
-    context->typeSeen = false;
-    context->classes.push(tok.idLexium());
-    context->pushSymTbl(tok.idLexium());
+    typeSeen = false;
+    classes.push(tok.idLexium());
+    pushSymTbl(tok.idLexium());
   }
 
   if( tok.isId() )
   {
-    Symbol * sym = context->currSymTbl->find(tok.idLexium());
+    Symbol * sym = currSymTbl->find(tok.idLexium());
 
     if( sym != nullptr )
     {

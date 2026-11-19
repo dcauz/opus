@@ -12,7 +12,7 @@ bool Parser::parseDefault( Default ** df )
 PENTER
 	// get :
 	Token	val;
-	lex( val, this );
+	lex( val );
 
 	if( val.id() != ID::COLON )
 	{

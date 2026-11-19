@@ -16,8 +16,7 @@ class Program
 {
 public:
 	Program( const char * srcFile );
-
-//	void statements( std::vector<Statement *> * defs );
+	~Program();
 
 	std::vector<Statement *> & statements();
 	std::vector<ILentity *>  & ilEntities();

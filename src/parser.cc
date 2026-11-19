@@ -17,19 +17,20 @@ void Parser::populateGlobalSymTbl()
 }
 
 
-bool Parser::parse()
+void Parser::parse()
 {
 PENTER
-	bool rc = true;
 
-	while(rc)
+	while(true)
 	{
 		Statement * statement;
-		rc &= parseStatement( &statement );
-		program_.statements().push_back(statement);
-	}
+		bool rc = parseStatement( &statement );
 
-	return rc;
+		if(rc)
+			program_.statements().push_back(statement);
+		else
+			break;
+	}
 }
 
 #define AND(a,b)	(int)a & (int)b

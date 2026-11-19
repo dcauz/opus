@@ -13,7 +13,7 @@ bool Parser::parseNamespace( Namespace ** ns )
 {
 PENTER
 	Token lval;
-	lex( lval, this );
+	lex( lval );
 
 	if( !lval.isId() )
 	{

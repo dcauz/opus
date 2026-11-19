@@ -30,30 +30,6 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////
 
-class Using: public Statement
-{
-public:
-	Using( int s, int e, std::vector<std::string> && n ):Statement(s,e), name_(n) {}
-
-	bool genCode( GenCodeContext & ) const final;
-	Type * semCheck( SemCheckContext & ) const final;
-
-private:
-	std::vector<std::string> name_;
-};
-
-class UsingNamespace: public Statement
-{
-public:
-	UsingNamespace( int s, int e, std::vector<std::string> && n ):Statement(s,e), name_(n) {}
-
-	bool genCode( GenCodeContext & ) const final;
-	Type * semCheck( SemCheckContext & ) const final;
-
-private:
-	std::vector<std::string> name_;
-};
-
 class Empty: public Statement
 {
 public:
@@ -127,23 +103,6 @@ public:
 
 	bool genCode( GenCodeContext & ) const final;
 	Type * semCheck( SemCheckContext & ) const final;
-};
-
-class Namespace: public Definition, public Symbol
-{
-public:
-	Namespace( int s, int e, const char * n, Statement * st = nullptr ):
-			Definition(s,e), Symbol(n), block_(static_cast<Block *>(st))
-	{ }
-	Namespace( int s, int e, const std::string & n, Statement * st = nullptr ):
-			Definition(s,e), Symbol(n), block_(static_cast<Block *>(st))
-	{ }
-
-	bool genCode( GenCodeContext & ) const final;
-	Type * semCheck( SemCheckContext & ) const final;
-
-private:
-	Block * block_;
 };
 
 class TemplateParam;
@@ -344,6 +303,7 @@ public:
 	ptrType_(pt),
 	init_(iv)
 	{
+printf( "%s:%d %s this %p\n", __FILE__, __LINE__, __func__, this );
 	}
 
 	bool genCode( GenCodeContext & ) const final;
@@ -415,7 +375,7 @@ class Executable: public Definition
 public:
 	Executable( int s, int e, Statement * st ) : Definition(s,e), body_(st) {}
 
-private:
+protected:
 	Statement * body_;
 };
 
@@ -430,10 +390,11 @@ public:
 		Type * t, 
 		const char * n, 
 		std::vector<Arg *> * args, 
-		Statement * bl = nullptr ):
+		Block * bl = nullptr ):
 			Executable(s,e,bl),
 			FunctionType(dec, n, t, args )
 	{
+printf( "%s:%d %s this %p\n", __FILE__, __LINE__, __func__, this );
 	}
 	~FunctionDef();
 

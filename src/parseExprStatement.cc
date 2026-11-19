@@ -14,7 +14,7 @@ bool Parser::parseExprStatement( ExprStatement ** es, Token & tok )
 PENTER
 	
 	if( tok.id() == ID::NIL )
-		lex( tok, this );
+		lex( tok );
 
 	Expr * ex;
 	bool rc = parseExpr( &ex, ETC::SCOLON, STR::NONE, tok, 0, 0 );

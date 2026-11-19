@@ -34,7 +34,7 @@ PENTER
 	*et = nullptr;
 
 	Token	lval;
-	lex( lval, this );
+	lex( lval );
 
 	int s = lval.line();
 
@@ -44,7 +44,7 @@ dumpToken( __FILE__, __LINE__, lval );
 
 	std::string name = lval.idLexium();
 
-	lex( lval, this );
+	lex( lval );
 dumpToken( __FILE__, __LINE__, lval );
 
 	Type * base = nullptr;
@@ -103,7 +103,7 @@ parseBody:
 
 		while( true )
 		{
-			lex( lval, this );
+			lex( lval );
 dumpToken( __FILE__, __LINE__, lval );
 			// name
 			if( !lval.isId() )
@@ -111,11 +111,11 @@ dumpToken( __FILE__, __LINE__, lval );
 			string name = lval.idLexium();
 
 			Expr	* expr = nullptr;
-			lex( lval, this );
+			lex( lval );
 dumpToken( __FILE__, __LINE__, lval );
 			if( lval.id() == ID::ASSIGN )
 			{
-			    lex( lval, this );
+			    lex( lval );
 dumpToken( __FILE__, __LINE__, lval );
 				if( !parseExpr( &expr, ETC::COMMA_OR_RBRACE, STR::NONE, lval, 0, 0 ) )
 					return false;	

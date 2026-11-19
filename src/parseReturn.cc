@@ -13,7 +13,7 @@ bool Parser::parseReturn( Return ** r )
 PENTER
 	Token lval;
 
-	lex( lval, this );
+	lex( lval );
 
 	if( lval.id() == ID::SCOLON )
 		*r = new Return( 0, 0, nullptr );

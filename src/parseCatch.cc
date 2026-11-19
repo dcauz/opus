@@ -14,7 +14,7 @@ bool Parser::parseCatch( CatchBlock ** cb )
 {
 PENTER
 	Token	lval;
-	lex( lval, this );
+	lex( lval );
 
 	if( lval.id() != ID::LPAREN )
 	{
@@ -22,7 +22,7 @@ PENTER
 		return false;
 	}
 
-	lex( lval, this );
+	lex( lval );
 
 	VarDef	* varDef = nullptr;
 	if( lval.id() != ID::DOT_DOT_DOT )
@@ -39,7 +39,7 @@ PENTER
 	else
 	{
 		Token	lval;
-		lex( lval, this );
+		lex( lval );
 		if(lval.id() != ID::RPAREN)
 		{
 			parserError( "missing ) character in catch statement" );

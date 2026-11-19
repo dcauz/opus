@@ -27,14 +27,14 @@ PENTER
 
 	// read name
 	Token   lval;
-	lex( lval, this );
+	lex( lval );
 	if( !lval.isId() )
 	{
 		parserError( "UNION NAME expected" );
 		return false;
 	}
 
-	lex( lval, this );
+	lex( lval );
 
 	// read type params
 	vector<TemplateParam *> * typeParams = nullptr;
@@ -47,7 +47,7 @@ PENTER
 		}
 	}
 
-	lex( lval, this );
+	lex( lval );
 
 	vector<Type *> * bases = nullptr;
 //	vector<up<Statement>> * sts = nullptr;

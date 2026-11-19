@@ -31,10 +31,12 @@
 // dotDotDot
 //	 ...
 //
-bool Parser::parseVarFuncDef( Token & token, VarDef **, Executable ** )
+bool Parser::parseVarFuncDef( Token & token, VarDef ** vd, Executable ** ex )
 {
 PENTER
 	//int typeId;
+
+	int s = token.line();
 
 	enum State
 	{
@@ -84,6 +86,8 @@ PENTER
 	ID paPtr = ID::NIL;
 	bool	pHasRef = false;
 	//bool	pHasPtr = false;
+	std::vector<Arg *> * args = nullptr;;
+	Type	* returnType = nullptr;
 
 	Expr 	* dim;
 
@@ -138,8 +142,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::LT )
 			{
-				std::vector<TemplateArg *>	* args;
-				if(!parseTypeArgs( &args, true ))
+				std::vector<TemplateArg *>	* tArgs;
+				if(!parseTypeArgs( &tArgs, true ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -176,7 +180,8 @@ dumpToken( __FILE__, __LINE__, token );
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
 				}
-				state = arrayCloseSeen;
+				if( token.id() == ID::RBRACKET )
+					state = arrayCloseSeen;
 			}
 			break;
 
@@ -401,11 +406,19 @@ dumpToken( __FILE__, __LINE__, token );
 			break;
 
 		case rParenSeen:
-			// func-modifier {
+			// func-modifier
 			if( token.id() == ID::LBRACE )
 			{
 				Block * body;
-				return parseBlock( & body );	
+				if(!parseBlock( & body ))
+				{
+					TODO
+				}
+				else
+				{
+					*ex = new FunctionDef(  s, -1, 0, returnType, name.idLexium(), args,  body );
+					return true;
+				}
 			}
 			else
 			{
@@ -416,7 +429,7 @@ dumpToken( __FILE__, __LINE__, token );
 		}
 
 printf( "\n%s:%d VF UPDATED state %d\n\n", __FILE__, __LINE__, state );
-		lex( token, this );
+		lex( token );
 	}
 
 	return false;

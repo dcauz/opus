@@ -27,3 +27,11 @@ public:
 	virtual ~Variable() {}
 };
 
+class Module: public Symbol
+{
+public:
+	Module( const char * n ):Symbol(n) {}
+	Module( const std::string & n ):Symbol(n) {}
+
+	virtual ~Module() {}
+};

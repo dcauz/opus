@@ -97,11 +97,11 @@ bool Parser::parseType( Token & lval, unsigned & declarators, Type ** type )
 PENTER
 		declarators = 0;
 
-		lex( lval, this );
+		lex( lval );
 		while( lval.isModifier() )
 		{
 			declarators += static_cast<unsigned>(lval.id());
-			lex( lval, this );
+			lex( lval );
 		}
 
 		std::vector<up<Expr>>	dims;
@@ -110,8 +110,8 @@ dumpToken( __FILE__, __LINE__, lval );
 		switch(lval.id())
 		{
 		default:
-			// Not a type. Set lookahead 
-			lookahead = std::move(lval);
+			// Not a type
+			pushLookahead(lval);
 			return false;
 
 		case ID::AUTO:	*type = new AutoType();		break;
@@ -284,7 +284,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::Q:
 		case ID::TYPE_NAME:
 		{
-			lex( lval, this );
+			lex( lval );
 
 			if( lval.id() == ID::LT )
 			{
@@ -305,7 +305,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::SET:
 		case ID::STACK:
 		{
-			lex( lval, this );
+			lex( lval );
 
 			if( lval.id() == ID::LT )
 			{
@@ -325,7 +325,7 @@ dumpToken( __FILE__, __LINE__, lval );
 	// Get modifiers and dims
 	while(true)
 	{
-		lex( lval, this );
+		lex( lval );
 
 		switch(lval.id())
 		{

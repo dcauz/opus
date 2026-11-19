@@ -21,7 +21,7 @@ PENTER
 	if(rc)
 	{
 		// get WHILE
-		lex( lval, this );
+		lex( lval );
 		if( lval.id() != ID::WHILE )
 		{
 			parserError( "do block is not followed by while" );
@@ -29,7 +29,7 @@ PENTER
 		}
 
 		// get (
-		lex( lval, this );
+		lex( lval );
 		if( lval.id() != ID::LPAREN )
 		{
 			parserError( "do .. while is not followed by (" );
@@ -38,7 +38,7 @@ PENTER
 
 		// get expr
 		Expr * ex;
-		lex( lval, this );
+		lex( lval );
 		rc = parseExpr( &ex, ETC::RPAREN, STR::NONE, lval, 0, 0 );
 
 		if( rc )

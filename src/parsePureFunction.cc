@@ -26,7 +26,7 @@ PENTER
 		return false;
 	}
 
-	lex( token, this );
+	lex( token );
 	if( token.id() != ID::LPAREN )
 	{
 		parserError( "Pure function missing ( character" );
@@ -39,7 +39,7 @@ PENTER
 	if( rc && token.id() != ID::RPAREN )
 		parserError( "Pure function missing ) character" );
 
-	lex( token, this );
+	lex( token );
 	if( token.id() != ID::ASSIGN )
 	{
 		parserError( "Pure function missing = character" );

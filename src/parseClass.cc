@@ -48,7 +48,7 @@ PENTER
 
 	while(true)
 	{
-	  lex( token, this );
+	  lex( token );
 dumpToken( __FILE__, __LINE__, token );
 		if( token.id() == ID::LT )
 		{

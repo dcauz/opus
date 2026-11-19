@@ -26,26 +26,26 @@ PENTER
 
 	while( true )
 	{
-		lex( token, this );
+		lex( token );
 
 dumpToken( __FILE__, __LINE__, token );
 
 		if( token.id() == ID::SCOLON )
 		{
 dumpToken( __FILE__, __LINE__, token );
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.id() == ID::LBRACE ) // {
 		{
 dumpToken( __FILE__, __LINE__, token );
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.is_implement() )
 		{
 dumpToken( __FILE__, __LINE__, token );
-			lookahead = std::move(token);
+			pushLookahead(token);
 			return true;
 		}
 		else if( token.id() == ID::COMMA )

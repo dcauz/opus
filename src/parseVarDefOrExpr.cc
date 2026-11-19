@@ -4,66 +4,64 @@ bool Parser::parseVarDefOrExpr( Token & token, ETC et, VarDef ** varDef, Expr **
 {
 PENTER
 
-  enum State
-  {
-    start,
-	idSeen,
-  } state = start;
-
-  Token first;
-  while(true)
-  {
-    switch(state)
-    {
-    case start:
-    {
-	  if(token.isType() || token.id() == ID::FINAL )
-      {
-	    VarDef * varDef;
-	    if(!parseVariableDef( token, et, &varDef ))
-		{
-		  dumpToken( __FILE__, __LINE__, token );
-          TODO
-		}
-		return true;
-	  }
-	  else if(token.isId())
-      {
-	    first = std::move(token);
-        state = idSeen;
-      }
-	  else
-      {
-		dumpToken( __FILE__, __LINE__, token );
-        TODO
-      }
-      break;
-    }
-	case idSeen:
+	enum State
 	{
-	  // This could be a variable definition if the type
-	  // has not been added to the symbol table
-	  if(token.isId())
-      {
-        dumpToken( __FILE__, __LINE__, token );
-        TODO
-      }
-	  else
-      {
-		lookahead = std::move(token);
+		start,
+		idSeen,
+	} state = start;
 
-	    if(!parseExpr( expr, et, STR::NONE, first, 0, 0 ))
+	Token first;
+	while(true)
+	{
+		switch(state)
 		{
-          dumpToken( __FILE__, __LINE__, token );
-          TODO
+		case start:
+		{
+		  if(token.isType() || token.id() == ID::FINAL )
+			{
+		    VarDef * varDef;
+		    if(!parseVariableDef( token, et, &varDef ))
+				{
+				  dumpToken( __FILE__, __LINE__, token );
+					TODO
+				}
+				return true;
+	  	}
+		  else if(token.isId())
+			{
+		    first = std::move(token);
+				state = idSeen;
+			}
+		  else
+			{
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
+			}
+			break;
 		}
-		token = std::move(first);
-		return true;
-      }
-      break;
+		case idSeen:
+		{
+		  // This could be a variable definition if the type
+		  // has not been added to the symbol table
+		  if(token.isId())
+			{
+				dumpToken( __FILE__, __LINE__, token );
+				TODO
+			}
+		  else
+			{
+		    if(!parseExpr( expr, et, STR::NONE, first, 0, 0 ))
+				{
+					dumpToken( __FILE__, __LINE__, token );
+					TODO
+				}
+				token = std::move(first);
+				return true;
+			}
+			break;
+		}
+		}
 	}
-	}
-  }
 
-  return true;
+	return true;
 }

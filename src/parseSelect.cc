@@ -7,8 +7,8 @@ using namespace	std;
 /**
 Syntax:
 
-  [USING reserved-word-mappings] 
 	SELECT 
+	[(using-mappings)]
   [DISTINCT] column_list
 	FROM table-expr 
 	{[INNER | LEFT | RIGHT | FULL] JOIN table-expr ON join_condition}
@@ -72,6 +72,12 @@ skip_rows
 limit_rows
 	expr
 
+using-mappings
+	using-mappings mapping
+	mapping
+
+mapping
+	name = name
 */
 
 inline bool isSelectReservedWord( const Token & token )
@@ -116,11 +122,11 @@ PENTER
 	while(true)
 	{
 		Token token;
-		lex( token, this );
+		lex( token );
 
 		if( token.isId() )
 		{
-			lex( token, this );
+			lex( token );
 			if( token.id() == ID::EQ )
 			{
 				TODO
@@ -130,7 +136,7 @@ PENTER
 				TODO
 			}
 
-			lex( token, this );
+			lex( token );
 			if( token.isId() && isSelectReservedWord( token ) )
 			{
 				TODO
@@ -152,7 +158,7 @@ PENTER
 	{
 		if( token.id() == ID::MUL )
 		{
-			lex(token, this );
+			lex(token );
 			return true;
 		}
 
@@ -170,7 +176,7 @@ PENTER
 
 		if( token.id() != ID::COMMA )
 			break;
-		lex(token, this );
+		lex(token );
 	}
 	
 	return false;
@@ -184,12 +190,12 @@ PENTER
 bool Parser::parseTableId( Token & token, ETC et, Select * select, bool onTerminated )
 {
 PENTER
-	lex( token, this );
+	lex( token );
 	if( token.isId() )
 	{
 		string name = token.idLexium();
 
-		lex( token, this );
+		lex( token );
 		if( token.isId() )
 		{
 			const char * lex = token.idLexium();
@@ -258,9 +264,9 @@ PENTER
 	STR str = STR::OFFSET_FETCH_ASC_DSC;
 
 	// eat optional 'by' keyword
-	lex( token, this );
+	lex( token );
 	if( token.is_by() )
-		lex( token, this );
+		lex( token );
 
 	while(true)
 	{
@@ -279,10 +285,10 @@ dumpToken( __FILE__, __LINE__, token );
 				{
 					// todo
 
-					lex( token, this );
+					lex( token );
 					if( token.id() == ID::COMMA )
 					{
-						lex( token, this );
+						lex( token );
 						continue;
 					}
 
@@ -294,10 +300,10 @@ dumpToken( __FILE__, __LINE__, token );
 				{
 					// todo
 
-					lex( token, this );
+					lex( token );
 					if( token.id() == ID::COMMA )
 					{
-						lex( token, this );
+						lex( token );
 						continue;
 					}
 
@@ -311,7 +317,7 @@ dumpToken( __FILE__, __LINE__, token );
 			// else, terminated by deliminating character
 			else if( token.id() == ID::COMMA )
 			{
-				lex( token, this );
+				lex( token );
 				// todo
 			}
 			else
@@ -334,7 +340,7 @@ PENTER
 
 	while( true )
 	{
-		lex( token, this );
+		lex( token );
 
 		Expr * expr;
 		if(!parseExpr( &expr, etc, STR::HAVING_ORDER_OFFSET_FETCH, token, 0, 0))
@@ -363,7 +369,7 @@ bool Parser::parseSelect( Select ** select, ETC et )
 {
 PENTER
 	Token token;
-	lex( token, this );
+	lex( token );
 
 	bool isDistinct = false;
 	*select = new Select( token.line(), token.column(), 0, nullptr, nullptr, nullptr );
@@ -372,7 +378,7 @@ PENTER
 	if( token.is_distinct() )
 	{
 		isDistinct = true;
-		lex( token, this );
+		lex( token );
 	}
 
 	if(!parseColumnList( token, *select ) )
@@ -412,7 +418,7 @@ PENTER
 
 	if( token.is_where() )
 	{
-		lex( token, this );
+		lex( token );
 		Expr * expr;
 		if(!parseExpr( &expr, et, STR::GROUP_HAVING_ORDER_OFFSET_FETCH, token, 0, 0))
 		{
@@ -423,7 +429,7 @@ PENTER
 
 	if( token.is_group())
 	{
-		lex(token, this );
+		lex(token );
 		if( !token.is_by())
 		{
 			TODO
@@ -440,7 +446,7 @@ PENTER
 	if( token.is_having())
 	{
 		Expr * expr;
-		lex(token, this );
+		lex(token );
 		if(!parseExpr( &expr, et, STR::ORDER_OFFSET_FETCH, token, 0, 0))
 		{
 			TODO
@@ -459,7 +465,7 @@ PENTER
 	if( token.is_offset())
 	{
 		// OFFSET skip_rows ROWS
-		lex( token, this );
+		lex( token );
 
 		Expr * expr;
 		if(!parseExpr( &expr, et, STR::ROWS, token, 0, 0))
@@ -470,19 +476,19 @@ PENTER
 
 		// todo
 
-		lex( token, this );
+		lex( token );
 	}
 
 	if(token.is_fetch())
 	{
 		// FETCH FIRST limit_rows ROWS ONLY
-		lex( token, this );
+		lex( token );
 		if( !token.is_first() )
 		{
 			TODO
 		}
 	
-		lex( token, this );
+		lex( token );
 		Expr * expr;
 		if(!parseExpr( &expr, et, STR::ROWS, token, 0, 0))
 		{
@@ -490,18 +496,18 @@ PENTER
 			return false;
 		}
 
-		lex( token, this );
+		lex( token );
 		if( !token.is_only())
 		{
 			TODO
 		}
 		// todo
 
-		lex( token, this );
+		lex( token );
 	}
 
 	// Push the terminating token back onto the stack
-	lookahead = std::move( token );
+	pushLookahead( token );
 
 	return true;
 }

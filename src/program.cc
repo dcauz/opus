@@ -9,11 +9,6 @@
 Program * program;
 
 
-/*void Program::statements( std::vector<Statement *> * defs ) 
-{ 
-	statements_ = *defs; 
-}
-*/
 std::vector<Statement *> & Program::statements() 
 { 
 	return statements_; 
@@ -30,6 +25,10 @@ Program::Program( const char * srcFile ):srcFile_(srcFile)
 	ilEntities_.push_back( new TargetDefinition( true, "x86_64-pc-linux-gnu" ));
 }
 
+Program::~Program( )
+{
+}
+
 bool Program::semCheck() const
 {
 	auto i = statements_.begin();
@@ -40,7 +39,6 @@ bool Program::semCheck() const
 	while( i != e )
 	{
 		Statement * def = *i;
-
 		Type * type = def->semCheck( context );
 		if( type == errorType )
 			return false;

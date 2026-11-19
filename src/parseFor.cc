@@ -33,13 +33,13 @@ bool Parser::parseFor( For ** f )
 {
 PENTER
 	Token lval;
-	lex( lval, this );
+	lex( lval );
 	if( lval.id() != ID::LPAREN )
 	{
 		parserError( "catch is not followed by ( character" );
 		return false;
 	}
-	lex( lval, this );
+	lex( lval );
 
 	Expr	* expr1  = nullptr;
 	Expr	* expr2  = nullptr;
@@ -60,7 +60,7 @@ PENTER
 	// Cases 1-12
 	if( lval.id() == ID::SCOLON )
 	{
-		lex( lval, this );
+		lex( lval );
 
 		// cases 3,4,7,8,11,12
 		if( lval.id() != ID::SCOLON )
@@ -71,7 +71,7 @@ PENTER
 				return false;
 		}
 
-		lex( lval, this );
+		lex( lval );
 
 		// cases  2,4,6,8,10,12
 		if( lval.id() != ID::RPAREN )
@@ -91,7 +91,7 @@ PENTER
 	else if( lval.id() == ID::COLON )	// case 13
 	{
 		Expr	* cExpr;
-		lex( lval, this );
+		lex( lval );
 		rc = parseExpr( &cExpr, ETC::RPAREN, STR::NONE, lval, 0, 0 );
 
 		if(!rc)

@@ -17,7 +17,7 @@ PENTER
 	while(!*statement)
 	{
 		Token	val;
-		lex( val, this );
+		lex( val );
 
 		switch(val.id())
 		{
@@ -30,29 +30,35 @@ PENTER
 			if( val.isId())
 			{
 				Token next;
-				lex( next, this );
+				lex( next );
 
 				// The first token may be a type name, so treat
 				// statement as a declaration
 				if( next.isId())
 				{
-					VarDef * vd;
-					Executable * ex;
-				  lookahead = std::move(next);
+					VarDef * vd = nullptr;
+					Executable * ex = nullptr;
+				  pushLookahead(next);
 					rc = parseVarFuncDef( val, &vd, &ex );
-					*statement = ex;
+					if( ex )
+						*statement = ex;
+					else
+						*statement = vd;
+printf( "%s:%d statement %p %p\n", __FILE__, __LINE__, ex, vd );
 				}
 				else
 				{
-				  lookahead = std::move(next);
+				  pushLookahead(next);
 					rc = parseExprStatement( &exprS, val );
 					*statement = exprS;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, exprS );
 				}
 				break;
 			}
 			
 			rc = parseExprStatement( &exprS, val );
 			*statement = exprS;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, exprS );
 			break;
 		}
 		case ID::SCOLON:		// empty
@@ -60,6 +66,7 @@ PENTER
 			auto empty = new Empty( 0 );
 			rc = true;
 			*statement = empty;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, empty );
 			break;
 		}
 		case ID::LBRACE:		// block
@@ -67,6 +74,7 @@ PENTER
 			Block * block;
 			rc = parseBlock( &block );
 			*statement = block;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, block );
 			break;
 		}
 		case ID::RBRACE:
@@ -170,6 +178,7 @@ PENTER
 			Executable * ex;
 			rc = parseVarFuncDef( val, &vd, &ex );
 			*statement = ex;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, ex );
 			break;
 		}
 	
@@ -180,6 +189,7 @@ PENTER
 			Break * b;
 			rc = parseBreak( &b );
 			*statement = b;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, b );
 			break;
 		}
 		case ID::CASE:		// case
@@ -187,6 +197,7 @@ PENTER
 			Case * c;
 			rc = parseCase( &c );
 			*statement = c;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, c );
 			break;
 		}
 		case ID::CONTINUE:	// continue
@@ -194,6 +205,7 @@ PENTER
 			Continue * con;
 			rc = parseContinue( &con );
 			*statement = con;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, con );
 			break;
 		}
 		case ID::DEFAULT:	// default
@@ -201,6 +213,7 @@ PENTER
 			Default * def;
 			rc = parseDefault( &def );
 			*statement = def;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, def );
 			break;
 		}
 		case ID::DO:		// do ... while 
@@ -208,6 +221,7 @@ PENTER
 			Do * un;
 			rc = parseDo( &un );
 			*statement = un;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, un );
 			break;
 		}
 		case ID::FOR:		// for
@@ -215,6 +229,7 @@ PENTER
 			For * f;
 			rc = parseFor( &f );
 			*statement = f;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, f );
 			break;
 		}
 		case ID::IF:		// if 
@@ -222,13 +237,7 @@ PENTER
 			If * i;
 			rc = parseIf( &i );
 			*statement = i;
-			break;
-		}
-		case ID::NAMESPACE:	// namespace
-		{
-			Namespace * ns;
-			rc = parseNamespace( &ns );
-			*statement = ns;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, i );
 			break;
 		}
 		case ID::RETURN:	// return
@@ -236,6 +245,7 @@ PENTER
 			Return * r;
 			rc = parseReturn( &r );
 			*statement = r;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, r );
 			break;
 		}
 		case ID::SWITCH:	// switch 
@@ -243,6 +253,7 @@ PENTER
 			Switch * sw;
 			rc = parseSwitch( &sw );
 			*statement = sw;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, sw );
 			break;
 		}
 		case ID::TRY:		// try
@@ -250,6 +261,7 @@ PENTER
 			Try * t;
 			rc = parseTry( &t );
 			*statement = t;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			break;
 		}
 		case ID::CATCH:		// catch
@@ -257,14 +269,7 @@ PENTER
 			CatchBlock * t;
 			rc = parseCatch( &t );
 			*statement = t;
-			break;
-		}
-		case ID::USING:		// using 
-		{
-			Using * u;
-			UsingNamespace * uns;
-			rc = parseUsing( &u, &uns );
-			*statement = uns;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			break;
 		}
 		case ID::WHILE:		// while 
@@ -272,6 +277,7 @@ PENTER
 			While * w;
 			rc = parseWhile( &w );
 			*statement = w;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, w );
 			break;
 		}
 	
@@ -282,6 +288,7 @@ PENTER
 			Class * ct;
 			rc = parseClass( &ct );
 			*statement = ct;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, ct );
 			break;
 		}
 		case ID::ENUM:
@@ -289,6 +296,7 @@ PENTER
 			Enum * et;
 			rc = parseEnum( &et );
 			*statement = et;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, et );
 			break;
 		}
 		case ID::UNION:
@@ -297,6 +305,7 @@ PENTER
 			rc = parseClass( &ut );
 			ut->ctype( Class::isUnion );
 			*statement = ut;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, ut );
 			break;
 		}
 		case ID::INTERFACE:
@@ -305,6 +314,7 @@ PENTER
 			rc = parseClass( &it );
 			it->ctype( Class::isInterface );
 			*statement = it;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, it );
 			break;
 		}
 		case ID::RELATION:
@@ -312,6 +322,7 @@ PENTER
 			Relation * rel;
 			rc = parseRelation( &rel );
 			*statement = rel;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, rel );
 			break;
 		}
 	
@@ -321,6 +332,7 @@ PENTER
 			PureFuncDef * pfd;
 			rc = parsePureFunction( &pfd );
 			*statement = pfd;
+printf( "%s:%d statement %p\n", __FILE__, __LINE__, pfd );
 			break;
 		}
 		}
