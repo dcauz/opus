@@ -10,7 +10,6 @@
 #include "bool.h"
 #include "semchkcontext.h"
 #include "log.h"
-#include "lex.h"
 #include "token.h"
 
 

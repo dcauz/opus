@@ -3,7 +3,6 @@
 #include "program.h"
 #include "symtbl.h"
 #include "token.h"
-#include "lex.h"
 
 #include <stack>
 #include <queue>

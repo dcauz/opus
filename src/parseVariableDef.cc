@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "lex.h"
 
 
 bool Parser::parseVariableDef( Token & token, ETC et, VarDef ** varDef )

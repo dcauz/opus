@@ -1,6 +1,5 @@
 #include "parser.h"
 #include "void.h"
-#include "lex.h"
 #include "token.h"
 
 
