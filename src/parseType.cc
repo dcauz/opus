@@ -301,6 +301,7 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::DURATION:
 		case ID::LIST:
 		case ID::MSET:
+		case ID::PQUEUE:
 		case ID::QUEUE:
 		case ID::SET:
 		case ID::STACK:
@@ -335,8 +336,9 @@ dumpToken( __FILE__, __LINE__, lval );
 
 		case ID::QUEST:
 		case ID::MUL:
+		case ID::EXP:
 		case ID::BAND:
-		case ID::WEAK:
+		case ID::ADD:
 			if(dims.size() == 0 )
 			{
 				if( collectionPtr == Pointer::NONE )
@@ -359,11 +361,11 @@ dumpToken( __FILE__, __LINE__, lval );
 			}
 			break;
 
-		case ID::LBRACK:
+		case ID::LBRACKET:
 		{
 			Expr * expr;
 			Token tt;
-			if( parseExpr( &expr, ETC::COMMA_OR_RBRACKET, STR::NONE, tt, 0, 0 ) && tt.id() == ID::RBRACKET )
+			if( parseExpr( &expr, ETC::COMMA_RBRACKET, STR::NONE, tt, 0, 0 ) && tt.id() == ID::RBRACKET )
 				dims.push_back(up<Expr>(expr));
 			else
 			{

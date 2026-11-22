@@ -146,9 +146,9 @@ enum class Pointer
 {
 	NONE				= 0,
 	OPTIONAL    = '?',
-	UNIQUE_PTR	= '&',
-	SHARED_PTR	= '*',
-	WEAK_PTR		= '#'
+	UNIQUE_PTR	= '*',
+	SHARED_PTR	= '^',
+	WEAK_PTR		= '+'
 };
 
 class TypeArg
@@ -342,12 +342,12 @@ private:
 class TemplateParam: public Variable
 {
 public:
-	TemplateParam( int s, const char * n): line_(s), Variable(n) {}
-	TemplateParam( int s, const std::string & n): line_(s), Variable(n) {}
+	TemplateParam( int s, const char * n): Variable(n), line_(s) {}
+	TemplateParam( int s, const std::string & n): Variable(n), line_(s) {}
 	TemplateParam( int s, Type * t, const char * n): 
-		line_(s), Variable(n), type_(t) {}
+		Variable(n), line_(s), type_(t) {}
 	TemplateParam( int s, Type * t, const std::string & n): 
-		line_(s), Variable(n), type_(t) {}
+		Variable(n), line_(s), type_(t) {}
 
 	bool genCode( GenCodeContext & ) const;
 	Type * semCheck( SemCheckContext & ) const;

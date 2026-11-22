@@ -44,21 +44,18 @@ PENTER
 						*statement = ex;
 					else
 						*statement = vd;
-printf( "%s:%d statement %p %p\n", __FILE__, __LINE__, ex, vd );
 				}
 				else
 				{
 				  pushLookahead(next);
 					rc = parseExprStatement( &exprS, val );
 					*statement = exprS;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, exprS );
 				}
 				break;
 			}
 			
 			rc = parseExprStatement( &exprS, val );
 			*statement = exprS;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, exprS );
 			break;
 		}
 		case ID::SCOLON:		// empty
@@ -66,7 +63,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, exprS );
 			auto empty = new Empty( 0 );
 			rc = true;
 			*statement = empty;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, empty );
 			break;
 		}
 		case ID::LBRACE:		// block
@@ -74,7 +70,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, empty );
 			Block * block;
 			rc = parseBlock( &block );
 			*statement = block;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, block );
 			break;
 		}
 		case ID::RBRACE:
@@ -155,13 +150,14 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, block );
 
 		case ID:: STRING: case ID:: LSTRING: case ID::LTSTRING:
 
-		case ID::MAP:		// map
+		case ID::MAP:			// map
 		case ID::MMAP:		// mmap
 		case ID::MSET:		// mset
-		case ID::N:			// N
+		case ID::N:				// N
 		case ID::LIST:		// list
 		case ID::OBJECT:	// object
-		case ID::Q:			// Q
+		case ID::PQUEUE:	// pqueue
+		case ID::Q:				// Q
 		case ID::QUEUE:		// queue
 		case ID::R:			// R
 		case ID::REGEXP:	// regexp
@@ -178,7 +174,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, block );
 			Executable * ex;
 			rc = parseVarFuncDef( val, &vd, &ex );
 			*statement = ex;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, ex );
 			break;
 		}
 	
@@ -189,7 +184,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, ex );
 			Break * b;
 			rc = parseBreak( &b );
 			*statement = b;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, b );
 			break;
 		}
 		case ID::CASE:		// case
@@ -197,7 +191,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, b );
 			Case * c;
 			rc = parseCase( &c );
 			*statement = c;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, c );
 			break;
 		}
 		case ID::CONTINUE:	// continue
@@ -205,7 +198,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, c );
 			Continue * con;
 			rc = parseContinue( &con );
 			*statement = con;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, con );
 			break;
 		}
 		case ID::DEFAULT:	// default
@@ -213,7 +205,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, con );
 			Default * def;
 			rc = parseDefault( &def );
 			*statement = def;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, def );
 			break;
 		}
 		case ID::DO:		// do ... while 
@@ -221,7 +212,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, def );
 			Do * un;
 			rc = parseDo( &un );
 			*statement = un;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, un );
 			break;
 		}
 		case ID::FOR:		// for
@@ -229,7 +219,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, un );
 			For * f;
 			rc = parseFor( &f );
 			*statement = f;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, f );
 			break;
 		}
 		case ID::IF:		// if 
@@ -237,7 +226,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, f );
 			If * i;
 			rc = parseIf( &i );
 			*statement = i;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, i );
 			break;
 		}
 		case ID::RETURN:	// return
@@ -245,7 +233,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, i );
 			Return * r;
 			rc = parseReturn( &r );
 			*statement = r;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, r );
 			break;
 		}
 		case ID::SWITCH:	// switch 
@@ -253,7 +240,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, r );
 			Switch * sw;
 			rc = parseSwitch( &sw );
 			*statement = sw;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, sw );
 			break;
 		}
 		case ID::TRY:		// try
@@ -261,7 +247,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, sw );
 			Try * t;
 			rc = parseTry( &t );
 			*statement = t;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			break;
 		}
 		case ID::CATCH:		// catch
@@ -269,7 +254,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			CatchBlock * t;
 			rc = parseCatch( &t );
 			*statement = t;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			break;
 		}
 		case ID::WHILE:		// while 
@@ -277,7 +261,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, t );
 			While * w;
 			rc = parseWhile( &w );
 			*statement = w;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, w );
 			break;
 		}
 	
@@ -288,7 +271,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, w );
 			Class * ct;
 			rc = parseClass( &ct );
 			*statement = ct;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, ct );
 			break;
 		}
 		case ID::ENUM:
@@ -296,7 +278,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, ct );
 			Enum * et;
 			rc = parseEnum( &et );
 			*statement = et;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, et );
 			break;
 		}
 		case ID::UNION:
@@ -305,7 +286,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, et );
 			rc = parseClass( &ut );
 			ut->ctype( Class::isUnion );
 			*statement = ut;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, ut );
 			break;
 		}
 		case ID::INTERFACE:
@@ -314,7 +294,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, ut );
 			rc = parseClass( &it );
 			it->ctype( Class::isInterface );
 			*statement = it;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, it );
 			break;
 		}
 		case ID::RELATION:
@@ -322,7 +301,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, it );
 			Relation * rel;
 			rc = parseRelation( &rel );
 			*statement = rel;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, rel );
 			break;
 		}
 	
@@ -332,7 +310,6 @@ printf( "%s:%d statement %p\n", __FILE__, __LINE__, rel );
 			PureFuncDef * pfd;
 			rc = parsePureFunction( &pfd );
 			*statement = pfd;
-printf( "%s:%d statement %p\n", __FILE__, __LINE__, pfd );
 			break;
 		}
 		}

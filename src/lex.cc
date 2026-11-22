@@ -719,9 +719,6 @@ void Parser::nextToken( Token & tok )
     case ']':
       tok.set( lineNo, columnNo, ID::RBRACKET );
       return;
-    case '#':
-      tok.set( lineNo, columnNo, ID::WEAK );
-      return;
     }
 
     switch(c)
@@ -796,13 +793,13 @@ void Parser::nextToken( Token & tok )
       else if( n == '&')
       {
         char n2 = nextChar( this );
-		if( n2 == '=' )
+				if( n2 == '=' )
           tok.set( lineNo, columnNo, ID::AND_ASS );
-		else
-		{
+				else
+				{
           tok.set( lineNo, columnNo, ID::AND );
           charLookahead[0] = n2;
-		}
+				}
         return;
       }
       else
@@ -833,14 +830,14 @@ void Parser::nextToken( Token & tok )
             charLookahead[0] = n;
             charLookahead[1] = n2;
             charLookahead[2] = n3;
-            tok.set( lineNo, columnNo, ID::LBRACK );
+            tok.set( lineNo, columnNo, ID::LBRACKET );
 		  }
 		}
 		else
 		{
           charLookahead[0] = n;
           charLookahead[1] = n2;
-          tok.set( lineNo, columnNo, ID::LBRACK );
+          tok.set( lineNo, columnNo, ID::LBRACKET );
 		}
       }
       else if( n == '.' )
@@ -855,7 +852,7 @@ void Parser::nextToken( Token & tok )
 		{
           charLookahead[0] = n;
           charLookahead[1] = n2;
-          tok.set( lineNo, columnNo, ID::LBRACK );
+          tok.set( lineNo, columnNo, ID::LBRACKET );
 		}
       }
       else if( n == '/' )
@@ -868,13 +865,13 @@ void Parser::nextToken( Token & tok )
 		{
           charLookahead[0] = n;
           charLookahead[1] = n2;
-          tok.set( lineNo, columnNo, ID::LBRACK );
+          tok.set( lineNo, columnNo, ID::LBRACKET );
 		}
       }
       else
       {
         charLookahead[0] = n;
-        tok.set( lineNo, columnNo, ID::LBRACK );
+        tok.set( lineNo, columnNo, ID::LBRACKET );
       }
 
       return;

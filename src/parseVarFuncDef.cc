@@ -40,33 +40,33 @@ PENTER
 
 	enum State
 	{
-		start					 = 0,
+		start					 	= 0,
 
-		modSeen				 = 1,
+		modSeen				 	= 1,
 		typeSeen				= 2,
-		ptrSeen				 = 3,
-		arrayOpenSeen	 = 4,
+		ptrSeen				 	= 3,
+		arrayOpenSeen	 	= 4,
 		arrayCloseSeen	= 5,
 		arrayPtrSeen		= 6,
-		refSeen				 = 7,
+		refSeen				 	= 7,
 		idSeen					= 8,
-		assSeen				 = 9,
+		assSeen				 	= 9,
 		exprSeen				= 10,
 
 		lParenSeen			= 11,
 
 		pModSeen				= 12,
-		pTypeSeen			 = 13,
+		pTypeSeen			 	= 13,
 		pPtrSeen				= 14,
 		pArrayOpenSeen	= 15,
-		pArrayCloseSeen = 16,
-		pArrayPtrSeen	 = 17,
+		pArrayCloseSeen	= 16,
+		pArrayPtrSeen		= 17,
 		pRefSeen				= 18,
-		pIdSeen				 = 19,
+		pIdSeen				 	= 19,
 		pAssSeen				= 20,
-		pExprSeen			 = 21,
+		pExprSeen			 	= 21,
 
-		dotDotDotSeen	 = 22,
+		dotDotDotSeen	 	= 22,
 
 		rParenSeen			= 23,
 	} state = start;
@@ -128,7 +128,7 @@ dumpToken( __FILE__, __LINE__, token );
 				name = std::move(token);
 				state = idSeen;
 			}
-			else if( token.id() == ID::LBRACK )
+			else if( token.id() == ID::LBRACKET )
 				state = arrayOpenSeen;
 			else if( token.id() == ID::QUEST )
 			{
@@ -143,7 +143,7 @@ dumpToken( __FILE__, __LINE__, token );
 			else if( token.id() == ID::LT )
 			{
 				std::vector<TemplateArg *>	* tArgs;
-				if(!parseTypeArgs( &tArgs, true ))
+				if(!parseTypeExpr( token, &tArgs, ETC::ID ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -175,7 +175,7 @@ dumpToken( __FILE__, __LINE__, token );
 			else
 			{
 				// get dims
-				if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, STR::NONE, token, 0, 0 ))
+				if(!parseExpr( &dim, ETC::COMMA_RBRACKET, STR::NONE, token, 0, 0 ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO
@@ -198,7 +198,7 @@ dumpToken( __FILE__, __LINE__, token );
 				state = arrayPtrSeen;
 				aPtr = token.id();
 			}
-			else if( token.id() == ID::LBRACK )
+			else if( token.id() == ID::LBRACKET )
 				state = arrayOpenSeen;
 			else
 			{
@@ -305,7 +305,7 @@ dumpToken( __FILE__, __LINE__, token );
 				pName = std::move(token);
 				state = pIdSeen;
 			}
-			else if( token.id() == ID::LBRACK )
+			else if( token.id() == ID::LBRACKET )
 				state = pArrayOpenSeen;
 			else if( token.id() == ID::BAND )
 				state = pRefSeen;

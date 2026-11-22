@@ -89,23 +89,31 @@ dumpToken( __FILE__, __LINE__, tok );
 	// Expression terminating characters
 	enum class ETC
 	{
-		COMMA		= 1,		// e1 , e2 , ...
-		COLON		= 2,		// e1 ? e2 : e3
-		RPAREN	= 4,		// ( e1 )
-		SCOLON	= 8,		// e ;
-		RBRACE	= 16,		// }
-		RBRACKET= 32,		// ]
-		BOR			= 64,		// | e |
-		GT			= 128,	// >
+		COMMA			= 1,		// e1 , e2 , ...
+		COLON			= 2,		// e1 ? e2 : e3
+		RPAREN		= 4,		// ( e1 )
+		SCOLON		= 8,		// e ;
+		RBRACE		= 16,		// }
+		RBRACKET	= 32,		// ]
+		BOR				= 64,		// | e |
+		GT				= 128,	// >
+		SRGHT			= 256,	// >>
+		ID				= 512,	// identifier
+		IMPLEMENT = 1024,
+		EXTEND		= 2048,
 
-		COMMA_OR_RPAREN   			= COMMA | RPAREN,
-		COMMA_OR_RBRACE   			= COMMA | RBRACE,
-		COMMA_OR_SCOLON   			= COMMA | SCOLON,
-		COMMA_OR_RBRACKET 			= COMMA | RBRACKET,
-		COMMA_OR_GT       			= COMMA | GT,
-		COMMA_OR_COLON_OR_RBRACE= COMMA | COLON | RBRACE,
+		COMMA_RPAREN   					= COMMA | RPAREN,
+		COMMA_RBRACE   					= COMMA | RBRACE,
+		COMMA_SCOLON   					= COMMA | SCOLON,
+		COMMA_RBRACKET					= COMMA | RBRACKET,
+		COMMA_GT     		  			= COMMA | GT,
+		COMMA_COLON_RBRACE			= COMMA | COLON | RBRACE,
+		COMMA_GT_SRGHT					= COMMA | GT | SRGHT,
 
-		SCOLON_OR_RPAREN				= SCOLON | RPAREN,
+		SCOLON_RPAREN						= SCOLON | RPAREN,
+
+		SCOLON_RBRACE_IMPLEMENT	= SCOLON | RBRACE | IMPLEMENT,
+		SCOLON_RBRACE_EXTEND		= SCOLON | RBRACE | EXTEND,
 	};
 
 	// Select expression terminating reserved words
@@ -147,7 +155,6 @@ private:
 
 	bool parseArgs( Token &, std::vector<Arg *> ** );
 	bool parseExpr( Expr ** expr, ETC et, STR set, Token &, int, int );
-	bool parseExprTypes( std::vector<TypeArg *> & );
 	bool parseSelect( Select **, ETC et );
 	bool parseIdMapping( std::map<std::string,std::string> & mapping );
 	bool parseColumnList( Token & token, Select * select );
@@ -157,12 +164,11 @@ private:
 
 	bool parseStatement( Statement ** );
 	bool parseType( Token &, unsigned &, Type ** );
-	bool parseTypeArgs( std::vector<TemplateArg *> **, bool );
+	bool parseTypeExpr( Token &, std::vector<TemplateArg *> **, ETC etc );
 	bool parseTypeParams( std::vector<TemplateParam *> ** );
 	bool parseVarDefOrExpr( Token & , ETC, VarDef ** variableDef, Expr ** initExpr );
 	bool parseVariableDef( Token & token, ETC et, VarDef ** variableDef );
 
-	bool parseAlias( Alias ** );
 	bool parseBlock( Block ** );
 	bool parseBreak( Break ** );
 	bool parseCase( Case ** );

@@ -152,6 +152,7 @@ Keyword keyWords[] =
 
 	{ ID::OBJECT,       "object" },
 
+	{ ID::PQUEUE,       "pqueue" },
 	{ ID::PRIVATE,      "private" },
 	{ ID::PUBLIC,       "public" },
 	{ ID::PURE,         "pure" },
@@ -413,7 +414,6 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::ERROR:       	ss << "ERROR";break;
 
 	case ID::NOT:    				ss << "!";		break;
-	case ID::WEAK:    			ss << "#";		break;
 	case ID::MOD:     			ss << "%";		break;
 	case ID::BAND:    			ss << "&";		break;
 	case ID::BAND_ASS:  		ss << "&=";		break;
@@ -431,7 +431,7 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::ASSIGN:  			ss << "=";		break;
 	case ID::GT:      			ss << ">";		break;
 	case ID::QUEST:   			ss << "?";		break;
-	case ID::LBRACK:  			ss << "[";		break;
+	case ID::LBRACKET: 			ss << "[";		break;
 	case ID::BSLASH:  			ss << "\\";		break;
 	case ID::RBRACKET: 			ss << "]";		break;
 	case ID::BXOR:     			ss << "^";		break;
@@ -598,19 +598,21 @@ void dumpToken( const char * f, int l, const Token & token )
 	case ID::N32:						ss << "n32"; 	    break;
 
 	case ID::N64:						ss << "i64"; 	    break;
-	case ID::N128:					ss << "i128";   break;
+	case ID::N128:					ss << "i128";   	break;
 
-	case ID::OBJECT:				ss << "object";	break;
+	case ID::OBJECT:				ss << "object";		break;
+
+	case ID::PQUEUE:				ss << "pqueue"; 	break;
 
 	case ID::Q:							ss << "Q"; 				break;
-	case ID::QUEUE:					ss << "queue"; 	break;
+	case ID::QUEUE:					ss << "queue"; 		break;
 
-	case ID::R:        		 	ss <<  "R";		break;
+	case ID::R:        		 	ss <<  "R";				break;
 	case ID::REGEXP:    		ss <<  "regexp";	break;
 
-  case ID::SEMAPHORE:			ss << "semaphore";	break;
-	case ID::STACK:					ss << "stack"; 	break;
-	case ID::STRING:				ss << "string";	break;
+  case ID::SEMAPHORE:			ss << "semaphore";break;
+	case ID::STACK:					ss << "stack"; 		break;
+	case ID::STRING:				ss << "string";		break;
 
 	case ID::U0:						ss << "u0"; 	    break;
 	case ID::U1:						ss << "u1"; 	    break;

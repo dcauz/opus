@@ -50,7 +50,6 @@ dumpToken( __FILE__, __LINE__, lval );
 	Type * base = nullptr;
 	std::vector<Statement *> * sts = nullptr;
 
-	int e;
 	if( lval.id() == ID::COLON )
 	{
 		while(true)
@@ -117,7 +116,7 @@ dumpToken( __FILE__, __LINE__, lval );
 			{
 			    lex( lval );
 dumpToken( __FILE__, __LINE__, lval );
-				if( !parseExpr( &expr, ETC::COMMA_OR_RBRACE, STR::NONE, lval, 0, 0 ) )
+				if( !parseExpr( &expr, ETC::COMMA_RBRACE, STR::NONE, lval, 0, 0 ) )
 					return false;	
 
 				if( !sts )

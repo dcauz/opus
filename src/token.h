@@ -57,7 +57,6 @@ enum class ID : unsigned int
 	SLFT,				// <<
 	NOT   =33,	// !
 	SRGHT,		 	// >>
-	WEAK  =35,	// #		weak pointer (not an operator)
 	SRGHT_ASS,	// >>=
 	MOD   =37,	// %
 	BAND  =38,	// &
@@ -101,7 +100,7 @@ enum class ID : unsigned int
 	// 70
 	BNOT  =70,	// ~
 
-	LBRACK=91,	// [
+	LBRACKET=91,// [
 	BSLASH=92,	// back slash
 	RBRACKET=93,// ]
 	BXOR  =94,	// ^^
@@ -147,6 +146,7 @@ enum class ID : unsigned int
 	N30, N31, N32, 
 	N64, N128,
 	OBJECT,
+	PQUEUE,
 	Q,
 	QUEUE,
 	R,
@@ -524,7 +524,7 @@ struct Token
 	bool isDefinedType() const{ return id_ > ID::FIRST_DEFINED_TYPE_NAME && id_ < ID::LAST_DEFINED_TYPE_NAME; }
 	bool isType() const       { return isBasicType() || isDefinedType(); }
 	bool isModifier() const		{ return id_ > ID::FIRST_TYPE_MODIFIER && id_ < ID::LAST_TYPE_MODIFIER; }
-	bool isPointer() const		{ return id_ == ID::MUL || id_ == ID::XOR || id_ == ID::WEAK; }
+	bool isPointer() const		{ return id_ == ID::MUL || id_ == ID::XOR || id_ == ID::ADD; }
 	bool isLongString() const { return id_ == ID::STRING_LIT || id_ == ID::LSTRING_LIT || id_ == ID::LTSTRING_LIT; }
 	bool isString() const 		{ return	id_ == ID::LSTRING_LIT || id_ == ID::LTSTRING_LIT ||
 																			id_ == ID::LSSTRING_LIT || id_ == ID::LTSSTRING_LIT ||

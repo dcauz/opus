@@ -32,7 +32,7 @@ static std::map<ID, Operator> ops =
 	{ ID::ALIGNOF,     {Assoc::NON,   1 }}, // alignof   Align of a type.
 	{ ID::LPAREN,      {Assoc::NON,   1 }}, // (     Parenthesis / ctor / function call
 	{ ID::RPAREN,      {Assoc::NON,   1 }}, // )     Parenthesis
-	{ ID::LBRACK,      {Assoc::NON,   1 }}, // [     Array index
+	{ ID::LBRACKET,    {Assoc::NON,   1 }}, // [     Array index
 	{ ID::RBRACKET,    {Assoc::NON,   1 }}, // ]     Array index
 	{ ID::ABS,         {Assoc::NON,   1 }}, // |..|                                          //
 	{ ID::FACTORIAL,   {Assoc::NON,   1 }}, // . !     Factorial (post)
@@ -671,7 +671,7 @@ bool Parser::reduce( int initOpStack, int initExprStack, ID next )
 				Expr * bin = createBinOpExpr( op, left, right );
 				exprStack.push( bin );
 			}
-			else if( op.id() == ID::LBRACK )
+			else if( op.id() == ID::LBRACKET )
 			{
 				Expr * right = exprStack.top();
 				exprStack.pop();
@@ -825,7 +825,7 @@ SNAT
 				state = prefixSeen;
 			}
 			// [ ... ]
-			else if( token.id() == ID::LBRACK )
+			else if( token.id() == ID::LBRACKET )
 			{
 SNAT
 				// Vector literal
@@ -881,7 +881,7 @@ SNAT
 					Expr * ex;
 					lex(token );  
 
-					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &ex, ETC::COMMA_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -919,7 +919,7 @@ SNAT
 		{
 			// .. , ... ]
 			Expr * ex;
-			if(!parseExpr( &ex, ETC::COMMA_OR_RBRACKET, str, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( &ex, ETC::COMMA_RBRACKET, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
@@ -945,7 +945,7 @@ SNAT
 		{
 			// .. , ... }
 			Expr * ex;
-			if( !parseExpr( &ex, ETC::COMMA_OR_RBRACE, str, token, opStack.size(), exprStack.size() ) )
+			if( !parseExpr( &ex, ETC::COMMA_RBRACE, str, token, opStack.size(), exprStack.size() ) )
 			{
 				assert( (int)opStack.size() == initOpStack && (int)exprStack.size() == initExprStack );
 				return false;
@@ -1020,7 +1020,7 @@ SNAT
 					state = prefixSeen;
 			}
 			// [ ... ]
-			else if( token.id() == ID::LBRACK )
+			else if( token.id() == ID::LBRACKET )
 			{
 				// Vector literal
 				state = vecBeginSeen;
@@ -1050,7 +1050,6 @@ SNAT
 		}
 		case valueSeen:
 		{
-SNAT
 			if( token.isId() && isTerminateWord(  token.idLexium(), str ))
 			{
 SNAT
@@ -1136,7 +1135,7 @@ SNAT
 				{
 					Expr * value;
 					lex(token );  
-					if(!parseExpr( &value, ETC::COMMA_OR_RBRACE, str, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &value, ETC::COMMA_RBRACE, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -1155,7 +1154,7 @@ SNAT
 				{
 					Expr * ex;
 					lex(token );  
-					if(!parseExpr( &ex, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
+					if(!parseExpr( &ex, ETC::COMMA_RPAREN, str, token, opStack.size(), exprStack.size() ))
 					{
 						dumpToken( __FILE__, __LINE__, token );
 						TODO
@@ -1181,7 +1180,7 @@ SNAT
 					}
 				}
 			}
-			else if( token.id() == ID::LBRACK)
+			else if( token.id() == ID::LBRACKET)
 			{
 SNAT
 				opStack.push(token);
@@ -1369,7 +1368,7 @@ SNAT
 		case arrayIndexSeen:
 		{
 			Expr * dim;
-			if(!parseExpr( &dim, ETC::COMMA_OR_RBRACKET, str, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( &dim, ETC::COMMA_RBRACKET, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO;
@@ -1400,7 +1399,7 @@ SNAT
 		}
 		case lparenSeen:
 		{
-			if(!parseExpr( expr, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
+			if(!parseExpr( expr, ETC::COMMA_RPAREN, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO;
@@ -1459,6 +1458,11 @@ SNAT
 				{
 						state = inCallSeen;
 				}
+				else if( token.id() == ID::LT )
+				{
+					dumpToken( __FILE__, __LINE__, token );
+					TODO
+				}
 				else
 				{
 					dumpToken( __FILE__, __LINE__, token );
@@ -1473,7 +1477,7 @@ SNAT
 				dumpToken( __FILE__, __LINE__, token );
 				TODO
 			}
-			else if(!parseExpr( expr, ETC::COMMA_OR_RPAREN, str, token, opStack.size(), exprStack.size() ))
+			else if(!parseExpr( expr, ETC::COMMA_RPAREN, str, token, opStack.size(), exprStack.size() ))
 			{
 				dumpToken( __FILE__, __LINE__, token );
 				TODO

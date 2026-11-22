@@ -32,7 +32,6 @@ src/mutex.cc \
 src/nodes.cc \
 src/object.cc \
 src/parser.cc \
-src/parseAlias.cc \
 src/parseArgs.cc \
 src/parseBlock.cc \
 src/parseBreak.cc \
@@ -46,7 +45,6 @@ src/parseEnum.cc \
 src/parseExpr.cc \
 src/parserError.cc \
 src/parseExprStatement.cc \
-src/parseExprTypes.cc \
 src/parseFor.cc \
 src/parseIf.cc \
 src/parsePureFunction.cc \
@@ -55,7 +53,7 @@ src/parseReturn.cc \
 src/parseSelect.cc \
 src/parseStatement.cc \
 src/parseSwitch.cc \
-src/parseTypeArgs.cc \
+src/parseTypeExpr.cc \
 src/parseTypeParams.cc \
 src/parseTry.cc \
 src/parseType.cc \
@@ -109,8 +107,8 @@ enumt \
 dot \
 objectt \
 functiont \
-classt \
 selectt \
+classt \
 collectionst
 
 test: $(TESTS)

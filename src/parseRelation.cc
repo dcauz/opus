@@ -45,7 +45,7 @@ PENTER
  *   save [by] [row|column]
  *   source string
  */
-bool Parser::parseRelation( Relation ** relation )
+bool Parser::parseRelation( Relation ** /* relation */ )
 {
 PENTER
 		Token token;

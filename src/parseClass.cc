@@ -62,7 +62,8 @@ dumpToken( __FILE__, __LINE__, token );
 		{
 dumpToken( __FILE__, __LINE__, token );
 			std::vector<TemplateArg *>	* bases;
-			if(!parseTypeArgs( &bases, false ) )
+			lex(token);
+			if(!parseTypeExpr( token, &bases, ETC::SCOLON_RBRACE_IMPLEMENT ) )
 			{
 				TODO
 			}
@@ -71,7 +72,8 @@ dumpToken( __FILE__, __LINE__, token );
 		{
 dumpToken( __FILE__, __LINE__, token );
 			std::vector<TemplateArg *>	* interfaces;
-			if(!parseTypeArgs( &interfaces, false ) )
+			lex(token);
+			if(!parseTypeExpr( token, &interfaces, ETC::SCOLON_RBRACE_EXTEND ) )
 			{
 				TODO
 			}
