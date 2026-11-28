@@ -16,7 +16,7 @@ PENTER
 	Token    token;
 	unsigned declarators;
 
-	bool rc = parseType( token, declarators, &type );
+	bool rc = parseType( token, &type, ETC::ID );
 	if(!rc)
 		return rc;
 

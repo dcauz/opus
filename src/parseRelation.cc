@@ -71,7 +71,7 @@ PENTER
 					if(token.is_header())
 					{
 						lex( token );
-						if( token.isId())
+						if( token.isType())
 						{
 							hname = token.idLexium();
 						}

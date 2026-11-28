@@ -9,8 +9,8 @@ using namespace std;
 Syntax:
 
 block
-    : '{' '}'
-    | '{' statements '}'
+	: '{' '}'
+	| '{' statements '}'
 
 statements
 	: statements statement
@@ -22,12 +22,12 @@ bool Parser::parseBlock( Block ** block )
 PENTER
 	// The { character is already read
 
-    bool rc = true;
+	bool rc = true;
 
 	vector<Statement *> * statements = new vector<Statement *>();
 
-    while(rc)
-    {
+	while(rc)
+	{
 		Statement * statement;
 		rc = parseStatement( &statement );
 

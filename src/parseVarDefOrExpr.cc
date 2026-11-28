@@ -39,6 +39,7 @@ PENTER
 			}
 			break;
 		}
+		// TODO: remove. Types must be forward declared.
 		case idSeen:
 		{
 		  // This could be a variable definition if the type

@@ -48,7 +48,7 @@ PENTER
 
 		Token token;
 		lex( token );
-dumpToken( __FILE__, __LINE__, token );
+
 		if( token.isId() )
 		{
 			std::string name = token.idLexium();
@@ -56,7 +56,6 @@ dumpToken( __FILE__, __LINE__, token );
 			// TODO: Check to see if it is a type-name
 			
 			lex( token );
-dumpToken( __FILE__, __LINE__, token );
 
 			// If two names, assume the first one is a type name with a forward
 			// declaration
@@ -67,7 +66,6 @@ dumpToken( __FILE__, __LINE__, token );
 				// TODO: set type
 
 				lex( token );
-dumpToken( __FILE__, __LINE__, token );
 
 				(*typeParams)->push_back( new TemplateParam( 0, type, name2 ));
 			}
@@ -80,7 +78,6 @@ dumpToken( __FILE__, __LINE__, token );
 		else if( token.isType() )
 		{
 			lex( token );
-dumpToken( __FILE__, __LINE__, token );
 
 			if( token.isId() )
 			{
@@ -97,7 +94,6 @@ dumpToken( __FILE__, __LINE__, token );
 		else if( token.id() == ID::TYPE )
 		{
 			lex( token );
-dumpToken( __FILE__, __LINE__, token );
 
 			if( token.isId() )
 			{

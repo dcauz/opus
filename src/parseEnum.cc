@@ -54,9 +54,7 @@ dumpToken( __FILE__, __LINE__, lval );
 	{
 		while(true)
 		{
-			unsigned declarators;
-
-			if(!parseType( lval, declarators, &base ) )
+			if(!parseType( lval, &base, ETC::COMMA_RBRACE ) )
 			{
 dumpToken( __FILE__, __LINE__, lval );
 				return false;
@@ -64,11 +62,6 @@ dumpToken( __FILE__, __LINE__, lval );
 			else
 			{
 printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
-				if( declarators != 0 )
-					throw std::runtime_error( "Base type of enum definition cannot "
-						"contain declarators" );
-				else
-				{
 printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 					if( lval.id() == ID::LBRACE )
 						goto parseBody;
@@ -76,8 +69,6 @@ printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 						goto parseDeclaration;
 					else
 						throw std::runtime_error( "Unexpected token found in enum definition");
-printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
-				}
 printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);
 			}
 printf( "%s:%d\n", __FILE__, __LINE__ ); fflush(stdout);

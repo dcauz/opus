@@ -61,9 +61,9 @@ dumpToken( __FILE__, __LINE__, token );
 		else if( token.is_extend() )
 		{
 dumpToken( __FILE__, __LINE__, token );
-			std::vector<TemplateArg *>	* bases;
+			Type	* bases;
 			lex(token);
-			if(!parseTypeExpr( token, &bases, ETC::SCOLON_RBRACE_IMPLEMENT ) )
+			if(!parseType( token, &bases, ETC::SCOLON_RBRACE_IMPLEMENT ) )
 			{
 				TODO
 			}
@@ -71,9 +71,9 @@ dumpToken( __FILE__, __LINE__, token );
 		else if( token.is_implement() )
 		{
 dumpToken( __FILE__, __LINE__, token );
-			std::vector<TemplateArg *>	* interfaces;
+			Type	* interfaces;
 			lex(token);
-			if(!parseTypeExpr( token, &interfaces, ETC::SCOLON_RBRACE_EXTEND ) )
+			if(!parseType( token, &interfaces, ETC::SCOLON_RBRACE_EXTEND ) )
 			{
 				TODO
 			}
@@ -84,6 +84,8 @@ dumpToken( __FILE__, __LINE__, token );
 			name = token.idLexium();
 			line = token.line();
 			column = token.column();
+			*clazz = new Class( line, column, name, nullptr, nullptr, nullptr );
+			currSymTbl->addType( *clazz );
 		}
 		else if( token.id() == ID::LBRACE )
 		{
@@ -91,7 +93,6 @@ dumpToken( __FILE__, __LINE__, token );
 			Block * block;			
 			if( parseBlock( &block ) )
 			{
-				*clazz = new Class( line, column, name, nullptr, nullptr, block );
 				return true;
 			}
 			else

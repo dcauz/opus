@@ -142,8 +142,8 @@ dumpToken( __FILE__, __LINE__, token );
 			}
 			else if( token.id() == ID::LT )
 			{
-				std::vector<TemplateArg *>	* tArgs;
-				if(!parseTypeExpr( token, &tArgs, ETC::ID ))
+				Type	* tArgs;
+				if(!parseType( token, &tArgs, ETC::ID ))
 				{
 					dumpToken( __FILE__, __LINE__, token );
 					TODO

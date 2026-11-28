@@ -17,17 +17,26 @@
 Type syntax:
 
 type
+	: declarators type_decl
+
+type_decl
 	: AUTO
 	| AUTO modifiers
+	| AUTO funcArgs 
 	| builtInType
 	| builtInType modifiers
+	| builtInType funcArgs 
 	| collectionType
 	| collectionType modifiers
+	| collectionType funcArgs 
 	| OBJECT
 	| OBJECT modifiers
+	| OBJECT funcArgs 
 	| TYPE_NAME
 	| TYPE_NAME modifiers
+	| TYPE_NAME funcArgs 
 	| TYPE_NAME '<' exprTypeList '>'
+	| TYPE_NAME '<' exprTypeList '>' funcArgs 
 	| TYPE_NAME '<' exprTypeList '>' modifiers
 
 modifiers
@@ -37,14 +46,34 @@ modifiers
 	| dims pointerMod
 
 pointerMod
-	: '?'
-	| '*'
-	| '&'
-	| '#'
-	| dims
+	: ?				// voidable
+	| *				// unique pointer
+	| **			// shared pointer
+	| +				// weak pointer
+	| dims		// array dimensions
+	: ? &			// voidable
+	| * &			// unique pointer
+	| ** &		// shared pointer
+	| + &			// weak pointer
+	| dims &	// array dimensions
+	| &				// reference
+
+funcArgs
+	: ( arglist )
+	()
+
+argList
+	: argList ',' paramType
+	| paramType
+
+paramType
+	: type paramName
+	| type
 
 dims
-	: '[' ']'
+	: dims '[' ']'
+	| dims '[ dimList ']'
+	| '[' ']'
 	| '[ dimList ']'
 
 dimList
@@ -68,51 +97,220 @@ builtInType
 	| N
 	| Z
 	| Q
+	| DURATION 
 	| R
 
 collectionType
-		: SET '<' type '>'
-		| MSET '<' type '>'
-		| LIST '<' type '>'
-		| DLIST '<' type '>'
-		| STACK '<' type '>'
-		| QUEUE '<' type '>'
-		| PQUEUE '<' type '>'
-		| DQUEUE '<' type '>'
-		| C '<' type '>'
-		| Q '<' type '>'
-		| DURATION '<' expr '>'
+	: SET '<' type '>'
+	| MSET '<' type '>'
+	| LIST '<' type '>'
+	| DLIST '<' type '>'
+	| STACK '<' type '>'
+	| QUEUE '<' type '>'
+	| PQUEUE '<' type '>'
+	| DQUEUE '<' type '>'
+	| C '<' type '>'
 
 exprTypeList
-		: exprTypeList ',' exprType
-		| exprType
+	: exprTypeList ',' exprType
+	| exprType
 
 exprType
-		: expr
-		| type
+	: expr
+	| type
+
+
+contexts
+	- variable / function definition  (must be followed by ID)
+	- class extend / implement        (must be followed by ; or { )
+	- ctor call                       (must be followed by ( )
 */
 
-bool Parser::parseType( Token & lval, unsigned & declarators, Type ** type )
+bool Parser::parseType( Token & token, Type ** type, ETC et )
 {
 PENTER
-		declarators = 0;
+		int declarators = 0;
 
-		lex( lval );
-		while( lval.isModifier() )
+		bool	hasVoid = false; 
+		bool	isUPtr = false;
+		bool	isRef = false;
+		bool	isSPtr = false;
+		bool	isWPtr = false;
+
+		lex( token );
+		while( token.isModifier() )
 		{
-			declarators += static_cast<unsigned>(lval.id());
-			lex( lval );
+			declarators += static_cast<unsigned>(token.id());
+			lex( token );
 		}
 
 		std::vector<up<Expr>>	dims;
 
-dumpToken( __FILE__, __LINE__, lval );
-		switch(lval.id())
+dumpToken( __FILE__, __LINE__, token );
+		switch(token.id())
 		{
 		default:
-			// Not a type
-			pushLookahead(lval);
-			return false;
+			if( token.isId())
+			{
+TODO
+				break;
+			}
+			else
+			{
+      	Expr * expr;
+	      if( !parseExpr( &expr, et, STR::NONE, token, 0, 0 ))
+ 	     {
+ 	       dumpToken( __FILE__, __LINE__, token );
+ 	       TODO
+ 	     }
+ 	     // todo: add expr
+				break;
+		}
+		case ID::LT:
+			TODO
+			break;
+		case ID::QUEST:
+			TODO
+			break;
+		case ID::MUL:
+			TODO
+			break;
+		case ID::EXP:
+			TODO
+			break;
+		case ID::ADD:
+			TODO
+			break;
+		case ID::BAND:
+			TODO
+			break;
+		case ID::LPAREN:
+			TODO
+			break;
+		case ID::RPAREN:
+			TODO
+			break;
+		case ID::LBRACKET:
+			TODO
+			break;
+		case ID::RBRACKET:
+			TODO
+			break;
+
+		case ID::COMMA:
+    	if( (int) et | (int)ETC::COMMA )
+      {
+        // todo: add type arg
+        return true;
+      }
+      else
+        TODO
+			break;
+		case ID::GT:
+      if( (int)et | (int)ETC::GT )
+			{
+        return true;
+			}
+      else
+        TODO
+			break;
+   if( token.id() == ID::SCOLON )
+    {
+      if( (int) et | (int)ETC::SCOLON )
+        return true;
+      else
+        TODO
+    }
+    else if( token.id() == ID::LBRACE )
+    {
+      if( (int) et | (int)ETC::RBRACE )
+        return true;
+      else
+        TODO
+    }
+    else if( token.id() == ID::LPAREN && ((int) et | (int)ETC::RPAREN ) )
+    {
+      pushLookahead(token);
+      return true;
+    }
+    else if( token.id() == ID::SRGHT )
+    {
+      if((int)et | (int)ETC::GT)
+      {
+        Token gt(token.line(),token.column(), ID::GT );
+        pushLookahead( gt );
+        return true;
+      }
+      else
+        TODO
+    }
+    else if( token.id() == ID::LT )
+    {
+      Type * innerArgs;
+      while(true)
+      {
+        lex(token);
+        if( !parseType( token, &innerArgs, ETC::COMMA_GT ))
+        {
+          TODO
+        }
+
+        // todo: add param
+        if( token.id() == ID::GT )
+          break;
+      }
+    }
+    else if( token.id() == ID::QUEST )
+    {
+      hasVoid = true;
+      TODO
+    }
+    else if( token.id() == ID::MUL )
+    {
+      isUPtr = true;
+      TODO
+    }
+    else if( token.id() == ID::BAND )
+    {
+      isRef = true;
+      TODO
+    }
+    else if( token.id() == ID::EXP )
+    {
+      isSPtr = true;
+      TODO
+    }
+    else if( token.id() == ID::ADD )
+    {
+      isWPtr = true;
+      TODO
+    }
+    else if( token.id() == ID::LBRACKET )
+    {
+      while(true)
+      {
+        lex(token);
+        Expr * dim;
+        if( !parseExpr( &dim, ETC::COMMA_GT, STR::NONE, token, 0, 0 ))
+        {
+          TODO
+        }
+
+        // todo: add param
+        if( token.id() == ID::GT )
+          break;
+      }
+      TODO
+    }
+    else if( token.id() == ID::RBRACKET )
+    {
+      if( (int)et | (int)ETC::RBRACKET )
+      {
+        TODO
+      }
+      else
+        TODO
+    }
 
 		case ID::AUTO:	*type = new AutoType();		break;
 		case ID::BOOL:	*type = new BoolType();		break;
@@ -284,11 +482,16 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::Q:
 		case ID::TYPE_NAME:
 		{
-			lex( lval );
+			lex( token );
 
-			if( lval.id() == ID::LT )
+			if( token.id() == ID::GT )
 			{
-				dumpToken( __FILE__, __LINE__, lval );
+				// todo: build the template type
+				return true;
+			}
+			else
+			{
+				dumpToken( __FILE__, __LINE__, token );
 				TODO // check for type parameters
 			}
 			break;
@@ -306,11 +509,11 @@ dumpToken( __FILE__, __LINE__, lval );
 		case ID::SET:
 		case ID::STACK:
 		{
-			lex( lval );
+			lex( token );
 
-			if( lval.id() == ID::LT )
+			if( token.id() == ID::LT )
 			{
-				dumpToken( __FILE__, __LINE__, lval );
+				dumpToken( __FILE__, __LINE__, token );
 				TODO // ensure type parameters present
 			}
 			else
@@ -326,9 +529,9 @@ dumpToken( __FILE__, __LINE__, lval );
 	// Get modifiers and dims
 	while(true)
 	{
-		lex( lval );
+		lex( token );
 
-		switch(lval.id())
+		switch( token.id() )
 		{
 		default:
 			// we are done. Set lookahead to token
@@ -342,20 +545,20 @@ dumpToken( __FILE__, __LINE__, lval );
 			if(dims.size() == 0 )
 			{
 				if( collectionPtr == Pointer::NONE )
-					collectionPtr = static_cast<Pointer>(lval.id());
+					collectionPtr = static_cast<Pointer>( token.id() );
 				else
 				{
-			        dumpToken( __FILE__, __LINE__, lval );
+			        dumpToken( __FILE__, __LINE__, token );
 					TODO	// multiple pointer modifiers error
 				}
 			}
 			else
 			{
 				if( elementPtr == Pointer::NONE )
-					elementPtr = static_cast<Pointer>(lval.id());
+					elementPtr = static_cast<Pointer>(token.id());
 				else
 				{
-			        dumpToken( __FILE__, __LINE__, lval );
+			        dumpToken( __FILE__, __LINE__, token );
 					TODO	// multiple pointer modifiers error
 				}
 			}

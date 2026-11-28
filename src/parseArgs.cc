@@ -17,14 +17,10 @@ args
 	;
 
 arg
-	: declarators type NAME
-	| type NAME
-	| declarators type
+	: type NAME
 	| type
 	| VA_ARGS
-	| declarators type NAME = expr
 	| type NAME = expr
-	| declarators type = expr
 	| type = expr
 	| VA_ARGS
 	;
@@ -72,18 +68,15 @@ PENTER
 			pushLookahead(lval);
 		}
 
-		unsigned declarators;
-		bool rc = parseType( lval, declarators, &type );
+		bool rc = parseType( lval, &type, ETC::COMMA_RPAREN );
 
 		if( lval.id() == ID::COMMA )
 		{
-			(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
-			declarators = 0;
+			(*args)->push_back( new Arg( 0, 0, type, argName ) );
 		}
 		else if( lval.id() == ID::RPAREN )
 		{
-			(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
-			declarators = 0;
+			(*args)->push_back( new Arg( 0, 0, type, argName ) );
 			break;
 		}
 		else if( lval.id() == ID::ID )
@@ -102,14 +95,12 @@ PENTER
 
 				if( lval.id() == ID::RPAREN )
 				{
-					(*args)->push_back( new Arg( 0, 0, declarators, type, argName, expr ) );
-					declarators = 0;
+					(*args)->push_back( new Arg( 0, 0, type, argName, expr ) );
 					break;
 				}
 				else if( lval.id() == ID::COMMA )
 				{
-					(*args)->push_back( new Arg( 0, 0, declarators, type, argName, expr ) );
-					declarators = 0;
+					(*args)->push_back( new Arg( 0, 0, type, argName, expr ) );
 				}
 				else
 				{
@@ -119,15 +110,12 @@ PENTER
 			}
 			else if( lval.id() == ID::RPAREN )
 			{
-				(*args)->push_back( new Arg( 0, 0, declarators, type, argName ) );
-				declarators = 0;
+				(*args)->push_back( new Arg( 0, 0, type, argName ) );
 				break;
 			}
 			else if( lval.id() == ID::COMMA )
 			{
-				(*args)->push_back( new Arg( 0, 0,
-					declarators, type, argName ) );
-				declarators = 0;
+				(*args)->push_back( new Arg( 0, 0, type, argName ) );
 			}
 			else
 			{

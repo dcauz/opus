@@ -163,8 +163,7 @@ private:
 	bool parseSortByColumns( Token & token, ETC, Select * select );
 
 	bool parseStatement( Statement ** );
-	bool parseType( Token &, unsigned &, Type ** );
-	bool parseTypeExpr( Token &, std::vector<TemplateArg *> **, ETC etc );
+	bool parseType( Token &, Type **, ETC et );
 	bool parseTypeParams( std::vector<TemplateParam *> ** );
 	bool parseVarDefOrExpr( Token & , ETC, VarDef ** variableDef, Expr ** initExpr );
 	bool parseVariableDef( Token & token, ETC et, VarDef ** variableDef );

@@ -321,10 +321,9 @@ private:
 class Arg: public Definition, public Variable
 {
 public:
-	Arg( int s, int e, unsigned decl, Type * t, const std::string & n, Expr * d = nullptr ): 
+	Arg( int s, int e, Type * t, const std::string & n, Expr * d = nullptr ): 
 		Definition(s,e),
 		Variable(n),
-		decl_(decl), 
 		type_(t),
 		default_(d)
 	{
@@ -334,7 +333,6 @@ public:
 	Type * semCheck( SemCheckContext & ) const final;
 
 private:
-	unsigned decl_;
 	Type   * type_;
 	Expr   * default_;
 };
